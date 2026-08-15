@@ -1,0 +1,110 @@
+import { GrowthTier } from "@/store/useForestStore";
+
+export interface NormalizedCustomerTree {
+  customerName: string;
+  mrr: number;
+  tier: GrowthTier;
+  source: "stripe" | "lemonsqueezy" | "polar" | "custom";
+  isValid: boolean;
+}
+
+/**
+ * Maps MRR numerical value to 3D Pine Tree Growth Tier
+ */
+export function calculateTreeTierFromMrr(mrr: number): GrowthTier {
+  if (mrr >= 100) return "majestic";
+  if (mrr >= 50) return "mature";
+  if (mrr >= 20) return "young";
+  if (mrr > 0) return "sapling";
+  return "stump";
+}
+
+/**
+ * Universal Revenue Webhook Parser
+ * Parses and normalizes incoming payment/subscription events across Stripe, Lemon Squeezy, and Polar.
+ */
+export function parseUniversalRevenueEvent(payload: any): NormalizedCustomerTree {
+  if (!payload || typeof payload !== "object") {
+    return {
+      customerName: "Anonymous Customer",
+      mrr: 0,
+      tier: "stump",
+      source: "custom",
+      isValid: false,
+    };
+  }
+
+  // 1. Stripe Event Parser
+  if (payload.object === "event" || payload.type?.startsWith("invoice.") || payload.type?.startsWith("checkout.")) {
+    const obj = payload.data?.object || {};
+    const name = obj.customer_name || obj.customer_email || obj.customer_details?.name || "Stripe Customer";
+    const rawAmount = obj.amount_paid ?? obj.amount_total ?? obj.total ?? 0;
+    const isAnnual = obj.lines?.data?.[0]?.plan?.interval === "year";
+
+    let mrr = Math.round(rawAmount / 100);
+    if (isAnnual && mrr > 0) {
+      mrr = Math.round(mrr / 12);
+    }
+
+    const isValid = mrr > 0;
+    return {
+      customerName: name,
+      mrr,
+      tier: calculateTreeTierFromMrr(mrr),
+      source: "stripe",
+      isValid,
+    };
+  }
+
+  // 2. Lemon Squeezy Event Parser
+  if (payload.meta?.event_name) {
+    const data = payload.data?.attributes || {};
+    const name = data.user_name || data.user_email || data.customer_name || "Lemon Squeezy Customer";
+    const rawAmount = data.subtotal_usd ?? data.total ?? data.subtotal ?? 0;
+    const isAnnual = data.interval === "year" || data.interval === "annually";
+
+    let mrr = Math.round(rawAmount / 100);
+    if (isAnnual && mrr > 0) {
+      mrr = Math.round(mrr / 12);
+    }
+
+    const isValid = mrr > 0;
+    return {
+      customerName: name,
+      mrr,
+      tier: calculateTreeTierFromMrr(mrr),
+      source: "lemonsqueezy",
+      isValid,
+    };
+  }
+
+  // 3. Polar Event Parser
+  if (payload.event?.startsWith("order.") || payload.event?.startsWith("subscription.")) {
+    const order = payload.data || {};
+    const name = order.customer?.name || order.customer?.email || "Polar Backer";
+    const rawAmount = order.amount ?? 0;
+    const isAnnual = order.recurring_interval === "year";
+
+    let mrr = Math.round(rawAmount / 100);
+    if (isAnnual && mrr > 0) {
+      mrr = Math.round(mrr / 12);
+    }
+
+    const isValid = mrr > 0;
+    return {
+      customerName: name,
+      mrr,
+      tier: calculateTreeTierFromMrr(mrr),
+      source: "polar",
+      isValid,
+    };
+  }
+
+  return {
+    customerName: "Anonymous Customer",
+    mrr: 0,
+    tier: "stump",
+    source: "custom",
+    isValid: false,
+  };
+}
