@@ -1,254 +1,729 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { HeaderHUD } from "@/components/hud/HeaderHUD";
-import { DailyQuestBar } from "@/components/hud/DailyQuestBar";
-import { ShipModal } from "@/components/hud/ShipModal";
-import { CampShopModal } from "@/components/hud/CampShopModal";
-import { ShareCardModal } from "@/components/hud/ShareCardModal";
-import { AddTreeModal } from "@/components/hud/AddTreeModal";
-import { useForestStore } from "@/store/useForestStore";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  History,
+  Flame,
+  Shield,
   Trees,
   TrendingUp,
+  Github,
+  CheckCircle2,
   CloudRain,
-  HelpCircle,
-  RotateCcw,
-  Sparkles,
+  Check,
+  Copy,
+  LogOut,
 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import { SegmentedControl, SegmentedOption } from "@/components/ui/SegmentedControl";
+import { TreeData, useForestStore } from "@/store/useForestStore";
+import { signInWithGoogle, signOutUser } from "@/lib/supabase/client";
+import { sound } from "@/lib/sound";
 
-// Dynamic import for Three.js Canvas to prevent SSR hydration mismatch
+// Dynamic import for the Island Canvas (Mode: Preview)
 const ForestCanvas = dynamic(
   () => import("@/components/canvas/ForestCanvas").then((mod) => mod.ForestCanvas),
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-screen flex flex-col items-center justify-center bg-[#07110d] text-emerald-400">
-        <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-400 rounded-full animate-spin mb-4" />
-        <span className="text-xs font-semibold tracking-[0.2em] uppercase font-mono animate-pulse">
-          Generating 3D Voxel Forest...
-        </span>
+      <div className="w-full h-[460px] sm:h-[520px] rounded-[2.5rem] bg-[#f4f0e8] border border-[#d6cfc5] flex flex-col items-center justify-center text-stone-600 font-mono text-xs shadow-inner">
+        <div className="w-8 h-8 border-2 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-2" />
+        <span className="uppercase tracking-widest text-[11px] font-pixel">Loading Island Preview...</span>
       </div>
     ),
   }
 );
 
-export default function Home() {
-  const [mounted, setMounted] = useState(false);
-  const checkStreakExpiry = useForestStore((s) => s.checkStreakExpiry);
-  const triggerRain = useForestStore((s) => s.triggerRain);
-  const resetDemoData = useForestStore((s) => s.resetDemoData);
-  const trees = useForestStore((s) => s.trees);
-  const shipHistory = useForestStore((s) => s.shipHistory);
+const PREVIEW_TREES: TreeData[] = [
+  {
+    id: "preview-1",
+    name: "Acme Corp (Pro Plan)",
+    type: "revenue",
+    tier: "mature",
+    gridX: -1.2,
+    gridZ: -1.2,
+    plantedAt: new Date(Date.now() - 86400000 * 14).toISOString(),
+    mrr: 79,
+    isDemo: true,
+  },
+  {
+    id: "preview-2",
+    name: "Auth & Checkout Release",
+    type: "shipping",
+    tier: "young",
+    gridX: 1.2,
+    gridZ: -0.8,
+    plantedAt: new Date(Date.now() - 86400000 * 8).toISOString(),
+    mrr: 0,
+    isDemo: true,
+  },
+  {
+    id: "preview-3",
+    name: "Enterprise Annual Customer",
+    type: "revenue",
+    tier: "majestic",
+    gridX: -0.5,
+    gridZ: 1.5,
+    plantedAt: new Date(Date.now() - 86400000 * 30).toISOString(),
+    mrr: 199,
+    isDemo: true,
+  },
+  {
+    id: "preview-4",
+    name: "100 Beta Founders",
+    type: "shipping",
+    tier: "sapling",
+    gridX: 1.5,
+    gridZ: 1.2,
+    plantedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    mrr: 0,
+    isDemo: true,
+  },
+];
 
-  const [isShipModalOpen, setIsShipModalOpen] = useState(false);
-  const [isShopModalOpen, setIsShopModalOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isAddTreeModalOpen, setIsAddTreeModalOpen] = useState(false);
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
+const MILESTONE_OPTIONS: SegmentedOption<3 | 7 | 14>[] = [
+  { value: 3, label: "Day 3: Fire" },
+  { value: 7, label: "Day 7: Tent" },
+  { value: 14, label: "Day 14: Cabin" },
+];
 
-  // Total MRR calculation
-  const totalMrr = trees.reduce((acc, t) => acc + (t.mrr || 0), 0);
+const SHIELD_OPTIONS: SegmentedOption<"armed" | "rest">[] = [
+  { value: "armed", label: "Shield Armed" },
+  { value: "rest", label: "Simulate Rest Day" },
+];
 
-  useEffect(() => {
-    setMounted(true);
-    checkStreakExpiry();
-  }, [checkStreakExpiry]);
+export default function LandingPage() {
+  const router = useRouter();
+  const user = useForestStore((s) => s.user);
+  const logoutUser = useForestStore((s) => s.logoutUser);
 
-  if (!mounted) {
-    return (
-      <div className="w-full h-screen flex flex-col items-center justify-center bg-[#07110d] text-emerald-400">
-        <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-400 rounded-full animate-spin mb-4" />
-        <span className="text-xs font-semibold tracking-[0.2em] uppercase font-mono animate-pulse">
-          Loading IndieForest...
-        </span>
-      </div>
+  const [selectedMilestone, setSelectedMilestone] = useState<3 | 7 | 14>(7);
+  const [shieldState, setShieldState] = useState<"armed" | "rest">("armed");
+  const [demoMrr, setDemoMrr] = useState(79);
+  const [copiedTweet, setCopiedTweet] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  const isAuthenticated = user.isAuthenticated;
+
+  const handleGoogleAuth = async () => {
+    sound.playClick();
+    setIsLoggingIn(true);
+    try {
+      await signInWithGoogle();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Google authentication error";
+      alert(msg);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleSignOut = () => {
+    signOutUser();
+    logoutUser();
+  };
+
+  const getTreeTierFromMrr = (mrr: number) => {
+    if (mrr >= 100) return { tier: "Majestic Golden Pine", desc: "4-tier stepped canopy with golden crown" };
+    if (mrr >= 50) return { tier: "Mature Golden Pine", desc: "3-tier stepped amber foliage" };
+    if (mrr >= 20) return { tier: "Young Golden Pine", desc: "2-tier stepped foliage, active subscriber" };
+    return { tier: "Golden Sapling", desc: "1-tier stepped seedling" };
+  };
+
+  const currentTreeTier = getTreeTierFromMrr(demoMrr);
+
+  const handleCopyTweet = () => {
+    navigator.clipboard.writeText(
+      `Day 14 of shipping on IndieForest.\n\nRank: Tier IV — Island Architect (Level 12)\nRevenue Grove: $${demoMrr * 3}/mo\nStreak: 14d Active\n\nBuilding in public on my island.`
     );
-  }
+    setCopiedTweet(true);
+    setTimeout(() => setCopiedTweet(false), 2000);
+  };
 
   return (
-    <main className="relative w-full h-screen min-h-[100dvh] overflow-hidden font-sans bg-[#07110d]">
-      {/* 3D Isometric Forest Canvas */}
-      <ForestCanvas />
-
-      {/* Top Header Status & HUD */}
-      <HeaderHUD
-        onOpenShipModal={() => setIsShipModalOpen(true)}
-        onOpenShopModal={() => setIsShopModalOpen(true)}
-        onOpenShareModal={() => setIsShareModalOpen(true)}
-        onOpenAddTreeModal={() => setIsAddTreeModalOpen(true)}
-      />
-
-      {/* Daily #1 Focus Quest Bar */}
-      <DailyQuestBar />
-
-      {/* Bottom Left: Island Overview Drawer & Quick Stats (Double-Bezel) */}
-      <div className="absolute bottom-6 left-6 z-20 flex flex-col gap-2 pointer-events-none">
-        {/* Quick Stats Pill */}
-        <div className="pointer-events-auto p-1 rounded-2xl bg-emerald-950/40 ring-1 ring-emerald-500/20 backdrop-blur-xl shadow-2xl">
-          <div className="px-4 py-2 rounded-[calc(1rem-0.125rem)] bg-[#0d1c16]/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-1.5 text-emerald-300 font-semibold">
-              <Trees className="w-4 h-4 text-emerald-400" />
-              <span>{trees.length} Trees</span>
-            </div>
-            <div className="w-[1px] h-3.5 bg-emerald-800" />
-            <div className="flex items-center gap-1.5 text-amber-300 font-mono font-bold">
-              <TrendingUp className="w-4 h-4 text-amber-400" />
-              <span>${totalMrr}/mo MRR</span>
-            </div>
-            <div className="w-[1px] h-3.5 bg-emerald-800" />
-            <button
-              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-              className="flex items-center gap-1 text-slate-300 hover:text-emerald-300 transition font-medium"
-            >
-              <History className="w-3.5 h-3.5" />
-              <span>{shipHistory.length} Ships</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Shipping History Drawer */}
-        {isHistoryOpen && (
-          <div className="pointer-events-auto w-80 p-1.5 rounded-2xl bg-emerald-950/40 ring-1 ring-emerald-500/20 backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-150">
-            <div className="p-4 rounded-[calc(1rem-0.125rem)] bg-[#0d1c16]/90 max-h-60 overflow-y-auto text-xs text-slate-300 space-y-2">
-              <div className="flex items-center justify-between pb-2 border-b border-emerald-900/60 font-bold text-emerald-100">
-                <span>Shipping Log History</span>
-                <span className="text-[10px] text-emerald-400 font-mono">
-                  {shipHistory.length} total
-                </span>
+    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-satoshi selection:bg-emerald-600 selection:text-white relative overflow-y-auto overflow-x-hidden">
+      
+      {/* 1. Unified Double-Bezel Navbar */}
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-4xl px-3 pointer-events-none font-satoshi">
+        <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
+          <div className="px-4 py-1.5 rounded-full porcelain-surface flex items-center justify-between">
+            
+            {/* Master Tree Stump Logo */}
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-6 h-6 rounded-lg overflow-hidden shadow-xs border border-stone-200">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logos/indieforest_logo.svg" alt="IndieForest Logo" className="w-full h-full object-cover" />
               </div>
-              {shipHistory.length === 0 ? (
-                <p className="text-slate-500 py-3 text-center italic text-xs">
-                  No ships logged yet. Click "SHIP IT" above!
-                </p>
-              ) : (
-                shipHistory.map((ship) => (
-                  <div
-                    key={ship.id}
-                    className="p-2 rounded-xl bg-black/50 ring-1 ring-emerald-950 flex flex-col gap-1"
+              <span className="font-bold text-xs sm:text-sm text-stone-950 tracking-tight font-satoshi">
+                IndieForest
+              </span>
+            </Link>
+
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center gap-1 text-xs font-semibold text-stone-600 font-satoshi">
+              <a
+                href="#how-it-works"
+                className="px-2.5 py-1 rounded-full hover:bg-stone-100/90 hover:text-stone-950 transition"
+              >
+                The Ritual
+              </a>
+              <a
+                href="#revenue-grove"
+                className="px-2.5 py-1 rounded-full hover:bg-stone-100/90 hover:text-stone-950 transition"
+              >
+                Revenue Grove
+              </a>
+              <a
+                href="#features"
+                className="px-2.5 py-1 rounded-full hover:bg-stone-100/90 hover:text-stone-950 transition"
+              >
+                Interactive Bento
+              </a>
+              <a
+                href="#faq"
+                className="px-2.5 py-1 rounded-full hover:bg-stone-100/90 hover:text-stone-950 transition"
+              >
+                FAQ
+              </a>
+            </nav>
+
+            {/* Navbar Action Button: Exact Same Button Primitive for Both States */}
+            <div className="flex items-center gap-2">
+              {isAuthenticated ? (
+                <div className="flex items-center gap-2">
+                  <Link href="/dashboard">
+                    <Button variant="emerald" size="sm" showArrow arrowType="right">
+                      OPEN DASHBOARD
+                    </Button>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="p-1.5 rounded-full hover:bg-stone-100 text-stone-500 hover:text-stone-800 transition cursor-pointer"
+                    title="Sign Out"
                   >
-                    <div className="flex items-center justify-between text-[10px]">
-                      <span className="font-mono text-emerald-400 font-semibold">
-                        +{ship.xpGained} XP
-                      </span>
-                      <span className="text-slate-500 font-mono text-[9px]">
-                        {new Date(ship.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-emerald-100 font-medium leading-tight">
-                      {ship.message}
-                    </p>
-                    {ship.proofUrl && (
-                      <a
-                        href={ship.proofUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[10px] text-sky-400 hover:underline truncate"
-                      >
-                        🔗 {ship.proofUrl}
-                      </a>
-                    )}
-                  </div>
-                ))
+                    <LogOut className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <Button
+                  onClick={handleGoogleAuth}
+                  variant="emerald"
+                  size="sm"
+                  showArrow
+                  arrowType="right"
+                  disabled={isLoggingIn}
+                >
+                  {isLoggingIn ? "CONNECTING..." : "SIGN IN WITH GOOGLE"}
+                </Button>
               )}
             </div>
-          </div>
-        )}
-      </div>
 
-      {/* Bottom Right: Interactive Debug / Quick Utility Controls */}
-      <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 pointer-events-auto">
-        <button
-          onClick={() => triggerRain(4000)}
-          className="p-2.5 rounded-2xl bg-sky-950/40 ring-1 ring-sky-500/20 hover:ring-sky-500/40 text-sky-400 hover:text-sky-200 backdrop-blur-xl transition active:scale-[0.97] shadow"
-          title="Trigger Rain Shower Animation"
-        >
-          <CloudRain className="w-4 h-4" />
-        </button>
-
-        <button
-          onClick={() => setIsHelpOpen(!isHelpOpen)}
-          className="p-2.5 rounded-2xl bg-emerald-950/40 ring-1 ring-emerald-500/20 hover:ring-emerald-500/40 text-emerald-400 hover:text-emerald-200 backdrop-blur-xl transition active:scale-[0.97] shadow"
-          title="How IndieForest Works"
-        >
-          <HelpCircle className="w-4 h-4" />
-        </button>
-
-        <button
-          onClick={() => {
-            if (confirm("Reset island to starter demo state?")) {
-              resetDemoData();
-            }
-          }}
-          className="p-2.5 rounded-2xl bg-red-950/40 ring-1 ring-red-500/20 hover:ring-red-500/40 text-slate-400 hover:text-red-300 backdrop-blur-xl transition active:scale-[0.97] shadow"
-          title="Reset Island Demo State"
-        >
-          <RotateCcw className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Quick Help Modal (Double-Bezel) */}
-      {isHelpOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-150">
-          <div className="w-full max-w-md p-1.5 rounded-[2rem] bg-emerald-950/40 ring-1 ring-emerald-500/30 shadow-2xl relative">
-            <div className="p-6 rounded-[calc(2rem-0.375rem)] bg-[#0c1813] shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] text-white">
-              <h3 className="text-base font-bold text-emerald-100 mb-2 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-400" /> Welcome to IndieForest!
-              </h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                IndieForest turns your daily coding habit into a living 3D world:
-              </p>
-              <ul className="text-xs text-slate-300 space-y-2.5 mb-5">
-                <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 font-bold font-mono">1.</span>
-                  <span>
-                    <strong>Daily Shipping = Rain & XP:</strong> Every commit or manual checkoff pours rain and levels up your developer rank.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-400 font-bold font-mono">2.</span>
-                  <span>
-                    <strong>Streaks & Shields:</strong> Maintain daily shipping to unlock camp structures (Campfire at 3d, Tent at 7d, Cabin at 14d). Shields protect rest days.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-sky-400 font-bold font-mono">3.</span>
-                  <span>
-                    <strong>Trees = Customers:</strong> Click any tree to inspect subscriber MRR or change its growth stage.
-                  </span>
-                </li>
-              </ul>
-              <button
-                onClick={() => setIsHelpOpen(false)}
-                className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-full transition active:scale-[0.98] font-mono uppercase tracking-wider"
-              >
-                GOT IT, LET'S SHIP!
-              </button>
-            </div>
           </div>
         </div>
-      )}
+      </header>
 
-      {/* Action Modals */}
-      <ShipModal
-        isOpen={isShipModalOpen}
-        onClose={() => setIsShipModalOpen(false)}
-      />
-      <CampShopModal
-        isOpen={isShopModalOpen}
-        onClose={() => setIsShopModalOpen(false)}
-      />
-      <ShareCardModal
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-      />
-      <AddTreeModal
-        isOpen={isAddTreeModalOpen}
-        onClose={() => setIsAddTreeModalOpen(false)}
-      />
-    </main>
+      {/* 2. Hero Section */}
+      <section className="pt-28 pb-16 md:pt-36 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 font-satoshi">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          
+          {/* Left Hero Copy */}
+          <div className="lg:col-span-6 space-y-6 text-left">
+            <Badge variant="stone" dot size="sm">
+              Gamified Habit & Revenue Tracker
+            </Badge>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-stone-950 leading-[1.06] tracking-tight font-editorial">
+              Your daily shipping momentum on a <span className="italic font-normal text-emerald-800 underline decoration-emerald-500/30 underline-offset-8">living island</span>.
+            </h1>
+
+            <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl font-satoshi">
+              Every git commit waters your island. Every paying subscriber sprouts a golden pine tree in your revenue grove. Maintain your streak to unlock milestone camps and defend against burnout.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+              {isAuthenticated ? (
+                <Link href="/dashboard">
+                  <Button variant="emerald" size="lg" showArrow arrowType="right" className="w-full sm:w-auto">
+                    GO TO MY ISLAND
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  onClick={handleGoogleAuth}
+                  variant="emerald"
+                  size="lg"
+                  showArrow
+                  arrowType="right"
+                  disabled={isLoggingIn}
+                  className="w-full sm:w-auto"
+                >
+                  {isLoggingIn ? "CONNECTING GOOGLE..." : "START FREE WITH GOOGLE"}
+                </Button>
+              )}
+
+              <Link href="/u/karan">
+                <Button variant="outline" size="lg" showArrow arrowType="up-right" className="w-full sm:w-auto">
+                  View Live Public Profile
+                </Button>
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-4 text-xs font-satoshi text-stone-500 pt-2">
+              <span className="flex items-center gap-1 font-semibold text-emerald-800 font-satoshi">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> Free & Open Source
+              </span>
+              <span>•</span>
+              <span className="font-satoshi">Zero WebGL Lag</span>
+              <span>•</span>
+              <span className="font-satoshi">Zero Code Access</span>
+            </div>
+          </div>
+
+          {/* Right Hero Island Canvas */}
+          <div className="lg:col-span-6 w-full">
+            <ForestCanvas mode="preview" customTrees={PREVIEW_TREES} />
+          </div>
+        </div>
+      </section>
+
+      {/* 3. The 3-Step Daily Shipping Ritual */}
+      <section id="how-it-works" className="py-20 bg-[#e6e1d7] border-y border-stone-300/80 font-satoshi">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <Badge variant="stone" size="sm" className="mb-3">
+            The Daily Habit Loop
+          </Badge>
+          <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 mb-3 font-editorial">
+            How IndieForest Powers Consistency
+          </h2>
+          <p className="text-sm sm:text-base text-stone-600 max-w-2xl mx-auto mb-12 font-satoshi">
+            A frictionless feedback loop engineered to make writing, pushing, and launching software deeply rewarding.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            
+            {/* Step 1 Card */}
+            <Card variant="porcelain" className="p-7 flex flex-col justify-between rounded-[2.5rem]">
+              <div>
+                <span className="text-xs font-pixel font-bold text-emerald-700 block mb-2">
+                  01 / Write & Push
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-satoshi">
+                  Code in your favorite IDE
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-satoshi">
+                  Work in VS Code, Antigravity, or Cursor. Push commits to GitHub or log 1-click releases when you ship a feature.
+                </p>
+                <div className="p-3 rounded-xl bg-stone-900 text-stone-100 font-mono text-xs flex items-center justify-between shadow-inner">
+                  <span className="text-emerald-400">$ git push origin main</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-stone-100 flex items-center gap-2 text-xs font-satoshi text-stone-500">
+                <Github className="w-3.5 h-3.5 text-stone-700" />
+                <span>Auto-scanned public commits</span>
+              </div>
+            </Card>
+
+            {/* Step 2 Card */}
+            <Card variant="porcelain" className="p-7 flex flex-col justify-between rounded-[2.5rem]">
+              <div>
+                <span className="text-xs font-pixel font-bold text-amber-700 block mb-2">
+                  02 / Water the Island
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-satoshi">
+                  Rain Pours & XP Advances
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-satoshi">
+                  Your ship triggers real-time particle rain. Streaks ignite, retro chimes ring, and your developer rank levels up.
+                </p>
+                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between shadow-xs">
+                  <span className="flex items-center gap-1.5 font-bold font-satoshi">
+                    <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" /> +100 XP & Streak Bonus
+                  </span>
+                  <span className="text-stone-600 font-pixel">Lvl II</span>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-stone-100 flex items-center gap-2 text-xs font-satoshi text-amber-800">
+                <CloudRain className="w-3.5 h-3.5 text-amber-700" />
+                <span>Dynamic particle weather system</span>
+              </div>
+            </Card>
+
+            {/* Step 3 Card */}
+            <Card variant="porcelain" className="p-7 flex flex-col justify-between rounded-[2.5rem]">
+              <div>
+                <span className="text-xs font-pixel font-bold text-emerald-700 block mb-2">
+                  03 / Revenue Grove
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-satoshi">
+                  Sprout Customer Trees
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-satoshi">
+                  Connect Stripe, Lemon Squeezy, or Polar webhooks. Every paying subscriber grows as a stepped pine tree on your island terrain.
+                </p>
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between shadow-xs">
+                  <span className="flex items-center gap-1.5 font-bold font-satoshi">
+                    <Trees className="w-3.5 h-3.5 text-emerald-700" /> Acme Corp ($79/mo)
+                  </span>
+                  <Badge variant="emerald" size="sm">Mature</Badge>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-stone-100 flex items-center gap-2 text-xs font-satoshi text-emerald-800">
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Live MRR island visualizer</span>
+              </div>
+            </Card>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Revenue Grove Showcase */}
+      <section id="revenue-grove" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-satoshi">
+        <div className="text-center mb-12">
+          <Badge variant="stone" size="sm" className="mb-2.5">
+            Pre-Revenue to Ramen Profitable
+          </Badge>
+          <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 font-editorial">
+            Dual-Grove System: Rewarding from Day 1
+          </h2>
+          <p className="text-sm sm:text-base text-stone-600 max-w-2xl mx-auto mt-2 font-satoshi">
+            Whether you are building your first MVP or scaling an established SaaS, your island stays green and thriving.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card variant="porcelain" className="p-8 rounded-[2.5rem] space-y-4">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shadow-xs">
+              <Trees className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold text-stone-950 font-satoshi">Shipping Pines (Emerald Needles)</h3>
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+              Earned by daily coding streaks, git commits, and free milestone releases (e.g. 100 beta users). Keeps pre-revenue founders motivated during the hard building phase.
+            </p>
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-satoshi">
+              <span>Trigger: Daily Ship / Milestone</span>
+              <Badge variant="emerald" size="sm">Emerald Foliage</Badge>
+            </div>
+          </Card>
+
+          <Card variant="porcelain" className="p-8 rounded-[2.5rem] space-y-4">
+            <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 shadow-xs">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold text-stone-950 font-satoshi">Revenue Pines (Golden Needles)</h3>
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+              Sprouted automatically when paying customer sales arrive from Stripe, Lemon Squeezy, or Polar. Displays floating monthly recurring revenue ($/mo) badges.
+            </p>
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-satoshi">
+              <span>Trigger: Stripe / Webhook Sale</span>
+              <Badge variant="amber" size="sm">Golden Crown</Badge>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* 5. Interactive Feature Bento Grid */}
+      <section id="features" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-satoshi">
+        <div className="text-center mb-14">
+          <Badge variant="stone" size="sm" className="mb-3">
+            Tactile Builders' Mechanics
+          </Badge>
+          <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 mb-3 font-editorial">
+            Interactive Bento Showcase
+          </h2>
+          <p className="text-sm sm:text-base text-stone-600 max-w-2xl mx-auto font-satoshi">
+            Test the live mechanics below to see how IndieForest turns shipping momentum into a living island.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          
+          {/* Bento 1: Milestone Camp Unlocks */}
+          <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-pixel uppercase tracking-wider font-semibold text-emerald-700 block mb-1">
+                Milestone Evolution
+              </span>
+              <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-satoshi">
+                Camp Unlocks as You Build
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-satoshi">
+                Cross shipping thresholds to expand your island diorama. Click below to preview each milestone:
+              </p>
+            </div>
+
+            <div className="mt-5 space-y-3 font-satoshi">
+              <SegmentedControl
+                options={MILESTONE_OPTIONS}
+                value={selectedMilestone}
+                onChange={(val) => setSelectedMilestone(val)}
+              />
+
+              <Card variant="subtle-inset" className="p-3.5 flex items-center justify-between text-xs sm:text-sm font-satoshi rounded-xl">
+                {selectedMilestone === 3 && (
+                  <>
+                    <span className="text-amber-800 font-bold">Campfire + Smoke Puffs Unlocked</span>
+                    <span className="text-stone-500 font-pixel">+10 Pinecones</span>
+                  </>
+                )}
+                {selectedMilestone === 7 && (
+                  <>
+                    <span className="text-emerald-800 font-bold">Canvas Tent Shelter Unlocked</span>
+                    <span className="text-stone-500 font-pixel">+1 Streak Shield</span>
+                  </>
+                )}
+                {selectedMilestone === 14 && (
+                  <>
+                    <span className="text-indigo-800 font-bold">Wooden Log Cabin Home Unlocked</span>
+                    <span className="text-stone-500 font-pixel">Tier IV Architect</span>
+                  </>
+                )}
+              </Card>
+            </div>
+
+            <div className="pt-4 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-500">
+              <span>Automatic Island Placement</span>
+              <span className="font-semibold text-emerald-800">Zero Configuration</span>
+            </div>
+          </Card>
+
+          {/* Bento 2: Burnout Protection Shields */}
+          <Card variant="porcelain" className="md:col-span-5 p-8 rounded-[2.5rem] flex flex-col justify-between">
+            <div>
+              <div className="w-9 h-9 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 mb-3 shadow-xs">
+                <Shield className="w-5 h-5 stroke-[1.75]" />
+              </div>
+
+              <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-satoshi">
+                Burnout Protection Shields
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+                Earn 1 Shield per 7-day streak (max 2). When you take a weekend off, your shield auto-consumes to protect your streak.
+              </p>
+            </div>
+
+            <div className="mt-5 space-y-3 font-satoshi">
+              <SegmentedControl
+                options={SHIELD_OPTIONS}
+                value={shieldState}
+                onChange={(val) => setShieldState(val)}
+                size="sm"
+              />
+
+              <Card variant="subtle-inset" className="p-3 rounded-xl text-xs text-stone-700 flex items-center justify-between font-satoshi">
+                <span>Rest Day Status:</span>
+                <span className={`font-bold ${shieldState === "armed" ? "text-emerald-700" : "text-amber-700"}`}>
+                  {shieldState === "armed" ? "Streak 100% Protected" : "Drought Warning Triggered"}
+                </span>
+              </Card>
+            </div>
+
+            <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-600">
+              <span>Automatic Rest Defense</span>
+              <span className="font-bold text-sky-800 font-pixel">2 Max Capacity</span>
+            </div>
+          </Card>
+
+          {/* Bento 3: Customer Pine Tree Stages */}
+          <Card variant="porcelain" className="md:col-span-5 p-8 rounded-[2.5rem] flex flex-col justify-between">
+            <div>
+              <div className="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-3 shadow-xs">
+                <TrendingUp className="w-5 h-5 stroke-[1.75]" />
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-satoshi">
+                MRR Revenue Grove Trees
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-3 font-satoshi">
+                Watch paying customers scale visually based on recurring value:
+              </p>
+            </div>
+
+            <Card variant="subtle-inset" className="p-4 space-y-2.5 font-satoshi rounded-2xl">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-satoshi">
+                <span className="text-stone-500">Customer MRR:</span>
+                <span className="font-bold text-emerald-800 text-sm font-pixel">${demoMrr}/mo</span>
+              </div>
+              <input
+                type="range"
+                min="10"
+                max="200"
+                step="5"
+                value={demoMrr}
+                onChange={(e) => setDemoMrr(parseInt(e.target.value))}
+                className="w-full accent-emerald-600 cursor-pointer"
+              />
+              <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs font-satoshi shadow-xs">
+                <div className="text-stone-900 font-bold">{currentTreeTier.tier}</div>
+                <div className="text-stone-500 text-[11px]">{currentTreeTier.desc}</div>
+              </div>
+            </Card>
+
+            <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-emerald-800">
+              <span>Stripe / Lemon Squeezy</span>
+              <span className="font-bold">Instant Webhook</span>
+            </div>
+          </Card>
+
+          {/* Bento 4: 1-Click Social Exporter */}
+          <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <Badge variant="stone" size="sm">
+                  Build in Public
+                </Badge>
+                <span className="text-xs font-satoshi text-emerald-700 font-bold">Twitter / X Formatted</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-satoshi">
+                1-Click Verified Social Exporter
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-satoshi">
+                Generate high-signal progress posts engineered for the developer niche. Zero fake hype, pure shipping momentum:
+              </p>
+            </div>
+
+            <Card variant="subtle-inset" className="p-4 font-satoshi text-xs sm:text-sm text-stone-800 space-y-2 mt-2 rounded-2xl">
+              <p className="text-xs sm:text-sm text-stone-700 font-satoshi leading-relaxed">
+                Day 14 of shipping on IndieForest.<br />
+                Rank: Tier IV — Island Architect (Level 12)<br />
+                Revenue Grove: ${demoMrr * 3}/mo | 14d Active Streak
+              </p>
+              <div className="pt-2 border-t border-stone-200/80 flex items-center justify-between">
+                <Button
+                  onClick={handleCopyTweet}
+                  variant="dark"
+                  size="sm"
+                  showArrow
+                  discIcon={copiedTweet ? Check : Copy}
+                >
+                  {copiedTweet ? "Copied to Clipboard" : "Copy Formatted Post"}
+                </Button>
+                <span className="text-xs text-stone-500 font-pixel">280 char compliant</span>
+              </div>
+            </Card>
+
+            <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-500">
+              <span>Dynamic Island Cards</span>
+              <span className="font-semibold text-emerald-800 font-pixel">indieforest.dev/u/karan</span>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* 6. Founder FAQ Section */}
+      <section id="faq" className="py-20 bg-[#e6e1d7] border-t border-stone-300/80 font-satoshi">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <Badge variant="stone" size="sm" className="mb-2">
+              Transparent & Zero-Slop
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 font-editorial">
+              Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            <Card variant="porcelain" className="p-6 rounded-2xl">
+              <h3 className="font-bold text-stone-950 text-sm mb-1.5 font-satoshi">
+                Do you read or store my private GitHub source code?
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+                Never. IndieForest only fetches public repository commit timestamps and author names to verify that you shipped code today. We never request private repo write permissions or read code contents.
+              </p>
+            </Card>
+
+            <Card variant="porcelain" className="p-6 rounded-2xl">
+              <h3 className="font-bold text-stone-950 text-sm mb-1.5 font-satoshi">
+                How does Stripe or Lemon Squeezy integration work?
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+                You simply paste your unique IndieForest Webhook URL into your Stripe, Lemon Squeezy, or Polar webhook settings. When a customer purchases a subscription, our webhook normalizer automatically sprouts a Golden Pine tree in your revenue grove with the customer's monthly recurring value.
+              </p>
+            </Card>
+
+            <Card variant="porcelain" className="p-6 rounded-2xl">
+              <h3 className="font-bold text-stone-950 text-sm mb-1.5 font-satoshi">
+                What happens if I take a weekend off?
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+                We believe in sustainable coding, not burnout. For every 7 days of consecutive shipping, you earn 1 Burnout Shield (up to 2 maximum). When you take a rest day, a shield is automatically consumed to protect your streak from resetting to zero.
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Bottom CTA */}
+      <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 font-satoshi">
+        <Card variant="elevated" className="p-8 sm:p-12 rounded-[3rem] text-center space-y-6 relative overflow-hidden">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mx-auto shadow-xs">
+            <Trees className="w-6 h-6 stroke-[1.75]" />
+          </div>
+
+          <div className="max-w-md mx-auto space-y-2">
+            <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 tracking-tight font-editorial">
+              Start growing your island today.
+            </h2>
+            <p className="text-sm sm:text-base text-stone-600 font-satoshi">
+              Join indie builders turning daily commits and revenue momentum into a living island.
+            </p>
+          </div>
+
+          <div className="pt-2 flex justify-center">
+            {isAuthenticated ? (
+              <Link href="/dashboard">
+                <Button variant="emerald" size="lg" showArrow arrowType="right">
+                  OPEN DASHBOARD
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                onClick={handleGoogleAuth}
+                variant="emerald"
+                size="lg"
+                showArrow
+                arrowType="right"
+                disabled={isLoggingIn}
+              >
+                {isLoggingIn ? "CONNECTING..." : "START FREE WITH GOOGLE"}
+              </Button>
+            )}
+          </div>
+
+          <p className="text-xs font-satoshi text-stone-500 pt-2">
+            Free forever • Zero setup • 1-click Google sync
+          </p>
+        </Card>
+
+        {/* Footer */}
+        <footer className="mt-16 pt-8 border-t border-stone-300/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-satoshi text-stone-500">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-stone-800 font-satoshi">IndieForest</span>
+            <span>© {new Date().getFullYear()}</span>
+          </div>
+          <div className="flex items-center gap-6 font-satoshi">
+            <a
+              href="https://github.com/kwakhare5/IndieForest"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-stone-900 transition"
+            >
+              GitHub Repository
+            </a>
+            <Link href="/dashboard" className="hover:text-stone-900 transition">
+              Open Dashboard
+            </Link>
+            <Link href="/u/karan" className="hover:text-stone-900 transition">
+              Public Profile
+            </Link>
+          </div>
+        </footer>
+      </section>
+    </div>
   );
 }
