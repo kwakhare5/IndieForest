@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <defs>
+    <linearGradient id="navLinen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1C1917"/>
+      <stop offset="100%" stop-color="#0F0E0D"/>
+    </linearGradient>
+    <linearGradient id="navPine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="50%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#navLinen)" stroke="#292524" stroke-width="1"/>
+  <rect x="28" y="47" width="8" height="8" rx="2" fill="#713F12"/>
+  <!-- Tier 3 -->
+  <path d="M32 34 L12 48 H52 Z" fill="#047857"/>
+  <path d="M32 34 L12 48 H32 Z" fill="#10B981"/>
+  <!-- Tier 2 -->
+  <path d="M32 21 L16 35 H48 Z" fill="#059669"/>
+  <path d="M32 21 L16 35 H32 Z" fill="#34D399"/>
+  <!-- Tier 1 -->
+  <path d="M32 8 L21 22 H43 Z" fill="#10B981"/>
+  <path d="M32 8 L21 22 H32 Z" fill="#6EE7B7"/>
+  <!-- Eyes -->
+  <circle cx="28" cy="30" r="2" fill="#022C22"/>
+  <circle cx="28.5" cy="29.5" r="0.8" fill="#FFFFFF"/>
+  <circle cx="36" cy="30" r="2" fill="#022C22"/>
+  <circle cx="36.5" cy="29.5" r="0.8" fill="#FFFFFF"/>
+</svg>

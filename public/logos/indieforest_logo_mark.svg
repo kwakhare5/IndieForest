@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#0F172A" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <title>IndieForest Official Logo Mark</title>
+  <g filter="url(#soft-shadow)">
+    <!-- Tree Trunk with Root Flares -->
+    <path fill="#92400E" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round"
+          d="M130 230 
+             C130 160 382 160 382 230 
+             L370 360 C370 410 400 425 400 425 
+             L340 425 C310 425 300 395 280 395 
+             C260 395 250 425 220 425 
+             L112 425 C112 425 142 410 142 360 Z"/>
+    <!-- Top Face Light Wood Cross-Section -->
+    <ellipse cx="256" cy="230" rx="124" ry="62" fill="#FEF3C7" stroke="#FFFFFF" stroke-width="10"/>
+    <!-- Concentric Golden Streak Rings -->
+    <ellipse cx="256" cy="230" rx="96" ry="46" fill="none" stroke="#F59E0B" stroke-width="8"/>
+    <ellipse cx="256" cy="230" rx="68" ry="32" fill="none" stroke="#F59E0B" stroke-width="7"/>
+    <ellipse cx="256" cy="230" rx="40" ry="18" fill="none" stroke="#F59E0B" stroke-width="6"/>
+    <!-- Bright Green Sprout -->
+    <circle cx="256" cy="230" r="10" fill="#22C55E"/>
+    <path fill="#22C55E" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"
+          d="M256 220 C256 150 295 130 295 130 C295 130 270 185 256 220 Z"/>
+    <path fill="#86EFAC" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"
+          d="M256 220 C256 160 220 140 220 140 C220 140 240 190 256 220 Z"/>
+  </g>
+</svg>
