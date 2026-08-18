@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useForestStore } from "@/store/useForestStore";
-import { Plus, Share2, Tent, Send, Trees } from "lucide-react";
+import { Share2, Tent, Trees } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface FloatingDockProps {

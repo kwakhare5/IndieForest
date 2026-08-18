@@ -7,9 +7,8 @@ import {
   evaluateStreakState,
   completeDailyQuest,
   purchaseCampDecor,
-  DEFAULT_CAMP_DECOR_CATALOG,
-  CampDecorItem,
   TreeData,
+  getLocalDateString,
 } from "./gamification";
 
 describe("Gamification Engine — Clean Code & TDD", () => {
@@ -201,4 +200,24 @@ describe("Gamification Engine — Clean Code & TDD", () => {
       expect(revenueTree.mrr).toBe(79);
     });
   });
+
+  describe("Seam 8: Local Calendar Day Calculations", () => {
+    it("formats dates deterministically as YYYY-MM-DD", () => {
+      const fixedDate = new Date("2026-08-21T10:00:00Z");
+      const dateStr = getLocalDateString(fixedDate);
+      expect(dateStr).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+
+    it("evaluates consecutive calendar day shipping accurately without UTC drift", () => {
+      const state = evaluateStreakState({
+        lastShipDate: "2026-08-20",
+        todayDate: "2026-08-21",
+        currentStreak: 4,
+        currentShields: 0,
+      });
+      expect(state.streakDays).toBe(4);
+      expect(state.drought).toBe(false);
+    });
+  });
 });
+

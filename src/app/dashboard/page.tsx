@@ -13,6 +13,7 @@ import { CampShopModal } from "@/components/hud/CampShopModal";
 import { SettingsModal } from "@/components/hud/SettingsModal";
 import { AuthModal } from "@/components/hud/AuthModal";
 import { useForestStore } from "@/store/useForestStore";
+import { useUser } from "@clerk/nextjs";
 
 // Dynamic import for Three.js Canvas to prevent SSR hydration mismatch
 const ForestCanvas = dynamic(
@@ -34,6 +35,9 @@ export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const checkStreakExpiry = useForestStore((s) => s.checkStreakExpiry);
   const hasCompletedSproutGuide = useForestStore((s) => s.hasCompletedSproutGuide);
+  const setUser = useForestStore((s) => s.setUser);
+
+  const { isLoaded, isSignedIn, user: clerkUser } = useUser();
 
   const [isShipModalOpen, setIsShipModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -45,7 +49,22 @@ export default function DashboardPage() {
   useEffect(() => {
     setMounted(true);
     checkStreakExpiry();
-  }, [checkStreakExpiry]);
+
+    if (isLoaded && isSignedIn && clerkUser) {
+      setUser({
+        id: clerkUser.id,
+        email: clerkUser.primaryEmailAddress?.emailAddress,
+        username:
+          clerkUser.username ||
+          clerkUser.firstName ||
+          clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
+          "builder",
+        fullName: clerkUser.fullName || "Indie Builder",
+        avatarUrl: clerkUser.imageUrl,
+        isAuthenticated: true,
+      });
+    }
+  }, [isLoaded, isSignedIn, clerkUser, checkStreakExpiry, setUser]);
 
   if (!mounted) {
     return (
@@ -60,7 +79,6 @@ export default function DashboardPage() {
 
   return (
     <main className="relative w-full h-screen min-h-[100dvh] overflow-hidden font-satoshi bg-[#ece7de]">
-      
       {/* Zone 1: Top Status & Identity Bar */}
       <TopStatusBar
         onOpenSettings={() => setIsSettingsModalOpen(true)}

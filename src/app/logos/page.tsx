@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Check, Copy, Download, Sparkles, Layers, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 
 export default function LogosPage() {

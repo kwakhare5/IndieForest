@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useForestStore, getRankTitle } from "@/store/useForestStore";
-import { Share2, Copy, Check, Flame, Download, ExternalLink } from "lucide-react";
+import { Share2, Check, Flame, Download, ImageIcon } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -21,7 +21,9 @@ export function ShareCardModal({ isOpen, onClose }: ShareCardModalProps) {
   const trees = useForestStore((s) => s.trees);
   const shipHistory = useForestStore((s) => s.shipHistory);
 
-  const [copied, setCopied] = useState(false);
+  const [copiedText, setCopiedText] = useState(false);
+  const [copiedImage, setCopiedImage] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
   const { title, badge } = getRankTitle(level);
   const latestShip = shipHistory[0]?.message || "Building my indie hacker island diorama";
@@ -35,11 +37,11 @@ Today's Ship: "${latestShip}"
 
 Building in public @indieforest_app`;
 
-  const handleCopy = () => {
+  const handleCopyText = () => {
     navigator.clipboard.writeText(tweetText);
     sound.playCoin();
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedText(true);
+    setTimeout(() => setCopiedText(false), 2000);
   };
 
   const handleOpenTwitter = () => {
@@ -47,39 +49,124 @@ Building in public @indieforest_app`;
     window.open(url, "_blank");
   };
 
-  const handleDownloadSVG = () => {
-    sound.playLevelUp();
-    const svgContent = `
-<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="#ece7de" />
-  <rect x="60" y="60" width="1080" height="510" rx="32" fill="#ffffff" stroke="#d6cfc5" stroke-width="2" />
-  
-  <!-- Header -->
-  <text x="110" y="140" font-family="sans-serif" font-size="28" font-weight="bold" fill="#047857">IndieForest • Daily Shipping Diorama</text>
-  <text x="110" y="220" font-family="serif" font-size="52" font-weight="normal" fill="#1c1917">Day ${streakDays} of Daily Shipping</text>
-  
-  <!-- Stats Box -->
-  <rect x="110" y="270" width="980" height="150" rx="20" fill="#f5f5f4" stroke="#e7e5e4" stroke-width="1.5" />
-  <text x="140" y="320" font-family="monospace" font-size="20" font-weight="bold" fill="#57534e">DEVELOPER RANK</text>
-  <text x="140" y="365" font-family="sans-serif" font-size="32" font-weight="bold" fill="#1c1917">Tier ${badge}: ${title} (Level ${level})</text>
-  
-  <text x="650" y="320" font-family="monospace" font-size="20" font-weight="bold" fill="#57534e">ISLAND METRICS</text>
-  <text x="650" y="365" font-family="sans-serif" font-size="32" font-weight="bold" fill="#047857">${trees.length} Trees • $${totalMrr}/mo MRR</text>
-  
-  <!-- Latest Ship -->
-  <text x="110" y="470" font-family="sans-serif" font-size="22" font-weight="600" fill="#44403c">Today: "${latestShip}"</text>
-  
-  <!-- Footer -->
-  <text x="110" y="525" font-family="monospace" font-size="18" fill="#78716c">@${user.username} • indieforest.dev/u/${user.username}</text>
-</svg>`.trim();
+  /**
+   * Generates a composited high-resolution PNG image containing the 3D Canvas
+   * and a clean stats overlay box.
+   */
+  const generateCompositeImage = async (): Promise<Blob | null> => {
+    const canvasElement = document.getElementById("forest-3d-canvas") as HTMLCanvasElement | null;
+    if (!canvasElement) {
+      return null;
+    }
 
-    const blob = new Blob([svgContent], { type: "image/svg+xml" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `indieforest-day-${streakDays}.svg`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const outputWidth = 1200;
+    const outputHeight = 630;
+    const offscreen = document.createElement("canvas");
+    offscreen.width = outputWidth;
+    offscreen.height = outputHeight;
+    const ctx = offscreen.getContext("2d");
+    if (!ctx) return null;
+
+    // Background Studio Linen
+    ctx.fillStyle = "#ece7de";
+    ctx.fillRect(0, 0, outputWidth, outputHeight);
+
+    // Draw the 3D Canvas centered
+    const canvasAspect = canvasElement.width / canvasElement.height;
+    let drawW = outputWidth;
+    let drawH = outputWidth / canvasAspect;
+    let drawX = 0;
+    let drawY = (outputHeight - drawH) / 2;
+
+    if (drawH < outputHeight) {
+      drawH = outputHeight;
+      drawW = outputHeight * canvasAspect;
+      drawX = (outputWidth - drawW) / 2;
+      drawY = 0;
+    }
+
+    ctx.drawImage(canvasElement, drawX, drawY, drawW, drawH);
+
+    // Bottom Stats Overlay Card
+    const cardX = 40;
+    const cardY = outputHeight - 160;
+    const cardW = outputWidth - 80;
+    const cardH = 120;
+
+    // Outer Bezel
+    ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+    ctx.beginPath();
+    ctx.roundRect(cardX, cardY, cardW, cardH, 24);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(214, 207, 197, 0.8)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Inner Surface
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.roundRect(cardX + 8, cardY + 8, cardW - 16, cardH - 16, 18);
+    ctx.fill();
+
+    // Text & Stats
+    ctx.fillStyle = "#047857";
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText("IndieForest • Daily Shipping Diorama", cardX + 32, cardY + 42);
+
+    ctx.fillStyle = "#1c1917";
+    ctx.font = "bold 32px sans-serif";
+    ctx.fillText(`Day ${streakDays} Streak • Tier ${badge}: ${title}`, cardX + 32, cardY + 84);
+
+    ctx.fillStyle = "#57534e";
+    ctx.font = "18px monospace";
+    ctx.fillText(`${trees.length} Active Trees • $${totalMrr}/mo MRR`, cardX + cardW - 360, cardY + 84);
+
+    return new Promise((resolve) => {
+      offscreen.toBlob((blob) => resolve(blob), "image/png");
+    });
+  };
+
+  const handleCopyImage = async () => {
+    setIsGeneratingImage(true);
+    try {
+      const blob = await generateCompositeImage();
+      if (blob && navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            [blob.type]: blob,
+          }),
+        ]);
+        sound.playLevelUp();
+        setCopiedImage(true);
+        setTimeout(() => setCopiedImage(false), 2500);
+      } else {
+        // Fallback to text copy
+        handleCopyText();
+      }
+    } catch (err) {
+      console.warn("Clipboard image copy not supported, falling back to text copy:", err);
+      handleCopyText();
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
+  const handleDownloadPNG = async () => {
+    setIsGeneratingImage(true);
+    try {
+      const blob = await generateCompositeImage();
+      if (blob) {
+        sound.playLevelUp();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `indieforest-day-${streakDays}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } finally {
+      setIsGeneratingImage(false);
+    }
   };
 
   return (
@@ -119,31 +206,37 @@ Building in public @indieforest_app`;
           </div>
 
           <div className="flex items-center justify-between text-[10px] font-pixel text-stone-500 pt-1">
-            <span>{trees.length} Trees • ${totalMrr}/mo MRR</span>
-            <span className="font-semibold text-emerald-800 font-pixel">indieforest.dev/u/{user.username}</span>
+            <span>
+              {trees.length} Trees • ${totalMrr}/mo MRR
+            </span>
+            <span className="font-semibold text-emerald-800 font-pixel">
+              indieforest.dev/u/{user.username}
+            </span>
           </div>
         </Card>
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-satoshi">
           <Button
-            onClick={handleCopy}
+            onClick={handleCopyImage}
             variant="outline"
             size="md"
-            icon={copied ? Check : Copy}
+            icon={copiedImage ? Check : ImageIcon}
             className="justify-center"
+            disabled={isGeneratingImage}
           >
-            {copied ? "Copied" : "Copy Text"}
+            {copiedImage ? "Image Copied!" : "Copy 3D Image"}
           </Button>
 
           <Button
-            onClick={handleDownloadSVG}
+            onClick={handleDownloadPNG}
             variant="outline"
             size="md"
             icon={Download}
             className="justify-center"
+            disabled={isGeneratingImage}
           >
-            Save Card
+            Download PNG
           </Button>
 
           <Button
@@ -156,6 +249,15 @@ Building in public @indieforest_app`;
           >
             POST TO X
           </Button>
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={handleCopyText}
+            className="text-[11px] font-pixel text-stone-500 hover:text-stone-800 underline transition-colors"
+          >
+            {copiedText ? "✓ Text copied to clipboard" : "or copy plain tweet text"}
+          </button>
         </div>
       </div>
     </Modal>

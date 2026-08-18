@@ -2,10 +2,8 @@
 
 import React, { useState } from "react";
 import { useForestStore } from "@/store/useForestStore";
-import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { Target, CheckCircle2, Circle, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import { sound } from "@/lib/sound";
+import { Target, CheckCircle2, Circle, ChevronDown, ChevronUp } from "lucide-react";
 
 interface DailyQuestPanelProps {
   onOpenShipModal: () => void;

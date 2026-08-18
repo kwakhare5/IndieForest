@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Flame,
   Shield,
@@ -14,14 +13,13 @@ import {
   CloudRain,
   Check,
   Copy,
-  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { SegmentedControl, SegmentedOption } from "@/components/ui/SegmentedControl";
-import { TreeData, useForestStore } from "@/store/useForestStore";
-import { signInWithGoogle, signOutUser } from "@/lib/supabase/client";
+import { TreeData } from "@/types/game";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 
 // Dynamic import for the Island Canvas (Mode: Preview)
@@ -97,35 +95,12 @@ const SHIELD_OPTIONS: SegmentedOption<"armed" | "rest">[] = [
 ];
 
 export default function LandingPage() {
-  const router = useRouter();
-  const user = useForestStore((s) => s.user);
-  const logoutUser = useForestStore((s) => s.logoutUser);
+  const { isLoaded, isSignedIn } = useUser();
 
   const [selectedMilestone, setSelectedMilestone] = useState<3 | 7 | 14>(7);
   const [shieldState, setShieldState] = useState<"armed" | "rest">("armed");
   const [demoMrr, setDemoMrr] = useState(79);
   const [copiedTweet, setCopiedTweet] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-  const isAuthenticated = user.isAuthenticated;
-
-  const handleGoogleAuth = async () => {
-    sound.playClick();
-    setIsLoggingIn(true);
-    try {
-      await signInWithGoogle();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Google authentication error";
-      alert(msg);
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
-
-  const handleSignOut = () => {
-    signOutUser();
-    logoutUser();
-  };
 
   const getTreeTierFromMrr = (mrr: number) => {
     if (mrr >= 100) return { tier: "Majestic Golden Pine", desc: "4-tier stepped canopy with golden crown" };
@@ -193,33 +168,27 @@ export default function LandingPage() {
 
             {/* Navbar Action Button: Exact Same Button Primitive for Both States */}
             <div className="flex items-center gap-2">
-              {isAuthenticated ? (
+              {isLoaded && isSignedIn ? (
                 <div className="flex items-center gap-2">
                   <Link href="/dashboard">
                     <Button variant="emerald" size="sm" showArrow arrowType="right">
                       OPEN DASHBOARD
                     </Button>
                   </Link>
-                  <button
-                    type="button"
-                    onClick={handleSignOut}
-                    className="p-1.5 rounded-full hover:bg-stone-100 text-stone-500 hover:text-stone-800 transition cursor-pointer"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                  </button>
+                  <UserButton />
                 </div>
               ) : (
-                <Button
-                  onClick={handleGoogleAuth}
-                  variant="emerald"
-                  size="sm"
-                  showArrow
-                  arrowType="right"
-                  disabled={isLoggingIn}
-                >
-                  {isLoggingIn ? "CONNECTING..." : "SIGN IN WITH GOOGLE"}
-                </Button>
+                <SignInButton mode="modal">
+                  <Button
+                    variant="emerald"
+                    size="sm"
+                    showArrow
+                    arrowType="right"
+                    onClick={() => sound.playClick()}
+                  >
+                    SIGN IN WITH GOOGLE
+                  </Button>
+                </SignInButton>
               )}
             </div>
 
@@ -246,24 +215,25 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-              {isAuthenticated ? (
+              {isLoaded && isSignedIn ? (
                 <Link href="/dashboard">
                   <Button variant="emerald" size="lg" showArrow arrowType="right" className="w-full sm:w-auto">
                     GO TO MY ISLAND
                   </Button>
                 </Link>
               ) : (
-                <Button
-                  onClick={handleGoogleAuth}
-                  variant="emerald"
-                  size="lg"
-                  showArrow
-                  arrowType="right"
-                  disabled={isLoggingIn}
-                  className="w-full sm:w-auto"
-                >
-                  {isLoggingIn ? "CONNECTING GOOGLE..." : "START FREE WITH GOOGLE"}
-                </Button>
+                <SignInButton mode="modal">
+                  <Button
+                    variant="emerald"
+                    size="lg"
+                    showArrow
+                    arrowType="right"
+                    onClick={() => sound.playClick()}
+                    className="w-full sm:w-auto"
+                  >
+                    START FREE WITH GOOGLE
+                  </Button>
+                </SignInButton>
               )}
 
               <Link href="/u/karan">
@@ -675,23 +645,24 @@ export default function LandingPage() {
           </div>
 
           <div className="pt-2 flex justify-center">
-            {isAuthenticated ? (
+            {isLoaded && isSignedIn ? (
               <Link href="/dashboard">
                 <Button variant="emerald" size="lg" showArrow arrowType="right">
                   OPEN DASHBOARD
                 </Button>
               </Link>
             ) : (
-              <Button
-                onClick={handleGoogleAuth}
-                variant="emerald"
-                size="lg"
-                showArrow
-                arrowType="right"
-                disabled={isLoggingIn}
-              >
-                {isLoggingIn ? "CONNECTING..." : "START FREE WITH GOOGLE"}
-              </Button>
+              <SignInButton mode="modal">
+                <Button
+                  variant="emerald"
+                  size="lg"
+                  showArrow
+                  arrowType="right"
+                  onClick={() => sound.playClick()}
+                >
+                  START FREE WITH GOOGLE
+                </Button>
+              </SignInButton>
             )}
           </div>
 
