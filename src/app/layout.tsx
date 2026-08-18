@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Instrument_Serif, Plus_Jakarta_Sans, VT323 } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
@@ -52,12 +53,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body
-        className={`${instrumentSerif.variable} ${jakartaSans.variable} ${vt323.variable} ${geistMono.variable} antialiased bg-[#ece7de] text-stone-900 overflow-y-auto overflow-x-hidden min-h-screen`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className="scroll-smooth">
+        <body
+          className={`${instrumentSerif.variable} ${jakartaSans.variable} ${vt323.variable} ${geistMono.variable} antialiased bg-[#ece7de] text-stone-900 overflow-y-auto overflow-x-hidden min-h-screen`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
