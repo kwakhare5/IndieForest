@@ -70,11 +70,11 @@ export function TopStatusBar({ onOpenSettings, onOpenAuth }: TopStatusBarProps) 
 
   return (
     <header className="fixed top-4 left-4 right-4 z-40 flex items-center justify-between pointer-events-none font-satoshi">
-      {/* 1. Left Pod: Master Brand Logo + User Identity & Rank */}
+      {/* 1. Left Pod: Master Brand Logo + User Identity & Streak */}
       <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-lg transition-all duration-150">
-        <div className="px-3.5 py-1.5 rounded-full porcelain-surface flex items-center gap-2.5">
+        <div className="px-3 py-1.5 rounded-full porcelain-surface flex items-center gap-2 sm:gap-2.5">
           {/* Official Tree Stump Master Logo */}
-          <Link href="/" className="flex items-center gap-2 group" title="Return to Landing Page">
+          <Link href="/" className="flex items-center gap-2 group shrink-0" title="Return to Landing Page">
             <div className="w-6 h-6 rounded-lg overflow-hidden border border-stone-200 shadow-xs">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logos/indieforest_logo.svg" alt="IndieForest Logo" className="w-full h-full object-cover" />
@@ -83,55 +83,59 @@ export function TopStatusBar({ onOpenSettings, onOpenAuth }: TopStatusBarProps) 
 
           <div className="w-[1px] h-3.5 bg-stone-200" />
 
-          {/* Auth State */}
+          {/* Auth State & Username */}
           {isLoaded && isSignedIn ? (
             <div className="flex items-center gap-2 text-left">
               <UserButton />
-              <div className="hidden sm:block">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-stone-900 leading-none">
-                    @{user.username}
-                  </span>
-                  <Badge variant="pixel" size="sm">
-                    Tier {badge}
-                  </Badge>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-bold text-stone-900 leading-none truncate max-w-[90px] sm:max-w-[120px]">
+                  @{user.username}
+                </span>
+                <Badge variant="pixel" size="sm" className="hidden sm:inline-flex">
+                  Tier {badge}
+                </Badge>
               </div>
             </div>
           ) : (
             <button
               type="button"
               onClick={onOpenAuth}
-              className="flex items-center gap-2 hover:opacity-80 transition cursor-pointer text-left"
+              className="flex items-center gap-1.5 hover:opacity-80 transition cursor-pointer text-left"
               title="Sign in with Google / Email"
             >
               <div className="w-5 h-5 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px] font-bold shadow-inner">
                 {user.username.slice(0, 1).toUpperCase()}
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-bold text-stone-900 leading-none">
-                  Sign In
-                </span>
-                <Badge variant="pixel" size="sm">
-                  Tier {badge}
-                </Badge>
-              </div>
+              <span className="text-xs font-bold text-stone-900 leading-none">
+                Sign In
+              </span>
             </button>
           )}
+
+          <div className="w-[1px] h-3.5 bg-stone-200" />
+
+          {/* Daily Streak Flame Counter */}
+          <div
+            className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-amber-50/80 border border-amber-200/80 text-amber-900 font-semibold cursor-default shrink-0"
+            title={`${streakDays}-day active shipping streak`}
+          >
+            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600 shrink-0" />
+            <span className="font-pixel text-[11px] font-bold">{streakDays}d</span>
+          </div>
         </div>
       </div>
 
-      {/* 2. Center Pod: XP Progress + Streaks & Shields */}
-      <div className="pointer-events-auto hidden md:flex items-center p-1 rounded-full glass-dock shadow-lg">
-        <div className="px-4 py-1.5 rounded-full porcelain-surface flex items-center gap-4 text-xs font-satoshi">
-          {/* XP Progress Bar */}
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-pixel text-stone-500 font-semibold uppercase">
-              Level {level}
+      {/* 2. Right Pod: Level XP + Pinecones + Shields + Atmosphere & Audio Controls */}
+      <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-lg transition-all duration-150">
+        <div className="px-3 py-1.5 rounded-full porcelain-surface flex items-center gap-2 sm:gap-3 text-xs font-satoshi">
+          {/* Level & XP Mini Bar */}
+          <div className="hidden sm:flex items-center gap-1.5" title={`Level ${level} • ${xpPercent}% to next rank`}>
+            <span className="text-[10px] font-pixel text-stone-500 font-bold uppercase">
+              L{level}
             </span>
-            <div className="w-24 h-2 rounded-full bg-stone-200/80 overflow-hidden relative shadow-inner">
+            <div className="w-12 h-1.5 rounded-full bg-stone-200 overflow-hidden relative shadow-inner">
               <div
-                className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                className="h-full bg-emerald-600 rounded-full transition-all duration-300"
                 style={{ width: `${xpPercent}%` }}
               />
             </div>
@@ -140,60 +144,46 @@ export function TopStatusBar({ onOpenSettings, onOpenAuth }: TopStatusBarProps) 
             </span>
           </div>
 
-          <div className="w-[1px] h-3.5 bg-stone-200" />
-
-          {/* Daily Streak Counter */}
-          <div
-            className="flex items-center gap-1.5 text-amber-800 font-semibold cursor-default"
-            title="Current Shipping Streak"
-          >
-            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" />
-            <span className="font-pixel text-xs">{streakDays}d Streak</span>
-          </div>
+          <div className="hidden sm:block w-[1px] h-3.5 bg-stone-200" />
 
           {/* Burnout Streak Shields */}
           <div
-            className="flex items-center gap-1 text-stone-600 font-medium cursor-default"
-            title="Streak Shields protect your progress on rest days"
+            className="flex items-center gap-1 text-emerald-800 font-medium cursor-default"
+            title={`${streakShields} Streak Shield(s) protecting rest days`}
           >
             <Shield className="w-3.5 h-3.5 text-emerald-700" />
-            <span className="font-pixel text-xs">x{streakShields}</span>
+            <span className="font-pixel text-xs font-bold">x{streakShields}</span>
+          </div>
+
+          {/* Pinecone Currency */}
+          <div
+            className="flex items-center gap-1 text-amber-900 font-semibold cursor-default"
+            title={`${pinecones} Pinecones available for camp decor`}
+          >
+            <Trees className="w-3.5 h-3.5 text-amber-700" />
+            <span className="font-pixel text-xs font-bold">{pinecones}</span>
           </div>
 
           <div className="w-[1px] h-3.5 bg-stone-200" />
 
-          {/* Pinecone Currency */}
-          <div
-            className="flex items-center gap-1.5 text-amber-900 font-semibold cursor-default"
-            title="Pinecone balance for Camp Shop decor"
-          >
-            <Trees className="w-3.5 h-3.5 text-amber-700" />
-            <span className="font-pixel text-xs">{pinecones}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Right Pod: Atmosphere Controls & Settings */}
-      <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-lg">
-        <div className="px-2.5 py-1.5 rounded-full porcelain-surface flex items-center gap-1.5">
           {/* Day / Sunset / Night Toggle */}
           <button
             type="button"
             onClick={cycleTimeOfDay}
-            className="p-1.5 rounded-full hover:bg-stone-100 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
-            title={`Current: ${timeOfDay}. Click to cycle lighting.`}
+            className="p-1 rounded-full hover:bg-stone-100/90 text-stone-600 hover:text-stone-900 transition active:scale-95 cursor-pointer"
+            title={`Lighting: ${timeOfDay.toUpperCase()} (Click to cycle)`}
           >
-            {timeOfDay === "day" && <Sun className="w-3.5 h-3.5 text-amber-600" />}
-            {timeOfDay === "sunset" && <Sunset className="w-3.5 h-3.5 text-orange-600" />}
-            {timeOfDay === "night" && <Moon className="w-3.5 h-3.5 text-slate-600" />}
+            {timeOfDay === "day" && <Sun className="w-3.5 h-3.5 text-amber-500" />}
+            {timeOfDay === "sunset" && <Sunset className="w-3.5 h-3.5 text-orange-500" />}
+            {timeOfDay === "night" && <Moon className="w-3.5 h-3.5 text-indigo-500" />}
           </button>
 
-          {/* Synthesized Web Audio Mute Toggle */}
+          {/* Audio Chime Mute/Unmute */}
           <button
             type="button"
             onClick={toggleAudio}
-            className="p-1.5 rounded-full hover:bg-stone-100 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
-            title={isMuted ? "Unmute Sound FX" : "Mute Sound FX"}
+            className="p-1 rounded-full hover:bg-stone-100/90 text-stone-600 hover:text-stone-900 transition active:scale-95 cursor-pointer"
+            title={isMuted ? "Unmute Retro Chimes" : "Mute Sound"}
           >
             {isMuted ? (
               <VolumeX className="w-3.5 h-3.5 text-stone-400" />
@@ -202,14 +192,15 @@ export function TopStatusBar({ onOpenSettings, onOpenAuth }: TopStatusBarProps) 
             )}
           </button>
 
-          <div className="w-[1px] h-3.5 bg-stone-200 mx-0.5" />
-
-          {/* Settings Modal Button */}
+          {/* Webhook & Settings Modal */}
           <button
             type="button"
-            onClick={onOpenSettings}
-            className="p-1.5 rounded-full hover:bg-stone-100 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
-            title="Settings & Webhook Keys"
+            onClick={() => {
+              sound.playClick();
+              onOpenSettings();
+            }}
+            className="p-1 rounded-full hover:bg-stone-100/90 text-stone-600 hover:text-stone-900 transition active:scale-95 cursor-pointer"
+            title="Settings & Webhook API Token"
           >
             <Settings className="w-3.5 h-3.5" />
           </button>

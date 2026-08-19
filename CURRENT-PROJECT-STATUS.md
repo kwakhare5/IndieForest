@@ -107,10 +107,14 @@ IndieForest is built strictly around **companionship and pride**, not guilt or d
 - **Clerk Auth Engine:** Seamless Google OAuth & Email authentication with zero Google Cloud console setup required in development. Drop-in `<UserButton />`, `<SignInButton />`, and `clerkMiddleware()`.
 - **Files:** [`middleware.ts`](file:///D:/IndieForest/src/middleware.ts), [`layout.tsx`](file:///D:/IndieForest/src/app/layout.tsx), [`AuthModal.tsx`](file:///D:/IndieForest/src/components/hud/AuthModal.tsx), [`TopStatusBar.tsx`](file:///D:/IndieForest/src/components/hud/TopStatusBar.tsx).
 
-### 4.7 Web Audio Synthesis & Double-Bezel Design
+### 4.7 Streamlined 3-Zone HUD & Double-Bezel Design
 - **Synthesized Audio:** Zero MP3 downloads; pleasant retro audio chimes generated via the Web Audio API.
+- **Streamlined 3-Zone HUD Architecture:**
+  - **Zone 1 (TopStatusBar):** Unified Dual-Pod architecture (Left: Logo + Identity + Streak Flame; Right: Level XP + Pinecones + Shields + Atmosphere/Sound/Settings controls).
+  - **Zone 2 (DailyQuestPanel):** Floating Capsule Badge (`top-18 left-4`) with smooth dropdown checklist and auto-minimize.
+  - **Zone 3 (FloatingDock):** Tactile Precision Dock with centered emerald hero CTA (`[ LOG DAILY SHIP ]`) and micro-interactions.
 - **Universal Double-Bezel UI:** Frosted glass outer enclosures (`glass-dock`) with porcelain inner cards (`porcelain-surface`), Warm Linen background (`#ece7de`), and crisp Lucide geometric icons (`1.5px` stroke).
-- **Files:** [`sound.ts`](file:///D:/IndieForest/src/lib/sound.ts), [`globals.css`](file:///D:/IndieForest/src/app/globals.css), [`Card.tsx`](file:///D:/IndieForest/src/components/ui/Card.tsx).
+- **Files:** [`TopStatusBar.tsx`](file:///D:/IndieForest/src/components/hud/TopStatusBar.tsx), [`DailyQuestPanel.tsx`](file:///D:/IndieForest/src/components/hud/DailyQuestPanel.tsx), [`FloatingDock.tsx`](file:///D:/IndieForest/src/components/hud/FloatingDock.tsx), [`sound.ts`](file:///D:/IndieForest/src/lib/sound.ts).
 
 ### 4.8 Public Profile Pages & Automated Tests
 - **Public Diorama:** Live 3D viewable island at `/u/[username]`.
