@@ -16,7 +16,7 @@ During the Session End ritual (called automatically whenever significant changes
 ## Log Entries
 
 ### [IndieForest — Architecture Overhaul, Ponytail Cleanup & Codebase Hardening] 2026-08-21
-- **Commit**: `HEAD`
+- **Commit**: `56d87a0`
 - **Shipped**:
   - **Streamlined 3-Zone HUD Overhaul:** Refactored HUD architecture into a Unified Dual-Pod top bar (clearing the center vertical column for the 3D diorama), a sleek Floating Capsule Badge for Daily Quests with smooth dropdown checklist and auto-collapse, and an ergonomic Tactile Precision bottom action dock with audio feedback.
   - **Full Codebase Architecture Refactoring:** Created `src/types/game.ts` as the canonical source of truth for all domain entities, eliminating domain $\leftrightarrow$ store circular dependencies and type fragmentation across UI components.
