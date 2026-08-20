@@ -19,13 +19,20 @@ export function BlockTree({ tree, onSelect }: BlockTreeProps) {
 
   const isRevenue = tree.type === "revenue" || (tree.mrr && tree.mrr > 0);
 
-  // Gentle wind swaying animation
+  // Gentle wind swaying & buttery scale lerp animation
   useFrame(({ clock }) => {
-    if (meshRef.current && tree.tier !== "stump") {
+    if (!meshRef.current) return;
+
+    if (tree.tier !== "stump") {
       const t = clock.getElapsedTime() + (tree.gridX + tree.gridZ) * 0.4;
       meshRef.current.rotation.z = Math.sin(t * 1.8) * 0.025;
       meshRef.current.rotation.x = Math.cos(t * 1.4) * 0.02;
     }
+
+    const targetScale = hovered ? 1.08 : 1.0;
+    meshRef.current.scale.x = THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, 0.15);
+    meshRef.current.scale.y = THREE.MathUtils.lerp(meshRef.current.scale.y, targetScale, 0.15);
+    meshRef.current.scale.z = THREE.MathUtils.lerp(meshRef.current.scale.z, targetScale, 0.15);
   });
 
   // Dual-Grove Palette: Golden Amber for Revenue vs Emerald Green for Shipping
@@ -70,7 +77,6 @@ export function BlockTree({ tree, onSelect }: BlockTreeProps) {
     <group
       ref={meshRef}
       position={[tree.gridX, 0, tree.gridZ]}
-      scale={hovered ? [1.1, 1.1, 1.1] : [1, 1, 1]}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
       onClick={handleClick}

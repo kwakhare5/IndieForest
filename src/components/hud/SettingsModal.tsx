@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { Settings, Github, Copy, Check, ExternalLink, Link2, RefreshCw } from "lucide-react";
+import { Settings, Github, Copy, Check, ExternalLink, Link2, RefreshCw, LogIn } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { sound } from "@/lib/sound";
+import { useForestStore, getRankTitle } from "@/store/useForestStore";
+import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -19,14 +21,20 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncSuccess, setSyncSuccess] = useState(false);
 
-  const userToken = "sample_webhook_token";
+  const user = useForestStore((s) => s.user);
+  const level = useForestStore((s) => s.level);
+  const { badge, title: rankTitle } = getRankTitle(level);
+
+  const { isSignedIn, isLoaded, user: clerkUser } = useUser();
+
+  const userToken = user.id || "builder_token";
   const webhookUrl = typeof window !== "undefined"
     ? `${window.location.origin}/api/webhooks/revenue?token=${userToken}`
     : `https://indieforest.dev/api/webhooks/revenue?token=${userToken}`;
 
   const profileUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/u/karan`
-    : `https://indieforest.dev/u/karan`;
+    ? `${window.location.origin}/u/${user.username || "builder"}`
+    : `https://indieforest.dev/u/${user.username || "builder"}`;
 
   const handleCopyWebhook = () => {
     navigator.clipboard.writeText(webhookUrl);
@@ -57,25 +65,72 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Backend & Integrations"
-      badgeText="Settings & Cloud"
+      title="Settings & Account"
+      badgeText="Console"
       icon={Settings}
       maxWidth="lg"
     >
-      <div className="space-y-5 font-satoshi text-xs text-stone-700">
+      <div className="space-y-4 font-satoshi text-xs text-stone-700">
         
-        {/* 1. Connected GitHub Identity */}
-        <Card variant="subtle-inset" className="p-4 flex items-center justify-between">
+        {/* 1. Account & Profile Section */}
+        <Card variant="subtle-inset" className="p-3.5 flex items-center justify-between">
+          {isLoaded && isSignedIn ? (
+            <div className="flex items-center gap-3">
+              <UserButton />
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-stone-900 text-sm font-satoshi">
+                    {clerkUser?.fullName || `@${user.username}`}
+                  </span>
+                  <Badge variant="emerald" size="sm">
+                    Tier {badge} • {rankTitle}
+                  </Badge>
+                </div>
+                <span className="text-[11px] font-mono text-stone-500">
+                  {clerkUser?.primaryEmailAddress?.emailAddress}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold text-xs">
+                  ?
+                </div>
+                <div>
+                  <span className="font-bold text-stone-900 text-xs block">
+                    Playing as Guest (@{user.username})
+                  </span>
+                  <span className="text-[10px] text-stone-500">
+                    Sign in to save your island across devices
+                  </span>
+                </div>
+              </div>
+              <SignInButton mode="modal">
+                <Button variant="emerald" size="sm" icon={LogIn}>
+                  Sign In
+                </Button>
+              </SignInButton>
+            </div>
+          )}
+        </Card>
+
+        {/* 2. Connected GitHub Identity & Cloud Sync */}
+        <Card variant="subtle-inset" className="p-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-stone-900 text-white flex items-center justify-center shadow-xs">
-              <Github className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-2xl bg-stone-900 text-white flex items-center justify-center shadow-xs">
+              <Github className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-stone-900 text-sm font-satoshi">kwakhare5</span>
-                <Badge variant="emerald" size="sm">Connected</Badge>
+                <span className="font-bold text-stone-900 text-xs font-satoshi">
+                  kwakhare5 / IndieForest
+                </span>
+                <Badge variant="stone" size="sm">GitHub Sync</Badge>
               </div>
-              <span className="text-[11px] font-mono text-stone-500">Public commit auto-scan enabled</span>
+              <span className="text-[10px] font-mono text-stone-500">
+                Commit verification auto-scan enabled
+              </span>
             </div>
           </div>
 
@@ -91,14 +146,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </Card>
 
         {syncSuccess && (
-          <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-pixel font-medium flex items-center gap-1.5 animate-in fade-in">
+          <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-satoshi font-medium flex items-center gap-1.5 animate-in fade-in">
             <Check className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Island state synchronized with Supabase PostgreSQL!</span>
+            <span>Island state synchronized with cloud!</span>
           </div>
         )}
 
-        {/* 2. Universal Revenue Webhook (Stripe / Lemon Squeezy / Polar) */}
-        <div className="space-y-2">
+        {/* 3. Universal Revenue Webhook (Stripe / Lemon Squeezy / Polar) */}
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
               <Link2 className="w-3.5 h-3.5 text-emerald-700" />
@@ -107,9 +162,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <span className="text-[10px] font-mono text-stone-500">Stripe • Lemon Squeezy • Polar</span>
           </div>
 
-          <Card variant="subtle-inset" className="p-3.5 space-y-2.5">
+          <Card variant="subtle-inset" className="p-3 space-y-2">
             <p className="text-[11px] text-stone-600 leading-relaxed font-satoshi">
-              Paste this URL into your Stripe, Lemon Squeezy, or Polar webhook settings. When a customer subscribes, a pine tree automatically sprouts in your grove.
+              Paste this URL into your payment webhook settings. When a customer subscribes, a Golden Pine tree automatically sprouts in your revenue grove.
             </p>
 
             <div className="flex items-center gap-2">
@@ -131,8 +186,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </Card>
         </div>
 
-        {/* 3. Public 3D Profile URL */}
-        <div className="space-y-2">
+        {/* 4. Public 3D Profile URL */}
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
               <ExternalLink className="w-3.5 h-3.5 text-emerald-700" />
