@@ -35,8 +35,10 @@ export async function GET(
 
     return new NextResponse(svg, {
       headers: {
-        "Content-Type": "image/svg+xml",
-        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=300",
+        "Content-Type": "image/svg+xml; charset=utf-8",
+        "X-Content-Type-Options": "nosniff",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'",
+        "Cache-Control": "public, max-age=120, s-maxage=300, stale-while-revalidate=600",
       },
     });
   } catch {
@@ -56,9 +58,12 @@ export async function GET(
 
     return new NextResponse(fallbackSvg, {
       headers: {
-        "Content-Type": "image/svg+xml",
-        "Cache-Control": "public, s-maxage=60",
+        "Content-Type": "image/svg+xml; charset=utf-8",
+        "X-Content-Type-Options": "nosniff",
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'",
+        "Cache-Control": "public, max-age=60, s-maxage=120",
       },
     });
   }
 }
+

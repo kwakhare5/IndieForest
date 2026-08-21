@@ -90,6 +90,26 @@ export interface Rank {
   badge: string;
 }
 
+export interface BadgeData {
+  username: string;
+  level: number;
+  rankTitle: string;
+  rankBadge: string;
+  streakDays: number;
+  totalCommits: number;
+  activeTreesCount: number;
+  mrr?: number;
+}
+
+export interface NormalizedCustomerTree {
+  customerName: string;
+  mrr: number;
+  tier: GrowthTier;
+  source: "stripe" | "lemonsqueezy" | "polar" | "custom";
+  isValid: boolean;
+  isChurn?: boolean;
+}
+
 export interface ShipRewardInput {
   streakDays: number;
   hasProofUrl?: boolean;
@@ -127,3 +147,4 @@ export interface StreakEvaluationOutput {
   streakShields: number;
   drought: boolean;
 }
+

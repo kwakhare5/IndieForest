@@ -1,16 +1,10 @@
 // Dynamic SVG Badge Generator for GitHub Profile READMEs
 // Adheres strictly to porcelain double-bezel aesthetic with zero AI slop
 
-export interface BadgeData {
-  username: string;
-  level: number;
-  rankTitle: string;
-  rankBadge: string;
-  streakDays: number;
-  totalCommits: number;
-  activeTreesCount: number;
-  mrr?: number;
-}
+import type { BadgeData } from "@/types/game";
+
+export type { BadgeData };
+
 
 function escapeXml(unsafe: string): string {
   return unsafe

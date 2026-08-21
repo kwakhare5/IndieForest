@@ -24,7 +24,7 @@ describe("Revenue Webhook Domain Core (TDD Seam)", () => {
       expect(result).toEqual({
         customerName: "Stripe Pro User",
         mrr: 49,
-        tier: "young",
+        tier: "sapling",
         source: "stripe",
         isValid: true,
       });
@@ -48,8 +48,29 @@ describe("Revenue Webhook Domain Core (TDD Seam)", () => {
       const result: NormalizedCustomerTree = parseUniversalRevenueEvent(payload);
 
       expect(result.mrr).toBe(100);
-      expect(result.tier).toBe("majestic");
+      expect(result.tier).toBe("young"); // $100 MRR is Young Tier ($50-$499)
       expect(result.customerName).toBe("annual@enterprise.com");
+      expect(result.isValid).toBe(true);
+    });
+
+    it("parses high-volume enterprise payment into majestic tier", () => {
+      const payload = {
+        type: "invoice.payment_succeeded",
+        data: {
+          object: {
+            customer_name: "Mega Corp",
+            amount_paid: 240000, // $2,400 MRR
+            currency: "usd",
+            lines: {
+              data: [{ plan: { interval: "month" } }],
+            },
+          },
+        },
+      };
+
+      const result = parseUniversalRevenueEvent(payload);
+      expect(result.mrr).toBe(2400);
+      expect(result.tier).toBe("majestic");
       expect(result.isValid).toBe(true);
     });
 
@@ -90,7 +111,7 @@ describe("Revenue Webhook Domain Core (TDD Seam)", () => {
       expect(result).toEqual({
         customerName: "Lemon Squeezy Builder",
         mrr: 29,
-        tier: "young",
+        tier: "sapling",
         source: "lemonsqueezy",
         isValid: true,
       });

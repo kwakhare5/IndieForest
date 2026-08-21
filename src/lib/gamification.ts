@@ -1,10 +1,9 @@
 // Clean Code Gamification Domain Module — Pure Functions & Zero Side Effects
 
-import {
+import type {
   GrowthTier,
   TreeType,
   TreeData,
-  ShipLog,
   CampDecorItem,
   DailyQuest,
   Rank,
@@ -14,33 +13,8 @@ import {
   LevelProgressOutput,
   StreakEvaluationInput,
   StreakEvaluationOutput,
-  TimelineEvent,
-  GuestbookEntry,
-  CommitProof,
-  StripeProof,
-  WeatherType,
 } from "@/types/game";
 
-export type {
-  GrowthTier,
-  TreeType,
-  TreeData,
-  ShipLog,
-  CampDecorItem,
-  DailyQuest,
-  Rank,
-  ShipRewardInput,
-  ShipRewards,
-  LevelProgressInput,
-  LevelProgressOutput,
-  StreakEvaluationInput,
-  StreakEvaluationOutput,
-  TimelineEvent,
-  GuestbookEntry,
-  CommitProof,
-  StripeProof,
-  WeatherType,
-};
 
 export const DEFAULT_CAMP_DECOR_CATALOG: CampDecorItem[] = [
   {
@@ -281,7 +255,8 @@ export function calculateTreeTier(
     if (mrr >= 2000) return { tier: "majestic", nextTierTarget: 2000, progressPercent: 100, nextTierLabel: "Max Level" };
     if (mrr >= 500) return { tier: "mature", nextTierTarget: 2000, progressPercent: Math.min(Math.round(((mrr - 500) / 1500) * 100), 100), nextTierLabel: "Majestic ($2,000 MRR)" };
     if (mrr >= 50) return { tier: "young", nextTierTarget: 500, progressPercent: Math.min(Math.round(((mrr - 50) / 450) * 100), 100), nextTierLabel: "Mature ($500 MRR)" };
-    return { tier: "sapling", nextTierTarget: 50, progressPercent: Math.min(Math.round((mrr / 50) * 100), 100), nextTierLabel: "Young ($50 MRR)" };
+    if (mrr > 0) return { tier: "sapling", nextTierTarget: 50, progressPercent: Math.min(Math.round((mrr / 50) * 100), 100), nextTierLabel: "Young ($50 MRR)" };
+    return { tier: "stump", nextTierTarget: 50, progressPercent: 0, nextTierLabel: "Sapling ($50 MRR)" };
   }
 
   // Shipping Tree Progression: Dual-gated by Commits AND Active Calendar Days
@@ -295,7 +270,10 @@ export function calculateTreeTier(
   if (commits >= 8 && effectiveDays >= 3) {
     return { tier: "young", nextTierTarget: 25, progressPercent: Math.min(Math.round(((commits - 8) / 17) * 100), 100), nextTierLabel: "Mature Pine (25 Commits & 7d)" };
   }
-  return { tier: "sapling", nextTierTarget: 8, progressPercent: Math.min(Math.round((commits / 8) * 100), 100), nextTierLabel: "Young Pine (8 Commits & 3d)" };
+  if (commits > 0) {
+    return { tier: "sapling", nextTierTarget: 8, progressPercent: Math.min(Math.round((commits / 8) * 100), 100), nextTierLabel: "Young Pine (8 Commits & 3d)" };
+  }
+  return { tier: "stump", nextTierTarget: 8, progressPercent: 0, nextTierLabel: "Sapling (1 Commit)" };
 }
 
 /**

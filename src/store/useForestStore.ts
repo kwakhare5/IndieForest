@@ -1,12 +1,15 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { sound } from "@/lib/sound";
-import {
+import type {
   GrowthTier,
   TreeType,
   TreeData,
   ShipLog,
   DailyQuest,
+  WeatherType,
+} from "@/types/game";
+import {
   getRankTitle,
   getXpForLevel,
   calculateShipRewards,
@@ -19,8 +22,9 @@ import {
   getTreeSlotCoordinate,
 } from "@/lib/gamification";
 
-export type { GrowthTier, TreeType, TreeData, ShipLog, DailyQuest };
+export type { GrowthTier, TreeType, TreeData, ShipLog, DailyQuest, WeatherType };
 export { getRankTitle, getXpForLevel, getLocalDateString };
+
 
 export interface ForestState {
   // User Profile & Identity
@@ -61,6 +65,7 @@ export interface ForestState {
 
   // 3D Weather & Atmosphere
   weather: "sunny" | "rain" | "golden_hour" | "night" | "drought";
+  weatherType: WeatherType;
   isRaining: boolean;
   timeOfDay: "day" | "sunset" | "night";
 
@@ -78,6 +83,7 @@ export interface ForestState {
   removeTree: (id: string) => void;
   updateTreeTier: (id: string, tier: GrowthTier) => void;
   setTimeOfDay: (time: "day" | "sunset" | "night") => void;
+  setWeatherType: (weather: WeatherType) => void;
   triggerRain: (durationMs?: number) => void;
   checkStreakExpiry: () => void;
   resetIsland: () => void;
@@ -106,8 +112,9 @@ export const useForestStore = create<ForestState>()(
   persist(
     (set, get) => ({
       user: {
-        id: "local-user",
-        username: "indie_builder",
+        id: "kwakhare5",
+        username: "kwakhare5",
+        avatarUrl: "https://github.com/kwakhare5.png",
         isAuthenticated: false,
       },
 
@@ -131,6 +138,7 @@ export const useForestStore = create<ForestState>()(
       unlockedDecor: [],
 
       weather: "sunny",
+      weatherType: "clear",
       isRaining: false,
       timeOfDay: "day",
 
@@ -155,12 +163,14 @@ export const useForestStore = create<ForestState>()(
         sound.playClick();
         set({
           user: {
-            id: "local-user",
-            username: "indie_builder",
+            id: "kwakhare5",
+            username: "kwakhare5",
+            avatarUrl: "https://github.com/kwakhare5.png",
             isAuthenticated: false,
           },
         });
       },
+
 
       setGithubRepo: (repo) => {
         set((state) => ({
@@ -375,12 +385,17 @@ export const useForestStore = create<ForestState>()(
         set({ timeOfDay: time });
       },
 
+      setWeatherType: (weatherType) => {
+        set({ weatherType });
+      },
+
       triggerRain: (durationMs = 4500) => {
-        set({ isRaining: true });
+        set({ isRaining: true, weatherType: "rain_emerald" });
         setTimeout(() => {
-          set({ isRaining: false });
+          set({ isRaining: false, weatherType: "clear" });
         }, durationMs);
       },
+
 
       checkStreakExpiry: () => {
         const state = get();
@@ -444,7 +459,7 @@ export const useForestStore = create<ForestState>()(
       },
     }),
     {
-      name: "indieforest_storage_v3",
+      name: "indieforest_storage_v4",
       storage: createJSONStorage(() =>
         typeof window !== "undefined" && window.localStorage
           ? window.localStorage
@@ -457,3 +472,4 @@ export const useForestStore = create<ForestState>()(
     }
   )
 );
+

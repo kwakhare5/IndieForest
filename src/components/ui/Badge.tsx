@@ -33,7 +33,7 @@ export function Badge({
     emerald: "bg-emerald-50 text-emerald-800 border border-emerald-200/90",
     amber: "bg-amber-50 text-amber-900 border border-amber-200/90",
     sky: "bg-sky-50 text-sky-900 border border-sky-200/90",
-    stone: "bg-white text-stone-700 border border-stone-300/80 shadow-2xs",
+    stone: "bg-white text-stone-700 border border-stone-300/80 shadow-xs",
     pixel: "bg-emerald-50 text-emerald-800 border border-emerald-200/90 font-mono font-bold",
     danger: "bg-red-50 text-red-800 border border-red-200/90",
   }[variant];

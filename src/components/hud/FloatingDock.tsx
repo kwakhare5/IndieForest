@@ -28,23 +28,23 @@ export function FloatingDock({
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center justify-center font-satoshi select-none">
       <div className="p-1 rounded-full glass-dock shadow-2xl transition-all duration-200">
-        <div className="h-11 px-3 rounded-full porcelain-surface bg-white flex items-center gap-1.5 sm:gap-2.5 font-satoshi">
+        <div className="h-11 px-2.5 sm:px-3 rounded-full porcelain-surface bg-white flex items-center gap-1.5 sm:gap-2 font-satoshi">
           
           {/* 1. Daily Streak & Burnout Shield Momentum Badge */}
           <div
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50/90 border border-amber-200/90 text-amber-900 font-semibold cursor-default shrink-0 shadow-2xs"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50/90 border border-amber-200/90 text-amber-900 font-semibold cursor-default shrink-0 shadow-xs"
             title={`${streakDays}-day shipping streak • ${streakShields} Streak Shield(s) protecting rest days`}
           >
-            <Flame className="w-4 h-4 fill-amber-500 text-amber-600 shrink-0 animate-pulse" />
-            <span className="font-pixel text-sm font-normal text-amber-950 leading-none">{streakDays}d</span>
+            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600 shrink-0 animate-pulse" />
+            <span className="font-pixel text-xs sm:text-sm font-normal text-amber-950 leading-none">{streakDays}d</span>
             <div className="w-[1px] h-3.5 bg-amber-300/80 mx-0.5" />
-            <div className="flex items-center gap-0.5 text-emerald-800 font-pixel text-sm font-normal leading-none">
-              <Shield className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+            <div className="flex items-center gap-0.5 text-emerald-800 font-pixel text-xs sm:text-sm font-normal leading-none">
+              <Shield className="w-3 h-3 text-emerald-700 shrink-0" />
               <span>x{streakShields}</span>
             </div>
           </div>
 
-          <div className="w-[1px] h-4 bg-stone-200" />
+          <div className="w-[1px] h-4 bg-stone-200 shrink-0" />
 
           {/* 2. On-Demand 3D Timeline Toggle */}
           {onToggleTimeline && (
@@ -54,9 +54,9 @@ export function FloatingDock({
                 sound.playClick();
                 onToggleTimeline();
               }}
-              className={`h-8 px-2.5 rounded-full font-semibold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer ${
+              className={`h-8 px-2.5 rounded-full font-semibold text-xs flex items-center gap-1.5 transition-all duration-150 active:scale-95 cursor-pointer ${
                 isTimelineOpen
-                  ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                  ? "bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-inner"
                   : "hover:bg-stone-100/90 text-stone-700 hover:text-stone-950"
               }`}
               title="Toggle 3D Growth Timeline & 10s Replay"
@@ -66,7 +66,7 @@ export function FloatingDock({
             </button>
           )}
 
-          <div className="w-[1px] h-4 bg-stone-200" />
+          <div className="w-[1px] h-4 bg-stone-200 shrink-0" />
 
           {/* 3. Primary Hero Action: LOG DAILY SHIP */}
           <button
@@ -75,14 +75,14 @@ export function FloatingDock({
               sound.playClick();
               onOpenShipModal();
             }}
-            className="h-8 px-4 rounded-full btn-specular-emerald text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0 tracking-wide font-satoshi"
+            className="h-8.5 px-3.5 sm:px-4 rounded-full btn-specular-emerald text-white font-bold text-xs flex items-center gap-1.5 transition-all duration-150 active:scale-95 active:shadow-inner cursor-pointer shrink-0 tracking-wide font-satoshi shadow-xs"
             title="Log Today's Ship & Grow Island"
           >
             <span>LOG DAILY SHIP</span>
             <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
           </button>
 
-          <div className="w-[1px] h-4 bg-stone-200" />
+          <div className="w-[1px] h-4 bg-stone-200 shrink-0" />
 
           {/* 4. Add Tree */}
           <button
@@ -91,7 +91,7 @@ export function FloatingDock({
               sound.playClick();
               onOpenAddTreeModal();
             }}
-            className="h-8 px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
+            className="h-8 px-2 sm:px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1 transition-all duration-150 active:scale-95 cursor-pointer"
             title="Plant Customer Revenue Tree or Milestone Sprout"
           >
             <Plus className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
@@ -105,7 +105,7 @@ export function FloatingDock({
               sound.playClick();
               onOpenShopModal();
             }}
-            className="h-8 px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
+            className="h-8 px-2 sm:px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1 transition-all duration-150 active:scale-95 cursor-pointer"
             title="Open Pinecone Camp Shop"
           >
             <Tent className="w-3.5 h-3.5 text-amber-700" />
@@ -119,7 +119,7 @@ export function FloatingDock({
               sound.playClick();
               onOpenShareModal();
             }}
-            className="w-8 h-8 rounded-full hover:bg-stone-100/90 flex items-center justify-center text-stone-600 hover:text-stone-950 transition active:scale-95 cursor-pointer"
+            className="w-8 h-8 rounded-full hover:bg-stone-100/90 flex items-center justify-center text-stone-600 hover:text-stone-950 transition-all duration-150 active:scale-95 cursor-pointer shrink-0"
             title="Share Daily Progress to X / Twitter"
           >
             <Share2 className="w-3.5 h-3.5" />

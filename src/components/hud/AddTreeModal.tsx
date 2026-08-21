@@ -29,7 +29,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [simSuccess, setSimSuccess] = useState(false);
 
-  const webhookBaseUrl = typeof window !== "undefined" ? window.location.origin : "https://indieforest.app";
+  const webhookBaseUrl = typeof window !== "undefined" ? window.location.origin : "https://indieforest.dev";
   const revenueWebhookUrl = `${webhookBaseUrl}/api/webhooks/revenue?userId=${user.id || "usr_builder"}`;
   const githubWebhookUrl = `${webhookBaseUrl}/api/github?userId=${user.id || "usr_builder"}`;
 

@@ -25,6 +25,8 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import { GitHubIslandProfile } from "@/lib/github";
 import { useForestStore } from "@/store/useForestStore";
+import { calculateTreeTier } from "@/lib/gamification";
+
 
 // Dynamic import for the Island Canvas (Mode: Preview)
 const ForestCanvas = dynamic(
@@ -99,6 +101,7 @@ const SHIELD_OPTIONS: SegmentedOption<"armed" | "rest">[] = [
 ];
 
 export default function LandingPage() {
+
   const { isLoaded, isSignedIn } = useUser();
   const mergeCloudData = useForestStore((s) => s.mergeCloudData);
 
@@ -152,14 +155,11 @@ export default function LandingPage() {
     }
   };
 
-  const getTreeTierFromMrr = (mrr: number) => {
-    if (mrr >= 100) return { tier: "Majestic Golden Pine", desc: "4-tier stepped canopy with golden crown" };
-    if (mrr >= 50) return { tier: "Mature Golden Pine", desc: "3-tier stepped amber foliage" };
-    if (mrr >= 20) return { tier: "Young Golden Pine", desc: "2-tier stepped foliage, active subscriber" };
-    return { tier: "Golden Sapling", desc: "1-tier stepped seedling" };
+  const treeTierInfo = calculateTreeTier("revenue", 0, demoMrr);
+  const currentTreeTier = {
+    tier: `${treeTierInfo.tier.charAt(0).toUpperCase() + treeTierInfo.tier.slice(1)} Golden Pine`,
+    desc: `Next Stage: ${treeTierInfo.nextTierLabel} (${treeTierInfo.progressPercent}%)`,
   };
-
-  const currentTreeTier = getTreeTierFromMrr(demoMrr);
 
   const handleCopyTweet = () => {
     navigator.clipboard.writeText(
@@ -168,6 +168,7 @@ export default function LandingPage() {
     setCopiedTweet(true);
     setTimeout(() => setCopiedTweet(false), 2000);
   };
+
 
   return (
     <div className="min-h-screen bg-[#ece7de] text-stone-900 font-satoshi selection:bg-emerald-600 selection:text-white relative overflow-y-auto overflow-x-hidden">
@@ -273,7 +274,7 @@ export default function LandingPage() {
                   </div>
                   <input
                     type="text"
-                    placeholder="Enter your GitHub username (e.g. kwakhare5)"
+                    placeholder="GitHub username (e.g. kwakhare5)"
                     value={searchUsername}
                     onChange={(e) => setSearchUsername(e.target.value)}
                     className="w-full bg-transparent text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-satoshi"
@@ -283,16 +284,10 @@ export default function LandingPage() {
                     variant="emerald"
                     size="sm"
                     disabled={isSearching || !searchUsername.trim()}
+                    icon={isSearching ? Loader2 : Sparkles}
                     className="shrink-0"
                   >
-                    {isSearching ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        <Sparkles className="w-3.5 h-3.5 mr-1" />
-                        Sprout Island
-                      </>
-                    )}
+                    {isSearching ? "Searching..." : "Sprout Island"}
                   </Button>
                 </div>
               </form>
@@ -378,7 +373,7 @@ export default function LandingPage() {
                   </SignInButton>
                 )}
 
-                <Link href="/u/karan">
+                <Link href="/u/kwakhare5">
                   <Button variant="outline" size="lg" showArrow arrowType="up-right" className="w-full sm:w-auto">
                     View Live Public Profile
                   </Button>
@@ -725,7 +720,7 @@ export default function LandingPage() {
 
             <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-500">
               <span>Dynamic Island Cards</span>
-              <span className="font-semibold text-emerald-800 font-pixel text-xs">indieforest.app/u/karan</span>
+              <span className="font-semibold text-emerald-800 font-pixel text-xs">indieforest.dev/u/kwakhare5</span>
             </div>
           </Card>
         </div>
@@ -835,7 +830,7 @@ export default function LandingPage() {
             <Link href="/dashboard" className="hover:text-stone-900 transition">
               Open Dashboard
             </Link>
-            <Link href="/u/karan" className="hover:text-stone-900 transition">
+            <Link href="/u/kwakhare5" className="hover:text-stone-900 transition">
               Public Profile
             </Link>
           </div>
