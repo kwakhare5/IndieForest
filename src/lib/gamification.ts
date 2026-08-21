@@ -1,37 +1,36 @@
 // Clean Code Gamification Domain Module — Pure Functions & Zero Side Effects
 
-export type GrowthTier = "sapling" | "young" | "mature" | "majestic" | "stump";
-export type TreeType = "shipping" | "revenue";
+import {
+  GrowthTier,
+  TreeType,
+  TreeData,
+  ShipLog,
+  CampDecorItem,
+  DailyQuest,
+  Rank,
+  ShipRewardInput,
+  ShipRewards,
+  LevelProgressInput,
+  LevelProgressOutput,
+  StreakEvaluationInput,
+  StreakEvaluationOutput,
+} from "@/types/game";
 
-export interface TreeData {
-  id: string;
-  name: string;
-  type?: TreeType; // "shipping" (emerald) or "revenue" (golden)
-  mrr?: number;
-  tier: GrowthTier;
-  gridX: number;
-  gridZ: number;
-  plantedAt: string;
-  isDemo?: boolean;
-}
-
-export interface ShipLog {
-  id: string;
-  date: string;
-  message: string;
-  source: "github" | "manual";
-  xpGained: number;
-  proofUrl?: string;
-  repo?: string;
-}
-
-export interface CampDecorItem {
-  id: string;
-  name: string;
-  icon: "flame" | "lamp" | "pier" | "tent";
-  cost: number;
-  description: string;
-}
+export type {
+  GrowthTier,
+  TreeType,
+  TreeData,
+  ShipLog,
+  CampDecorItem,
+  DailyQuest,
+  Rank,
+  ShipRewardInput,
+  ShipRewards,
+  LevelProgressInput,
+  LevelProgressOutput,
+  StreakEvaluationInput,
+  StreakEvaluationOutput,
+};
 
 export const DEFAULT_CAMP_DECOR_CATALOG: CampDecorItem[] = [
   {
@@ -64,54 +63,14 @@ export const DEFAULT_CAMP_DECOR_CATALOG: CampDecorItem[] = [
   },
 ];
 
-export interface DailyQuest {
-  id: string;
-  title: string;
-  xpReward: number;
-  completed: boolean;
-}
-
-export interface Rank {
-  title: string;
-  badge: string;
-}
-
-export interface ShipRewardInput {
-  streakDays: number;
-  hasProofUrl?: boolean;
-  isMilestoneDay?: boolean;
-  currentShields?: number;
-}
-
-export interface ShipRewards {
-  xpGained: number;
-  pineconesGained: number;
-  shieldsGained: number;
-}
-
-export interface LevelProgressInput {
-  currentLevel: number;
-  currentXp: number;
-  earnedXp: number;
-}
-
-export interface LevelProgressOutput {
-  level: number;
-  xp: number;
-  didLevelUp: boolean;
-}
-
-export interface StreakEvaluationInput {
-  lastShipDate: string | null;
-  todayDate: string;
-  currentStreak: number;
-  currentShields: number;
-}
-
-export interface StreakEvaluationOutput {
-  streakDays: number;
-  streakShields: number;
-  drought: boolean;
+/**
+ * Returns a local date string in YYYY-MM-DD format based on local calendar time.
+ */
+export function getLocalDateString(date: Date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 /**

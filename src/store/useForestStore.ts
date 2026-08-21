@@ -14,10 +14,11 @@ import {
   evaluateStreakState,
   completeDailyQuest,
   purchaseCampDecor,
+  getLocalDateString,
 } from "@/lib/gamification";
 
 export type { GrowthTier, TreeType, TreeData, ShipLog, DailyQuest };
-export { getRankTitle, getXpForLevel };
+export { getRankTitle, getXpForLevel, getLocalDateString };
 
 export interface ForestState {
   // User Profile & Identity
@@ -78,6 +79,18 @@ export interface ForestState {
   triggerRain: (durationMs?: number) => void;
   checkStreakExpiry: () => void;
   resetIsland: () => void;
+  mergeCloudData: (data: {
+    level?: number;
+    xp?: number;
+    totalXp?: number;
+    pinecones?: number;
+    streakDays?: number;
+    bestStreak?: number;
+    streakShields?: number;
+    trees?: TreeData[];
+    shipHistory?: ShipLog[];
+    unlockedDecor?: string[];
+  }) => void;
 }
 
 const DEFAULT_QUESTS: DailyQuest[] = [
@@ -137,13 +150,13 @@ export const useForestStore = create<ForestState>()(
 
       logoutUser: () => {
         sound.playClick();
-        set((state) => ({
+        set({
           user: {
             id: "local-user",
             username: "indie_builder",
             isAuthenticated: false,
           },
-        }));
+        });
       },
 
       setGithubRepo: (repo) => {
@@ -166,7 +179,7 @@ export const useForestStore = create<ForestState>()(
       },
 
       shipToday: (message, source = "manual", proofUrl, repo) => {
-        const todayStr = new Date().toISOString().split("T")[0];
+        const todayStr = getLocalDateString();
         const state = get();
 
         const alreadyShippedToday = state.lastShipDate === todayStr;
@@ -330,7 +343,7 @@ export const useForestStore = create<ForestState>()(
         const state = get();
         if (!state.lastShipDate) return;
 
-        const todayStr = new Date().toISOString().split("T")[0];
+        const todayStr = getLocalDateString();
         const result = evaluateStreakState({
           lastShipDate: state.lastShipDate,
           todayDate: todayStr,
@@ -342,6 +355,49 @@ export const useForestStore = create<ForestState>()(
           streakDays: result.streakDays,
           streakShields: result.streakShields,
           drought: result.drought,
+        });
+      },
+
+      mergeCloudData: (cloudData) => {
+        const state = get();
+        // Merge trees keeping unique by ID
+        const existingIds = new Set(state.trees.map((t) => t.id));
+        const mergedTrees = [...state.trees];
+        if (cloudData.trees) {
+          for (const ct of cloudData.trees) {
+            if (!existingIds.has(ct.id)) {
+              mergedTrees.push(ct);
+              existingIds.add(ct.id);
+            }
+          }
+        }
+
+        // Merge ship logs keeping unique by ID
+        const existingLogIds = new Set(state.shipHistory.map((s) => s.id));
+        const mergedLogs = [...state.shipHistory];
+        if (cloudData.shipHistory) {
+          for (const cl of cloudData.shipHistory) {
+            if (!existingLogIds.has(cl.id)) {
+              mergedLogs.push(cl);
+              existingLogIds.add(cl.id);
+            }
+          }
+        }
+
+        // Merge unlocked decor
+        const decorSet = new Set([...state.unlockedDecor, ...(cloudData.unlockedDecor || [])]);
+
+        set({
+          level: Math.max(state.level, cloudData.level || 1),
+          xp: cloudData.xp !== undefined ? cloudData.xp : state.xp,
+          totalXp: Math.max(state.totalXp, cloudData.totalXp || 0),
+          pinecones: Math.max(state.pinecones, cloudData.pinecones || 20),
+          streakDays: Math.max(state.streakDays, cloudData.streakDays || 0),
+          bestStreak: Math.max(state.bestStreak, cloudData.bestStreak || 0),
+          streakShields: Math.max(state.streakShields, cloudData.streakShields || 0),
+          trees: mergedTrees,
+          shipHistory: mergedLogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+          unlockedDecor: Array.from(decorSet),
         });
       },
 
@@ -366,7 +422,15 @@ export const useForestStore = create<ForestState>()(
     }),
     {
       name: "indieforest_storage_v2",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined" && window.localStorage
+          ? window.localStorage
+          : {
+              getItem: () => null,
+              setItem: () => {},
+              removeItem: () => {},
+            }
+      ),
     }
   )
 );

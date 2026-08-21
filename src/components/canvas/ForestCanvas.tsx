@@ -8,12 +8,13 @@ import { TerrainIsland } from "./TerrainIsland";
 import { BlockTree } from "./BlockTree";
 import { CampProps } from "./CampProps";
 import { WeatherSystem } from "./WeatherSystem";
-import { useForestStore, TreeData, GrowthTier } from "@/store/useForestStore";
+import { TreeData, GrowthTier } from "@/types/game";
+import { useForestStore } from "@/store/useForestStore";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SegmentedControl, SegmentedOption } from "@/components/ui/SegmentedControl";
-import { TrendingUp, Layers, Calendar, Trash2, X, Sparkles } from "lucide-react";
+import { TrendingUp, Layers, Calendar, Trash2, X } from "lucide-react";
 
 interface ForestCanvasProps {
   mode?: "full" | "preview" | "profile";
@@ -86,7 +87,13 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
           near: -100,
           far: 200,
         }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+          preserveDrawingBuffer: true,
+        }}
+        id="forest-3d-canvas"
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>

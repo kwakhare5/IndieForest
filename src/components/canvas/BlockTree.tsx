@@ -3,7 +3,8 @@
 import React, { useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { TreeData, GrowthTier, useForestStore } from "@/store/useForestStore";
+import { TreeData } from "@/types/game";
+import { useForestStore } from "@/store/useForestStore";
 import { sound } from "@/lib/sound";
 
 interface BlockTreeProps {

@@ -71,23 +71,33 @@ D:\IndieForest\
 │   │   │   └── WeatherSystem.tsx      — Sunlight directional shadows, rain particles, fireflies
 │   │   ├── hud/
 │   │   │   ├── AddTreeModal.tsx       — Subscriber customer tree adder modal
+│   │   │   ├── AuthModal.tsx          — Clerk authentication modal with guest option
+│   │   │   ├── CampShopModal.tsx      — Pinecone decor store for 3D island items
+│   │   │   ├── DailyQuestPanel.tsx    — Daily focus quest checklist
 │   │   │   ├── FloatingDock.tsx       — Unified bottom Double-Bezel control dock
 │   │   │   ├── SettingsModal.tsx      — Backend cloud sync & Universal Webhook configuration
 │   │   │   ├── ShareCardModal.tsx     — 1-click build-in-public social card exporter
-│   │   │   └── ShipModal.tsx          — 1-click manual & GitHub commit verification modal
+│   │   │   ├── ShipModal.tsx          — 1-click manual & GitHub commit verification modal
+│   │   │   ├── SproutGuide.tsx        — Interactive 2-step virgin island onboarding
+│   │   │   └── TopStatusBar.tsx       — Rank, XP progression, streaks, shields, time of day
 │   │   └── ui/
 │   │       ├── Badge.tsx              — Standardized geometric badges
 │   │       ├── Button.tsx             — Tactile Button-in-Button components with specular glints
-│   │       └── Modal.tsx              — Canonical porcelain double-bezel modal wrapper
+│   │       ├── Card.tsx               — Porcelain & glass double-bezel enclosures
+│   │       ├── Modal.tsx              — Canonical porcelain double-bezel modal wrapper
+│   │       └── SegmentedControl.tsx   — Tactile pill switcher
 │   ├── lib/
 │   │   ├── gamification.ts            — Clean Code pure domain calculations (XP, streaks, ranks)
-│   │   ├── gamification.test.ts       — Vitest unit test suite (13 domain tests)
+│   │   ├── gamification.test.ts       — Vitest unit test suite (21 domain tests)
 │   │   ├── revenueWebhook.ts          — Universal Revenue Webhook parser
 │   │   ├── revenueWebhook.test.ts     — Vitest unit test suite (6 webhook tests)
-│   │   └── sound.ts                   — Web Audio synthesized retro sound generator
+│   │   ├── sound.ts                   — Web Audio synthesized retro sound generator
+│   │   └── supabase/                  — Browser client & cloud synchronization
 │   ├── store/
-│   │   └── useForestStore.ts          — Zustand store with localStorage persistence
+│   │   ├── useForestStore.ts          — Zustand store with localStorage persistence
+│   │   └── useForestStore.test.ts     — Vitest unit test suite (10 store tests)
 │   └── types/
+│       ├── game.ts                    — Canonical domain types & interfaces
 │       └── r3f.d.ts                   — JSX intrinsic elements for React 19 + R3F
 ├── supabase/
 │   └── migrations/                    — PostgreSQL schema & RLS policies
@@ -97,6 +107,7 @@ D:\IndieForest\
 ├── CONTEXT.md                         — Domain language & business rules
 ├── JOURNAL.md                         — Product diary & engineering log
 ├── README.md                          — Developer & public overview
+├── eslint.config.mjs                  — Flat ESLint 9 configuration
 ├── package.json
 └── tsconfig.json
 ```

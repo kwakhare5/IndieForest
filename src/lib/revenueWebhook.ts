@@ -1,4 +1,4 @@
-import { GrowthTier } from "@/store/useForestStore";
+import { GrowthTier } from "@/types/game";
 
 export interface NormalizedCustomerTree {
   customerName: string;

@@ -2,10 +2,9 @@
 
 import React, { useState } from "react";
 import { useForestStore } from "@/store/useForestStore";
-import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Sparkles, Target, Github, Send, ArrowRight, Check } from "lucide-react";
+import { Sparkles, Target, Github } from "lucide-react";
 import { sound } from "@/lib/sound";
 
 interface SproutGuideProps {
