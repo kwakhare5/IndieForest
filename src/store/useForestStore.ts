@@ -16,6 +16,7 @@ import {
   purchaseCampDecor,
   getLocalDateString,
   calculateTreeTier,
+  getTreeSlotCoordinate,
 } from "@/lib/gamification";
 
 export type { GrowthTier, TreeType, TreeData, ShipLog, DailyQuest };
@@ -80,6 +81,7 @@ export interface ForestState {
   triggerRain: (durationMs?: number) => void;
   checkStreakExpiry: () => void;
   resetIsland: () => void;
+  syncGitHubIsland: (username: string) => Promise<void>;
   mergeCloudData: (data: {
     level?: number;
     xp?: number;
@@ -112,7 +114,7 @@ export const useForestStore = create<ForestState>()(
       level: 1,
       xp: 0,
       totalXp: 0,
-      pinecones: 20, // Starter pinecone stash
+      pinecones: 20, // Starter pinecones
 
       streakDays: 0,
       bestStreak: 0,
@@ -124,7 +126,7 @@ export const useForestStore = create<ForestState>()(
       todayFocus: "Build MVP & ship first release",
       hasCompletedSproutGuide: false,
 
-      trees: [], // Fresh virgin island with 0 fake trees
+      trees: [], // Clean virgin island
       shipHistory: [],
       unlockedDecor: [],
 
@@ -179,6 +181,26 @@ export const useForestStore = create<ForestState>()(
         set({ hasCompletedSproutGuide: true });
       },
 
+      syncGitHubIsland: async (username: string) => {
+        try {
+          const res = await fetch(`/api/github/preview?username=${encodeURIComponent(username)}`);
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data.trees && data.trees.length > 0) {
+            set((state) => ({
+              trees: data.trees,
+              streakDays: Math.max(data.streakDays, state.streakDays),
+              level: Math.max(data.level, state.level),
+              pinecones: Math.max(data.pinecones, state.pinecones),
+              user: { ...state.user, username: data.username, avatarUrl: data.avatarUrl },
+              hasCompletedSproutGuide: true,
+            }));
+          }
+        } catch {
+          // ignore
+        }
+      },
+
       shipToday: (message, source = "manual", proofUrl, repo) => {
         const todayStr = getLocalDateString();
         const state = get();
@@ -222,14 +244,34 @@ export const useForestStore = create<ForestState>()(
         );
 
         // Water and grow the most active or matching shipping tree
-        const updatedTrees = state.trees.map((t, idx) => {
+        let updatedTrees = state.trees.map((t, idx) => {
           if (t.type === "shipping" && (t.name === repo || idx === 0 || state.trees.length === 1)) {
             const nextCommits = (t.commits || 0) + 1;
-            const nextTier = calculateTreeTier("shipping", nextCommits, t.mrr).tier;
+            const nextTier = calculateTreeTier("shipping", nextCommits, t.mrr, (t.activeDays || 1) + 1).tier;
             return { ...t, commits: nextCommits, tier: nextTier };
           }
           return t;
         });
+
+        // If no trees exist yet, plant first shipping sapling
+        if (updatedTrees.length === 0) {
+          const starterCoord = getTreeSlotCoordinate("shipping", 0);
+          updatedTrees = [
+            {
+              id: `tree-${Date.now()}`,
+              name: repo || "First Project",
+              type: "shipping",
+              commits: 1,
+              activeDays: 1,
+              mrr: 0,
+              tier: "sapling",
+              gridX: starterCoord[0],
+              gridZ: starterCoord[1],
+              plantedAt: new Date().toISOString(),
+              isDemo: false,
+            },
+          ];
+        }
 
         set({
           xp: progress.xp,
@@ -258,35 +300,28 @@ export const useForestStore = create<ForestState>()(
         const result = completeDailyQuest(state.quests, questId);
         if (!result.success) return;
 
+        sound.playCoin();
         const progress = evaluateLevelProgress({
           currentLevel: state.level,
           currentXp: state.xp,
           earnedXp: result.xpAwarded,
         });
 
-        if (progress.didLevelUp) {
-          sound.playLevelUp();
-        } else {
-          sound.playCoin();
-        }
-
         set({
           quests: result.updatedQuests,
           xp: progress.xp,
           totalXp: state.totalXp + result.xpAwarded,
           level: progress.level,
-          pinecones: state.pinecones + 5 + (progress.didLevelUp ? 50 : 0),
+          pinecones: state.pinecones + 5,
         });
       },
 
       buyDecor: (itemId) => {
         const state = get();
         const result = purchaseCampDecor(state.unlockedDecor, state.pinecones, itemId);
-        if (!result.success) {
-          return false;
-        }
+        if (!result.success) return false;
 
-        sound.playLevelUp();
+        sound.playCoin();
         set({
           pinecones: result.remainingPinecones,
           unlockedDecor: result.unlockedIds,
@@ -294,60 +329,53 @@ export const useForestStore = create<ForestState>()(
         return true;
       },
 
-      addTree: (name, mrr = 0, tier = "young", type = "revenue") => {
+      addTree: (name, mrr = 0, tier = "sapling", type) => {
         const state = get();
-        const coords = [
-          [-2.2, -1.2],
-          [2.2, -1.2],
-          [-1.2, -2.5],
-          [1.2, -2.5],
-          [-2.5, 1.2],
-          [2.5, 1.2],
-          [-1.8, 1.8],
-          [1.8, -1.8],
-        ];
-        const nextCoord = coords[state.trees.length % coords.length] || [0, 2.5];
-        const initialCommits = type === "shipping" ? 1 : 0;
-        const computedTier = tier || calculateTreeTier(type, initialCommits, mrr).tier;
+        const treeType = type || (mrr > 0 ? "revenue" : "shipping");
+        
+        // Count existing trees of same type to pick non-overlapping coordinate slot
+        const existingCount = state.trees.filter((t) => (t.type || "shipping") === treeType).length;
+        const coord = getTreeSlotCoordinate(treeType, existingCount);
 
         const newTree: TreeData = {
-          id: `tree-${Date.now()}`,
-          name: name.trim() || (type === "shipping" ? "Project Repo" : "Subscriber"),
-          type,
-          commits: initialCommits,
+          id: `tree-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          name: name.trim() || (treeType === "revenue" ? "Paying Customer" : "New Feature"),
+          type: treeType,
           mrr,
-          tier: computedTier,
-          gridX: nextCoord[0],
-          gridZ: nextCoord[1],
+          commits: treeType === "shipping" ? 1 : 0,
+          activeDays: 1,
+          tier,
+          gridX: coord[0],
+          gridZ: coord[1],
           plantedAt: new Date().toISOString(),
           isDemo: false,
         };
 
-        sound.playCoin();
+        sound.playShipSuccess();
         set({
           trees: [...state.trees, newTree],
+          hasCompletedSproutGuide: true,
         });
       },
 
       removeTree: (id) => {
-        const state = get();
         sound.playClick();
-        set({
+        set((state) => ({
           trees: state.trees.filter((t) => t.id !== id),
-        });
+        }));
       },
 
       updateTreeTier: (id, tier) => {
-        const state = get();
-        set({
+        set((state) => ({
           trees: state.trees.map((t) => (t.id === id ? { ...t, tier } : t)),
-        });
+        }));
       },
 
-      setTimeOfDay: (timeOfDay) => set({ timeOfDay }),
+      setTimeOfDay: (time) => {
+        set({ timeOfDay: time });
+      },
 
-      triggerRain: (durationMs = 4000) => {
-        sound.playShipSuccess();
+      triggerRain: (durationMs = 4500) => {
         set({ isRaining: true });
         setTimeout(() => {
           set({ isRaining: false });
@@ -356,10 +384,8 @@ export const useForestStore = create<ForestState>()(
 
       checkStreakExpiry: () => {
         const state = get();
-        if (!state.lastShipDate) return;
-
         const todayStr = getLocalDateString();
-        const result = evaluateStreakState({
+        const streakResult = evaluateStreakState({
           lastShipDate: state.lastShipDate,
           todayDate: todayStr,
           currentStreak: state.streakDays,
@@ -367,52 +393,34 @@ export const useForestStore = create<ForestState>()(
         });
 
         set({
-          streakDays: result.streakDays,
-          streakShields: result.streakShields,
-          drought: result.drought,
+          streakDays: streakResult.streakDays,
+          streakShields: streakResult.streakShields,
+          drought: streakResult.drought,
         });
       },
 
-      mergeCloudData: (cloudData) => {
-        const state = get();
-        // Merge trees keeping unique by ID
-        const existingIds = new Set(state.trees.map((t) => t.id));
-        const mergedTrees = [...state.trees];
-        if (cloudData.trees) {
-          for (const ct of cloudData.trees) {
-            if (!existingIds.has(ct.id)) {
-              mergedTrees.push(ct);
-              existingIds.add(ct.id);
+      mergeCloudData: (data) => {
+        set((state) => {
+          const mergedTrees = [...state.trees];
+          if (data.trees) {
+            for (const t of data.trees) {
+              if (!mergedTrees.some((existing) => existing.id === t.id)) {
+                mergedTrees.push(t);
+              }
             }
           }
-        }
-
-        // Merge ship logs keeping unique by ID
-        const existingLogIds = new Set(state.shipHistory.map((s) => s.id));
-        const mergedLogs = [...state.shipHistory];
-        if (cloudData.shipHistory) {
-          for (const cl of cloudData.shipHistory) {
-            if (!existingLogIds.has(cl.id)) {
-              mergedLogs.push(cl);
-              existingLogIds.add(cl.id);
-            }
-          }
-        }
-
-        // Merge unlocked decor
-        const decorSet = new Set([...state.unlockedDecor, ...(cloudData.unlockedDecor || [])]);
-
-        set({
-          level: Math.max(state.level, cloudData.level || 1),
-          xp: cloudData.xp !== undefined ? cloudData.xp : state.xp,
-          totalXp: Math.max(state.totalXp, cloudData.totalXp || 0),
-          pinecones: Math.max(state.pinecones, cloudData.pinecones || 20),
-          streakDays: Math.max(state.streakDays, cloudData.streakDays || 0),
-          bestStreak: Math.max(state.bestStreak, cloudData.bestStreak || 0),
-          streakShields: Math.max(state.streakShields, cloudData.streakShields || 0),
-          trees: mergedTrees,
-          shipHistory: mergedLogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
-          unlockedDecor: Array.from(decorSet),
+          return {
+            level: data.level ?? state.level,
+            xp: data.xp ?? state.xp,
+            totalXp: data.totalXp ?? state.totalXp,
+            pinecones: data.pinecones ?? state.pinecones,
+            streakDays: data.streakDays ?? state.streakDays,
+            bestStreak: data.bestStreak ?? state.bestStreak,
+            streakShields: data.streakShields ?? state.streakShields,
+            trees: mergedTrees,
+            shipHistory: data.shipHistory ?? state.shipHistory,
+            unlockedDecor: data.unlockedDecor ?? state.unlockedDecor,
+          };
         });
       },
 
@@ -436,7 +444,7 @@ export const useForestStore = create<ForestState>()(
       },
     }),
     {
-      name: "indieforest_storage_v2",
+      name: "indieforest_storage_v3",
       storage: createJSONStorage(() =>
         typeof window !== "undefined" && window.localStorage
           ? window.localStorage
