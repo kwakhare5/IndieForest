@@ -68,7 +68,7 @@ export function CampShopModal({ isOpen, onClose }: CampShopModalProps) {
         </p>
 
         {feedback && (
-          <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-pixel font-bold animate-in fade-in">
+          <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-medium animate-in fade-in">
             {feedback}
           </div>
         )}
@@ -99,7 +99,7 @@ export function CampShopModal({ isOpen, onClose }: CampShopModalProps) {
                     ) : (
                       <div className="flex items-center gap-1 text-xs font-pixel font-bold text-stone-900">
                         <Trees className="w-3.5 h-3.5 text-emerald-700" />
-                        <span>{item.cost} Pinecones</span>
+                        <span>{item.cost} PINECONES</span>
                       </div>
                     )}
                   </div>
@@ -111,8 +111,8 @@ export function CampShopModal({ isOpen, onClose }: CampShopModalProps) {
 
                 <div>
                   {isUnlocked ? (
-                    <div className="text-[10px] text-emerald-700 font-pixel font-semibold">
-                      ✓ Active on Island
+                    <div className="text-xs text-emerald-700 font-pixel font-bold">
+                      ✓ ACTIVE ON ISLAND
                     </div>
                   ) : (
                     <Button

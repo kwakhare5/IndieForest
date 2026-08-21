@@ -52,7 +52,7 @@ export function SegmentedControl<T extends string | number>({
             {Icon && <Icon className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} />}
             <span>{opt.label}</span>
             {opt.badge && (
-              <span className="ml-1 text-[10px] font-pixel text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
+              <span className="ml-1 font-pixel text-xs font-normal text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
                 {opt.badge}
               </span>
             )}

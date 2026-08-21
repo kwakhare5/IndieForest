@@ -15,6 +15,7 @@ import {
   completeDailyQuest,
   purchaseCampDecor,
   getLocalDateString,
+  calculateTreeTier,
 } from "@/lib/gamification";
 
 export type { GrowthTier, TreeType, TreeData, ShipLog, DailyQuest };
@@ -220,6 +221,16 @@ export const useForestStore = create<ForestState>()(
           q.id === "focus_ship" ? { ...q, completed: true } : q
         );
 
+        // Water and grow the most active or matching shipping tree
+        const updatedTrees = state.trees.map((t, idx) => {
+          if (t.type === "shipping" && (t.name === repo || idx === 0 || state.trees.length === 1)) {
+            const nextCommits = (t.commits || 0) + 1;
+            const nextTier = calculateTreeTier("shipping", nextCommits, t.mrr).tier;
+            return { ...t, commits: nextCommits, tier: nextTier };
+          }
+          return t;
+        });
+
         set({
           xp: progress.xp,
           totalXp: state.totalXp + rewards.xpGained,
@@ -231,6 +242,7 @@ export const useForestStore = create<ForestState>()(
           lastShipDate: todayStr,
           drought: false,
           quests: updatedQuests,
+          trees: updatedTrees,
           shipHistory: [newShipLog, ...state.shipHistory].slice(0, 50),
           isRaining: true,
           hasCompletedSproutGuide: true,
@@ -295,13 +307,16 @@ export const useForestStore = create<ForestState>()(
           [1.8, -1.8],
         ];
         const nextCoord = coords[state.trees.length % coords.length] || [0, 2.5];
+        const initialCommits = type === "shipping" ? 1 : 0;
+        const computedTier = tier || calculateTreeTier(type, initialCommits, mrr).tier;
 
         const newTree: TreeData = {
           id: `tree-${Date.now()}`,
-          name: name.trim() || "Customer",
+          name: name.trim() || (type === "shipping" ? "Project Repo" : "Subscriber"),
           type,
+          commits: initialCommits,
           mrr,
-          tier,
+          tier: computedTier,
           gridX: nextCoord[0],
           gridZ: nextCoord[1],
           plantedAt: new Date().toISOString(),

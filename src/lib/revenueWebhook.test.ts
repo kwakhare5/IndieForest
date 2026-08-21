@@ -52,6 +52,23 @@ describe("Revenue Webhook Domain Core (TDD Seam)", () => {
       expect(result.customerName).toBe("annual@enterprise.com");
       expect(result.isValid).toBe(true);
     });
+
+    it("handles customer.subscription.deleted as a churn event (converts tree to stump)", () => {
+      const payload = {
+        type: "customer.subscription.deleted",
+        data: {
+          object: {
+            customer_email: "churned@user.com",
+          },
+        },
+      };
+
+      const result = parseUniversalRevenueEvent(payload);
+      expect(result.isValid).toBe(true);
+      expect(result.isChurn).toBe(true);
+      expect(result.tier).toBe("stump");
+      expect(result.mrr).toBe(0);
+    });
   });
 
   describe("Lemon Squeezy Events", () => {
@@ -78,6 +95,21 @@ describe("Revenue Webhook Domain Core (TDD Seam)", () => {
         isValid: true,
       });
     });
+
+    it("handles Lemon Squeezy subscription_cancelled as churn", () => {
+      const payload = {
+        meta: { event_name: "subscription_cancelled" },
+        data: {
+          attributes: {
+            user_name: "Cancelling User",
+          },
+        },
+      };
+
+      const result = parseUniversalRevenueEvent(payload);
+      expect(result.isChurn).toBe(true);
+      expect(result.tier).toBe("stump");
+    });
   });
 
   describe("Polar Events", () => {
@@ -100,6 +132,19 @@ describe("Revenue Webhook Domain Core (TDD Seam)", () => {
         source: "polar",
         isValid: true,
       });
+    });
+
+    it("handles Polar subscription.canceled as churn", () => {
+      const payload = {
+        event: "subscription.canceled",
+        data: {
+          customer: { name: "Polar Churner" },
+        },
+      };
+
+      const result = parseUniversalRevenueEvent(payload);
+      expect(result.isChurn).toBe(true);
+      expect(result.tier).toBe("stump");
     });
   });
 

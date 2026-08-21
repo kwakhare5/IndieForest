@@ -13,6 +13,8 @@ import {
   CloudRain,
   Check,
   Copy,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -21,6 +23,8 @@ import { SegmentedControl, SegmentedOption } from "@/components/ui/SegmentedCont
 import { TreeData } from "@/types/game";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
+import { GitHubIslandProfile } from "@/lib/github";
+import { useForestStore } from "@/store/useForestStore";
 
 // Dynamic import for the Island Canvas (Mode: Preview)
 const ForestCanvas = dynamic(
@@ -30,13 +34,13 @@ const ForestCanvas = dynamic(
     loading: () => (
       <div className="w-full h-[460px] sm:h-[520px] rounded-[2.5rem] bg-[#f4f0e8] border border-[#d6cfc5] flex flex-col items-center justify-center text-stone-600 font-mono text-xs shadow-inner">
         <div className="w-8 h-8 border-2 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-2" />
-        <span className="uppercase tracking-widest text-[11px] font-pixel">Loading Island Preview...</span>
+        <span className="uppercase tracking-widest text-sm font-bold font-pixel">Loading Island Preview...</span>
       </div>
     ),
   }
 );
 
-const PREVIEW_TREES: TreeData[] = [
+const DEFAULT_PREVIEW_TREES: TreeData[] = [
   {
     id: "preview-1",
     name: "Acme Corp (Pro Plan)",
@@ -96,11 +100,57 @@ const SHIELD_OPTIONS: SegmentedOption<"armed" | "rest">[] = [
 
 export default function LandingPage() {
   const { isLoaded, isSignedIn } = useUser();
+  const mergeCloudData = useForestStore((s) => s.mergeCloudData);
+
+  // GitHub Instant Search & Preview State
+  const [searchUsername, setSearchUsername] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [activeProfile, setActiveProfile] = useState<GitHubIslandProfile | null>(null);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   const [selectedMilestone, setSelectedMilestone] = useState<3 | 7 | 14>(7);
   const [shieldState, setShieldState] = useState<"armed" | "rest">("armed");
   const [demoMrr, setDemoMrr] = useState(79);
   const [copiedTweet, setCopiedTweet] = useState(false);
+
+  const handleInstantSprout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanUser = searchUsername.trim().replace(/^@/, "");
+    if (!cleanUser) return;
+
+    setIsSearching(true);
+    setSearchError(null);
+    sound.playClick();
+
+    try {
+      const res = await fetch(`/api/github/preview?username=${encodeURIComponent(cleanUser)}`);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "User not found");
+      }
+      const data: GitHubIslandProfile = await res.json();
+      setActiveProfile(data);
+      sound.playShipSuccess();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to load GitHub activity";
+      setSearchError(msg);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleClaimIsland = () => {
+    sound.playLevelUp();
+    if (activeProfile) {
+      mergeCloudData({
+        trees: activeProfile.trees,
+        streakDays: activeProfile.streakDays,
+        level: activeProfile.level,
+        xp: activeProfile.xp,
+        pinecones: activeProfile.pinecones,
+      });
+    }
+  };
 
   const getTreeTierFromMrr = (mrr: number) => {
     if (mrr >= 100) return { tier: "Majestic Golden Pine", desc: "4-tier stepped canopy with golden crown" };
@@ -166,7 +216,7 @@ export default function LandingPage() {
               </a>
             </nav>
 
-            {/* Navbar Action Button: Exact Same Button Primitive for Both States */}
+            {/* Navbar Action Button */}
             <div className="flex items-center gap-2">
               {isLoaded && isSignedIn ? (
                 <div className="flex items-center gap-2">
@@ -186,7 +236,7 @@ export default function LandingPage() {
                     arrowType="right"
                     onClick={() => sound.playClick()}
                   >
-                    SIGN IN WITH GOOGLE
+                    SIGN IN
                   </Button>
                 </SignInButton>
               )}
@@ -202,8 +252,8 @@ export default function LandingPage() {
           
           {/* Left Hero Copy */}
           <div className="lg:col-span-6 space-y-6 text-left">
-            <Badge variant="stone" dot size="sm">
-              Gamified Habit & Revenue Tracker
+            <Badge variant="stone" dot size="md" className="mb-2 shadow-2xs">
+              Zero-Touch 3D Living Diorama
             </Badge>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-stone-950 leading-[1.06] tracking-tight font-editorial">
@@ -211,52 +261,148 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl font-satoshi">
-              Every git commit waters your island. Every paying subscriber sprouts a golden pine tree in your revenue grove. Maintain your streak to unlock milestone camps and defend against burnout.
+              Zero manual logging. Connect GitHub once — every code push automatically waters your island and grows emerald pine trees. When revenue arrives via Stripe or Polar, golden groves sprout.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-              {isLoaded && isSignedIn ? (
-                <Link href="/dashboard">
-                  <Button variant="emerald" size="lg" showArrow arrowType="right" className="w-full sm:w-auto">
-                    GO TO MY ISLAND
-                  </Button>
-                </Link>
-              ) : (
-                <SignInButton mode="modal">
+            {/* Zero-Friction Instant Sprout Search Bar */}
+            <div className="pt-1">
+              <form onSubmit={handleInstantSprout} className="p-1.5 rounded-2xl glass-dock shadow-sm max-w-lg">
+                <div className="p-1 rounded-xl porcelain-surface flex items-center gap-2">
+                  <div className="pl-3 text-stone-400">
+                    <Github className="w-4 h-4 text-stone-600" />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Enter your GitHub username (e.g. kwakhare5)"
+                    value={searchUsername}
+                    onChange={(e) => setSearchUsername(e.target.value)}
+                    className="w-full bg-transparent text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-satoshi"
+                  />
                   <Button
+                    type="submit"
                     variant="emerald"
-                    size="lg"
-                    showArrow
-                    arrowType="right"
-                    onClick={() => sound.playClick()}
-                    className="w-full sm:w-auto"
+                    size="sm"
+                    disabled={isSearching || !searchUsername.trim()}
+                    className="shrink-0"
                   >
-                    START FREE WITH GOOGLE
+                    {isSearching ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5 mr-1" />
+                        Sprout Island
+                      </>
+                    )}
                   </Button>
-                </SignInButton>
-              )}
+                </div>
+              </form>
 
-              <Link href="/u/karan">
-                <Button variant="outline" size="lg" showArrow arrowType="up-right" className="w-full sm:w-auto">
-                  View Live Public Profile
-                </Button>
-              </Link>
+              {searchError && (
+                <p className="text-xs text-rose-600 mt-2 pl-2 font-medium">
+                  {searchError}
+                </p>
+              )}
             </div>
 
-            <div className="flex items-center gap-4 text-xs font-satoshi text-stone-500 pt-2">
+            {/* Active Sprouted Profile Result Card */}
+            {activeProfile ? (
+              <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 shadow-xs max-w-lg space-y-3 animate-in fade-in duration-300">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={activeProfile.avatarUrl}
+                      alt={activeProfile.username}
+                      className="w-8 h-8 rounded-full border border-emerald-300"
+                    />
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-stone-900 font-satoshi">
+                        @{activeProfile.username}&apos;s Live Island
+                      </h4>
+                      <p className="text-[11px] text-emerald-800 font-medium">
+                        {activeProfile.totalCommits} commits across {activeProfile.activeReposCount} projects
+                      </p>
+                    </div>
+                  </div>
+                  <Badge variant="emerald" size="sm">
+                    {activeProfile.streakDays}d Streak
+                  </Badge>
+                </div>
+
+                <div className="pt-2 border-t border-emerald-200/60 flex items-center justify-between">
+                  <span className="text-xs text-stone-600 font-satoshi">
+                    Level {activeProfile.level} • {activeProfile.pinecones} Pinecones
+                  </span>
+                  
+                  {isLoaded && isSignedIn ? (
+                    <Link href="/dashboard" onClick={handleClaimIsland}>
+                      <Button variant="emerald" size="sm" showArrow arrowType="right">
+                        Claim &amp; Go to Dashboard
+                      </Button>
+                    </Link>
+                  ) : (
+                    <SignInButton mode="modal">
+                      <Button
+                        variant="emerald"
+                        size="sm"
+                        showArrow
+                        arrowType="right"
+                        onClick={handleClaimIsland}
+                      >
+                        Claim Island &amp; Auto-Sync
+                      </Button>
+                    </SignInButton>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+                {isLoaded && isSignedIn ? (
+                  <Link href="/dashboard">
+                    <Button variant="emerald" size="lg" showArrow arrowType="right" className="w-full sm:w-auto">
+                      GO TO MY ISLAND
+                    </Button>
+                  </Link>
+                ) : (
+                  <SignInButton mode="modal">
+                    <Button
+                      variant="emerald"
+                      size="lg"
+                      showArrow
+                      arrowType="right"
+                      onClick={() => sound.playClick()}
+                      className="w-full sm:w-auto"
+                    >
+                      START FREE WITH GOOGLE
+                    </Button>
+                  </SignInButton>
+                )}
+
+                <Link href="/u/karan">
+                  <Button variant="outline" size="lg" showArrow arrowType="up-right" className="w-full sm:w-auto">
+                    View Live Public Profile
+                  </Button>
+                </Link>
+              </div>
+            )}
+
+            <div className="flex items-center gap-4 text-xs font-satoshi text-stone-500 pt-1">
               <span className="flex items-center gap-1 font-semibold text-emerald-800 font-satoshi">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> Free & Open Source
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> 100% Zero-Touch Sync
               </span>
               <span>•</span>
-              <span className="font-satoshi">Zero WebGL Lag</span>
-              <span>•</span>
               <span className="font-satoshi">Zero Code Access</span>
+              <span>•</span>
+              <span className="font-satoshi">Stripe &amp; Polar Ready</span>
             </div>
           </div>
 
           {/* Right Hero Island Canvas */}
           <div className="lg:col-span-6 w-full">
-            <ForestCanvas mode="preview" customTrees={PREVIEW_TREES} />
+            <ForestCanvas
+              mode="preview"
+              customTrees={activeProfile ? activeProfile.trees : DEFAULT_PREVIEW_TREES}
+            />
           </div>
         </div>
       </section>
@@ -265,10 +411,10 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-20 bg-[#e6e1d7] border-y border-stone-300/80 font-satoshi">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <Badge variant="stone" size="sm" className="mb-3">
-            The Daily Habit Loop
+            Zero Manual Effort
           </Badge>
           <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 mb-3 font-editorial">
-            How IndieForest Powers Consistency
+            How IndieForest Works Passively
           </h2>
           <p className="text-sm sm:text-base text-stone-600 max-w-2xl mx-auto mb-12 font-satoshi">
             A frictionless feedback loop engineered to make writing, pushing, and launching software deeply rewarding.
@@ -279,14 +425,14 @@ export default function LandingPage() {
             {/* Step 1 Card */}
             <Card variant="porcelain" className="p-7 flex flex-col justify-between rounded-[2.5rem]">
               <div>
-                <span className="text-xs font-pixel font-bold text-emerald-700 block mb-2">
-                  01 / Write & Push
+                <span className="font-pixel text-xs font-bold text-emerald-700 block mb-2">
+                  01 / CODE &amp; PUSH
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-satoshi">
-                  Code in your favorite IDE
+                  Code in your favorite editor
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-satoshi">
-                  Work in VS Code, Antigravity, or Cursor. Push commits to GitHub or log 1-click releases when you ship a feature.
+                  Work in VS Code, Cursor, or Antigravity. Push code to GitHub — IndieForest automatically detects your commits with zero manual logging.
                 </p>
                 <div className="p-3 rounded-xl bg-stone-900 text-stone-100 font-mono text-xs flex items-center justify-between shadow-inner">
                   <span className="text-emerald-400">$ git push origin main</span>
@@ -302,20 +448,20 @@ export default function LandingPage() {
             {/* Step 2 Card */}
             <Card variant="porcelain" className="p-7 flex flex-col justify-between rounded-[2.5rem]">
               <div>
-                <span className="text-xs font-pixel font-bold text-amber-700 block mb-2">
-                  02 / Water the Island
+                <span className="font-pixel text-xs font-bold text-amber-700 block mb-2">
+                  02 / PASSIVE WATERING
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-satoshi">
-                  Rain Pours & XP Advances
+                  Rain Pours &amp; Pines Grow
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-satoshi">
-                  Your ship triggers real-time particle rain. Streaks ignite, retro chimes ring, and your developer rank levels up.
+                  Every commit triggers particle rain over your 3D diorama. Streaks advance, retro chimes ring, and your developer rank levels up.
                 </p>
                 <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between shadow-xs">
                   <span className="flex items-center gap-1.5 font-bold font-satoshi">
-                    <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" /> +100 XP & Streak Bonus
+                    <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" /> +100 XP &amp; Streak Bonus
                   </span>
-                  <span className="text-stone-600 font-pixel">Lvl II</span>
+                  <span className="text-stone-700 font-pixel text-xs font-bold">LVL II</span>
                 </div>
               </div>
               <div className="mt-6 pt-4 border-t border-stone-100 flex items-center gap-2 text-xs font-satoshi text-amber-800">
@@ -327,14 +473,14 @@ export default function LandingPage() {
             {/* Step 3 Card */}
             <Card variant="porcelain" className="p-7 flex flex-col justify-between rounded-[2.5rem]">
               <div>
-                <span className="text-xs font-pixel font-bold text-emerald-700 block mb-2">
-                  03 / Revenue Grove
+                <span className="font-pixel text-xs font-bold text-emerald-700 block mb-2">
+                  03 / REVENUE GROVE
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-satoshi">
-                  Sprout Customer Trees
+                  Sprout Golden Pines
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-satoshi">
-                  Connect Stripe, Lemon Squeezy, or Polar webhooks. Every paying subscriber grows as a stepped pine tree on your island terrain.
+                  Connect Stripe, Lemon Squeezy, or Polar. Every paying subscriber grows as a radiant golden pine tree near your oasis pond.
                 </p>
                 <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between shadow-xs">
                   <span className="flex items-center gap-1.5 font-bold font-satoshi">
@@ -374,10 +520,10 @@ export default function LandingPage() {
             </div>
             <h3 className="text-lg font-bold text-stone-950 font-satoshi">Shipping Pines (Emerald Needles)</h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
-              Earned by daily coding streaks, git commits, and free milestone releases (e.g. 100 beta users). Keeps pre-revenue founders motivated during the hard building phase.
+              Earned by automated git commits and shipping streaks. Keeps pre-revenue founders motivated during the hard building phase.
             </p>
             <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-satoshi">
-              <span>Trigger: Daily Ship / Milestone</span>
+              <span>Trigger: Automated GitHub Commits</span>
               <Badge variant="emerald" size="sm">Emerald Foliage</Badge>
             </div>
           </Card>
@@ -388,7 +534,7 @@ export default function LandingPage() {
             </div>
             <h3 className="text-lg font-bold text-stone-950 font-satoshi">Revenue Pines (Golden Needles)</h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
-              Sprouted automatically when paying customer sales arrive from Stripe, Lemon Squeezy, or Polar. Displays floating monthly recurring revenue ($/mo) badges.
+              Sprouted automatically when customer sales arrive from Stripe, Lemon Squeezy, or Polar. Displays floating recurring revenue ($/mo) badges.
             </p>
             <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-satoshi">
               <span>Trigger: Stripe / Webhook Sale</span>
@@ -402,7 +548,7 @@ export default function LandingPage() {
       <section id="features" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-satoshi">
         <div className="text-center mb-14">
           <Badge variant="stone" size="sm" className="mb-3">
-            Tactile Builders' Mechanics
+            Tactile Builders&apos; Mechanics
           </Badge>
           <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 mb-3 font-editorial">
             Interactive Bento Showcase
@@ -417,8 +563,8 @@ export default function LandingPage() {
           {/* Bento 1: Milestone Camp Unlocks */}
           <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
             <div>
-              <span className="text-xs font-pixel uppercase tracking-wider font-semibold text-emerald-700 block mb-1">
-                Milestone Evolution
+              <span className="font-pixel text-xs uppercase tracking-wider font-bold text-emerald-700 block mb-1">
+                MILESTONE EVOLUTION
               </span>
               <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-satoshi">
                 Camp Unlocks as You Build
@@ -439,19 +585,19 @@ export default function LandingPage() {
                 {selectedMilestone === 3 && (
                   <>
                     <span className="text-amber-800 font-bold">Campfire + Smoke Puffs Unlocked</span>
-                    <span className="text-stone-500 font-pixel">+10 Pinecones</span>
+                    <span className="text-stone-700 font-pixel text-xs font-bold">+10 PINECONES</span>
                   </>
                 )}
                 {selectedMilestone === 7 && (
                   <>
                     <span className="text-emerald-800 font-bold">Canvas Tent Shelter Unlocked</span>
-                    <span className="text-stone-500 font-pixel">+1 Streak Shield</span>
+                    <span className="text-stone-700 font-pixel text-xs font-bold">+1 STREAK SHIELD</span>
                   </>
                 )}
                 {selectedMilestone === 14 && (
                   <>
                     <span className="text-indigo-800 font-bold">Wooden Log Cabin Home Unlocked</span>
-                    <span className="text-stone-500 font-pixel">Tier IV Architect</span>
+                    <span className="text-stone-700 font-pixel text-xs font-bold">TIER IV ARCHITECT</span>
                   </>
                 )}
               </Card>
@@ -496,7 +642,7 @@ export default function LandingPage() {
 
             <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-600">
               <span>Automatic Rest Defense</span>
-              <span className="font-bold text-sky-800 font-pixel">2 Max Capacity</span>
+              <span className="font-bold text-sky-800 font-pixel text-xs">2 MAX CAPACITY</span>
             </div>
           </Card>
 
@@ -573,13 +719,13 @@ export default function LandingPage() {
                 >
                   {copiedTweet ? "Copied to Clipboard" : "Copy Formatted Post"}
                 </Button>
-                <span className="text-xs text-stone-500 font-pixel">280 char compliant</span>
+                <span className="text-xs text-stone-500 font-pixel font-bold">280 CHAR COMPLIANT</span>
               </div>
             </Card>
 
             <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-500">
               <span>Dynamic Island Cards</span>
-              <span className="font-semibold text-emerald-800 font-pixel">indieforest.dev/u/karan</span>
+              <span className="font-semibold text-emerald-800 font-pixel text-xs">indieforest.app/u/karan</span>
             </div>
           </Card>
         </div>
@@ -590,7 +736,7 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <Badge variant="stone" size="sm" className="mb-2">
-              Transparent & Zero-Slop
+              Transparent &amp; Zero-Slop
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-normal text-stone-950 font-editorial">
               Frequently Asked Questions
@@ -612,7 +758,7 @@ export default function LandingPage() {
                 How does Stripe or Lemon Squeezy integration work?
               </h3>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
-                You simply paste your unique IndieForest Webhook URL into your Stripe, Lemon Squeezy, or Polar webhook settings. When a customer purchases a subscription, our webhook normalizer automatically sprouts a Golden Pine tree in your revenue grove with the customer's monthly recurring value.
+                You simply paste your unique IndieForest Webhook URL into your Stripe, Lemon Squeezy, or Polar webhook settings. When a customer purchases a subscription, our webhook normalizer automatically sprouts a Golden Pine tree in your revenue grove with the customer&apos;s monthly recurring value.
               </p>
             </Card>
 

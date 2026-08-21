@@ -4,17 +4,23 @@ import React, { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useForestStore } from "@/store/useForestStore";
+import { WeatherType } from "@/types/game";
 
 export function WeatherSystem() {
   const isRaining = useForestStore((s) => s.isRaining);
+  const weatherType = useForestStore((s) => (s as { weatherType?: WeatherType }).weatherType || (isRaining ? "rain_emerald" : "clear"));
   const timeOfDay = useForestStore((s) => s.timeOfDay);
   const streakDays = useForestStore((s) => s.streakDays);
 
-  const rainCount = 140;
-  const fireflyCount = 25;
+  const rainCount = 160;
+  const fireflyCount = 30;
+  const goldCount = 80;
 
   const rainRef = useRef<THREE.InstancedMesh>(null);
   const firefliesRef = useRef<THREE.InstancedMesh>(null);
+  const goldShowerRef = useRef<THREE.InstancedMesh>(null);
+  const sunrayRef = useRef<THREE.Group>(null);
+  const lightningLightRef = useRef<THREE.PointLight>(null);
 
   // Rain drop positions
   const rainData = useMemo(() => {
@@ -25,6 +31,17 @@ export function WeatherSystem() {
       speed: 0.18 + Math.random() * 0.12,
     }));
   }, [rainCount]);
+
+  // Gold particle shower positions
+  const goldData = useMemo(() => {
+    return Array.from({ length: goldCount }, () => ({
+      x: (Math.random() - 0.5) * 6.5,
+      y: Math.random() * 7 + 1,
+      z: (Math.random() - 0.5) * 6.5,
+      speed: 0.08 + Math.random() * 0.08,
+      rotation: Math.random() * Math.PI * 2,
+    }));
+  }, [goldCount]);
 
   // Firefly positions
   const fireflyData = useMemo(() => {
@@ -43,10 +60,10 @@ export function WeatherSystem() {
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
 
-    // Rain drop animation
-    if (rainRef.current && isRaining) {
+    // 1. Rain / Mist Particle Animation
+    if (rainRef.current && (isRaining || weatherType === "rain_emerald" || weatherType === "thunder_milestone")) {
       rainData.forEach((drop, i) => {
-        drop.y -= drop.speed;
+        drop.y -= drop.speed * (weatherType === "thunder_milestone" ? 1.5 : 1.0);
         if (drop.y < 0) {
           drop.y = 8 + Math.random() * 2;
           drop.x = (Math.random() - 0.5) * 8.5;
@@ -55,14 +72,39 @@ export function WeatherSystem() {
         dummy.position.set(drop.x, drop.y, drop.z);
         dummy.rotation.x = 0.1;
         dummy.rotation.z = -0.1;
-        dummy.scale.set(0.04, 0.5, 0.04);
+        dummy.scale.set(0.035, 0.45, 0.035);
         dummy.updateMatrix();
         rainRef.current!.setMatrixAt(i, dummy.matrix);
       });
       rainRef.current.instanceMatrix.needsUpdate = true;
     }
 
-    // Fireflies floating animation
+    // 2. Radiant Golden Particle Shower (Stripe Payments)
+    if (goldShowerRef.current && weatherType === "gold_shower") {
+      goldData.forEach((particle, i) => {
+        particle.y -= particle.speed;
+        particle.rotation += 0.05;
+        if (particle.y < 0) {
+          particle.y = 7 + Math.random() * 2;
+          particle.x = (Math.random() - 0.5) * 6.5;
+          particle.z = (Math.random() - 0.5) * 6.5;
+        }
+        dummy.position.set(particle.x, particle.y, particle.z);
+        dummy.rotation.set(particle.rotation, particle.rotation, 0);
+        dummy.scale.set(0.08, 0.08, 0.08);
+        dummy.updateMatrix();
+        goldShowerRef.current!.setMatrixAt(i, dummy.matrix);
+      });
+      goldShowerRef.current.instanceMatrix.needsUpdate = true;
+    }
+
+    // 3. Lightning Flash (Thunder Milestone)
+    if (lightningLightRef.current && weatherType === "thunder_milestone") {
+      const flash = Math.sin(time * 15) > 0.95 ? 4.5 : 0;
+      lightningLightRef.current.intensity = flash;
+    }
+
+    // 4. Fireflies floating animation
     if (firefliesRef.current && (timeOfDay === "night" || streakDays >= 7)) {
       fireflyData.forEach((fly, i) => {
         const y = fly.y + Math.sin(time * fly.speed + fly.phase) * 0.35;
@@ -76,6 +118,11 @@ export function WeatherSystem() {
         firefliesRef.current!.setMatrixAt(i, dummy.matrix);
       });
       firefliesRef.current.instanceMatrix.needsUpdate = true;
+    }
+
+    // 5. Rotating Golden Sunray Beams
+    if (sunrayRef.current) {
+      sunrayRef.current.rotation.y = time * 0.04;
     }
   });
 
@@ -130,15 +177,38 @@ export function WeatherSystem() {
       {/* Ambient Fill Light */}
       <ambientLight color={lighting.ambientColor} intensity={lighting.ambientIntensity} />
 
-      {/* Rain Particle Mesh */}
-      {isRaining && (
+      {/* Lightning Flash Point Light for Milestones */}
+      <pointLight ref={lightningLightRef} position={[0, 8, 0]} color="#e0f2fe" intensity={0} distance={20} />
+
+      {/* 1. Rain / Mist Particle Mesh */}
+      {(isRaining || weatherType === "rain_emerald" || weatherType === "thunder_milestone") && (
         <instancedMesh ref={rainRef} args={[undefined, undefined, rainCount]}>
           <cylinderGeometry args={[1, 1, 1, 4]} />
-          <meshBasicMaterial color="#38bdf8" transparent opacity={0.8} />
+          <meshBasicMaterial color={weatherType === "thunder_milestone" ? "#bae6fd" : "#38bdf8"} transparent opacity={0.75} />
         </instancedMesh>
       )}
 
-      {/* Fireflies Mesh */}
+      {/* 2. Golden Particle Shower (Stripe Sales) */}
+      {weatherType === "gold_shower" && (
+        <instancedMesh ref={goldShowerRef} args={[undefined, undefined, goldCount]}>
+          <octahedronGeometry args={[1, 0]} />
+          <meshStandardMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={1.5} roughness={0.1} />
+        </instancedMesh>
+      )}
+
+      {/* 3. Golden Sunray Beams */}
+      {weatherType === "thunder_milestone" && (
+        <group ref={sunrayRef} position={[0, 4, 0]}>
+          {[0, Math.PI / 2, Math.PI, Math.PI * 1.5].map((rot, idx) => (
+            <mesh key={idx} rotation={[0.4, rot, 0]}>
+              <cylinderGeometry args={[0.05, 0.8, 12, 4]} />
+              <meshBasicMaterial color="#fef08a" transparent opacity={0.12} />
+            </mesh>
+          ))}
+        </group>
+      )}
+
+      {/* 4. Fireflies Mesh */}
       {(timeOfDay === "night" || streakDays >= 7) && (
         <instancedMesh ref={firefliesRef} args={[undefined, undefined, fireflyCount]}>
           <sphereGeometry args={[1, 6, 6]} />

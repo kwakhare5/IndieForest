@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import { useForestStore } from "@/store/useForestStore";
-import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Sparkles, Target, Github } from "lucide-react";
+import { Sparkles, X, ChevronDown, Rocket } from "lucide-react";
 import { sound } from "@/lib/sound";
 
 interface SproutGuideProps {
@@ -12,123 +11,78 @@ interface SproutGuideProps {
 }
 
 export function SproutGuide({ onOpenShipModal }: SproutGuideProps) {
-  const todayFocus = useForestStore((s) => s.todayFocus);
-  const setTodayFocus = useForestStore((s) => s.setTodayFocus);
-  const setGithubRepo = useForestStore((s) => s.setGithubRepo);
-  const user = useForestStore((s) => s.user);
+  const completeSproutGuide = useForestStore(
+    (s) => s.completeSproutGuide
+  );
+  const [isDismissed, setIsDismissed] = useState(false);
 
-  const [focusInput, setFocusInput] = useState(todayFocus);
-  const [repoInput, setRepoInput] = useState(user.githubRepo || "");
-  const [step, setStep] = useState<1 | 2>(1);
+  if (isDismissed) return null;
 
-  const handleSaveFocus = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (focusInput.trim()) {
-      setTodayFocus(focusInput.trim());
-      sound.playCoin();
-      setStep(2);
-    }
+  const handleDismiss = () => {
+    sound.playClick();
+    setIsDismissed(true);
+    completeSproutGuide();
   };
 
-  const handleSaveRepoAndShip = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (repoInput.trim()) {
-      setGithubRepo(repoInput.trim());
-    }
-    sound.playLevelUp();
+  const handleAction = () => {
+    sound.playCoin();
     onOpenShipModal();
   };
 
   return (
-    <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 w-full max-w-md px-4 pointer-events-auto animate-in fade-in slide-in-from-top-4 duration-300 font-satoshi">
-      <div className="p-1 rounded-[2.25rem] glass-dock shadow-2xl">
-        <div className="p-6 rounded-[calc(2.25rem-0.375rem)] porcelain-surface space-y-4 text-stone-900">
+    <div className="fixed bottom-22 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-300 font-satoshi select-none max-w-sm sm:max-w-md w-full px-4">
+      {/* Speech Bubble Enclosure */}
+      <div className="p-1 rounded-2xl glass-dock shadow-2xl relative w-full">
+        <div className="px-3.5 py-2.5 rounded-[calc(1rem-0.125rem)] porcelain-surface flex items-center justify-between gap-3 text-stone-900">
           
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shadow-xs">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-xs font-bold text-stone-950 font-satoshi">Welcome to your Virgin Island</h3>
-                <span className="text-[10px] text-stone-500 font-pixel">Step {step} of 2 • Sprout Guide</span>
-              </div>
+          {/* Left Icon & Text */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-7 h-7 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 animate-spin duration-3000" />
             </div>
 
-            <Badge variant="pixel" size="sm">+150 XP First Ship</Badge>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-bold text-stone-950 font-satoshi truncate">
+                  Welcome to your Virgin Island
+                </span>
+                <Badge variant="pixel" size="sm" className="hidden sm:inline-flex shrink-0">
+                  +150 XP FIRST SHIP
+                </Badge>
+              </div>
+              <p className="text-[11px] text-stone-600 font-medium truncate mt-0.5">
+                Log your first daily ship below to sprout trees!
+              </p>
+            </div>
           </div>
 
-          {/* Step 1: Set Today's #1 Focus Task */}
-          {step === 1 && (
-            <form onSubmit={handleSaveFocus} className="space-y-3">
-              <p className="text-xs text-stone-600 leading-relaxed font-satoshi">
-                What is the single most important task or feature you are coding today?
-              </p>
-              <div className="relative">
-                <Target className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
-                <input
-                  type="text"
-                  required
-                  value={focusInput}
-                  onChange={(e) => setFocusInput(e.target.value)}
-                  placeholder="e.g. Build Google OAuth & Clean HUD"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-3 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 font-satoshi font-medium"
-                />
-              </div>
+          {/* Right Action & Dismiss */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={handleAction}
+              className="px-2.5 py-1 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1 transition active:scale-95 cursor-pointer shadow-xs"
+            >
+              <Rocket className="w-3 h-3" />
+              <span>Start</span>
+            </button>
 
-              <Button
-                type="submit"
-                variant="emerald"
-                size="md"
-                showArrow
-                arrowType="right"
-                className="w-full"
-              >
-                Next: Connect GitHub
-              </Button>
-            </form>
-          )}
-
-          {/* Step 2: Link GitHub & Log First Ship */}
-          {step === 2 && (
-            <form onSubmit={handleSaveRepoAndShip} className="space-y-3">
-              <p className="text-xs text-stone-600 leading-relaxed font-satoshi">
-                Enter your public GitHub repo to auto-scan commits, or skip to ship manually:
-              </p>
-              <div className="relative">
-                <Github className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
-                <input
-                  type="text"
-                  value={repoInput}
-                  onChange={(e) => setRepoInput(e.target.value)}
-                  placeholder="e.g. kwakhare5/IndieForest"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-3 py-2 text-xs text-stone-900 font-mono placeholder-stone-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="md"
-                  onClick={() => onOpenShipModal()}
-                >
-                  Skip Repo
-                </Button>
-                <Button
-                  type="submit"
-                  variant="emerald"
-                  size="md"
-                  showArrow
-                >
-                  LOG FIRST SHIP
-                </Button>
-              </div>
-            </form>
-          )}
+            <button
+              type="button"
+              onClick={handleDismiss}
+              className="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition cursor-pointer"
+              title="Dismiss Guide"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
         </div>
+      </div>
+
+      {/* Downward Pointer Triangle Centered toward LOG DAILY SHIP */}
+      <div className="text-stone-300 -mt-1 drop-shadow-sm flex items-center justify-center">
+        <ChevronDown className="w-5 h-5 animate-bounce text-emerald-700" />
       </div>
     </div>
   );
