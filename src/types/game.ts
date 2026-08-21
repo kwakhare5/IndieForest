@@ -14,10 +14,13 @@ export interface CommitProof {
 }
 
 export interface StripeProof {
-  invoiceId: string;
-  amount: number;
+  customerId?: string;
+  invoiceId?: string;
+  amount?: number;
+  amountMrr?: number;
   currency?: string;
-  plan: string;
+  plan?: string;
+  customerName?: string;
   timestamp: string;
 }
 
