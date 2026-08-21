@@ -1,32 +1,49 @@
-import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from "next";
+import { Geist_Mono, Instrument_Serif, Plus_Jakarta_Sans, VT323 } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-editorial",
+  weight: ["400"],
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const jakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-satoshi",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const vt323 = VT323({
+  variable: "--font-pixel",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "IndieForest — 3D Gamified Daily Shipping Island",
+  title: "IndieForest — Gamified 3D Daily Shipping Dashboard for Indie Hackers",
   description:
-    "Transform daily code shipping and indie startup growth into a living 3D low-poly isometric forest island.",
+    "Turn daily coding momentum and SaaS customer growth into a living 3D low-poly island diorama. 1-click GitHub commit sync, streak shields, and MRR pine trees.",
+  keywords: ["indie hacker", "github streak", "gamified coding", "3d diorama", "habit tracker", "build in public"],
   icons: {
-    icon: "/favicon.ico",
+    icon: "/logos/indieforest_logo.svg",
+    apple: "/logos/indieforest_logo.svg",
   },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#0d1512",
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  openGraph: {
+    title: "IndieForest — 3D Daily Shipping Dashboard",
+    description: "Turn daily git commits and revenue momentum into a living 3D island diorama.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -35,8 +52,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${geistSans.variable} ${geistMono.variable}`}>
-      <body className="antialiased font-sans bg-[#09110e] text-[#ecfdf5] overflow-hidden select-none">
+    <html lang="en" className="scroll-smooth">
+      <body
+        className={`${instrumentSerif.variable} ${jakartaSans.variable} ${vt323.variable} ${geistMono.variable} antialiased bg-[#ece7de] text-stone-900 overflow-y-auto overflow-x-hidden min-h-screen`}
+      >
         {children}
       </body>
     </html>
