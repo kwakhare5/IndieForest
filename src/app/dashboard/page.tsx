@@ -45,6 +45,7 @@ export default function DashboardPage() {
   const [isAddTreeModalOpen, setIsAddTreeModalOpen] = useState(false);
   const [isShopModalOpen, setIsShopModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
 
   // Timeline Scrubber State
   const [scrubbedTrees, setScrubbedTrees] = useState<TreeData[] | null>(null);
@@ -97,7 +98,7 @@ export default function DashboardPage() {
         onOpenShareModal={() => setIsShareModalOpen(true)}
       />
 
-      {/* Zone 4: 3D Living Isometric Diorama Canvas */}
+      {/* Zone 2: 3D Living Isometric Diorama Canvas */}
       <ForestCanvas mode="full" customTrees={scrubbedTrees || undefined} />
 
       {/* In-Game Onboarding Sprout Guide (Only on virgin island before first ship) */}
@@ -105,11 +106,15 @@ export default function DashboardPage() {
         <SproutGuide onOpenShipModal={() => setIsShipModalOpen(true)} />
       )}
 
-      {/* Floating 3D Timeline Scrubber Dock (Above Bottom Dock) */}
-      {trees.length > 0 && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-30 w-full max-w-2xl px-4 pointer-events-none">
+      {/* On-Demand 3D Timeline Scrubber (Only shows when toggled from bottom dock) */}
+      {isTimelineOpen && trees.length > 0 && (
+        <div className="fixed bottom-22 left-1/2 -translate-x-1/2 z-30 w-full max-w-2xl px-4 animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-auto">
           <TimelineScrubber
             trees={trees}
+            onClose={() => {
+              setIsTimelineOpen(false);
+              setScrubbedTrees(null);
+            }}
             onScrubChange={(active, date) => {
               if (date === null) {
                 setScrubbedTrees(null);
@@ -127,6 +132,8 @@ export default function DashboardPage() {
         onOpenShareModal={() => setIsShareModalOpen(true)}
         onOpenAddTreeModal={() => setIsAddTreeModalOpen(true)}
         onOpenShopModal={() => setIsShopModalOpen(true)}
+        isTimelineOpen={isTimelineOpen}
+        onToggleTimeline={() => setIsTimelineOpen((prev) => !prev)}
       />
 
       {/* Double-Bezel Modals */}

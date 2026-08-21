@@ -38,6 +38,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
   const [profile, setProfile] = useState<GitHubIslandProfile | null>(null);
   const [scrubbedTrees, setScrubbedTrees] = useState<TreeData[] | null>(null);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [wateredCount, setWateredCount] = useState(0);
   const [showWaterToast, setShowWaterToast] = useState(false);
 
@@ -180,11 +181,15 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
         customTrees={scrubbedTrees || (trees.length ? trees : undefined)}
       />
 
-      {/* Floating 3D Timeline Scrubber */}
-      {trees.length > 0 && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4 pointer-events-none">
+      {/* On-Demand 3D Timeline Scrubber */}
+      {isTimelineOpen && trees.length > 0 && (
+        <div className="fixed bottom-18 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4 animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-auto">
           <TimelineScrubber
             trees={trees}
+            onClose={() => {
+              setIsTimelineOpen(false);
+              setScrubbedTrees(null);
+            }}
             onScrubChange={(active, date) => {
               if (date === null) {
                 setScrubbedTrees(null);
@@ -196,23 +201,37 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
         </div>
       )}
 
-      {/* Bottom Floating Verified Stats Pill */}
+      {/* Bottom Floating Verified Stats Pill with Timeline Toggle */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-auto p-1 rounded-full glass-dock shadow-xl">
-        <div className="px-6 py-2 rounded-full porcelain-surface flex items-center gap-4 text-xs font-satoshi">
+        <div className="px-4 sm:px-6 py-2 rounded-full porcelain-surface flex items-center gap-3 sm:gap-4 text-xs font-satoshi">
           <div className="flex items-center gap-1.5 text-amber-800 font-pixel text-sm font-bold">
             <Flame className="w-4 h-4 fill-amber-500 text-amber-600" />
-            <span>{streakDays}d Streak</span>
+            <span>{streakDays}d</span>
           </div>
           <div className="w-[1px] h-3.5 bg-stone-200" />
           <div className="flex items-center gap-1.5 text-emerald-800 font-pixel text-sm font-bold">
             <Trees className="w-4 h-4 text-emerald-700" />
-            <span>{trees.length} Active Groves</span>
+            <span>{trees.length} Groves</span>
           </div>
           <div className="w-[1px] h-3.5 bg-stone-200" />
           <div className="flex items-center gap-1.5 text-stone-800 font-pixel text-sm font-bold">
             <TrendingUp className="w-4 h-4 text-emerald-700" />
             <span>{totalCommits} Commits</span>
           </div>
+          <div className="w-[1px] h-3.5 bg-stone-200" />
+          <button
+            onClick={() => {
+              sound.playClick();
+              setIsTimelineOpen(!isTimelineOpen);
+            }}
+            className={`px-2 py-0.5 rounded-full font-bold text-xs flex items-center gap-1 transition cursor-pointer ${
+              isTimelineOpen
+                ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                : "hover:bg-stone-100 text-stone-600 hover:text-stone-900"
+            }`}
+          >
+            <span>Timeline</span>
+          </button>
         </div>
       </div>
 

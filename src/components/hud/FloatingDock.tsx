@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Share2, Tent, Plus, Flame, Shield, ArrowUpRight } from "lucide-react";
+import { Share2, Tent, Plus, Flame, Shield, ArrowUpRight, History } from "lucide-react";
 import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
 
@@ -10,6 +10,8 @@ interface FloatingDockProps {
   onOpenShareModal: () => void;
   onOpenAddTreeModal: () => void;
   onOpenShopModal: () => void;
+  isTimelineOpen?: boolean;
+  onToggleTimeline?: () => void;
 }
 
 export function FloatingDock({
@@ -17,6 +19,8 @@ export function FloatingDock({
   onOpenShareModal,
   onOpenAddTreeModal,
   onOpenShopModal,
+  isTimelineOpen = false,
+  onToggleTimeline,
 }: FloatingDockProps) {
   const streakDays = useForestStore((s) => s.streakDays);
   const streakShields = useForestStore((s) => s.streakShields);
@@ -24,7 +28,7 @@ export function FloatingDock({
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center justify-center font-satoshi select-none">
       <div className="p-1 rounded-full glass-dock shadow-2xl transition-all duration-200">
-        <div className="h-11 px-3 rounded-full porcelain-surface bg-white flex items-center gap-2 sm:gap-2.5 font-satoshi">
+        <div className="h-11 px-3 rounded-full porcelain-surface bg-white flex items-center gap-1.5 sm:gap-2.5 font-satoshi">
           
           {/* 1. Daily Streak & Burnout Shield Momentum Badge */}
           <div
@@ -42,23 +46,29 @@ export function FloatingDock({
 
           <div className="w-[1px] h-4 bg-stone-200" />
 
-          {/* 2. Add Customer / Shipping Tree */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              onOpenAddTreeModal();
-            }}
-            className="h-8 px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
-            title="Plant Customer Revenue Tree or Milestone Sprout"
-          >
-            <Plus className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-            <span className="hidden sm:inline font-satoshi font-bold">Tree</span>
-          </button>
+          {/* 2. On-Demand 3D Timeline Toggle */}
+          {onToggleTimeline && (
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                onToggleTimeline();
+              }}
+              className={`h-8 px-2.5 rounded-full font-semibold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer ${
+                isTimelineOpen
+                  ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                  : "hover:bg-stone-100/90 text-stone-700 hover:text-stone-950"
+              }`}
+              title="Toggle 3D Growth Timeline & 10s Replay"
+            >
+              <History className={`w-3.5 h-3.5 ${isTimelineOpen ? "text-emerald-800" : "text-stone-600"}`} />
+              <span className="hidden sm:inline font-satoshi font-bold">Timeline</span>
+            </button>
+          )}
 
           <div className="w-[1px] h-4 bg-stone-200" />
 
-          {/* 3. Primary Hero Action: LOG DAILY SHIP (Height-Matched Tactile Pill) */}
+          {/* 3. Primary Hero Action: LOG DAILY SHIP */}
           <button
             type="button"
             onClick={() => {
@@ -74,7 +84,21 @@ export function FloatingDock({
 
           <div className="w-[1px] h-4 bg-stone-200" />
 
-          {/* 4. Camp Shop */}
+          {/* 4. Add Tree */}
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              onOpenAddTreeModal();
+            }}
+            className="h-8 px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
+            title="Plant Customer Revenue Tree or Milestone Sprout"
+          >
+            <Plus className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+            <span className="hidden sm:inline font-satoshi font-bold">Tree</span>
+          </button>
+
+          {/* 5. Camp Shop */}
           <button
             type="button"
             onClick={() => {
@@ -88,7 +112,7 @@ export function FloatingDock({
             <span className="hidden sm:inline font-satoshi font-bold">Shop</span>
           </button>
 
-          {/* 5. Share Card Exporter */}
+          {/* 6. Share Card Exporter */}
           <button
             type="button"
             onClick={() => {
