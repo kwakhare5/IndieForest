@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, RotateCcw, Calendar } from "lucide-react";
+import { Play, Pause, RotateCcw, Calendar, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { sound } from "@/lib/sound";
@@ -10,10 +10,16 @@ import { TreeData } from "@/types/game";
 export interface TimelineScrubberProps {
   trees: TreeData[];
   onScrubChange: (activeTrees: TreeData[], activeDateStr: string | null) => void;
+  onClose?: () => void;
   className?: string;
 }
 
-export function TimelineScrubber({ trees, onScrubChange, className = "" }: TimelineScrubberProps) {
+export function TimelineScrubber({
+  trees,
+  onScrubChange,
+  onClose,
+  className = "",
+}: TimelineScrubberProps) {
   // Sort trees by planted date to establish historical bounds
   const sortedDates = React.useMemo(() => {
     if (!trees.length) return [Date.now() - 86400000 * 30, Date.now()];
@@ -111,7 +117,7 @@ export function TimelineScrubber({ trees, onScrubChange, className = "" }: Timel
 
   return (
     <div className={`pointer-events-auto p-1.5 rounded-full glass-dock shadow-xl font-satoshi ${className}`}>
-      <div className="px-4 py-2.5 rounded-full porcelain-surface flex flex-wrap items-center gap-3 sm:gap-4">
+      <div className="px-4 py-2.5 rounded-full porcelain-surface flex flex-wrap items-center gap-2.5 sm:gap-4">
         
         {/* Play/Pause Time-Lapse Button */}
         <Button
@@ -128,7 +134,7 @@ export function TimelineScrubber({ trees, onScrubChange, className = "" }: Timel
           ) : (
             <>
               <Play className="w-3.5 h-3.5 mr-1 fill-current" />
-              <span className="text-xs font-bold">Play 10s Time-Lapse</span>
+              <span className="text-xs font-bold">10s Replay</span>
             </>
           )}
         </Button>
@@ -172,7 +178,7 @@ export function TimelineScrubber({ trees, onScrubChange, className = "" }: Timel
         </div>
 
         {/* Historical Status Badge */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
           {isScrubbingActive ? (
             <div className="flex items-center gap-1.5">
               <Badge variant="amber" size="sm" dot>
@@ -181,7 +187,7 @@ export function TimelineScrubber({ trees, onScrubChange, className = "" }: Timel
               </Badge>
               <button
                 onClick={handleResetLive}
-                className="p-1 rounded-full text-stone-400 hover:text-stone-800 hover:bg-stone-100 transition"
+                className="p-1 rounded-full text-stone-400 hover:text-stone-800 hover:bg-stone-100 transition cursor-pointer"
                 title="Return to Live Island"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -191,6 +197,20 @@ export function TimelineScrubber({ trees, onScrubChange, className = "" }: Timel
             <Badge variant="emerald" size="sm" dot>
               Live State
             </Badge>
+          )}
+
+          {onClose && (
+            <button
+              onClick={() => {
+                sound.playClick();
+                handleResetLive();
+                onClose();
+              }}
+              className="p-1 rounded-full text-stone-400 hover:text-stone-800 hover:bg-stone-100 transition cursor-pointer ml-1"
+              title="Close Timeline Scrubber"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
           )}
         </div>
 
