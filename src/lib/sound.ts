@@ -23,6 +23,10 @@ class SoundEngine {
     return this.isMuted;
   }
 
+  public setMuted(muted: boolean) {
+    this.isMuted = muted;
+  }
+
   public getMuted(): boolean {
     return this.isMuted;
   }
