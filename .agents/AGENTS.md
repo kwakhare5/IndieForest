@@ -86,7 +86,7 @@ npm run lint       # ESLint + TypeScript check
 
 **Last session date:** 2026-08-21
 
-**What we built / changed:**
+- Streamlined 3-Zone HUD architecture: Unified Dual-Pod top status bar, Floating Capsule quest dropdown badge, and Tactile Precision bottom dock.
 - Overhauled codebase architecture: established `src/types/game.ts` as canonical domain source of truth and decoupled domain math from state stores.
 - Executed Ponytail audit: purged dead folder `src/utils/supabase/` and unreferenced `src/lib/supabase/server.ts`, and made `src/lib/supabase/client.ts` cleanly self-contained.
 - Configured modern `eslint.config.mjs` flat configuration for Next.js 16 + ESLint 9 (100% clean lint pass).

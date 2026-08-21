@@ -16,8 +16,9 @@ During the Session End ritual (called automatically whenever significant changes
 ## Log Entries
 
 ### [IndieForest — Architecture Overhaul, Ponytail Cleanup & Codebase Hardening] 2026-08-21
-- **Commit**: `75aac90`
+- **Commit**: `HEAD`
 - **Shipped**:
+  - **Streamlined 3-Zone HUD Overhaul:** Refactored HUD architecture into a Unified Dual-Pod top bar (clearing the center vertical column for the 3D diorama), a sleek Floating Capsule Badge for Daily Quests with smooth dropdown checklist and auto-collapse, and an ergonomic Tactile Precision bottom action dock with audio feedback.
   - **Full Codebase Architecture Refactoring:** Created `src/types/game.ts` as the canonical source of truth for all domain entities, eliminating domain $\leftrightarrow$ store circular dependencies and type fragmentation across UI components.
   - **Ponytail Dead Code Purge:** Safely deleted obsolete/duplicate `src/utils/supabase/` and unreferenced `src/lib/supabase/server.ts`, and made `src/lib/supabase/client.ts` cleanly self-contained.
   - **Modern ESLint 9 Flat Config:** Configured modern `eslint.config.mjs` flat configuration resolving all Next.js 16 linting issues (clean pass with 0 errors, 0 warnings).
