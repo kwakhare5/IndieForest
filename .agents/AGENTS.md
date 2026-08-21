@@ -79,13 +79,16 @@ npm run lint       # ESLint + TypeScript check
 
 **Last session date:** 2026-08-22
 
+- **Deep Codebase Cleanup & Progression Single Source of Truth:** Unified all tree tier calculations under canonical `calculateTreeTier` in `src/lib/gamification.ts` with strict support for dormant stumps on churn and dual-gated shipping progression. Eliminated duplicate/obsolete helper math from `revenueWebhook.ts`.
+- **Zero-`any` Type System & Domain Consolidation:** Consolidated canonical domain entity types (`GrowthTier`, `TreeType`, `WeatherType`, `TreeData`, `ShipLog`, `CampDecorItem`, `DailyQuest`, `Rank`, `BadgeData`, `NormalizedCustomerTree`) in `src/types/game.ts`. Replaced loose casts with strict typed schemas for Stripe, Lemon Squeezy, and Polar webhook events.
+- **State & Store Optimization (`useForestStore.ts`):** Streamlined store actions, eliminated redundant type aliases, added strict `WeatherType` support and verified SSR-safe storage.
 - **Dynamic GitHub README SVG Badge Endpoint (`/api/badge/[username]`):** Built server-rendered SVG generator (`src/lib/badge.ts` + `/api/badge/[username]/route.ts`) supporting both 600×200px porcelain diorama cards and compact shields.io pills with 100% test-driven Vitest coverage.
 - **3D Timeline Scrubber & 10s Time-Lapse Player (`TimelineScrubber.tsx`):** Built floating interactive scrubber on dashboard (`src/app/dashboard/page.tsx`) and public profile (`src/app/u/[username]/page.tsx`) with quick-jumps (`7d`, `30d`, `90d`, `All`) and automated 10-second turntable growth animation for Twitter/X video clips.
 - **Multi-Tiered Weather Particle Engine (`WeatherSystem.tsx`):** Upgraded weather system with distinct particle FX: gentle emerald mist/rain for commits, dramatic thunderstorm lightning & golden sunrays for streak milestones, and radiant golden particle showers for Stripe sales.
 - **Verifiable Proof Popovers & Tree Inspector (`ForestCanvas.tsx`):** Upgraded 3D tree inspector to display verified GitHub commit SHAs with clickable diff links and Stripe webhook confirmation badges.
 - **Public Living Portfolio & Visitor Social Interaction (`u/[username]/page.tsx`):** Integrated 1-click **"💧 Water Tree"** visitor cheers (+5 XP toast) and campsite guestbook modal (`GuestbookModal.tsx`) for 1-line encouraging notes from fellow builders.
-- **16 Non-Overlapping Radial Slots & Smart Proof-of-Ship (`gamification.ts`):** Enforced 16 canonical radial sector slots (`WEST_EMERALD_SLOTS`, `EAST_GOLDEN_SLOTS`) to eliminate tree clipping and implemented dual-gated progression (commits + active days).
-- **100% Test-Driven Quality:** 40/40 Vitest unit tests passing with zero Turbopack build or lint errors.
+- **16 Non-Overlapping Radial Slots & Smart Proof-of-Ship (`gamification.ts`):** Enforced 16 canonical radial sector slots (`WEST_EMERALD_SLOTS`, `EAST_GOLDEN_SLOTS`) to eliminate tree clipping.
+- **100% Test-Driven Quality:** 55/55 Vitest unit tests passing with zero Turbopack build or lint errors.
 
 **Immediate next task:**
 
@@ -94,3 +97,4 @@ npm run lint       # ESLint + TypeScript check
 **Open blockers:**
 
 - [None]
+

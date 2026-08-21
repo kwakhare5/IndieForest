@@ -3,7 +3,9 @@ import {
   calculateStreakFromDates,
   parseGitHubEventsToIsland,
   getFallbackIslandProfile,
+  isValidGitHubUsername,
 } from "./github";
+
 
 describe("GitHub Ingestion Engine", () => {
   it("calculates continuous streaks correctly across calendar days", () => {
@@ -58,10 +60,27 @@ describe("GitHub Ingestion Engine", () => {
     expect(profile.streakDays).toBe(2);
   });
 
-  it("provides fallback profile when rate-limited", () => {
-    const fallback = getFallbackIslandProfile("karan");
-    expect(fallback.username).toBe("karan");
+  it("validates GitHub username formatting according to official RFC rules", () => {
+    expect(isValidGitHubUsername("kwakhare5")).toBe(true);
+    expect(isValidGitHubUsername("torvalds")).toBe(true);
+    expect(isValidGitHubUsername("octo-cat")).toBe(true);
+    expect(isValidGitHubUsername("a")).toBe(true);
+
+    expect(isValidGitHubUsername("")).toBe(false);
+    expect(isValidGitHubUsername("../malicious")).toBe(false);
+    expect(isValidGitHubUsername("user name")).toBe(false);
+    expect(isValidGitHubUsername("-leading")).toBe(false);
+    expect(isValidGitHubUsername("trailing-")).toBe(false);
+    expect(isValidGitHubUsername("user--double")).toBe(false);
+    expect(isValidGitHubUsername("a".repeat(40))).toBe(false);
+  });
+
+  it("provides valid fallback profile when rate-limited", () => {
+    const fallback = getFallbackIslandProfile("kwakhare5");
+    expect(fallback.username).toBe("kwakhare5");
     expect(fallback.trees.length).toBeGreaterThan(0);
     expect(fallback.totalCommits).toBeGreaterThan(0);
   });
 });
+
+

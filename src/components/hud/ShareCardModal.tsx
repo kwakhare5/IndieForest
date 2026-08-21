@@ -35,7 +35,7 @@ Rank: Tier ${badge} — ${title} (Level ${level})
 Trees: ${trees.length} Active | $${totalMrr}/mo MRR
 Today's Ship: "${latestShip}"
 
-Building in public @indieforest_app`;
+Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
 
   const handleCopyText = () => {
     navigator.clipboard.writeText(tweetText);

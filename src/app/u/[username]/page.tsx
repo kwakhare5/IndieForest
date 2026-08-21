@@ -52,7 +52,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
     {
       id: "entry-2",
       author: "Tibo",
-      message: "Your island looks incredible. Love the 3D diorama diorama aesthetic!",
+      message: "Your island looks incredible. Love the 3D diorama aesthetic!",
       timestamp: new Date(Date.now() - 86400000 * 5).toISOString(),
     },
   ]);

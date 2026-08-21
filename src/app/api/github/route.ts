@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isValidGitHubUsername } from "@/lib/github";
 
 interface GitHubRawCommit {
   sha: string;
@@ -16,6 +17,7 @@ interface GitHubRawCommit {
 }
 
 export async function GET(req: NextRequest) {
+
   const { searchParams } = new URL(req.url);
   const username = searchParams.get("username");
   const repo = searchParams.get("repo");
@@ -26,6 +28,24 @@ export async function GET(req: NextRequest) {
       { status: 400 }
     );
   }
+
+  const cleanUser = username.trim().replace(/^@/, "");
+  if (!isValidGitHubUsername(cleanUser)) {
+    return NextResponse.json(
+      { error: `Invalid GitHub username format: '${username}'` },
+      { status: 400 }
+    );
+  }
+
+  // Ensure repo name is sanitized (alphanumeric, hyphens, underscores, dots)
+  const cleanRepo = repo.trim();
+  if (!/^[a-zA-Z0-9_.-]{1,100}$/.test(cleanRepo)) {
+    return NextResponse.json(
+      { error: "Invalid repository name format" },
+      { status: 400 }
+    );
+  }
+
 
   try {
     const res = await fetch(

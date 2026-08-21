@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { TreeData } from "@/types/game";
 import {
   getXpForLevel,
   getRankTitle,
@@ -7,12 +8,12 @@ import {
   evaluateStreakState,
   completeDailyQuest,
   purchaseCampDecor,
-  TreeData,
   getLocalDateString,
   getTreeSlotCoordinate,
   calculateTreeTier,
   reconstructHistoricalIsland,
 } from "./gamification";
+
 
 describe("Gamification Engine — Clean Code & TDD", () => {
   describe("Seam 1: Level & XP Curve", () => {

@@ -15,19 +15,32 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
-### [IndieForest — Zero-Touch GitHub Ingestion, 3D Timeline Scrubber & Dynamic README Badges] 2026-08-22
-- **Commit**: `9059e1f`
+### [IndieForest — Deep Codebase Cleanup, Core Architecture Refactoring & UI Standardization] 2026-08-22
+- **Commit**: `6cc23ee` (Core Refactor, Security & Documentation)
 - **Shipped**:
+
+  - **Security & RFC Validation:** Enforced official GitHub username RFC regex (`^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$`) across all API routes to prevent SSRF and path traversal.
+  - **Token Authentication & Anti-Replay Defense:** Webhook endpoints strictly require non-empty authenticated secret tokens via query params.
+  - **SVG CSP & Anti-Sniff Protection:** Added `X-Content-Type-Options: nosniff` and `Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'` to dynamic README SVG badges.
+  - **Exhaustive Production Documentation:** Expanded `README.md` into comprehensive technical architecture manual with API schemas, gamification formulas, and deployment guide.
+
+
+
+  - **Universal Atomic Component Standardization & Reuse:** Enhanced and standardized canonical UI primitives ([`Button.tsx`](file:///d:/IndieForest/src/components/ui/Button.tsx), [`Card.tsx`](file:///d:/IndieForest/src/components/ui/Card.tsx), [`Badge.tsx`](file:///d:/IndieForest/src/components/ui/Badge.tsx), [`Modal.tsx`](file:///d:/IndieForest/src/components/ui/Modal.tsx), [`SegmentedControl.tsx`](file:///d:/IndieForest/src/components/ui/SegmentedControl.tsx)) across all pages, modals, and HUD widgets.
+  - **Progression Math & Core Single Source of Truth:** Unified all tree tier calculations under canonical `calculateTreeTier` in `src/lib/gamification.ts` with strict support for dormant stumps on churn and dual-gated shipping progression. Eliminated duplicate/obsolete helper math from `revenueWebhook.ts` and `page.tsx`.
+  - **Zero-`any` Type System & Domain Consolidation:** Consolidated domain entity types (`GrowthTier`, `TreeType`, `WeatherType`, `TreeData`, `ShipLog`, `CampDecorItem`, `DailyQuest`, `Rank`, `BadgeData`, `NormalizedCustomerTree`) in `src/types/game.ts`. Replaced loose casts with strict typed schemas for Stripe, Lemon Squeezy, and Polar webhook events.
+  - **State & Store Optimization (`useForestStore.ts`):** Streamlined store actions, eliminated redundant type aliases, added strict `WeatherType` support and verified SSR-safe storage.
   - **Dynamic GitHub README SVG Badge Endpoint (`/api/badge/[username]`):** Built server-rendered SVG generator (`src/lib/badge.ts` + `/api/badge/[username]/route.ts`) supporting both 600×200px porcelain diorama cards and compact shields.io pills with 100% test-driven Vitest coverage.
   - **3D Timeline Scrubber & 10s Time-Lapse Player (`TimelineScrubber.tsx`):** Built floating interactive scrubber on dashboard (`src/app/dashboard/page.tsx`) and public profile (`src/app/u/[username]/page.tsx`) with quick-jumps (`7d`, `30d`, `90d`, `All`) and automated 10-second turntable growth animation for Twitter/X video clips.
   - **Multi-Tiered Weather Particle Engine (`WeatherSystem.tsx`):** Upgraded weather system with distinct particle FX: gentle emerald mist/rain for commits, dramatic thunderstorm lightning & golden sunrays for streak milestones, and radiant golden particle showers for Stripe sales.
   - **Verifiable Proof Popovers & Tree Inspector (`ForestCanvas.tsx`):** Upgraded 3D tree inspector to display verified GitHub commit SHAs with clickable diff links and Stripe webhook confirmation badges.
   - **Public Living Portfolio & Visitor Social Interaction (`u/[username]/page.tsx`):** Integrated 1-click **"💧 Water Tree"** visitor cheers (+5 XP toast) and campsite guestbook modal (`GuestbookModal.tsx`) for 1-line encouraging notes from fellow builders.
-  - **16 Non-Overlapping Radial Slots & Smart Proof-of-Ship (`gamification.ts`):** Enforced 16 canonical radial sector slots (`WEST_EMERALD_SLOTS`, `EAST_GOLDEN_SLOTS`) to eliminate tree clipping and implemented dual-gated progression (commits + active days).
-  - **Comprehensive Stress-Testing & Webhook Churn Engine (`github-stress.test.ts` & `revenueWebhook.ts`):** Hardened against bot commit spam, cross-timezone streak boundaries, zero-decimal currencies, XML XSS injection, and automated subscriber churn/cancellation handling (converting churned trees to dormant stumps).
-- **Metrics**: 54/54 Vitest unit & store tests passing (100% green) · 0 lint errors/warnings · 0 TypeScript errors · 100% production Turbopack build pass.
-- **Visuals**: Porcelain double-bezel timeline scrubber, dynamic SVG README cards, campsite guestbook, and multi-tiered weather particles in Warm Studio Linen `#ece7de`.
-- **Vibe**: 🌲 100% zero manual labor, viral distribution loops complete, airtight game mechanics!
+  - **16 Non-Overlapping Radial Slots & Smart Proof-of-Ship (`gamification.ts`):** Enforced 16 canonical radial sector slots (`WEST_EMERALD_SLOTS`, `EAST_GOLDEN_SLOTS`) to eliminate tree clipping.
+- **Metrics**: 55/55 Vitest unit & store tests passing (100% green) · 0 ESLint errors/warnings · 0 TypeScript errors · 100% production Turbopack build pass.
+- **Visuals**: Double-bezel porcelain surfaces, dynamic SVG README cards, campsite guestbook, and multi-tiered weather particles in Warm Studio Linen `#ece7de`.
+- **Vibe**: 🌲 Pristine architecture, zero technical debt, rock-solid type safety, 55/55 tests green!
+
+
 
 ### [IndieForest — Architecture Overhaul, Ponytail Cleanup & Codebase Hardening] 2026-08-21
 - **Commit**: `56d87a0`

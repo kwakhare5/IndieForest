@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { TreeData } from "@/types/game";
 import { useForestStore } from "@/store/useForestStore";
 import { sound } from "@/lib/sound";
@@ -56,7 +56,7 @@ export function BlockTree({ tree, onSelect }: BlockTreeProps) {
 
   const trunkColor = isRevenue ? "#78350f" : "#854d0e";
 
-  const handlePointerOver = (e: any) => {
+  const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(true);
     document.body.style.cursor = "pointer";
@@ -67,7 +67,7 @@ export function BlockTree({ tree, onSelect }: BlockTreeProps) {
     document.body.style.cursor = "auto";
   };
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     sound.playClick();
     if (onSelect) onSelect(tree);

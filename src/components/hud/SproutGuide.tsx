@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useForestStore } from "@/store/useForestStore";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { Sparkles, X, ChevronDown, Rocket } from "lucide-react";
 import { sound } from "@/lib/sound";
 
@@ -58,14 +59,15 @@ export function SproutGuide({ onOpenShipModal }: SproutGuideProps) {
 
           {/* Right Action & Dismiss */}
           <div className="flex items-center gap-1.5 shrink-0">
-            <button
-              type="button"
+            <Button
+              variant="emerald"
+              size="sm"
               onClick={handleAction}
-              className="px-2.5 py-1 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1 transition active:scale-95 cursor-pointer shadow-xs"
+              icon={Rocket}
+              className="h-7 px-2.5 text-[11px]"
             >
-              <Rocket className="w-3 h-3" />
-              <span>Start</span>
-            </button>
+              Start
+            </Button>
 
             <button
               type="button"

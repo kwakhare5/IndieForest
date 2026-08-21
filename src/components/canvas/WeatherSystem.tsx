@@ -4,13 +4,14 @@ import React, { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useForestStore } from "@/store/useForestStore";
-import { WeatherType } from "@/types/game";
 
 export function WeatherSystem() {
   const isRaining = useForestStore((s) => s.isRaining);
-  const weatherType = useForestStore((s) => (s as { weatherType?: WeatherType }).weatherType || (isRaining ? "rain_emerald" : "clear"));
+  const weatherType = useForestStore((s) => s.weatherType || (s.isRaining ? "rain_emerald" : "clear"));
   const timeOfDay = useForestStore((s) => s.timeOfDay);
   const streakDays = useForestStore((s) => s.streakDays);
+
+
 
   const rainCount = 160;
   const fireflyCount = 30;

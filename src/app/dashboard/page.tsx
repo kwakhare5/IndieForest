@@ -71,11 +71,13 @@ export default function DashboardPage() {
       });
     } else if (isLoaded && !isSignedIn) {
       setUser({
-        id: "local-user",
-        username: "indie_builder",
+        id: "kwakhare5",
+        username: "kwakhare5",
+        avatarUrl: "https://github.com/kwakhare5.png",
         isAuthenticated: false,
       });
     }
+
   }, [isLoaded, isSignedIn, clerkUser, checkStreakExpiry, setUser]);
 
   if (!mounted) {

@@ -2,13 +2,17 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, Copy, Download, Sparkles, Layers, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Check, Copy, Download } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { sound } from "@/lib/sound";
 
 export default function LogosPage() {
   const [copiedUrl, setCopiedUrl] = useState(false);
 
   const handleCopy = () => {
+    sound.playCoin();
     navigator.clipboard.writeText(window.location.origin + "/logos/indieforest_logo.svg");
     setCopiedUrl(true);
     setTimeout(() => setCopiedUrl(false), 2000);
@@ -41,30 +45,19 @@ export default function LogosPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleCopy}
-              className="px-3.5 py-2 rounded-full btn-specular-porcelain text-xs font-semibold text-stone-800 flex items-center gap-1.5 cursor-pointer transition active:scale-95 shadow-xs"
+              icon={copiedUrl ? Check : Copy}
             >
-              {copiedUrl ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>URL Copied</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Copy SVG Link</span>
-                </>
-              )}
-            </button>
+              {copiedUrl ? "URL Copied" : "Copy SVG Link"}
+            </Button>
 
-            <a
-              href="/logos/indieforest_logo.svg"
-              download="indieforest_logo.svg"
-              className="px-4 py-2 rounded-full btn-specular-emerald text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition active:scale-95 shadow-xs"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download Official SVG</span>
+            <a href="/logos/indieforest_logo.svg" download="indieforest_logo.svg">
+              <Button variant="emerald" size="sm" icon={Download}>
+                Download SVG
+              </Button>
             </a>
           </div>
         </div>
@@ -73,7 +66,7 @@ export default function LogosPage() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           
           {/* Main 512x512 Master Display Card */}
-          <div className="md:col-span-6 p-8 rounded-[3rem] bg-white border border-stone-200 shadow-xl flex flex-col items-center justify-center text-center space-y-6">
+          <Card variant="porcelain" className="md:col-span-6 p-8 rounded-[3rem] shadow-xl flex flex-col items-center justify-center text-center space-y-6">
             <div className="w-64 h-64 sm:w-72 sm:h-72 rounded-[2.5rem] p-2 bg-gradient-to-b from-[#f4f0e8] to-[#ece7de] border border-[#d6cfc5] shadow-inner flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -91,76 +84,44 @@ export default function LogosPage() {
                 512x512px Vector SVG • Continuous Squircle (rx=112)
               </p>
             </div>
-          </div>
+          </Card>
 
           {/* Context Scales & Design Breakdown */}
           <div className="md:col-span-6 space-y-6">
             
             {/* Scale Contexts (Favicon, Navbar, App Icon) */}
-            <div className="p-6 rounded-[2.5rem] bg-white border border-stone-200 shadow-sm space-y-4">
-              <span className="font-pixel text-xs font-bold uppercase tracking-wider text-emerald-800 block">
-                VISUAL SCALE HIERARCHY
-              </span>
+            <Card variant="porcelain" className="p-6 rounded-[2.5rem] shadow-sm space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 font-pixel">
+                Scalability Verification
+              </h4>
 
               <div className="grid grid-cols-3 gap-3 text-center">
-                {/* 1. App Icon (64px) */}
-                <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 flex flex-col items-center justify-center gap-2">
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-md">
+                <Card variant="subtle-inset" className="p-3 rounded-2xl flex flex-col items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden border border-stone-300/80 shadow-xs">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/logos/indieforest_logo.svg" alt="App Icon" className="w-full h-full" />
+                    <img src="/logos/indieforest_logo.svg" alt="32px Icon" className="w-full h-full object-cover" />
                   </div>
-                  <span className="font-pixel text-xs font-bold text-stone-700">App Icon (64px)</span>
-                </div>
+                  <span className="text-[10px] font-mono text-stone-600">32×32 Navbar</span>
+                </Card>
 
-                {/* 2. Navbar Pod (32px) */}
-                <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 flex flex-col items-center justify-center gap-2">
-                  <div className="w-8 h-8 rounded-xl overflow-hidden shadow-xs">
+                <Card variant="subtle-inset" className="p-3 rounded-2xl flex flex-col items-center gap-2">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-stone-300/80 shadow-xs">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/logos/indieforest_logo.svg" alt="Navbar Icon" className="w-full h-full" />
+                    <img src="/logos/indieforest_logo.svg" alt="48px Icon" className="w-full h-full object-cover" />
                   </div>
-                  <span className="font-pixel text-xs font-bold text-stone-700">Navbar (32px)</span>
-                </div>
+                  <span className="text-[10px] font-mono text-stone-600">48×48 Dock</span>
+                </Card>
 
-                {/* 3. Favicon (16px) */}
-                <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 flex flex-col items-center justify-center gap-2">
-                  <div className="w-5 h-5 rounded-md overflow-hidden shadow-xs">
+                <Card variant="subtle-inset" className="p-3 rounded-2xl flex flex-col items-center gap-2">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-stone-300/80 shadow-xs">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/logos/indieforest_logo.svg" alt="Favicon" className="w-full h-full" />
+                    <img src="/logos/indieforest_logo.svg" alt="64px Icon" className="w-full h-full object-cover" />
                   </div>
-                  <span className="font-pixel text-xs font-bold text-stone-700">Favicon (16px)</span>
-                </div>
+                  <span className="text-[10px] font-mono text-stone-600">64×64 Favicon</span>
+                </Card>
               </div>
-            </div>
+            </Card>
 
-            {/* Design DNA Breakdown */}
-            <div className="p-6 rounded-[2.5rem] bg-white border border-stone-200 shadow-sm space-y-3 font-satoshi text-xs text-stone-600">
-              <span className="text-xs font-pixel font-bold uppercase tracking-wider text-emerald-800 block">
-                Brand Geometry &amp; Symbolism
-              </span>
-
-              <div className="space-y-2.5">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                    <Layers className="w-3 h-3" />
-                  </div>
-                  <span><strong>4 Concentric Growth Rings:</strong> Represents daily developer shipping streaks and longevity.</span>
-                </div>
-
-                <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-                    <Sparkles className="w-3 h-3" />
-                  </div>
-                  <span><strong>Fresh Heartwood Sprout:</strong> Symbolizes active revenue and continuous product shipping momentum.</span>
-                </div>
-
-                <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-3 h-3" />
-                  </div>
-                  <span><strong>Radiant Apple Green:</strong> Vibrant, high-energy gradient (#4ADE80 &rarr; #22C55E &rarr; #16A34A).</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 

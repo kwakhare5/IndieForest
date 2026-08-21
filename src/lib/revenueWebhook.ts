@@ -1,35 +1,72 @@
-import { GrowthTier } from "@/types/game";
+import type { NormalizedCustomerTree } from "@/types/game";
+import { calculateTreeTier } from "./gamification";
 
-export interface NormalizedCustomerTree {
-  customerName: string;
-  mrr: number;
-  tier: GrowthTier;
-  source: "stripe" | "lemonsqueezy" | "polar" | "custom";
-  isValid: boolean;
-  isChurn?: boolean;
-}
+export type { NormalizedCustomerTree };
 
 const ZERO_DECIMAL_CURRENCIES = new Set([
   "bif", "clp", "djf", "gnf", "jpy", "kmf", "krw", "mga",
-  "pyg", "rwf", "ugx", "vnd", "vuv", "xaf", "xof", "xpf"
+  "pyg", "rwf", "ugx", "vnd", "vuv", "xaf", "xof", "xpf",
 ]);
 
-/**
- * Maps MRR numerical value to 3D Pine Tree Growth Tier
- */
-export function calculateTreeTierFromMrr(mrr: number): GrowthTier {
-  if (mrr >= 100) return "majestic";
-  if (mrr >= 50) return "mature";
-  if (mrr >= 20) return "young";
-  if (mrr > 0) return "sapling";
-  return "stump";
+interface StripeEventObject {
+  customer_name?: string;
+  customer_email?: string;
+  customer_details?: { name?: string; email?: string };
+  currency?: string;
+  amount_paid?: number;
+  amount_total?: number;
+  total?: number;
+  lines?: {
+    data?: Array<{
+      plan?: {
+        interval?: string;
+      };
+    }>;
+  };
+}
+
+interface StripeWebhookPayload {
+  object?: string;
+  type?: string;
+  data?: {
+    object?: StripeEventObject;
+  };
+}
+
+interface LemonSqueezyWebhookPayload {
+  meta?: {
+    event_name?: string;
+  };
+  data?: {
+    attributes?: {
+      user_name?: string;
+      user_email?: string;
+      customer_name?: string;
+      subtotal_usd?: number;
+      total?: number;
+      subtotal?: number;
+      interval?: string;
+    };
+  };
+}
+
+interface PolarWebhookPayload {
+  event?: string;
+  data?: {
+    customer?: {
+      name?: string;
+      email?: string;
+    };
+    amount?: number;
+    recurring_interval?: string;
+  };
 }
 
 /**
  * Universal Revenue Webhook Parser
  * Parses and normalizes incoming payment/subscription events across Stripe, Lemon Squeezy, and Polar.
  */
-export function parseUniversalRevenueEvent(payload: any): NormalizedCustomerTree {
+export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomerTree {
   if (!payload || typeof payload !== "object") {
     return {
       customerName: "Anonymous Customer",
@@ -41,15 +78,29 @@ export function parseUniversalRevenueEvent(payload: any): NormalizedCustomerTree
   }
 
   // 1. Stripe Event Parser
-  if (payload.object === "event" || payload.type?.startsWith("invoice.") || payload.type?.startsWith("checkout.") || payload.type?.startsWith("customer.subscription.")) {
-    const eventType = payload.type || "";
-    const obj = payload.data?.object || {};
-    const name = obj.customer_name || obj.customer_email || obj.customer_details?.name || "Stripe Customer";
+  const stripePayload = payload as StripeWebhookPayload;
+  if (
+    stripePayload.object === "event" ||
+    stripePayload.type?.startsWith("invoice.") ||
+    stripePayload.type?.startsWith("checkout.") ||
+    stripePayload.type?.startsWith("customer.subscription.")
+  ) {
+    const eventType = stripePayload.type || "";
+    const obj = stripePayload.data?.object || {};
+    const name =
+      obj.customer_name ||
+      obj.customer_email ||
+      obj.customer_details?.name ||
+      "Stripe Customer";
     const currency = (obj.currency || "usd").toLowerCase();
     const isZeroDecimal = ZERO_DECIMAL_CURRENCIES.has(currency);
 
     // Churn / Cancellation event
-    if (eventType === "customer.subscription.deleted" || eventType === "customer.subscription.paused" || eventType === "invoice.payment_failed") {
+    if (
+      eventType === "customer.subscription.deleted" ||
+      eventType === "customer.subscription.paused" ||
+      eventType === "invoice.payment_failed"
+    ) {
       return {
         customerName: name,
         mrr: 0,
@@ -72,20 +123,29 @@ export function parseUniversalRevenueEvent(payload: any): NormalizedCustomerTree
     return {
       customerName: name,
       mrr,
-      tier: calculateTreeTierFromMrr(mrr),
+      tier: calculateTreeTier("revenue", 0, mrr).tier,
       source: "stripe",
       isValid,
     };
   }
 
   // 2. Lemon Squeezy Event Parser
-  if (payload.meta?.event_name) {
-    const eventName = payload.meta.event_name;
-    const data = payload.data?.attributes || {};
-    const name = data.user_name || data.user_email || data.customer_name || "Lemon Squeezy Customer";
+  const lsPayload = payload as LemonSqueezyWebhookPayload;
+  if (lsPayload.meta?.event_name) {
+    const eventName = lsPayload.meta.event_name;
+    const data = lsPayload.data?.attributes || {};
+    const name =
+      data.user_name ||
+      data.user_email ||
+      data.customer_name ||
+      "Lemon Squeezy Customer";
 
     // Churn / Cancellation event
-    if (eventName === "subscription_cancelled" || eventName === "subscription_expired" || eventName === "subscription_paused") {
+    if (
+      eventName === "subscription_cancelled" ||
+      eventName === "subscription_expired" ||
+      eventName === "subscription_paused"
+    ) {
       return {
         customerName: name,
         mrr: 0,
@@ -108,16 +168,17 @@ export function parseUniversalRevenueEvent(payload: any): NormalizedCustomerTree
     return {
       customerName: name,
       mrr,
-      tier: calculateTreeTierFromMrr(mrr),
+      tier: calculateTreeTier("revenue", 0, mrr).tier,
       source: "lemonsqueezy",
       isValid,
     };
   }
 
   // 3. Polar Event Parser
-  if (payload.event?.startsWith("order.") || payload.event?.startsWith("subscription.")) {
-    const eventName = payload.event;
-    const order = payload.data || {};
+  const polarPayload = payload as PolarWebhookPayload;
+  if (polarPayload.event?.startsWith("order.") || polarPayload.event?.startsWith("subscription.")) {
+    const eventName = polarPayload.event;
+    const order = polarPayload.data || {};
     const name = order.customer?.name || order.customer?.email || "Polar Backer";
 
     // Churn / Cancellation event
@@ -144,7 +205,7 @@ export function parseUniversalRevenueEvent(payload: any): NormalizedCustomerTree
     return {
       customerName: name,
       mrr,
-      tier: calculateTreeTierFromMrr(mrr),
+      tier: calculateTreeTier("revenue", 0, mrr).tier,
       source: "polar",
       isValid,
     };

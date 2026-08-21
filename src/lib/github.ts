@@ -54,9 +54,24 @@ interface RawGitHubEvent {
 }
 
 /**
+ * Validates a GitHub username against official GitHub naming rules:
+ * - 1 to 39 characters
+ * - Alphanumeric characters or single hyphens
+ * - Cannot begin or end with a hyphen
+ * - No consecutive hyphens
+ */
+export function isValidGitHubUsername(username: string): boolean {
+  if (!username || typeof username !== "string") return false;
+  const clean = username.trim().replace(/^@/, "");
+  // GitHub official username specification
+  return /^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/.test(clean);
+}
+
+/**
  * Calculates continuous shipping streak (in days) from an array of date strings.
  */
 export function calculateStreakFromDates(dates: string[], todayStr: string = getLocalDateString()): number {
+
   if (!dates.length) return 0;
 
   // Extract unique sorted YYYY-MM-DD dates in descending order
@@ -221,9 +236,10 @@ export function parseGitHubEventsToIsland(
  */
 export async function fetchGitHubUserIsland(username: string): Promise<GitHubIslandProfile> {
   const cleanUsername = username.trim().replace(/^@/, "");
-  if (!cleanUsername) {
-    throw new Error("GitHub username is required");
+  if (!cleanUsername || !isValidGitHubUsername(cleanUsername)) {
+    throw new Error(`Invalid GitHub username: "${username}"`);
   }
+
 
   const response = await fetch(`https://api.github.com/users/${cleanUsername}/events`, {
     headers: {

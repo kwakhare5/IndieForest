@@ -2,12 +2,14 @@
 
 import React, { useState } from "react";
 import { useForestStore } from "@/store/useForestStore";
-import { DEFAULT_CAMP_DECOR_CATALOG, CampDecorItem } from "@/lib/gamification";
+import { DEFAULT_CAMP_DECOR_CATALOG } from "@/lib/gamification";
+import type { CampDecorItem } from "@/types/game";
+
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { Tent, Check, Flame, Lamp, Anchor, Trees } from "lucide-react";
+import { Tent, Check, Flame, Lamp, Anchor } from "lucide-react";
 import confetti from "canvas-confetti";
 
 interface CampShopModalProps {
@@ -98,32 +100,34 @@ export function CampShopModal({ isOpen, onClose }: CampShopModalProps) {
                       </Badge>
                     ) : (
                       <div className="flex items-center gap-1 text-xs font-pixel font-bold text-stone-900">
-                        <Trees className="w-3.5 h-3.5 text-emerald-700" />
-                        <span>{item.cost} PINECONES</span>
+                        <span className="text-amber-800">🌰 {item.cost}</span>
                       </div>
                     )}
                   </div>
+
                   <h4 className="font-bold text-stone-900 text-xs font-satoshi">{item.name}</h4>
-                  <p className="text-[11px] text-stone-500 mt-1 leading-snug font-satoshi">
+                  <p className="text-[11px] text-stone-500 leading-relaxed mt-0.5 font-satoshi">
                     {item.description}
                   </p>
                 </div>
 
-                <div>
+                <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-stone-400">
+                    {isUnlocked ? "Active on Island" : `Requires ${item.cost} 🌰`}
+                  </span>
+
                   {isUnlocked ? (
-                    <div className="text-xs text-emerald-700 font-pixel font-bold">
-                      ✓ ACTIVE ON ISLAND
-                    </div>
+                    <Button variant="outline" size="sm" disabled className="opacity-60">
+                      Owned
+                    </Button>
                   ) : (
                     <Button
-                      type="button"
                       variant={canAfford ? "emerald" : "outline"}
                       size="sm"
-                      onClick={() => handleBuy(item)}
                       disabled={!canAfford}
-                      className="w-full justify-center text-xs"
+                      onClick={() => handleBuy(item)}
                     >
-                      {canAfford ? `Unlock for ${item.cost} Pinecones` : `Need ${item.cost - pinecones} more`}
+                      {canAfford ? "Unlock" : "Need 🌰"}
                     </Button>
                   )}
                 </div>
@@ -132,8 +136,7 @@ export function CampShopModal({ isOpen, onClose }: CampShopModalProps) {
           })}
         </div>
 
-        <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
-          <span>Earn +10 Pinecones per milestone ship</span>
+        <div className="pt-2 border-t border-stone-100 flex justify-end">
           <Button variant="outline" size="sm" onClick={onClose}>
             Done
           </Button>

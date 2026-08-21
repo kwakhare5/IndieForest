@@ -117,53 +117,47 @@ export function TimelineScrubber({
 
   return (
     <div className={`pointer-events-auto p-1.5 rounded-full glass-dock shadow-xl font-satoshi ${className}`}>
-      <div className="px-4 py-2.5 rounded-full porcelain-surface flex flex-wrap items-center gap-2.5 sm:gap-4">
+      <div className="px-4 py-2 rounded-full porcelain-surface flex flex-wrap items-center gap-2.5 sm:gap-3.5">
         
         {/* Play/Pause Time-Lapse Button */}
         <Button
           variant={isPlaying ? "emerald" : "dark"}
           size="sm"
           onClick={togglePlay}
-          className="rounded-full shrink-0 shadow-xs"
+          icon={isPlaying ? Pause : Play}
+          className="shrink-0"
         >
-          {isPlaying ? (
-            <>
-              <Pause className="w-3.5 h-3.5 mr-1" />
-              <span className="text-xs font-bold">Pause Replay</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3.5 h-3.5 mr-1 fill-current" />
-              <span className="text-xs font-bold">10s Replay</span>
-            </>
-          )}
+          {isPlaying ? "Pause" : "10s Replay"}
         </Button>
 
         {/* Quick Jumps */}
-        <div className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-stone-600">
+        <div className="hidden sm:flex items-center gap-1 p-0.5 rounded-full bg-stone-100/90 border border-stone-200/80 text-[11px] font-bold text-stone-600">
           <button
+            type="button"
             onClick={() => handleQuickJump(7)}
-            className="px-2 py-0.5 rounded-full hover:bg-stone-100 transition cursor-pointer"
+            className="px-2 py-0.5 rounded-full hover:bg-white hover:text-stone-900 transition active:scale-95 cursor-pointer"
           >
             7d
           </button>
           <button
+            type="button"
             onClick={() => handleQuickJump(30)}
-            className="px-2 py-0.5 rounded-full hover:bg-stone-100 transition cursor-pointer"
+            className="px-2 py-0.5 rounded-full hover:bg-white hover:text-stone-900 transition active:scale-95 cursor-pointer"
           >
             30d
           </button>
           <button
+            type="button"
             onClick={() => handleQuickJump(90)}
-            className="px-2 py-0.5 rounded-full hover:bg-stone-100 transition cursor-pointer"
+            className="px-2 py-0.5 rounded-full hover:bg-white hover:text-stone-900 transition active:scale-95 cursor-pointer"
           >
             90d
           </button>
         </div>
 
         {/* Timeline Slider */}
-        <div className="flex-1 min-w-[140px] sm:min-w-[200px] flex items-center gap-2">
-          <span className="text-[10px] font-bold font-pixel text-stone-600 uppercase shrink-0">Day 1</span>
+        <div className="flex-1 min-w-[140px] sm:min-w-[180px] flex items-center gap-2">
+          <span className="text-[10px] font-bold font-pixel text-stone-500 uppercase shrink-0">Day 1</span>
           <input
             type="range"
             min="1"
@@ -181,13 +175,13 @@ export function TimelineScrubber({
         <div className="flex items-center gap-1.5 shrink-0">
           {isScrubbingActive ? (
             <div className="flex items-center gap-1.5">
-              <Badge variant="amber" size="sm" dot>
-                <Calendar className="w-3 h-3 mr-1" />
-                {currentDateStr} ({visibleTrees.length} Trees)
+              <Badge variant="amber" size="sm" dot icon={Calendar}>
+                {currentDateStr} ({visibleTrees.length})
               </Badge>
               <button
+                type="button"
                 onClick={handleResetLive}
-                className="p-1 rounded-full text-stone-400 hover:text-stone-800 hover:bg-stone-100 transition cursor-pointer"
+                className="p-1 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition active:scale-95 cursor-pointer"
                 title="Return to Live Island"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -201,13 +195,14 @@ export function TimelineScrubber({
 
           {onClose && (
             <button
+              type="button"
               onClick={() => {
                 sound.playClick();
                 handleResetLive();
                 onClose();
               }}
-              className="p-1 rounded-full text-stone-400 hover:text-stone-800 hover:bg-stone-100 transition cursor-pointer ml-1"
-              title="Close Timeline Scrubber"
+              className="p-1 rounded-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition active:scale-95 cursor-pointer ml-0.5"
+              title="Close Timeline"
             >
               <X className="w-3.5 h-3.5" />
             </button>

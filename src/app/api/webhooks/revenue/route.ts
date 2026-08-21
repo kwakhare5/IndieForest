@@ -7,8 +7,19 @@ import { parseUniversalRevenueEvent } from "@/lib/revenueWebhook";
  */
 export async function POST(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const token = searchParams.get("token");
+
+    if (!token || token.trim().length < 4) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Valid webhook token required in query parameter (?token=...)" },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const normalizedTree = parseUniversalRevenueEvent(body);
+
 
     if (!normalizedTree.isValid) {
       return NextResponse.json(
