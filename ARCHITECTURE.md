@@ -1,164 +1,151 @@
-# IndieForest — Master Architecture & Game Design Document
-
-## 1. Vision & Core Philosophy
-
-**IndieForest** is a playable, living 3D low-poly isometric island dashboard for indie hackers, solo founders, and developers. It turns daily coding consistency and project milestones into a delightful game:
-
-- 🪵 **Daily Shipping is Vitality:** Pushing commits or logging daily progress triggers rain showers, grows your forest, levels up your developer rank, and unlocks cozy island upgrades.
-- 🌲 **Customers = Trees (Optional Layer):** Paying customers sprout as dedicated named 3D pine trees.
-- 🎯 **Daily Focus Ritual:** Pick your **#1 Priority Quest** each morning; check it off by night to keep your island thriving.
-- 🛡️ **Burnout-Proof:** Earn **Streak Shields** so well-deserved rest days never wipe your hard-earned progress.
+# ARCHITECTURE.md — Technical Blueprint
+#
+# LOAD ON-DEMAND ONLY — not every session.
+# How to load: "Read ARCHITECTURE.md before we continue."
+# When to load: major structural changes, new dev onboarding.
 
 ---
 
-## 2. Visual Style & 3D Rendering Pipeline
-
-- **Renderer:** Three.js via **React Three Fiber (`@react-three/fiber`)** + **`@react-three/drei`**.
-- **Camera:** `OrthographicCamera` set at an isometric angle (`position={[20, 20, 20]}`, `zoom={42}`), with smooth orbit rotation, pan, and zoom clamping.
-- **Lighting & Shadows:**
-  - Soft directional sunlight casting real-time low-poly shadows (`castShadow={true}`, shadow map size 2048).
-  - Ambient fill light + warm point light on the campfire and lanterns.
-- **Aesthetic Inspiration:** Flat-shaded, stylized low-poly voxel terrain block with terraced cliff strata, crystal blue central pond, campfire, and geometric pine trees.
-- **Zero AI-Runtime Dependency:** All models are constructed via procedural Three.js geometries (box/cylinder/cone instances) and CC0 low-poly GLTFs. Programmatic material shaders handle color transitions and seasonal palettes.
+## System Overview
 
 ```
-                    ┌─────────────────────────┐
-                    │      Sun / Sunlight     │
-                    └───────────┬─────────────┘
-                                │
-             ┌──────────────────▼──────────────────┐
-             │       3D Isometric Forest Island    │
-             │  ┌───────────────┐ ┌──────────────┐ │
-             │  │ Terrain Block │ │ Central Pond │ │ │
-             │  └───────┬───────┘ └──────┬───────┘ │
-             │          │                │         │
-             │  ┌───────▼────────────────▼───────┐ │
-             │  │   Instanced Pine Trees / Props │ │
-             │  └────────────────────────────────┘ │
-             └──────────────────┬──────────────────┘
-                                │
-                    ┌───────────▼─────────────┐
-                    │  Weather / FX Particles │
-                    │ (Rain / Coins / Glows)  │
-                    └─────────────────────────┘
+[Next.js 16 App Router (Turbopack)]
+   ├── Pages: /, /dashboard, /logos, /u/[username]
+   ├── API Routes: /api/github, /api/webhooks/revenue
+   └── UI System: Double-Bezel Porcelain Components (Modal, Button, Badge, FloatingDock)
+        │
+   [React Three Fiber v9 Canvas]
+   ├── CameraRig (Isometric Parallax Tilt)
+   ├── TerrainIsland (Stepped Voxel Strata, Oasis Pond)
+   ├── BlockTree (5-Tier Low-Poly Meshes, Click Raycasting)
+   ├── CampProps (Milestone Campfire, Tent, Cabin, Clouds)
+   └── WeatherSystem (Dynamic Sun, Instanced Rain Particles, Fireflies)
+        │
+   [Domain Core (Pure TypeScript / Vitest)]
+   ├── gamification.ts (XP curves, streak decay, shield rules, rank titles)
+   └── revenueWebhook.ts (Stripe, Lemon Squeezy, Polar webhook normalizer)
 ```
 
 ---
 
-## 3. The Gamification & Economy Engine
+## Services & Responsibilities
 
-### 3.1 XP & Level Progression
-Experience points (XP) are earned through daily developer actions:
-
-| Action | XP Reward | Purpose |
-|---|---|---|
-| **Daily Ship (GitHub or Manual)** | `+100 XP` | Primary habit anchor |
-| **Complete Daily #1 Focus Quest** | `+50 XP` | Priority discipline |
-| **Streak Multiplier** | `+10 XP × streak_days` | Consistency compounding |
-| **Proof-of-Work Link (URL / PR / Tweet)** | `+25 XP` | Public accountability |
-| **New Customer / Revenue Event** | `+200 XP` | Business growth milestone |
-
-```
-Level Formula: XP_required = 200 * (Level ^ 1.4)
-```
-
-### 3.2 Developer Ranks & Titles
-- **Lvl 1–4:** Seedling Scout 🌲 *(Starter 6x6 Island, Dirt Camp)*
-- **Lvl 5–9:** Code Forager 🏕️ *(Unlocked Campfire 🔥, Wooden Logs)*
-- **Lvl 10–19:** Shipwright 🛶 *(Unlocked Fishing Pier, Camping Tent ⛺, 8x8 Island)*
-- **Lvl 20–34:** Island Architect 🏡 *(Unlocked Cozy Wood Cabin, Stone Pathways)*
-- **Lvl 35–49:** Mountain Warden 🏮 *(Unlocked Stone Watchtower, Lantern Posts)*
-- **Lvl 50+:** Forest Monarch 👑 *(Unlocked Northern Lights 🌌, Golden Shrine)*
-
-### 3.3 Economy: Pinecones (🌰) & The Camp Shop
-- **Earning Pinecones:** Earn **10 🌰** per daily ship, **25 🌰** on 7-day streak milestones, and **50 🌰** on level-ups.
-- **Cosmetic Camp Shop:** Spend Pinecones to unlock and place custom props:
-  - *Stone Cobblestone Pathway* (20 🌰)
-  - *Cozy Wood Bench & Mug* (35 🌰)
-  - *Forest Fox / Pet Companion* 🦊 (75 🌰)
-  - *Solar Lantern Post* 🏮 (50 🌰)
-  - *Cherry Blossom Sakura Biome Skin* (150 🌰)
-  - *Snowy Winter Island Theme* (150 🌰)
-
-### 3.4 Burnout Prevention: Streak Shield System 🛡️
-- Earn **1 Streak Shield** for every 7 consecutive days of shipping (holds a maximum of **2 Shields** in inventory).
-- If a developer misses a day (vacation, weekend, rest), 1 shield is consumed automatically, protecting the streak counter and preventing forest drought.
-
-### 3.5 Dynamic Atmosphere & Weather Buffs ✨
-- **3+ Day Streak:** Campfire sparks with warm light and rising smoke particles.
-- **7+ Day Streak:** "Golden Hour" lighting mode + glowing fireflies at night.
-- **14+ Day Streak:** Rainbow arc over the central pond after rain events.
-- **30+ Day Streak:** Aurora Borealis (Northern Lights) shader across the night sky.
-- **Drought Mode (Missed Ship without Shield):** Subtle mist/fog rolls in, foliage desaturates slightly until the next ship.
+| Service | Where it runs | What it owns |
+|---------|--------------|--------------|
+| Next.js App Router | Vercel (Edge / Node) | UI layout, SSR hydration guards, static landing page, dashboard, public profile |
+| React Three Fiber Canvas | Client Browser (WebGL) | 3D voxel terrain, stepped pine trees, particle weather, cursor parallax |
+| `/api/github` Route | Vercel Serverless Function | Public GitHub repo commit polling and rate-limit handling |
+| `/api/webhooks/revenue` Route | Vercel Serverless Function | Universal webhook ingestion for Stripe, Lemon Squeezy, and Polar |
+| Zustand Gamification Store | Client Browser (LocalStorage) | XP curve progression, daily streak states, tree entities, quest checkoffs |
+| Web Audio API Synth Engine | Client Browser (Web Audio) | Zero-latency synthesized retro chimes, coin sounds, level fanfare |
 
 ---
 
-## 4. Daily Shipping Ritual & UX Flow
+## File Tree
 
-1. **Morning (30 Seconds):**
-   - Open IndieForest dashboard.
-   - Enter **"Today's #1 Focus Quest"** (e.g., *"Finish Stripe Checkout webhook"*).
-2. **Throughout the Day:**
-   - Code freely. GitHub pushes are automatically polled and queued.
-3. **Evening / Wrap-up (10 Seconds):**
-   - Click **"⚡ Ship It"** (or auto-completed via commit).
-   - Dynamic 3D rain shower pours over the island.
-   - Gold coin particles and XP banner trigger level progress.
-   - Optional: Click **"Share to X"** to generate a 1-click branded 3D snapshot card.
-
----
-
-## 5. Technical System Architecture
-
-```mermaid
-flowchart TD
-    subgraph Frontend ["Next.js 15 App Router (TypeScript + Tailwind v4)"]
-        UI[HUD: Quest Bar, Streak Badge, XP Progress]
-        R3F[React Three Fiber Canvas]
-        ThreeScene[3D Island: Procedural Terrain, Pond, Trees, Weather]
-        CardGen[1-Click Social Snapshot Generator]
-    end
-
-    subgraph State ["Client & Store Layer"]
-        ZustandStore[useForestStore (Zustand + LocalStorage Sync)]
-        AudioSynthesizer[WebAudio Sound Effects]
-    end
-
-    subgraph Integrations ["Data Connectors"]
-        GitHubAPI[/api/github/activity (Commits & PRs)]
-        StripeWebhook[/api/stripe/webhook (Customers -> Trees)]
-    end
-
-    UI --> ZustandStore
-    GitHubAPI --> ZustandStore
-    StripeWebhook --> ZustandStore
-    ZustandStore --> ThreeScene
-    ZustandStore --> AudioSynthesizer
-    ThreeScene --> CardGen
+```
+D:\IndieForest\
+├── public/
+│   ├── logos/
+│   │   ├── indieforest_logo.svg       — Official 512x512 Master Squircle Logo
+│   │   └── indieforest_logo_mark.svg  — Transparent Official Logo Mark
+│   └── icon.svg                       — Browser Favicon asset
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── github/route.ts        — GitHub commit sync endpoint
+│   │   │   └── webhooks/revenue/      — Universal Stripe/LemonSqueezy/Polar webhook
+│   │   ├── dashboard/page.tsx         — Fullscreen 3D diorama app with top & bottom HUD
+│   │   ├── logos/page.tsx             — Official Brand Identity showcase & scale inspector
+│   │   ├── u/[username]/page.tsx      — Public shareable 3D diorama profile
+│   │   ├── globals.css                — Tailwind v4 design tokens, scrollbar hide, porcelain tokens
+│   │   ├── layout.tsx                 — Typography loader & app metadata
+│   │   ├── not-found.tsx              — 404 fallback page
+│   │   └── page.tsx                   — Main landing page with 3D diorama hero & bento grid
+│   ├── components/
+│   │   ├── canvas/
+│   │   │   ├── BlockTree.tsx          — 5-tier stepped low-poly pine trees with hover bounce
+│   │   │   ├── CampProps.tsx          — Campfire, smoke puffs, tent, cabin, drifting clouds
+│   │   │   ├── ForestCanvas.tsx       — Locked isometric canvas with <CameraRig /> parallax
+│   │   │   ├── TerrainIsland.tsx      — Stepped voxel earth, terracotta clay strata, oasis pond
+│   │   │   └── WeatherSystem.tsx      — Sunlight directional shadows, rain particles, fireflies
+│   │   ├── hud/
+│   │   │   ├── AddTreeModal.tsx       — Subscriber customer tree adder modal
+│   │   │   ├── FloatingDock.tsx       — Unified bottom Double-Bezel control dock
+│   │   │   ├── SettingsModal.tsx      — Backend cloud sync & Universal Webhook configuration
+│   │   │   ├── ShareCardModal.tsx     — 1-click build-in-public social card exporter
+│   │   │   └── ShipModal.tsx          — 1-click manual & GitHub commit verification modal
+│   │   └── ui/
+│   │       ├── Badge.tsx              — Standardized geometric badges
+│   │       ├── Button.tsx             — Tactile Button-in-Button components with specular glints
+│   │       └── Modal.tsx              — Canonical porcelain double-bezel modal wrapper
+│   ├── lib/
+│   │   ├── gamification.ts            — Clean Code pure domain calculations (XP, streaks, ranks)
+│   │   ├── gamification.test.ts       — Vitest unit test suite (13 domain tests)
+│   │   ├── revenueWebhook.ts          — Universal Revenue Webhook parser
+│   │   ├── revenueWebhook.test.ts     — Vitest unit test suite (6 webhook tests)
+│   │   └── sound.ts                   — Web Audio synthesized retro sound generator
+│   ├── store/
+│   │   └── useForestStore.ts          — Zustand store with localStorage persistence
+│   └── types/
+│       └── r3f.d.ts                   — JSX intrinsic elements for React 19 + R3F
+├── supabase/
+│   └── migrations/                    — PostgreSQL schema & RLS policies
+├── docs/adr/ (0001 through 0005)
+├── .agents/AGENTS.md                  — Project rules & session resume
+├── ARCHITECTURE.md                    — Master technical blueprint
+├── CONTEXT.md                         — Domain language & business rules
+├── JOURNAL.md                         — Product diary & engineering log
+├── README.md                          — Developer & public overview
+├── package.json
+└── tsconfig.json
 ```
 
 ---
 
-## 6. Phased Implementation Roadmap
+## API Contracts
 
-### **Phase 1: The Playable 3D Forest & Gamification Loop (Current)**
-- [x] Full Master Architecture & Game Design locked.
-- [ ] Next.js 15 + R3F + Tailwind project initialization.
-- [ ] 3D Procedural Island Canvas (isometric terrain, lake, campfire, rocks).
-- [ ] Dynamic Tree System (Saplings, Young Pines, Mature Trees, Stumps).
-- [ ] Weather & Particle System (Shipping rain, coin sparks, fireflies).
-- [ ] Gamification Engine: XP leveling, Streak Shields, Pinecone currency, Daily Quest Bar.
-- [ ] GitHub Activity Integration + 1-Click Manual Ship Modal.
-- [ ] 1-Click Social Snapshot Card Export for Twitter/X.
+| Method | Route | Auth required | What it does |
+|--------|-------|--------------|--------------|
+| GET | `/api/github?username=X&repo=Y` | ❌ (Public) | Fetches latest 10 commits from public GitHub repository for 1-click daily shipping |
+| POST | `/api/webhooks/revenue` | ❌ (Token URL) | Ingests Stripe, Lemon Squeezy, and Polar webhook events to plant Customer Trees |
 
-### **Phase 2: Accounts, Social & Supabase Sync**
-- [ ] Supabase Auth (Sign in with GitHub).
-- [ ] Cloud sync for island data and persistent streaks across devices.
-- [ ] Public Shareable 3D Island link (`indieforest.dev/@username`).
-- [ ] Stripe customer webhook integration (revenue-to-tree mapper).
-- [ ] AI Daily Quest Suggestion (Gemini Flash analyzes commit messages).
+---
 
-### **Phase 3: Multiplayer & Biomes**
-- [ ] Multiple product biomes (expand island into archipelago).
-- [ ] Indie Hacker Guilds / Team forests.
-- [ ] Time-travel scrubber (view 3D island state 30 days ago).
+## Key Data Flows
+
+### Daily Shipping Flow
+```
+Developer clicks "SHIP IT" (or syncs GitHub repo)
+→ Form submits payload (message, source, proofUrl)
+→ Pure domain calculateShipRewards() computes XP (+100 base, +streak bonus, +proof bonus)
+→ evaluateLevelProgress() calculates excess XP remainder rollover
+→ Web Audio engine triggers level fanfare or rain sound
+→ 3D Canvas instanced rain particles fall for 4.5s
+→ Floating Dock updates Level, XP bar, and Streak Flame
+→ LocalStorage persists updated state
+```
+
+### Revenue Webhook Flow
+```
+Customer purchases product via Stripe / Lemon Squeezy / Polar
+→ Platform emits webhook POST to /api/webhooks/revenue?token=sample_webhook_token
+→ Pure domain parseRevenueWebhook() identifies event, customer name, and MRR contribution
+→ Returns verified customer tree payload
+→ Zustand store plants customer tree on 3D island terrain
+```
+
+---
+
+## Historical Decisions
+
+| Date | Decision | Why |
+|------|---------|-----|
+| 2026-08-20 | React Three Fiber v9 + Three.js 0.170 | Procedural 3D depth, real-time shadows, and zero sprite generation latency |
+| 2026-08-20 | Next.js 16.3.1 (Turbopack) + React 19 | Sub-second compilation and native client component type validation |
+| 2026-08-20 | Locked Isometric Camera with Cursor Parallax | Fixed diorama framing eliminates disorientation while retaining tactile depth |
+| 2026-08-20 | Warm Studio Linen Palette (`#ece7de`) | Eliminates stark pure white glare and gives a warm papercraft diorama aesthetic |
+| 2026-08-20 | Pure Domain Logic in `gamification.ts` & `revenueWebhook.ts` | Complete separation of concerns with 100% test coverage via Vitest (19/19 passing) |
+| 2026-08-20 | Canonical Double-Bezel Modal Architecture | Unifies all modals and floating docks with `glass-dock` outer + `porcelain-surface` inner chamber |
+| 2026-08-20 | Global Scrollbar Suppression | Eliminates ugly browser scrollbars while keeping fluid wheel and touch scrolling active |
+| 2026-08-20 | Universal Host Binding `0.0.0.0:3000` | Enables seamless Antigravity IDE and internal Chromium webview routing |

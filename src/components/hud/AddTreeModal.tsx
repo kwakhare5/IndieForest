@@ -1,130 +1,225 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForestStore, GrowthTier } from "@/store/useForestStore";
-import { X, PlusCircle, Trees, DollarSign, ArrowRight } from "lucide-react";
+import { useForestStore, GrowthTier, TreeType } from "@/store/useForestStore";
+import { Trees, DollarSign, Zap, Check, TrendingUp } from "lucide-react";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { SegmentedControl, SegmentedOption } from "@/components/ui/SegmentedControl";
+import confetti from "canvas-confetti";
 
 interface AddTreeModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+const TAB_OPTIONS: SegmentedOption<"manual" | "simulator">[] = [
+  { value: "manual", label: "Plant Tree" },
+  { value: "simulator", label: "Webhook Simulator", icon: Zap },
+];
+
+const TYPE_OPTIONS: SegmentedOption<TreeType>[] = [
+  { value: "shipping", label: "Shipping Milestone", icon: Trees },
+  { value: "revenue", label: "Paying Subscriber", icon: TrendingUp },
+];
+
+const TIER_OPTIONS: SegmentedOption<GrowthTier>[] = [
+  { value: "sapling", label: "Sapling" },
+  { value: "young", label: "Young" },
+  { value: "mature", label: "Mature" },
+  { value: "majestic", label: "Majestic" },
+];
+
 export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
   const addTree = useForestStore((s) => s.addTree);
 
+  const [activeTab, setActiveTab] = useState<"manual" | "simulator">("manual");
+  const [treeType, setTreeType] = useState<TreeType>("shipping");
   const [name, setName] = useState("");
   const [mrr, setMrr] = useState("29");
   const [tier, setTier] = useState<GrowthTier>("young");
-
-  if (!isOpen) return null;
+  const [simSuccess, setSimSuccess] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    addTree(name.trim(), parseInt(mrr) || 0, tier);
+    addTree(
+      name.trim(),
+      treeType === "revenue" ? parseInt(mrr) || 0 : 0,
+      tier,
+      treeType
+    );
+
+    confetti({
+      particleCount: 50,
+      spread: 60,
+      origin: { y: 0.7 },
+      colors: treeType === "revenue" ? ["#f59e0b", "#fbbf24"] : ["#10b981", "#34d399"],
+    });
+
     setName("");
     onClose();
   };
 
+  const handleSimulateWebhook = async (amount: number, customerName: string) => {
+    addTree(customerName, amount, amount >= 100 ? "majestic" : amount >= 50 ? "mature" : "young", "revenue");
+
+    confetti({
+      particleCount: 70,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ["#f59e0b", "#10b981", "#3b82f6"],
+    });
+
+    setSimSuccess(true);
+    setTimeout(() => {
+      setSimSuccess(false);
+      onClose();
+    }, 1500);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-      {/* Outer Shell (Double-Bezel) */}
-      <div className="w-full max-w-md p-1.5 rounded-[2rem] bg-emerald-950/40 ring-1 ring-emerald-500/30 shadow-2xl relative">
-        {/* Inner Core */}
-        <div className="rounded-[calc(2rem-0.375rem)] bg-[#0c1813] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] text-white relative">
-          <button
-            onClick={onClose}
-            className="absolute top-5 right-5 p-1.5 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition"
-          >
-            <X className="w-4 h-4" />
-          </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Grow Island Forest"
+      badgeText="Dual-Grove Engine"
+      icon={Trees}
+    >
+      <div className="space-y-4 font-satoshi">
+        
+        {/* Tab Switcher */}
+        <SegmentedControl
+          options={TAB_OPTIONS}
+          value={activeTab}
+          onChange={(val) => setActiveTab(val)}
+        />
 
-          {/* Header */}
-          <div className="flex items-center gap-3.5 mb-5">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 ring-1 ring-emerald-500/40 flex items-center justify-center text-emerald-300">
-              <Trees className="w-5 h-5" />
-            </div>
+        {activeTab === "manual" && (
+          <form onSubmit={handleSubmit} className="space-y-3.5 font-satoshi">
+            
+            {/* Tree Type Switcher */}
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold text-emerald-400 block mb-0.5">
-                Revenue & Subscribers
-              </span>
-              <h2 className="text-base font-bold text-emerald-50 tracking-tight">
-                Plant Customer Tree
-              </h2>
+              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-satoshi">
+                Tree Category
+              </label>
+              <SegmentedControl
+                options={TYPE_OPTIONS}
+                value={treeType}
+                onChange={(val) => setTreeType(val)}
+                size="sm"
+              />
             </div>
-          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Customer / Goal Name */}
+            {/* Tree Label / Customer Name */}
             <div>
-              <label className="text-xs font-semibold text-emerald-300 mb-1.5 block">
-                Customer / Subscriber Name
+              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-satoshi">
+                {treeType === "revenue" ? "Customer or Company Name" : "Milestone or Feature Name"}
               </label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Acme Corp (Pro Tier)"
-                className="w-full bg-black/60 border border-emerald-500/25 rounded-2xl px-3.5 py-2.5 text-xs text-emerald-100 placeholder-slate-500 outline-none focus:ring-1 focus:ring-emerald-400 font-sans"
+                placeholder={treeType === "revenue" ? "e.g. Acme Corp" : "e.g. 100 Beta Signups"}
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 font-satoshi"
               />
             </div>
 
-            {/* MRR Contribution */}
-            <div>
-              <label className="text-xs font-semibold text-emerald-300 mb-1.5 block">
-                Monthly Revenue (MRR $)
-              </label>
-              <div className="relative">
-                <DollarSign className="w-4 h-4 text-emerald-400 absolute left-3.5 top-2.5" />
-                <input
-                  type="number"
-                  min="0"
-                  value={mrr}
-                  onChange={(e) => setMrr(e.target.value)}
-                  placeholder="29"
-                  className="w-full bg-black/60 border border-emerald-500/25 rounded-2xl pl-9 pr-3 py-2.5 text-xs text-emerald-100 font-mono outline-none focus:ring-1 focus:ring-emerald-400"
-                />
+            {/* MRR Field (If Revenue) */}
+            {treeType === "revenue" && (
+              <div>
+                <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-satoshi">
+                  Monthly Recurring Revenue ($/mo)
+                </label>
+                <div className="relative">
+                  <DollarSign className="w-4 h-4 text-stone-400 absolute left-3.5 top-2.5" />
+                  <input
+                    type="number"
+                    min="1"
+                    value={mrr}
+                    onChange={(e) => setMrr(e.target.value)}
+                    placeholder="29"
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-3 py-2 text-xs text-stone-900 font-pixel outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+                  />
+                </div>
               </div>
+            )}
+
+            {/* Growth Tier */}
+            <div>
+              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-satoshi">
+                Growth Stage
+              </label>
+              <SegmentedControl
+                options={TIER_OPTIONS}
+                value={tier}
+                onChange={(val) => setTier(val)}
+                size="sm"
+              />
             </div>
 
-            {/* Growth Tier Select */}
-            <div>
-              <label className="text-xs font-semibold text-emerald-300 mb-1.5 block">
-                Initial Tree Stage
-              </label>
-              <div className="grid grid-cols-4 gap-1.5 text-xs">
-                {(["sapling", "young", "mature", "majestic"] as GrowthTier[]).map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setTier(t)}
-                    className={`py-2 rounded-xl capitalize font-semibold transition ${
-                      tier === t
-                        ? "bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(16,185,129,0.4)]"
-                        : "bg-black/40 ring-1 ring-emerald-900/60 text-emerald-300 hover:bg-emerald-950/60"
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Submit with Button-in-Button */}
-            <button
+            {/* Submit CTA */}
+            <Button
               type="submit"
-              className="group w-full pl-5 pr-2 py-2 mt-2 rounded-full font-bold bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 text-slate-950 shadow-lg shadow-emerald-500/25 transition-all duration-300 flex items-center justify-between text-xs tracking-wider active:scale-[0.98]"
+              variant={treeType === "revenue" ? "dark" : "emerald"}
+              size="md"
+              showArrow
+              className="w-full mt-2"
             >
-              <span className="font-mono font-extrabold">PLANT TREE ON ISLAND</span>
-              <div className="w-8 h-8 rounded-full bg-slate-950/20 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5">
-                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-              </div>
-            </button>
+              {treeType === "revenue" ? "SPROUT REVENUE PINE" : "PLANT SHIPPING PINE"}
+            </Button>
           </form>
-        </div>
+        )}
+
+        {activeTab === "simulator" && (
+          <div className="space-y-3 font-satoshi">
+            <p className="text-xs text-stone-600 leading-relaxed">
+              Test how Stripe or Lemon Squeezy sales trigger real-time pine tree sprouts on your island:
+            </p>
+
+            {simSuccess && (
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-pixel font-bold flex items-center gap-1.5 animate-in fade-in">
+                <Check className="w-4 h-4 text-emerald-600" />
+                <span>Simulated Sale Received: Revenue Pine Sprouted on Island!</span>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 gap-2.5">
+              <Card
+                variant="subtle-inset"
+                className="p-3.5 flex items-center justify-between hover:border-stone-300 transition cursor-pointer"
+                onClick={() => handleSimulateWebhook(29, "Starter Subscriber")}
+              >
+                <div>
+                  <div className="font-bold text-stone-900 text-xs">$29/mo Starter Plan</div>
+                  <div className="text-[11px] text-stone-500">Sprouts a Young Golden Pine</div>
+                </div>
+                <Button variant="emerald" size="sm" icon={Zap}>
+                  Test $29
+                </Button>
+              </Card>
+
+              <Card
+                variant="subtle-inset"
+                className="p-3.5 flex items-center justify-between hover:border-stone-300 transition cursor-pointer"
+                onClick={() => handleSimulateWebhook(99, "Pro Enterprise")}
+              >
+                <div>
+                  <div className="font-bold text-stone-900 text-xs">$99/mo Pro Enterprise</div>
+                  <div className="text-[11px] text-stone-500">Sprouts a Majestic Ancient Pine</div>
+                </div>
+                <Button variant="dark" size="sm" icon={Zap}>
+                  Test $99
+                </Button>
+              </Card>
+            </div>
+          </div>
+        )}
+
       </div>
-    </div>
+    </Modal>
   );
 }

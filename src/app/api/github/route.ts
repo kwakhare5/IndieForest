@@ -1,5 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 
+interface GitHubRawCommit {
+  sha: string;
+  html_url: string;
+  commit: {
+    message: string;
+    author?: {
+      name?: string;
+      date?: string;
+    };
+  };
+  author?: {
+    login?: string;
+  };
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get("username");
@@ -14,7 +29,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${username}/${repo}/commits?per_page=10`,
+      `https://api.github.com/repos/${encodeURIComponent(username)}/${encodeURIComponent(repo)}/commits?per_page=10`,
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
@@ -31,8 +46,8 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const data = await res.json();
-    const commits = data.map((c: any) => ({
+    const data: GitHubRawCommit[] = await res.json();
+    const commits = data.map((c) => ({
       sha: c.sha.substring(0, 7),
       message: c.commit.message,
       author: c.commit.author?.name || c.author?.login || "Developer",
@@ -41,9 +56,10 @@ export async function GET(req: NextRequest) {
     }));
 
     return NextResponse.json({ success: true, commits });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Failed to fetch GitHub commits";
     return NextResponse.json(
-      { error: error.message || "Failed to fetch GitHub commits" },
+      { error: errorMessage },
       { status: 500 }
     );
   }
