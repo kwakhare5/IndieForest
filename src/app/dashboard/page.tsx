@@ -54,14 +54,16 @@ export default function DashboardPage() {
     checkStreakExpiry();
 
     if (isLoaded && isSignedIn && clerkUser) {
+      const username =
+        clerkUser.username ||
+        clerkUser.firstName ||
+        clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
+        "builder";
+
       setUser({
         id: clerkUser.id,
         email: clerkUser.primaryEmailAddress?.emailAddress,
-        username:
-          clerkUser.username ||
-          clerkUser.firstName ||
-          clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
-          "builder",
+        username,
         fullName: clerkUser.fullName || "Indie Builder",
         avatarUrl: clerkUser.imageUrl,
         isAuthenticated: true,
