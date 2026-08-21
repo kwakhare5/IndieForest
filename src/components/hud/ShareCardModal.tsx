@@ -187,7 +187,7 @@ Building in public @indieforest_app`;
               </div>
               <div>
                 <h4 className="text-xs font-bold text-stone-900 font-satoshi">{title}</h4>
-                <span className="text-[10px] text-stone-500 font-pixel">LEVEL {level}</span>
+                <span className="font-pixel text-xs font-bold text-stone-500">LVL {level}</span>
               </div>
             </div>
 
@@ -197,19 +197,19 @@ Building in public @indieforest_app`;
           </div>
 
           <div className="p-3 rounded-xl bg-white border border-stone-200/90 text-xs text-stone-700 my-2.5 shadow-xs">
-            <span className="text-[10px] font-pixel uppercase font-semibold text-stone-500 block mb-1">
-              Today's Ship:
+            <span className="font-pixel text-xs uppercase font-bold text-stone-500 block mb-1">
+              TODAY&apos;S SHIP:
             </span>
             <p className="line-clamp-2 text-xs text-stone-900 font-medium font-satoshi">
-              "{latestShip}"
+              &ldquo;{latestShip}&rdquo;
             </p>
           </div>
 
-          <div className="flex items-center justify-between text-[10px] font-pixel text-stone-500 pt-1">
+          <div className="flex items-center justify-between font-pixel text-xs font-bold text-stone-500 pt-1">
             <span>
-              {trees.length} Trees • ${totalMrr}/mo MRR
+              {trees.length} TREES • ${totalMrr}/MO MRR
             </span>
-            <span className="font-semibold text-emerald-800 font-pixel">
+            <span className="text-emerald-800">
               indieforest.dev/u/{user.username}
             </span>
           </div>
@@ -254,7 +254,7 @@ Building in public @indieforest_app`;
         <div className="text-center">
           <button
             onClick={handleCopyText}
-            className="text-[11px] font-pixel text-stone-500 hover:text-stone-800 underline transition-colors"
+            className="text-[11px] font-satoshi font-medium text-stone-500 hover:text-stone-800 underline transition-colors"
           >
             {copiedText ? "✓ Text copied to clipboard" : "or copy plain tweet text"}
           </button>

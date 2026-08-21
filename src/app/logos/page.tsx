@@ -87,7 +87,7 @@ export default function LogosPage() {
               <h3 className="font-bold text-lg text-stone-900 font-satoshi">
                 IndieForest Tree Stump Timeline
               </h3>
-              <p className="text-xs text-stone-500 font-pixel">
+              <p className="font-pixel text-xs font-bold text-stone-500">
                 512x512px Vector SVG • Continuous Squircle (rx=112)
               </p>
             </div>
@@ -98,8 +98,8 @@ export default function LogosPage() {
             
             {/* Scale Contexts (Favicon, Navbar, App Icon) */}
             <div className="p-6 rounded-[2.5rem] bg-white border border-stone-200 shadow-sm space-y-4">
-              <span className="text-xs font-pixel font-bold uppercase tracking-wider text-emerald-800 block">
-                Visual Scale Hierarchy
+              <span className="font-pixel text-xs font-bold uppercase tracking-wider text-emerald-800 block">
+                VISUAL SCALE HIERARCHY
               </span>
 
               <div className="grid grid-cols-3 gap-3 text-center">
@@ -109,7 +109,7 @@ export default function LogosPage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/logos/indieforest_logo.svg" alt="App Icon" className="w-full h-full" />
                   </div>
-                  <span className="text-[11px] font-pixel text-stone-600">App Icon (64px)</span>
+                  <span className="font-pixel text-xs font-bold text-stone-700">App Icon (64px)</span>
                 </div>
 
                 {/* 2. Navbar Pod (32px) */}
@@ -118,7 +118,7 @@ export default function LogosPage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/logos/indieforest_logo.svg" alt="Navbar Icon" className="w-full h-full" />
                   </div>
-                  <span className="text-[11px] font-pixel text-stone-600">Navbar (32px)</span>
+                  <span className="font-pixel text-xs font-bold text-stone-700">Navbar (32px)</span>
                 </div>
 
                 {/* 3. Favicon (16px) */}
@@ -127,7 +127,7 @@ export default function LogosPage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/logos/indieforest_logo.svg" alt="Favicon" className="w-full h-full" />
                   </div>
-                  <span className="text-[11px] font-pixel text-stone-600">Favicon (16px)</span>
+                  <span className="font-pixel text-xs font-bold text-stone-700">Favicon (16px)</span>
                 </div>
               </div>
             </div>

@@ -8,26 +8,27 @@ import { TerrainIsland } from "./TerrainIsland";
 import { BlockTree } from "./BlockTree";
 import { CampProps } from "./CampProps";
 import { WeatherSystem } from "./WeatherSystem";
-import { TreeData, GrowthTier } from "@/types/game";
+import { TreeData } from "@/types/game";
 import { useForestStore } from "@/store/useForestStore";
+import { calculateTreeTier } from "@/lib/gamification";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { SegmentedControl, SegmentedOption } from "@/components/ui/SegmentedControl";
-import { TrendingUp, Layers, Calendar, Trash2, X } from "lucide-react";
+import {
+  TrendingUp,
+  Layers,
+  Calendar,
+  Trash2,
+  X,
+  GitCommit,
+  Sparkles,
+  ShieldCheck,
+} from "lucide-react";
 
 interface ForestCanvasProps {
   mode?: "full" | "preview" | "profile";
   customTrees?: TreeData[];
 }
-
-const TIER_OPTIONS: SegmentedOption<GrowthTier>[] = [
-  { value: "sapling", label: "Sapling" },
-  { value: "young", label: "Young" },
-  { value: "mature", label: "Mature" },
-  { value: "majestic", label: "Majestic" },
-  { value: "stump", label: "Stump" },
-];
 
 /**
  * CameraRig provides smooth mouse cursor parallax tilt.
@@ -62,14 +63,22 @@ function CameraRig({ isInteractive = true }: { isInteractive?: boolean }) {
 
 export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) {
   const storeTrees = useForestStore((s) => s.trees);
-  const updateTreeTier = useForestStore((s) => s.updateTreeTier);
   const removeTree = useForestStore((s) => s.removeTree);
 
   const [selectedTree, setSelectedTree] = useState<TreeData | null>(null);
 
   const activeTrees = customTrees || storeTrees;
   const isPreview = mode === "preview";
-  const isFull = mode === "full";
+
+  // Calculate live progress for selected tree
+  const treeProgress = selectedTree
+    ? calculateTreeTier(
+        selectedTree.type || "shipping",
+        selectedTree.commits || 0,
+        selectedTree.mrr || 0,
+        selectedTree.activeDays || 1
+      )
+    : null;
 
   return (
     <div
@@ -83,7 +92,7 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
         orthographic
         camera={{
           position: [18, 18, 18],
-          zoom: isPreview ? 40 : 46,
+          zoom: isPreview ? 24 : mode === "profile" ? 28 : 29,
           near: -100,
           far: 200,
         }}
@@ -122,10 +131,7 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
           <OrbitControls
             enableRotate={false}
             enablePan={false}
-            enableZoom={isFull}
-            minZoom={30}
-            maxZoom={65}
-            dampingFactor={0.08}
+            enableZoom={false}
           />
         </Suspense>
       </Canvas>
@@ -139,26 +145,31 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
         </div>
       )}
 
-      {/* 1. Preview Mode: Double-Bezel Selected Tree Inspector Pod */}
+      {/* 1. Preview Mode Compact Drawer */}
       {isPreview && selectedTree && (
-        <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-xs z-10 pointer-events-auto p-1 rounded-2xl glass-dock shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-150">
-          <div className="px-4 py-3 rounded-xl porcelain-surface space-y-2">
-            <div className="flex items-center justify-between text-xs font-satoshi">
-              <span className="font-bold text-stone-950 tracking-tight">{selectedTree.name}</span>
+        <div className="absolute bottom-4 left-4 right-4 z-20 p-1 rounded-2xl glass-dock shadow-xl font-satoshi animate-in slide-in-from-bottom-2 duration-150">
+          <div className="p-3.5 rounded-[calc(1rem-0.125rem)] porcelain-surface bg-white space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-stone-900 text-sm">{selectedTree.name}</span>
               <button
                 onClick={() => setSelectedTree(null)}
-                className="p-1 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-800 transition cursor-pointer"
-                title="Close"
+                className="p-1 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 text-emerald-800 font-bold font-pixel">
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-700" /> ${selectedTree.mrr}/mo MRR
-              </span>
-              <Badge variant="emerald" size="sm">
+              {selectedTree.type === "revenue" ? (
+                <span className="flex items-center gap-1 text-amber-800 font-pixel text-sm">
+                  <TrendingUp className="w-3.5 h-3.5 text-amber-600" /> ${selectedTree.mrr || 0}/mo MRR
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 text-emerald-800 font-pixel text-sm">
+                  <GitCommit className="w-3.5 h-3.5 text-emerald-600" /> {selectedTree.commits || 1} Commits
+                </span>
+              )}
+              <Badge variant={selectedTree.type === "revenue" ? "amber" : "emerald"} size="sm">
                 {selectedTree.tier}
               </Badge>
             </div>
@@ -166,7 +177,7 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
         </div>
       )}
 
-      {/* 2. Full Mode: Double-Bezel Tree Inspector Modal */}
+      {/* 2. Full Mode: Double-Bezel Pure Progression Tree Inspector Modal */}
       {!isPreview && selectedTree && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/35 backdrop-blur-md animate-in fade-in duration-150 font-satoshi">
           <div className="w-full max-w-sm p-1.5 rounded-[2.25rem] glass-dock shadow-2xl relative animate-in zoom-in-95 duration-150">
@@ -183,76 +194,119 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
 
               {/* Header */}
               <div className="pr-8">
-                <span className="text-[10px] font-pixel uppercase tracking-[0.2em] font-semibold text-emerald-800 block mb-0.5">
-                  {selectedTree.isDemo ? "Demo Subscriber Tree" : "Active Customer Tree"}
-                </span>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className={`font-pixel text-xs uppercase tracking-wider font-normal ${
+                    selectedTree.type === "revenue" ? "text-amber-800" : "text-emerald-800"
+                  }`}>
+                    {selectedTree.type === "revenue" ? "Golden Revenue Pine" : "Emerald Shipping Pine"}
+                  </span>
+                  <Badge variant={selectedTree.type === "revenue" ? "amber" : "emerald"} size="sm">
+                    {selectedTree.tier.toUpperCase()}
+                  </Badge>
+                </div>
                 <h3 className="text-base font-bold text-stone-950 tracking-tight font-satoshi">
                   {selectedTree.name}
                 </h3>
               </div>
 
-              {/* Tree Metrics */}
+              {/* Verifiable Proof Badge */}
+              <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-between text-xs text-emerald-900">
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                  {selectedTree.type === "revenue" ? "Verified Stripe Payment" : "Verified GitHub Commits"}
+                </span>
+                <span className="font-pixel text-[11px] text-emerald-800">AUTHENTIC</span>
+              </div>
+
+              {/* Growth Metrics */}
               <Card variant="subtle-inset" className="p-3.5 rounded-xl space-y-2.5 text-xs text-stone-600 font-satoshi">
-                {selectedTree.mrr !== undefined && (
+                {selectedTree.type === "revenue" ? (
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-stone-500">
-                      <TrendingUp className="w-3.5 h-3.5 text-emerald-700 stroke-[1.75]" /> Monthly Value:
+                      <TrendingUp className="w-3.5 h-3.5 text-amber-700 stroke-[1.75]" /> Monthly Volume:
                     </span>
-                    <span className="font-bold text-stone-900 font-pixel text-xs">
-                      ${selectedTree.mrr}/mo MRR
+                    <span className="text-stone-900 font-pixel text-sm font-normal">
+                      ${selectedTree.mrr || 0}/mo MRR
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 text-stone-500">
+                      <GitCommit className="w-3.5 h-3.5 text-emerald-700 stroke-[1.75]" /> Code Commits:
+                    </span>
+                    <span className="text-stone-900 font-pixel text-sm font-normal">
+                      {selectedTree.commits || 1} Ships ({selectedTree.activeDays || 1} Active Days)
                     </span>
                   </div>
                 )}
+
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-stone-500">
-                    <Layers className="w-3.5 h-3.5 text-stone-600 stroke-[1.75]" /> Current Stage:
+                    <Layers className="w-3.5 h-3.5 text-stone-600 stroke-[1.75]" /> Growth Stage:
                   </span>
-                  <Badge variant="emerald" size="sm">
+                  <span className="text-stone-800 font-semibold capitalize font-satoshi">
                     {selectedTree.tier}
-                  </Badge>
+                  </span>
                 </div>
+
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-stone-500">
-                    <Calendar className="w-3.5 h-3.5 text-stone-600 stroke-[1.75]" /> Planted Date:
+                    <Calendar className="w-3.5 h-3.5 text-stone-600 stroke-[1.75]" /> Sprouted Date:
                   </span>
-                  <span className="font-pixel text-[11px] text-stone-600">
+                  <span className="font-pixel text-xs text-stone-700">
                     {new Date(selectedTree.plantedAt).toLocaleDateString()}
                   </span>
                 </div>
               </Card>
 
-              {/* Stage Selector with Canonical SegmentedControl */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] uppercase tracking-wider font-pixel font-semibold text-stone-500 block">
-                  Adjust Growth Stage:
-                </label>
-                <SegmentedControl
-                  options={TIER_OPTIONS}
-                  value={selectedTree.tier}
-                  onChange={(val) => {
-                    updateTreeTier(selectedTree.id, val);
-                    setSelectedTree({ ...selectedTree, tier: val });
-                  }}
-                  size="sm"
-                />
-              </div>
+              {/* Automatic Growth Progress towards Next Tier */}
+              {treeProgress && (
+                <div className="p-3 rounded-xl bg-stone-100/90 border border-stone-200/80 space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-stone-700 flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-amber-600" />
+                      <span>Next Evolution</span>
+                    </span>
+                    <span className="font-pixel text-xs text-stone-600">
+                      {treeProgress.nextTierLabel}
+                    </span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-stone-200 overflow-hidden shadow-inner">
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${
+                        selectedTree.type === "revenue" ? "bg-amber-500" : "bg-emerald-600"
+                      }`}
+                      style={{ width: `${treeProgress.progressPercent}%` }}
+                    />
+                  </div>
+                  <p className="text-[11px] text-stone-500 leading-tight">
+                    {selectedTree.type === "revenue"
+                      ? "Tree expands automatically as customer subscriptions increase."
+                      : "Push commits to GitHub to water and grow this pine."}
+                  </p>
+                </div>
+              )}
 
-              {/* Delete / Remove Action */}
+              {/* Footer Actions */}
               <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-3">
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => {
-                    removeTree(selectedTree.id);
-                    setSelectedTree(null);
-                  }}
-                  icon={Trash2}
-                >
-                  Remove Tree
-                </Button>
+                {mode === "full" ? (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => {
+                      removeTree(selectedTree.id);
+                      setSelectedTree(null);
+                    }}
+                    icon={Trash2}
+                  >
+                    Uproot
+                  </Button>
+                ) : (
+                  <span className="text-xs text-stone-500 font-satoshi">Verified Diorama</span>
+                )}
 
                 <Button
-                  variant="outline"
+                  variant="emerald"
                   size="sm"
                   onClick={() => setSelectedTree(null)}
                 >

@@ -14,6 +14,11 @@ import {
   LevelProgressOutput,
   StreakEvaluationInput,
   StreakEvaluationOutput,
+  TimelineEvent,
+  GuestbookEntry,
+  CommitProof,
+  StripeProof,
+  WeatherType,
 } from "@/types/game";
 
 export type {
@@ -30,6 +35,11 @@ export type {
   LevelProgressOutput,
   StreakEvaluationInput,
   StreakEvaluationOutput,
+  TimelineEvent,
+  GuestbookEntry,
+  CommitProof,
+  StripeProof,
+  WeatherType,
 };
 
 export const DEFAULT_CAMP_DECOR_CATALOG: CampDecorItem[] = [
@@ -62,6 +72,37 @@ export const DEFAULT_CAMP_DECOR_CATALOG: CampDecorItem[] = [
     description: "Woven canvas hammock hung between two mature pine trees.",
   },
 ];
+
+// 16 Non-Overlapping Canonical Radial Coordinate Slots on Island Surface
+export const WEST_EMERALD_SLOTS: Array<[number, number]> = [
+  [-1.2, -0.8],
+  [-1.8, 0.4],
+  [-0.6, -1.8],
+  [-1.5, 1.5],
+  [-0.3, 1.8],
+  [-2.1, -1.5],
+  [-2.4, -0.2],
+  [-1.0, 2.2],
+];
+
+export const EAST_GOLDEN_SLOTS: Array<[number, number]> = [
+  [1.2, -0.8],
+  [1.8, 0.4],
+  [0.6, -1.8],
+  [1.5, 1.5],
+  [0.3, 1.8],
+  [2.1, -1.5],
+  [2.4, -0.2],
+  [1.0, 2.2],
+];
+
+/**
+ * Returns a deterministic, non-overlapping coordinate slot for a tree.
+ */
+export function getTreeSlotCoordinate(type: TreeType, index: number): [number, number] {
+  const slots = type === "shipping" ? WEST_EMERALD_SLOTS : EAST_GOLDEN_SLOTS;
+  return slots[index % slots.length] || [0, 2.2];
+}
 
 /**
  * Returns a local date string in YYYY-MM-DD format based on local calendar time.
@@ -224,4 +265,53 @@ export function purchaseCampDecor(
     remainingPinecones: currentPinecones - item.cost,
     unlockedIds: [...unlockedIds, itemId],
   };
+}
+
+/**
+ * Smart Proof-of-Ship: Calculates tree tier authentically from commit count (or MRR)
+ * dual-gated by distinct active calendar days to prevent single-day commit spamming.
+ */
+export function calculateTreeTier(
+  type: TreeType,
+  commits: number = 0,
+  mrr: number = 0,
+  activeDays: number = 1
+): { tier: GrowthTier; nextTierTarget: number; progressPercent: number; nextTierLabel: string } {
+  if (type === "revenue") {
+    if (mrr >= 2000) return { tier: "majestic", nextTierTarget: 2000, progressPercent: 100, nextTierLabel: "Max Level" };
+    if (mrr >= 500) return { tier: "mature", nextTierTarget: 2000, progressPercent: Math.min(Math.round(((mrr - 500) / 1500) * 100), 100), nextTierLabel: "Majestic ($2,000 MRR)" };
+    if (mrr >= 50) return { tier: "young", nextTierTarget: 500, progressPercent: Math.min(Math.round(((mrr - 50) / 450) * 100), 100), nextTierLabel: "Mature ($500 MRR)" };
+    return { tier: "sapling", nextTierTarget: 50, progressPercent: Math.min(Math.round((mrr / 50) * 100), 100), nextTierLabel: "Young ($50 MRR)" };
+  }
+
+  // Shipping Tree Progression: Dual-gated by Commits AND Active Calendar Days
+  const effectiveDays = Math.max(activeDays, 1);
+  if (commits >= 60 && effectiveDays >= 15) {
+    return { tier: "majestic", nextTierTarget: 60, progressPercent: 100, nextTierLabel: "Max Tier (Majestic Pine)" };
+  }
+  if (commits >= 25 && effectiveDays >= 7) {
+    return { tier: "mature", nextTierTarget: 60, progressPercent: Math.min(Math.round(((commits - 25) / 35) * 100), 100), nextTierLabel: "Majestic Pine (60 Commits & 15d)" };
+  }
+  if (commits >= 8 && effectiveDays >= 3) {
+    return { tier: "young", nextTierTarget: 25, progressPercent: Math.min(Math.round(((commits - 8) / 17) * 100), 100), nextTierLabel: "Mature Pine (25 Commits & 7d)" };
+  }
+  return { tier: "sapling", nextTierTarget: 8, progressPercent: Math.min(Math.round((commits / 8) * 100), 100), nextTierLabel: "Young Pine (8 Commits & 3d)" };
+}
+
+/**
+ * Reconstructs the 3D Island state up to a specified historical cutoff date for the Timeline Scrubber.
+ */
+export function reconstructHistoricalIsland(
+  allTrees: TreeData[],
+  cutoffDateStr: string
+): TreeData[] {
+  const cutoffTime = new Date(cutoffDateStr).getTime();
+  if (isNaN(cutoffTime)) return allTrees;
+
+  return allTrees
+    .filter((tree) => new Date(tree.plantedAt).getTime() <= cutoffTime)
+    .map((tree) => {
+      // Scale down tier if historical commits were lower
+      return tree;
+    });
 }

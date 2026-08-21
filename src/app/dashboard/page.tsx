@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { TopStatusBar } from "@/components/hud/TopStatusBar";
-import { DailyQuestPanel } from "@/components/hud/DailyQuestPanel";
 import { FloatingDock } from "@/components/hud/FloatingDock";
 import { SproutGuide } from "@/components/hud/SproutGuide";
 import { ShipModal } from "@/components/hud/ShipModal";
@@ -11,9 +10,10 @@ import { ShareCardModal } from "@/components/hud/ShareCardModal";
 import { AddTreeModal } from "@/components/hud/AddTreeModal";
 import { CampShopModal } from "@/components/hud/CampShopModal";
 import { SettingsModal } from "@/components/hud/SettingsModal";
-import { AuthModal } from "@/components/hud/AuthModal";
+import { TimelineScrubber } from "@/components/hud/TimelineScrubber";
 import { useForestStore } from "@/store/useForestStore";
 import { useUser } from "@clerk/nextjs";
+import { TreeData } from "@/types/game";
 
 // Dynamic import for Three.js Canvas to prevent SSR hydration mismatch
 const ForestCanvas = dynamic(
@@ -23,7 +23,7 @@ const ForestCanvas = dynamic(
     loading: () => (
       <div className="w-full h-screen flex flex-col items-center justify-center bg-[#ece7de] text-stone-600 font-mono text-xs">
         <div className="w-10 h-10 border-3 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-3" />
-        <span className="tracking-[0.2em] uppercase font-semibold font-pixel text-xs">
+        <span className="tracking-[0.2em] uppercase font-bold font-pixel text-sm">
           Loading 3D Island...
         </span>
       </div>
@@ -35,6 +35,7 @@ export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const checkStreakExpiry = useForestStore((s) => s.checkStreakExpiry);
   const hasCompletedSproutGuide = useForestStore((s) => s.hasCompletedSproutGuide);
+  const trees = useForestStore((s) => s.trees);
   const setUser = useForestStore((s) => s.setUser);
 
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
@@ -44,7 +45,9 @@ export default function DashboardPage() {
   const [isAddTreeModalOpen, setIsAddTreeModalOpen] = useState(false);
   const [isShopModalOpen, setIsShopModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Timeline Scrubber State
+  const [scrubbedTrees, setScrubbedTrees] = useState<TreeData[] | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -63,6 +66,12 @@ export default function DashboardPage() {
         avatarUrl: clerkUser.imageUrl,
         isAuthenticated: true,
       });
+    } else if (isLoaded && !isSignedIn) {
+      setUser({
+        id: "local-user",
+        username: "indie_builder",
+        isAuthenticated: false,
+      });
     }
   }, [isLoaded, isSignedIn, clerkUser, checkStreakExpiry, setUser]);
 
@@ -70,7 +79,7 @@ export default function DashboardPage() {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center bg-[#ece7de] text-stone-600 font-mono text-xs">
         <div className="w-10 h-10 border-3 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-3" />
-        <span className="tracking-[0.2em] uppercase font-semibold font-pixel text-xs">
+        <span className="tracking-[0.2em] uppercase font-bold font-pixel text-sm">
           Loading 3D Island...
         </span>
       </div>
@@ -79,24 +88,35 @@ export default function DashboardPage() {
 
   return (
     <main className="relative w-full h-screen min-h-[100dvh] overflow-hidden font-satoshi bg-[#ece7de]">
-      {/* Zone 1: Top Status & Identity Bar */}
+      {/* Zone 1: Unified Top Status & Identity Bar */}
       <TopStatusBar
         onOpenSettings={() => setIsSettingsModalOpen(true)}
-        onOpenAuth={() => setIsAuthModalOpen(true)}
-      />
-
-      {/* Zone 2: Left Daily Quests Panel */}
-      <DailyQuestPanel
         onOpenShipModal={() => setIsShipModalOpen(true)}
         onOpenShareModal={() => setIsShareModalOpen(true)}
       />
 
       {/* Zone 4: 3D Living Isometric Diorama Canvas */}
-      <ForestCanvas mode="full" />
+      <ForestCanvas mode="full" customTrees={scrubbedTrees || undefined} />
 
       {/* In-Game Onboarding Sprout Guide (Only on virgin island before first ship) */}
-      {!hasCompletedSproutGuide && (
+      {!hasCompletedSproutGuide && trees.length === 0 && (
         <SproutGuide onOpenShipModal={() => setIsShipModalOpen(true)} />
+      )}
+
+      {/* Floating 3D Timeline Scrubber Dock (Above Bottom Dock) */}
+      {trees.length > 0 && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-30 w-full max-w-2xl px-4 pointer-events-none">
+          <TimelineScrubber
+            trees={trees}
+            onScrubChange={(active, date) => {
+              if (date === null) {
+                setScrubbedTrees(null);
+              } else {
+                setScrubbedTrees(active);
+              }
+            }}
+          />
+        </div>
       )}
 
       {/* Zone 3: Bottom Action Dock */}
@@ -131,11 +151,6 @@ export default function DashboardPage() {
       <SettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
-      />
-
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
       />
     </main>
   );

@@ -2,17 +2,58 @@
 
 export type GrowthTier = "sapling" | "young" | "mature" | "majestic" | "stump";
 export type TreeType = "shipping" | "revenue";
+export type WeatherType = "clear" | "rain_emerald" | "thunder_milestone" | "gold_shower" | "drought";
+
+export interface CommitProof {
+  sha: string;
+  message: string;
+  diffUrl?: string;
+  repo: string;
+  author: string;
+  date: string;
+}
+
+export interface StripeProof {
+  invoiceId: string;
+  amount: number;
+  currency?: string;
+  plan: string;
+  timestamp: string;
+}
 
 export interface TreeData {
   id: string;
   name: string;
   type?: TreeType; // "shipping" (emerald) or "revenue" (golden)
+  commits?: number;
+  activeDays?: number;
   mrr?: number;
   tier: GrowthTier;
   gridX: number;
   gridZ: number;
   plantedAt: string;
   isDemo?: boolean;
+  commitProof?: CommitProof;
+  stripeProof?: StripeProof;
+}
+
+export interface TimelineEvent {
+  id: string;
+  timestamp: string;
+  title: string;
+  type: "commit" | "revenue" | "milestone";
+  treeId?: string;
+  details?: string;
+  value?: number;
+}
+
+export interface GuestbookEntry {
+  id: string;
+  author: string;
+  avatarUrl?: string;
+  message: string;
+  timestamp: string;
+  verifiedVisitor?: boolean;
 }
 
 export interface ShipLog {
@@ -23,6 +64,7 @@ export interface ShipLog {
   xpGained: number;
   proofUrl?: string;
   repo?: string;
+  commitSha?: string;
 }
 
 export interface CampDecorItem {

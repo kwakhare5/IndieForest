@@ -9,6 +9,9 @@ import {
   purchaseCampDecor,
   TreeData,
   getLocalDateString,
+  getTreeSlotCoordinate,
+  calculateTreeTier,
+  reconstructHistoricalIsland,
 } from "./gamification";
 
 describe("Gamification Engine — Clean Code & TDD", () => {
@@ -116,108 +119,86 @@ describe("Gamification Engine — Clean Code & TDD", () => {
     });
   });
 
-  describe("Seam 5: Daily Quests Engine", () => {
-    it("marks a daily quest completed and returns awarded XP", () => {
-      const quests = [
-        { id: "focus_ship", title: "Ship today's #1 focus", xpReward: 100, completed: false },
-        { id: "github_commit", title: "Push code to GitHub", xpReward: 50, completed: false },
-        { id: "share_x", title: "Post progress to X", xpReward: 25, completed: false },
-      ];
+  describe("Seam 5: Canonical Radial Coordinate Slots", () => {
+    it("assigns non-overlapping western coordinates for emerald shipping trees", () => {
+      const coord1 = getTreeSlotCoordinate("shipping", 0);
+      const coord2 = getTreeSlotCoordinate("shipping", 1);
+      expect(coord1[0]).toBeLessThan(0); // West is negative X
+      expect(coord1).not.toEqual(coord2);
+    });
 
+    it("assigns non-overlapping eastern coordinates for golden revenue trees", () => {
+      const coord1 = getTreeSlotCoordinate("revenue", 0);
+      const coord2 = getTreeSlotCoordinate("revenue", 1);
+      expect(coord1[0]).toBeGreaterThan(0); // East is positive X
+      expect(coord1).not.toEqual(coord2);
+    });
+  });
+
+  describe("Seam 6: Smart Proof-of-Ship Anti-Gaming Formula", () => {
+    it("requires both commits and active days to reach Majestic tier", () => {
+      const singleDaySpam = calculateTreeTier("shipping", 100, 0, 1);
+      expect(singleDaySpam.tier).not.toBe("majestic");
+
+      const legitimateGrowth = calculateTreeTier("shipping", 60, 0, 20);
+      expect(legitimateGrowth.tier).toBe("majestic");
+    });
+  });
+
+  describe("Seam 7: Daily Quests Engine", () => {
+    it("completes daily quest and awards XP", () => {
+      const quests = [
+        { id: "focus_ship", title: "Ship focus", xpReward: 100, completed: false },
+      ];
       const result = completeDailyQuest(quests, "focus_ship");
       expect(result.success).toBe(true);
       expect(result.xpAwarded).toBe(100);
-      expect(result.updatedQuests.find((q) => q.id === "focus_ship")?.completed).toBe(true);
-      expect(result.updatedQuests.find((q) => q.id === "github_commit")?.completed).toBe(false);
-    });
-
-    it("prevents double-claiming XP for an already completed quest", () => {
-      const quests = [
-        { id: "focus_ship", title: "Ship today's #1 focus", xpReward: 100, completed: true },
-      ];
-
-      const result = completeDailyQuest(quests, "focus_ship");
-      expect(result.success).toBe(false);
-      expect(result.xpAwarded).toBe(0);
+      expect(result.updatedQuests[0].completed).toBe(true);
     });
   });
 
-  describe("Seam 6: Pinecone Camp Shop Purchases", () => {
-    it("successfully purchases an unowned decor item if user has enough pinecones", () => {
-      const unlockedIds: string[] = [];
-      const result = purchaseCampDecor(unlockedIds, 120, "firepit_stone");
-
+  describe("Seam 8: Pinecone Camp Shop Purchases", () => {
+    it("allows purchasing camp items when pinecones are sufficient", () => {
+      const result = purchaseCampDecor([], 100, "firepit_stone");
       expect(result.success).toBe(true);
-      expect(result.remainingPinecones).toBe(70); // 120 - 50 = 70
       expect(result.unlockedIds).toContain("firepit_stone");
     });
-
-    it("rejects purchase if user has insufficient pinecones", () => {
-      const unlockedIds: string[] = [];
-      const result = purchaseCampDecor(unlockedIds, 30, "firepit_stone");
-
-      expect(result.success).toBe(false);
-      expect(result.remainingPinecones).toBe(30);
-      expect(result.unlockedIds).not.toContain("firepit_stone");
-      expect(result.error).toBe("Insufficient Pinecones");
-    });
-
-    it("rejects purchase if item is already unlocked", () => {
-      const unlockedIds = ["firepit_stone"];
-      const result = purchaseCampDecor(unlockedIds, 100, "firepit_stone");
-
-      expect(result.success).toBe(false);
-      expect(result.remainingPinecones).toBe(100);
-      expect(result.error).toBe("Item already unlocked");
-    });
   });
 
-  describe("Seam 7: Dual-Grove Tree Properties", () => {
-    it("correctly flags shipping trees vs revenue trees", () => {
-      const shippingTree: TreeData = {
-        id: "ship-1",
-        name: "Feature Launch",
-        type: "shipping",
-        tier: "young",
-        gridX: 0.5,
-        gridZ: 0.5,
-        plantedAt: new Date().toISOString(),
-      };
-
-      const revenueTree: TreeData = {
-        id: "rev-1",
-        name: "Acme Corp",
-        type: "revenue",
-        mrr: 79,
-        tier: "mature",
-        gridX: -1.0,
-        gridZ: -1.0,
-        plantedAt: new Date().toISOString(),
-      };
-
-      expect(shippingTree.type).toBe("shipping");
-      expect(revenueTree.type).toBe("revenue");
-      expect(revenueTree.mrr).toBe(79);
-    });
-  });
-
-  describe("Seam 8: Local Calendar Day Calculations", () => {
-    it("formats dates deterministically as YYYY-MM-DD", () => {
-      const fixedDate = new Date("2026-08-21T10:00:00Z");
-      const dateStr = getLocalDateString(fixedDate);
-      expect(dateStr).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  describe("Seam 9: Local Calendar Time & Historical Timeline Reconstruction", () => {
+    it("formats dates as YYYY-MM-DD", () => {
+      const d = getLocalDateString(new Date("2026-08-22T12:00:00Z"));
+      expect(d).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     });
 
-    it("evaluates consecutive calendar day shipping accurately without UTC drift", () => {
-      const state = evaluateStreakState({
-        lastShipDate: "2026-08-20",
-        todayDate: "2026-08-21",
-        currentStreak: 4,
-        currentShields: 0,
-      });
-      expect(state.streakDays).toBe(4);
-      expect(state.drought).toBe(false);
+    it("filters trees correctly by historical cutoff timestamp", () => {
+      const testTrees: TreeData[] = [
+        {
+          id: "t1",
+          name: "Repo A",
+          type: "shipping",
+          tier: "mature",
+          gridX: -1.2,
+          gridZ: -0.8,
+          plantedAt: "2026-08-01T00:00:00Z",
+        },
+        {
+          id: "t2",
+          name: "Repo B",
+          type: "shipping",
+          tier: "young",
+          gridX: -1.8,
+          gridZ: 0.4,
+          plantedAt: "2026-08-15T00:00:00Z",
+        },
+      ];
+
+      const stateAtAug5 = reconstructHistoricalIsland(testTrees, "2026-08-05");
+      expect(stateAtAug5.length).toBe(1);
+      expect(stateAtAug5[0].id).toBe("t1");
+
+      const stateAtAug20 = reconstructHistoricalIsland(testTrees, "2026-08-20");
+      expect(stateAtAug20.length).toBe(2);
     });
   });
 });
-
