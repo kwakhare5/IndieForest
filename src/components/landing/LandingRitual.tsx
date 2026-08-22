@@ -8,7 +8,7 @@ import { Check, Github, Flame, CloudRain, Zap, TrendingUp } from "lucide-react";
 
 export function LandingRitual() {
   return (
-    <section id="overview" className="py-20 bg-[#e6e1d7] border-y border-stone-300/80 font-satoshi">
+    <section id="overview" className="py-20 bg-[#e6e1d7] border-y border-stone-300/80 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <LandingSectionHeader
           badge="Daily Shipping Loop"
@@ -43,10 +43,10 @@ export function LandingRitual() {
             description="Each active project grows an Emerald Shipping Pine. Stripe sales sprout Golden Revenue Pines. Collect streak shields as you build."
             previewWidget={
               <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between shadow-xs">
-                <span className="flex items-center gap-1.5 font-bold font-satoshi">
+                <span className="flex items-center gap-1.5 font-bold font-sans">
                   <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" /> +100 XP
                 </span>
-                <span className="text-stone-700 font-satoshi text-[11px] font-bold uppercase tracking-wider">TIER II UNLOCKED</span>
+                <span className="text-stone-700 font-sans text-[11px] font-bold uppercase tracking-wider">TIER II UNLOCKED</span>
               </div>
             }
             footerIcon={CloudRain}
@@ -62,7 +62,7 @@ export function LandingRitual() {
             description="Export 1200×675 3D render cards and 10s turntable orbit video reels to share your verified progress on X/Twitter in seconds."
             previewWidget={
               <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between shadow-xs">
-                <span className="flex items-center gap-1.5 font-bold font-satoshi">
+                <span className="flex items-center gap-1.5 font-bold font-sans">
                   <Zap className="w-3.5 h-3.5 text-emerald-700" /> 1200×675 Card
                 </span>
                 <Badge variant="emerald" size="sm">60fps HD</Badge>

@@ -52,7 +52,7 @@ export function Modal({
 
   return (
     <div
-      className={`${positionClasses} animate-in fade-in duration-150 font-satoshi`}
+      className={`${positionClasses} animate-in fade-in duration-150 font-sans`}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -89,7 +89,7 @@ export function Modal({
                   {badgeText}
                 </span>
               )}
-              <h2 className="text-base font-bold text-stone-950 tracking-tight font-satoshi">
+              <h2 className="text-base font-bold text-stone-950 tracking-tight font-sans">
                 {title}
               </h2>
             </div>

@@ -29,7 +29,7 @@ const FAQ_ITEMS = [
 
 export function LandingFaq() {
   return (
-    <section id="faq" className="py-20 bg-[#e6e1d7] border-t border-stone-300/80 font-satoshi">
+    <section id="faq" className="py-20 bg-[#e6e1d7] border-t border-stone-300/80 font-sans">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <LandingSectionHeader
           badge="Transparent & Zero-Slop"
@@ -41,10 +41,10 @@ export function LandingFaq() {
         <div className="space-y-4">
           {FAQ_ITEMS.map((item, idx) => (
             <Card key={idx} variant="porcelain" className="p-6 rounded-2xl space-y-1.5">
-              <h3 className="font-bold text-stone-950 text-sm font-satoshi">
+              <h3 className="font-bold text-stone-950 text-sm font-sans">
                 {item.question}
               </h3>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
                 {item.answer}
               </p>
             </Card>

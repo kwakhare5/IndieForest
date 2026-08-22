@@ -94,7 +94,7 @@ export function Button({
   return (
     <button
       disabled={disabled}
-      className={`group relative inline-flex items-center ${showArrow ? "justify-between" : "justify-center"} rounded-full font-satoshi transition-all duration-150 active:scale-[0.97] active:shadow-inner disabled:opacity-50 disabled:pointer-events-none cursor-pointer ${sizeStyles} ${variantStyles} ${className}`}
+      className={`group relative inline-flex items-center ${showArrow ? "justify-between" : "justify-center"} rounded-full font-sans transition-all duration-150 active:scale-[0.97] active:shadow-inner disabled:opacity-50 disabled:pointer-events-none cursor-pointer ${sizeStyles} ${variantStyles} ${className}`}
       {...props}
     >
       <span className="flex items-center justify-center gap-1.5">

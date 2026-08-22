@@ -42,10 +42,10 @@ export function CabinWarRoomModal({
               <Home className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-sm text-stone-900 font-satoshi">
+              <h4 className="font-bold text-sm text-stone-900 font-sans">
                 Multi-Repo Command Center
               </h4>
-              <p className="text-xs text-stone-500 font-satoshi">
+              <p className="text-xs text-stone-500 font-sans">
                 Consolidated receipts across all active modules
               </p>
             </div>
@@ -69,7 +69,7 @@ export function CabinWarRoomModal({
         {/* Dual-Grove Aggregate Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-satoshi block">Emerald Grove</span>
+            <span className="text-[11px] text-stone-500 font-sans block">Emerald Grove</span>
             <div className="text-lg font-bold text-emerald-800 font-pixel flex items-center gap-1.5">
               <Trees className="w-4 h-4 text-emerald-600" />
               {shippingTrees.length} REPOS
@@ -78,7 +78,7 @@ export function CabinWarRoomModal({
           </Card>
 
           <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-satoshi block">Golden Grove</span>
+            <span className="text-[11px] text-stone-500 font-sans block">Golden Grove</span>
             <div className="text-lg font-bold text-amber-700 font-pixel flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-amber-600" />
               ${totalMrr}/MO
@@ -87,7 +87,7 @@ export function CabinWarRoomModal({
           </Card>
 
           <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-satoshi block">Consistency</span>
+            <span className="text-[11px] text-stone-500 font-sans block">Consistency</span>
             <div className="text-lg font-bold text-amber-800 font-pixel">
               {streakDays} DAYS
             </div>
@@ -95,7 +95,7 @@ export function CabinWarRoomModal({
           </Card>
 
           <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-satoshi block">Rank & XP</span>
+            <span className="text-[11px] text-stone-500 font-sans block">Rank & XP</span>
             <div className="text-lg font-bold text-stone-900 font-pixel">
               LVL {level}
             </div>
@@ -106,7 +106,7 @@ export function CabinWarRoomModal({
         {/* Active Modules Breakdown */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h5 className="text-xs font-bold text-stone-900 font-satoshi uppercase tracking-wider">
+            <h5 className="text-xs font-bold text-stone-900 font-sans uppercase tracking-wider">
               Verified Module Inventory ({trees.length})
             </h5>
             <Button
@@ -125,7 +125,7 @@ export function CabinWarRoomModal({
             {trees.map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-white border border-stone-200/80 text-xs font-satoshi"
+                className="flex items-center justify-between p-3 rounded-xl bg-white border border-stone-200/80 text-xs font-sans"
               >
                 <div className="flex items-center gap-2.5">
                   <div
@@ -139,7 +139,7 @@ export function CabinWarRoomModal({
                   </div>
                   <div>
                     <span className="font-bold text-stone-900">{t.name}</span>
-                    <span className="text-[10px] text-stone-500 block uppercase font-satoshi font-semibold tracking-wider">
+                    <span className="text-[10px] text-stone-500 block uppercase font-sans font-semibold tracking-wider">
                       {t.tier} Tier
                     </span>
                   </div>

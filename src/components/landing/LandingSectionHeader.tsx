@@ -39,7 +39,7 @@ export function LandingSectionHeader({
       </h2>
 
       {description && (
-        <p className="text-sm sm:text-base text-stone-600 font-satoshi leading-relaxed">
+        <p className="text-sm sm:text-base text-stone-600 font-sans leading-relaxed">
           {description}
         </p>
       )}

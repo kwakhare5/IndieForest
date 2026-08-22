@@ -43,7 +43,7 @@ export function Card({
 
   return (
     <div
-      className={`rounded-[2rem] font-satoshi text-stone-900 ${variantStyles} ${paddingStyles} ${className}`}
+      className={`rounded-[2rem] font-sans text-stone-900 ${variantStyles} ${paddingStyles} ${className}`}
       {...props}
     >
       {children}

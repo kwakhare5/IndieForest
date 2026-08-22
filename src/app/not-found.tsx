@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#ece7de] text-stone-900 font-satoshi p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#ece7de] text-stone-900 font-sans p-4">
       <div className="w-full max-w-md p-1.5 rounded-[2.5rem] glass-dock shadow-2xl animate-in zoom-in-95 duration-200">
         <div className="p-8 rounded-[calc(2.5rem-0.375rem)] porcelain-surface text-center space-y-5">
           <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mx-auto shadow-xs">
@@ -20,7 +20,7 @@ export default function NotFound() {
             <h1 className="text-2xl sm:text-3xl font-normal text-stone-950 font-editorial">
               Island Not Found
             </h1>
-            <p className="text-xs sm:text-sm text-stone-600 font-satoshi max-w-xs mx-auto">
+            <p className="text-xs sm:text-sm text-stone-600 font-sans max-w-xs mx-auto">
               This path has wandered off the map into unexplored wilderness.
             </p>
           </div>

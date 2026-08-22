@@ -43,7 +43,7 @@ export function LandingFeatureCard({
       <div>
         {stepTag && (
           <span
-            className={`font-satoshi text-[11px] font-bold uppercase tracking-wider block mb-2 ${stepTagColor}`}
+            className={`font-sans text-[11px] font-bold uppercase tracking-wider block mb-2 ${stepTagColor}`}
           >
             {stepTag}
           </span>
@@ -57,11 +57,11 @@ export function LandingFeatureCard({
           </div>
         )}
 
-        <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-satoshi">
+        <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-sans">
           {title}
         </h3>
 
-        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-satoshi">
+        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-5 font-sans">
           {description}
         </p>
 
@@ -70,7 +70,7 @@ export function LandingFeatureCard({
 
       {(footerText || FooterIcon || footerBadge) && (
         <div
-          className={`mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi ${footerColor}`}
+          className={`mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-sans ${footerColor}`}
         >
           <div className="flex items-center gap-2">
             {FooterIcon && <FooterIcon className="w-3.5 h-3.5" />}

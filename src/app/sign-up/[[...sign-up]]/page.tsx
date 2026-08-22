@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 
 export default function SignUpPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#ece7de] text-stone-900 font-satoshi p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#ece7de] text-stone-900 font-sans p-4">
       <div className="mb-6">
         <Link href="/">
           <Button variant="outline" size="sm" showArrow arrowType="left">

@@ -43,7 +43,7 @@ export function FloatingDock({
   hasShippedToday = false,
 }: FloatingDockProps) {
   return (
-    <div className="fixed bottom-6 inset-x-0 z-40 flex flex-col items-center px-4 pointer-events-none font-satoshi select-none">
+    <div className="fixed bottom-6 inset-x-0 z-40 flex flex-col items-center px-4 pointer-events-none font-sans select-none">
       <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-xl transition-all duration-200">
         <div className="px-2.5 py-1.5 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
           

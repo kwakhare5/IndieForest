@@ -112,7 +112,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
   const totalCommits = profile ? profile.totalCommits : 5;
 
   return (
-    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-satoshi selection:bg-emerald-600 selection:text-white relative pb-16">
+    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white relative pb-16">
       {/* Top Navbar */}
       <header className="sticky top-0 z-40 w-full bg-[#ece7de] border-b border-stone-300/80 px-4 sm:px-8 py-3">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
@@ -199,20 +199,20 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                   className="w-16 h-16 rounded-2xl border-2 border-emerald-300 shadow-md"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-inner font-satoshi">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-inner font-sans">
                   {username.slice(0, 2).toUpperCase()}
                 </div>
               )}
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-stone-950 tracking-tight font-satoshi">
+                  <h1 className="text-xl sm:text-2xl font-bold text-stone-950 tracking-tight font-sans">
                     @{username}
                   </h1>
                   <Badge variant="emerald" size="sm">
                     Tier {badge}
                   </Badge>
                 </div>
-                <p className="text-xs text-stone-600 font-satoshi font-medium mt-1">
+                <p className="text-xs text-stone-600 font-sans font-medium mt-1">
                   {title} · Level {level}
                 </p>
               </div>
@@ -226,7 +226,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
           {/* Stats Metric Row */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
             <Card variant="subtle-inset" className="p-4 rounded-2xl space-y-1">
-              <span className="text-[11px] text-stone-500 font-satoshi block">
+              <span className="text-[11px] text-stone-500 font-sans block">
                 Active Consistency
               </span>
               <div className="text-xl font-bold text-amber-700 font-pixel flex items-center gap-1.5">
@@ -237,7 +237,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
             </Card>
 
             <Card variant="subtle-inset" className="p-4 rounded-2xl space-y-1">
-              <span className="text-[11px] text-stone-500 font-satoshi block">
+              <span className="text-[11px] text-stone-500 font-sans block">
                 Active Modules
               </span>
               <div className="text-xl font-bold text-emerald-800 font-pixel flex items-center gap-1.5">
@@ -251,7 +251,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
               variant="subtle-inset"
               className="p-4 rounded-2xl space-y-1 col-span-2 sm:col-span-1"
             >
-              <span className="text-[11px] text-stone-500 font-satoshi block">
+              <span className="text-[11px] text-stone-500 font-sans block">
                 Total Activity
               </span>
               <div className="text-xl font-bold text-stone-900 font-pixel flex items-center gap-1.5">
@@ -265,7 +265,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
 
         {/* Modules Section */}
         <section className="space-y-4">
-          <h2 className="text-lg font-bold text-stone-950 font-satoshi">
+          <h2 className="text-lg font-bold text-stone-950 font-sans">
             Verified Project Modules
           </h2>
           {trees.length > 0 ? (
@@ -292,10 +292,10 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                         )}
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-stone-950 font-satoshi truncate max-w-[160px]">
+                        <h4 className="font-bold text-sm text-stone-950 font-sans truncate max-w-[160px]">
                           {tree.name}
                         </h4>
-                        <span className="text-[10px] text-stone-500 uppercase font-satoshi font-semibold tracking-wider">
+                        <span className="text-[10px] text-stone-500 uppercase font-sans font-semibold tracking-wider">
                           {tree.tier} Tier
                         </span>
                       </div>
@@ -309,7 +309,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                         : `${tree.commits || 0} commits`}
                     </Badge>
                   </div>
-                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 font-satoshi">
+                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 font-sans">
                     <span>Planted {new Date(tree.plantedAt).toLocaleDateString()}</span>
                     <span className="text-emerald-800 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Verified

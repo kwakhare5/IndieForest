@@ -255,7 +255,7 @@ export default function GalleryPage() {
       </Canvas>
 
       {/* 2. Top Navigation Bar & View Controls */}
-      <div className="fixed top-5 inset-x-5 z-40 flex items-center justify-between pointer-events-none font-satoshi">
+      <div className="fixed top-5 inset-x-5 z-40 flex items-center justify-between pointer-events-none font-sans">
         {/* Left: Return to Dashboard & Title */}
         <div className="pointer-events-auto flex items-center gap-3">
           <Link
@@ -371,7 +371,7 @@ export default function GalleryPage() {
 
       {/* Option A Modular Slabs Live Progression Selector (Visible in Diorama Mode) */}
       {viewMode === "diorama" && (
-        <div className="fixed top-20 inset-x-5 z-40 flex justify-center pointer-events-none font-satoshi">
+        <div className="fixed top-20 inset-x-5 z-40 flex justify-center pointer-events-none font-sans">
           <div className="pointer-events-auto p-1.5 rounded-full bg-white/95 backdrop-blur-xs border border-stone-300 shadow-xl flex items-center gap-1.5">
             <div className="px-2.5 py-1 text-[11px] font-bold text-stone-500 flex items-center gap-1">
               <span>Modular Level:</span>

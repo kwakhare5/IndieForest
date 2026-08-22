@@ -11,7 +11,7 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-satoshi selection:bg-emerald-600 selection:text-white relative overflow-y-auto overflow-x-hidden">
+    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white relative overflow-y-auto overflow-x-hidden">
       {/* 1. Universal Double-Bezel Navbar */}
       <LandingNavbar />
 

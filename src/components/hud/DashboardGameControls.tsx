@@ -68,7 +68,7 @@ export function DashboardGameControls({
   });
 
   return (
-    <div className="fixed top-4 right-5 z-40 flex flex-col items-end font-satoshi pointer-events-auto select-none">
+    <div className="fixed top-4 right-5 z-40 flex flex-col items-end font-sans pointer-events-auto select-none">
       {/* 1. Universal Double-Bezel Landing Page Capsule */}
       <div className="p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
         <div className="px-2 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
@@ -219,7 +219,7 @@ export function DashboardGameControls({
                       </div>
                       <div className="flex flex-col truncate">
                         <span className="font-bold text-xs text-stone-950 truncate">{tree.name}</span>
-                        <span className="text-[10px] text-stone-500 uppercase font-satoshi font-semibold tracking-wider">
+                        <span className="text-[10px] text-stone-500 uppercase font-sans font-semibold tracking-wider">
                           {tree.type === "revenue" ? `$${tree.mrr || 0}/mo` : `${tree.commits || 0} commits`} · {tree.tier}
                         </span>
                       </div>

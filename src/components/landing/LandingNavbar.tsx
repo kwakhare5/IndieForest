@@ -10,7 +10,7 @@ export function LandingNavbar() {
   const { isLoaded, isSignedIn } = useUser();
 
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-4xl px-3 pointer-events-none font-satoshi">
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-4xl px-3 pointer-events-none font-sans">
       <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
         <div className="px-4 py-1.5 rounded-full porcelain-surface flex items-center justify-between">
           {/* Logo */}
@@ -23,13 +23,13 @@ export function LandingNavbar() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <span className="font-bold text-xs sm:text-sm text-stone-950 tracking-tight font-satoshi">
+            <span className="font-bold text-xs sm:text-sm text-stone-950 tracking-tight font-sans">
               IndieForest
             </span>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 text-xs font-semibold text-stone-600 font-satoshi">
+          <nav className="hidden md:flex items-center gap-1 text-xs font-semibold text-stone-600 font-sans">
             <a
               href="#overview"
               className="px-2.5 py-1 rounded-full hover:bg-stone-100/90 hover:text-stone-950 transition"

@@ -49,7 +49,7 @@ export function Badge({
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-satoshi font-semibold tracking-tight ${sizeStyles} ${variantStyles} ${className}`}
+      className={`inline-flex items-center rounded-full font-sans font-semibold tracking-tight ${sizeStyles} ${variantStyles} ${className}`}
     >
       {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />}
       {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
