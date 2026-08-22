@@ -4,21 +4,22 @@
 
 ## 1. System Overview
 
-IndieForest is engineered as a high-performance Next.js 16 web application with clear separation between marketing landing surfaces, authenticated builder dashboards, public diorama profiles, domain logic, and serverless webhook pipelines.
+IndieForest is engineered as a high-performance Next.js 16 web application with clear separation between marketing landing surfaces, authenticated builder dashboards, public diorama profiles, domain logic, and Supabase PostgreSQL persistence.
 
 ```
 [ Next.js 16 App Router (Turbopack) ]
    ├── Pages:
    │    ├── / (Landing Page: 7 Modular Surfaces in src/components/landing/)
    │    ├── /dashboard (Edge-to-Edge 3D Living Diorama + 3-Zone Tactical HUD)
-   │    ├── /gallery (3D Component Showroom: Conifers, Oaks, Campsite, Fauna)
-   │    ├── /u/[username] (Public Builder Showcase & Guestbook)
+   │    ├── /gallery (3D Component Showroom: Conifers, Oaks, Campsite, Monuments, Fauna)
+   │    ├── /u/[username] (Public Builder Showcase & Persistent Guestbook)
+   │    ├── /logos (Official Brand Logo Showcase)
    │    └── /sign-in, /sign-up (Clerk Managed Authentication)
    │
-   ├── API Routes (Vercel Serverless):
+   ├── API Routes (Vercel Serverless + Edge):
    │    ├── /api/github (Zero-Touch GitHub Event Polling & Streak Calculation)
-   │    ├── /api/github/preview (Zero-Latency Famous Builder Previews)
-   │    ├── /api/webhooks/revenue (Stripe, Lemon Squeezy, Polar Webhook Normalizer)
+   │    ├── /api/github/preview (Zero-Latency Famous Builder & Public Previews)
+   │    ├── /api/webhooks/revenue (Stripe, Lemon Squeezy, Polar Webhook Normalizer + Supabase Direct Insert)
    │    ├── /api/badge/[username] (Dynamic SVG Vector README Badges)
    │    └── /api/og (Dynamic OpenGraph Social Image Generator)
    │
@@ -26,14 +27,19 @@ IndieForest is engineered as a high-performance Next.js 16 web application with 
    │    └── Double-Bezel Porcelain Primitives (Card, Button, Badge, Modal, SegmentedControl)
    │
    ├── 3D Canvas Engine (src/components/canvas/):
-   │    ├── ForestCanvas.tsx (Isometric orthographic camera rig & lighting)
-   │    ├── TerrainIsland.tsx (Chamfered procedural diorama island slab)
+   │    ├── ForestCanvas.tsx (Isometric orthographic camera rig, lighting & dynamic zoom)
+   │    ├── ModularIsland.tsx (Pure 1:1 symmetrical square modular terrain expansion)
    │    ├── BlockTree.tsx (Interactive tree with spring hover lerp & billboard)
+   │    ├── WeatherSystem.tsx (Atmospheric particle & weather simulation)
    │    └── models/
    │         ├── ConiferTree.tsx (Alpine Evergreen Pine lineage for GitHub Shipping)
    │         ├── DeciduousTree.tsx (Golden Broadleaf Money Oak lineage for Stripe MRR)
    │         ├── Campfire.tsx, CanvasTent.tsx, LogCabin.tsx (Campsite Hubs)
-   │         └── RobinBird.tsx, CampDog.tsx, LanternPost.tsx, Flagpole.tsx (Fauna/Props)
+   │         ├── Windmill.tsx, HarborPier.tsx, Lighthouse.tsx (Elite High-Level Monuments)
+   │         └── CampDog.tsx (Standing Golden Companion), RobinBird.tsx, LanternPost.tsx, Flagpole.tsx
+   │
+   ├── Database & Cloud Persistence (src/lib/supabase.ts):
+   │    └── Supabase PostgreSQL Client (profiles, trees, ship_logs, guestbook_entries)
    │
    ├── Domain Core (src/lib/):
    │    ├── gamification.ts (Side-effect free XP, Streak, Shield, and Tier algorithms)
@@ -43,7 +49,7 @@ IndieForest is engineered as a high-performance Next.js 16 web application with 
    │    └── sound.ts (Synthesized Web Audio API lo-fi ambiance & tactile chimes)
    │
    └── State Management (src/store/):
-        └── useForestStore.ts (Zustand 5.0 store with SSR-safe LocalStorage persistence)
+        └── useForestStore.ts (Zustand 5.0 store with LocalStorage persistence + Supabase auto-sync)
 ```
 
 ---
@@ -53,54 +59,9 @@ IndieForest is engineered as a high-performance Next.js 16 web application with 
 | Service / Layer | Runtime / Location | Core Responsibility |
 | :--- | :--- | :--- |
 | **Landing Surface** | Client / Server (Next.js SSR) | Modular landing sections, feature bento, interactive hero preview, FAQ |
-| **Builder Dashboard** | Client (Authenticated) | Edge-to-edge 3D living diorama with 3-Zone Tactical Porcelain HUD |
-| **Showroom Catalog** | Client (`/gallery`) | Interactive 3D asset showroom for conifer & deciduous lineages |
-| **Public Showcase** | Client / Server (Next.js SSR) | Shareable builder profile (`/u/[username]`), guestbook, verified badges |
+| **Builder Dashboard** | Client (Authenticated) | Edge-to-edge 3D living diorama with 3-Zone Tactical Porcelain HUD & cloud sync |
+| **Showroom Catalog** | Client (`/gallery`) | Interactive 3D asset showroom for 1:1 square terrain, trees, campsite & fauna |
+| **Public Showcase** | Client / Server (Next.js SSR) | Shareable builder profile (`/u/[username]`), Supabase guestbook, verified badges |
+| **Database Cloud Layer**| Supabase PostgreSQL | Permanent storage for user profiles, bilateral trees, ship history & cheers |
 | **Domain Logic** | Pure TypeScript (`src/lib/`) | 100% deterministic algorithms for XP, streaks, levels, and tier scaling |
-| **Authentication** | Clerk (`@clerk/nextjs`) | Fast Google OAuth & session management |
-| **Universal Webhooks** | Serverless Edge / Node.js | Multi-provider event parsing for Stripe, Lemon Squeezy, and Polar |
-| **State Store** | Client (Zustand) | Reactive local state, streak expiry checks, zero-touch sync coordination |
-
----
-
-## 3. Directory Layout
-
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── badge/[username]/route.ts  — Dynamic SVG README generator
-│   │   ├── github/route.ts            — GitHub push sync endpoint
-│   │   ├── github/preview/route.ts    — Curated famous builders preview
-│   │   ├── og/route.tsx               — Social card OpenGraph generator
-│   │   └── webhooks/revenue/route.ts  — Universal revenue webhook handler
-│   ├── dashboard/page.tsx             — Edge-to-edge 3D island dashboard
-│   ├── gallery/page.tsx               — 3D asset showroom catalog
-│   ├── u/[username]/page.tsx          — Public builder diorama & guestbook
-│   ├── layout.tsx                     — Root layout with ClerkProvider
-│   └── page.tsx                       — Composed modular landing page
-├── components/
-│   ├── canvas/                        — 3D diorama canvas & procedural models
-│   │   ├── ForestCanvas.tsx
-│   │   ├── TerrainIsland.tsx
-│   │   ├── BlockTree.tsx
-│   │   └── models/
-│   │       ├── ConiferTree.tsx        — GitHub Evergreen Pine lineage
-│   │       ├── DeciduousTree.tsx      — Stripe Golden Money Oak lineage
-│   │       ├── ZenStump.tsx           — Sabbatical Rest Stump
-│   │       ├── Campfire.tsx           — Daily Focus station
-│   │       ├── CanvasTent.tsx         — Sabbatical Rest vault
-│   │       ├── LogCabin.tsx           — Founder War Room HQ
-│   │       └── CampDog.tsx, RobinBird.tsx, Flagpole.tsx, LanternPost.tsx
-│   ├── hud/                           — 3-Zone Tactical Porcelain HUD & Overlays
-│   │   ├── DashboardTopLeftNav.tsx    — [← Home] link + Quests & Perk Shop popover
-│   │   ├── DashboardGameControls.tsx  — Lighting, Audio & Modules Inventory popover
-│   │   ├── FloatingDock.tsx           — Streak, Ship Daily, Share & Stats popover tray
-│   │   ├── TreeInspectorCard.tsx      — In-world 3D tree click inspector
-│   │   └── modals/                    — CampfireFocus, TentSabbatical, CabinWarRoom, ShareCard, AddTree, Settings
-│   ├── landing/                       — Modular landing page sections
-│   └── ui/                            — Atomic double-bezel porcelain design system
-├── lib/                               — Pure domain math, webhook parsers, and Web Audio API
-├── store/                             — Zustand 5.0 store with local persistence
-└── types/                             — Strict TypeScript domain types
-```
+| **Authentication** | Clerk (`@clerk/nextjs`) | Instant Google/GitHub OAuth & session management |

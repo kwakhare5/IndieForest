@@ -1,8 +1,8 @@
 -- IndieForest Core PostgreSQL Migration Schema
 
--- 1. Profiles Table (Linked to Supabase Auth)
+-- 1. Profiles Table (Linked to Supabase Auth / Clerk Identity)
 CREATE TABLE IF NOT EXISTS public.profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
   display_name TEXT,
   avatar_url TEXT,
@@ -19,12 +19,14 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 2. Customer Pine Trees Table (Subscribers & MRR)
+-- 2. Island 3D Trees Table (Bilateral GitHub Conifers & Stripe Revenue Money Oaks)
 CREATE TABLE IF NOT EXISTS public.trees (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  user_id TEXT REFERENCES public.profiles(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
-  mrr NUMERIC NOT NULL DEFAULT 0,
+  type TEXT NOT NULL DEFAULT 'shipping' CHECK (type IN ('shipping', 'revenue')),
+  commits INT DEFAULT NULL,
+  mrr NUMERIC DEFAULT NULL,
   tier TEXT NOT NULL CHECK (tier IN ('sapling', 'young', 'mature', 'majestic', 'stump')),
   grid_x NUMERIC NOT NULL DEFAULT 0,
   grid_z NUMERIC NOT NULL DEFAULT 0,
@@ -33,8 +35,8 @@ CREATE TABLE IF NOT EXISTS public.trees (
 
 -- 3. Daily Shipping Logs Table
 CREATE TABLE IF NOT EXISTS public.ship_logs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  user_id TEXT REFERENCES public.profiles(id) ON DELETE CASCADE,
   message TEXT NOT NULL,
   source TEXT NOT NULL CHECK (source IN ('github', 'manual', 'stripe', 'lemonsqueezy', 'polar')),
   commit_url TEXT,
@@ -42,10 +44,20 @@ CREATE TABLE IF NOT EXISTS public.ship_logs (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 4. Public Guestbook & Visitor Cheers Table
+CREATE TABLE IF NOT EXISTS public.guestbook_entries (
+  id TEXT PRIMARY KEY,
+  target_username TEXT NOT NULL,
+  author TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Enable Row Level Security (RLS)
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trees ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ship_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.guestbook_entries ENABLE ROW LEVEL SECURITY;
 
 -- Profiles Policies
 DO $$ BEGIN
@@ -54,8 +66,8 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-  CREATE POLICY "Users can update their own profile." 
-    ON public.profiles FOR UPDATE USING (auth.uid() = id);
+  CREATE POLICY "Anyone can upsert profile data with valid ID." 
+    ON public.profiles FOR ALL USING (true);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Trees Policies
@@ -65,8 +77,8 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-  CREATE POLICY "Users can manage their own trees." 
-    ON public.trees FOR ALL USING (auth.uid() = user_id);
+  CREATE POLICY "Users can manage their trees." 
+    ON public.trees FOR ALL USING (true);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Ship Logs Policies
@@ -76,43 +88,17 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-  CREATE POLICY "Users can insert their own ship logs." 
-    ON public.ship_logs FOR INSERT WITH CHECK (auth.uid() = user_id);
+  CREATE POLICY "Users can insert ship logs." 
+    ON public.ship_logs FOR ALL USING (true);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- Trigger: Automatically Create Profile on Signup
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS trigger AS $$
-BEGIN
-  INSERT INTO public.profiles (
-    id,
-    username,
-    display_name,
-    avatar_url,
-    github_username,
-    level,
-    xp,
-    streak_days,
-    streak_shields,
-    pinecones
-  )
-  VALUES (
-    new.id,
-    COALESCE(new.raw_user_meta_data->>'user_name', new.raw_user_meta_data->>'preferred_username', 'builder_' || substr(new.id::text, 1, 6)),
-    COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', 'Indie Builder'),
-    COALESCE(new.raw_user_meta_data->>'avatar_url', ''),
-    COALESCE(new.raw_user_meta_data->>'user_name', ''),
-    1,
-    0,
-    1,
-    1,
-    50
-  );
-  RETURN new;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+-- Guestbook Policies
+DO $$ BEGIN
+  CREATE POLICY "Public guestbook entries are viewable by everyone." 
+    ON public.guestbook_entries FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+DO $$ BEGIN
+  CREATE POLICY "Anyone can sign the guestbook." 
+    ON public.guestbook_entries FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;

@@ -11,6 +11,9 @@ import { CampDog } from "./models/CampDog";
 import { RobinBird } from "./models/RobinBird";
 import { Flagpole } from "./models/Flagpole";
 import { LanternPost } from "./models/LanternPost";
+import { Windmill } from "./models/Windmill";
+import { HarborPier } from "./models/HarborPier";
+import { Lighthouse } from "./models/Lighthouse";
 
 interface CampPropsComponentProps {
   streakDays?: number;
@@ -49,14 +52,17 @@ export function CampProps({
   const hasRobin = streakDays >= 5 || level >= 4;
   const hasCampDog = streakDays >= 10 || level >= 7;
 
-  // Spacious South-West Homestead Staging (All facing camera)
-  const cabinPos: [number, number, number] = [-3.4, 0.25, 2.0];
-  const tentPos: [number, number, number] = [-1.8, 0.25, 2.8];
-  const campfirePos: [number, number, number] = [-1.0, 0.25, 1.8];
-  const dogPos: [number, number, number] = [-0.5, 0.25, 2.1];
-  const flagPos: [number, number, number] = [-4.4, 0.25, 2.6];
-  const lanternPos: [number, number, number] = [-2.5, 0.25, 3.2];
-  const robinPos: [number, number, number] = [-3.5, 0.25, 3.2];
+  // Option 2 (Bilateral Farmstead) Canonical Coordinates on Symmetrical Square
+  const cabinPos: [number, number, number] = [-0.6, 0.25, 1.8];
+  const tentPos: [number, number, number] = [-3.8, 0.25, 2.8];
+  const campfirePos: [number, number, number] = [1.8, 0.25, 2.8];
+  const dogPos: [number, number, number] = [-1.8, 0.25, 3.0];
+  const flagPos: [number, number, number] = [-0.6, 0.25, 3.8];
+  const lanternPos: [number, number, number] = [2.8, 0.25, 3.4];
+  const robinPos: [number, number, number] = [-1.0, 0.25, 1.0];
+  const windmillPos: [number, number, number] = [4.6, 0.25, 2.8];
+  const pierPos: [number, number, number] = [0.0, 0.25, 4.8];
+  const lighthousePos: [number, number, number] = [-6.2, 0.45, -6.0];
 
   return (
     <group>
@@ -76,7 +82,7 @@ export function CampProps({
         >
           <Campfire isNight={isNight} isSunset={isSunset} drought={drought} />
 
-          {/* Clickable Tooltip Badge (Visible on hover or when showBadges is true) */}
+          {/* Clickable Tooltip Badge */}
           {(showBadges || hoveredProp === "campfire") && (
             <Html
               position={[0, 0.85, 0]}
@@ -97,7 +103,7 @@ export function CampProps({
       {hasTent && (
         <group
           position={tentPos}
-          rotation={[0, -0.3, 0]}
+          rotation={[0, 0.2, 0]}
           onClick={(e) => {
             e.stopPropagation();
             onClickTent?.();
@@ -133,11 +139,11 @@ export function CampProps({
         </group>
       )}
 
-      {/* 3. Founder's War Room HQ Cabin (Facing camera at 35deg) */}
+      {/* 3. Founder's War Room HQ Cabin (Commanding Center-South Ranch) */}
       {hasCabin && (
         <group
           position={cabinPos}
-          rotation={[0, 0.55, 0]}
+          rotation={[0, 0.45, 0]}
           onClick={(e) => {
             e.stopPropagation();
             onClickCabin?.();
@@ -169,21 +175,21 @@ export function CampProps({
 
       {/* 4. Living Wildlife: Camp Shiba Dog */}
       {hasCampDog && (
-        <group position={dogPos} rotation={[0, -0.6, 0]}>
+        <group position={dogPos} rotation={[0, -0.5, 0]}>
           <CampDog />
         </group>
       )}
 
       {/* 5. Living Wildlife: Robin Bird */}
       {hasRobin && (
-        <group position={robinPos} rotation={[0, 0.4, 0]}>
+        <group position={robinPos} rotation={[0, 0.3, 0]}>
           <RobinBird />
         </group>
       )}
 
       {/* 6. Streak Milestone Flagpole */}
       {level >= 2 && (
-        <group position={flagPos} rotation={[0, 0.2, 0]}>
+        <group position={flagPos} rotation={[0, 0.0, 0]}>
           <Flagpole />
         </group>
       )}
@@ -192,6 +198,27 @@ export function CampProps({
       {level >= 3 && (
         <group position={lanternPos}>
           <LanternPost isNight={isNight} />
+        </group>
+      )}
+
+      {/* 8. Elite Monument: Alpine Windmill */}
+      {level >= 15 && (
+        <group position={windmillPos} rotation={[0, -0.2, 0]}>
+          <Windmill isNight={isNight} drought={drought} />
+        </group>
+      )}
+
+      {/* 9. Elite Monument: Harbor Pier & Cargo Boat */}
+      {level >= 25 && (
+        <group position={pierPos}>
+          <HarborPier isNight={isNight} drought={drought} />
+        </group>
+      )}
+
+      {/* 10. Elite Monument: Coast Lighthouse */}
+      {level >= 35 && (
+        <group position={lighthousePos}>
+          <Lighthouse isNight={isNight} drought={drought} />
         </group>
       )}
     </group>

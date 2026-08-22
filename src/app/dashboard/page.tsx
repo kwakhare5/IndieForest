@@ -36,6 +36,7 @@ export default function DashboardPage() {
   const toggleTimeOfDay = useForestStore((s) => s.toggleTimeOfDay);
   const dailyQuests = useForestStore((s) => s.dailyQuests);
   const triggerQuestProgress = useForestStore((s) => s.triggerQuestProgress);
+  const loadCloudIsland = useForestStore((s) => s.loadCloudIsland);
 
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
 
@@ -50,43 +51,53 @@ export default function DashboardPage() {
   const [selectedTree, setSelectedTree] = useState<TreeData | null>(null);
   const [isHudHidden, setIsHudHidden] = useState(false);
 
-
   useEffect(() => {
     setMounted(true);
     checkStreakExpiry();
 
-    let targetUsername = "kwakhare5";
+    async function initDashboard() {
+      let targetUsername = "kwakhare5";
+      let targetUserId = "kwakhare5";
 
-    if (isLoaded && isSignedIn && clerkUser) {
-      const username =
-        clerkUser.username ||
-        clerkUser.firstName ||
-        clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
-        "builder";
+      if (isLoaded && isSignedIn && clerkUser) {
+        const username =
+          clerkUser.username ||
+          clerkUser.firstName ||
+          clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
+          "builder";
 
-      targetUsername = username;
-      setUser({
-        id: clerkUser.id,
-        email: clerkUser.primaryEmailAddress?.emailAddress,
-        username,
-        fullName: clerkUser.fullName || "Indie Builder",
-        avatarUrl: clerkUser.imageUrl,
-        isAuthenticated: true,
-      });
-    } else if (isLoaded && !isSignedIn) {
-      setUser({
-        id: "kwakhare5",
-        username: "kwakhare5",
-        avatarUrl: "https://github.com/kwakhare5.png",
-        isAuthenticated: false,
-      });
+        targetUsername = username;
+        targetUserId = clerkUser.id;
+
+        setUser({
+          id: clerkUser.id,
+          email: clerkUser.primaryEmailAddress?.emailAddress,
+          username,
+          fullName: clerkUser.fullName || "Indie Builder",
+          avatarUrl: clerkUser.imageUrl,
+          isAuthenticated: true,
+        });
+      } else if (isLoaded && !isSignedIn) {
+        setUser({
+          id: "kwakhare5",
+          username: "kwakhare5",
+          avatarUrl: "https://github.com/kwakhare5.png",
+          isAuthenticated: false,
+        });
+      }
+
+      // Try loading from Supabase first
+      const hasCloudData = await loadCloudIsland(targetUserId);
+      if (!hasCloudData) {
+        if (trees.length === 0) {
+          await syncGitHubIsland(targetUsername);
+        } else {
+          await autoCheckTodayCommits();
+        }
+      }
     }
 
-    if (trees.length === 0) {
-      syncGitHubIsland(targetUsername);
-    } else {
-      autoCheckTodayCommits();
-    }
+    initDashboard();
   }, [
     isLoaded,
     isSignedIn,
