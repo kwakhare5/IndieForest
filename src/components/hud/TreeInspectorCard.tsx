@@ -19,10 +19,10 @@ export function TreeInspectorCard({ tree, onClose }: TreeInspectorCardProps) {
   const isRevenue = tree.type === "revenue";
 
   return (
-    <div className="fixed bottom-24 inset-x-4 sm:inset-x-auto sm:left-6 z-40 animate-in slide-in-from-bottom-4 sm:slide-in-from-left-4 fade-in duration-200 font-sans max-w-sm w-full mx-auto sm:mx-0">
+    <div className="fixed bottom-24 inset-x-4 sm:inset-x-auto sm:left-6 z-40 origin-bottom-left animate-in slide-in-from-bottom-3 fade-in duration-150 font-sans max-w-sm w-full mx-auto sm:mx-0">
       <Card
         variant="porcelain"
-        className="p-4 sm:p-5 rounded-3xl shadow-2xl border border-stone-300 bg-white/98 backdrop-blur-md space-y-3 relative"
+        className="p-4 sm:p-5 rounded-[2rem] shadow-2xl border border-stone-200/90 bg-white/98 backdrop-blur-md space-y-3.5 relative"
       >
         {/* Close button */}
         <button
@@ -30,73 +30,71 @@ export function TreeInspectorCard({ tree, onClose }: TreeInspectorCardProps) {
             sound.playClick();
             onClose();
           }}
-          className="absolute top-3.5 right-3.5 p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition cursor-pointer"
+          className="absolute top-4 right-4 p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition cursor-pointer"
           title="Close Inspector"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Tree Header */}
-        <div className="flex items-center gap-3 pr-6">
+        <div className="flex items-center gap-3 pr-8">
           <div
-            className={`w-10 h-10 rounded-2xl flex items-center justify-center border shadow-xs ${
+            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
               isRevenue
-                ? "bg-amber-50 text-amber-700 border-amber-200"
-                : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                ? "bg-amber-50 text-amber-700 border border-amber-200/80"
+                : "bg-emerald-50 text-emerald-700 border border-emerald-200/80"
             }`}
           >
-            {isRevenue ? <TrendingUp className="w-5 h-5" /> : <Trees className="w-5 h-5" />}
+            {isRevenue ? <TrendingUp className="w-4.5 h-4.5" /> : <Trees className="w-4.5 h-4.5" />}
           </div>
           <div>
-            <span className="font-sans text-[10px] uppercase tracking-wider font-bold text-stone-500 block">
-              {isRevenue ? "EAST REVENUE GROVE" : "WEST SHIPPING GROVE"}
+            <span className="font-sans text-[10px] uppercase tracking-wider font-bold text-stone-400 block mb-0.5">
+              {isRevenue ? "East Revenue Grove" : "West Shipping Grove"}
             </span>
-            <h3 className="text-base font-bold text-stone-950 font-sans truncate max-w-[200px]">
+            <h3 className="text-sm font-bold text-stone-950 font-sans truncate max-w-[200px]">
               {tree.name}
             </h3>
           </div>
         </div>
 
-        {/* Metric & Tier Pills */}
-        <div className="grid grid-cols-2 gap-2">
-          <Card variant="subtle-inset" className="p-2.5 rounded-xl space-y-0.5">
-            <span className="text-[10px] text-stone-500 font-semibold font-sans block">
-              {isRevenue ? "Monthly Value" : "Commit Count"}
+        {/* Flat Stat Metrics Row */}
+        <div className="grid grid-cols-2 gap-3 py-2.5 px-3 rounded-xl bg-stone-50 border border-stone-100">
+          <div>
+            <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
+              {isRevenue ? "Tracked MRR" : "Commit Activity"}
             </span>
-            <div className="flex items-center gap-1 font-bold text-sm font-pixel text-stone-900">
+            <div className="flex items-center gap-1 font-bold text-xs text-stone-900">
               {isRevenue ? (
                 <>
                   <DollarSign className="w-3.5 h-3.5 text-amber-600" />
-                  <span>${tree.mrr || 0}/mo</span>
+                  <span className="font-pixel text-sm">${tree.mrr || 0}/mo</span>
                 </>
               ) : (
                 <>
                   <GitCommit className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>{tree.commits || 1} Commits</span>
+                  <span className="font-pixel text-sm">{tree.commits || 1} Commits</span>
                 </>
               )}
             </div>
-          </Card>
+          </div>
 
-          <Card variant="subtle-inset" className="p-2.5 rounded-xl space-y-0.5">
-            <span className="text-[10px] text-stone-500 font-semibold font-sans block">
-              Canopy Stage
+          <div>
+            <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
+              Growth Tier
             </span>
-            <div className="flex items-center gap-1">
-              <Badge variant={isRevenue ? "amber" : "emerald"} size="sm">
-                Stage {tree.tier}
-              </Badge>
-            </div>
-          </Card>
+            <Badge variant={isRevenue ? "amber" : "emerald"} size="sm">
+              Tier {tree.tier}
+            </Badge>
+          </div>
         </div>
 
-        {/* Date & Plot Location */}
-        <div className="flex items-center justify-between text-xs text-stone-500 font-sans pt-0.5">
+        {/* Date & Coordinates Footer */}
+        <div className="flex items-center justify-between text-xs text-stone-400 font-sans pt-0.5 border-t border-stone-100">
           <span className="flex items-center gap-1 text-[11px]">
             <Calendar className="w-3 h-3 text-stone-400" />
             Planted {new Date(tree.plantedAt).toLocaleDateString()}
           </span>
-          <span className="text-[11px] font-mono text-stone-400">
+          <span className="text-[10px] font-mono text-stone-400">
             [{tree.gridX.toFixed(1)}, {tree.gridZ.toFixed(1)}]
           </span>
         </div>

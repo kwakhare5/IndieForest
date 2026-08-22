@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { Flame, Volume2, VolumeX, Play, Pause, RotateCcw, Sparkles, CheckCircle2 } from "lucide-react";
 import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
@@ -60,21 +59,28 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Milestone Campfire" maxWidth="md">
-      <div className="space-y-5">
-        {/* Campfire Header Banner */}
-        <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200/80">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center border border-orange-200">
-              <Flame className="w-5 h-5 fill-orange-500" />
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Campsite Focus & Pomodoro"
+      badgeText="Proof of Work"
+      icon={Flame}
+      maxWidth="md"
+    >
+      <div className="space-y-4 font-sans text-xs text-stone-700">
+        {/* Campfire Header Row */}
+        <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 border border-orange-200/80 flex items-center justify-center">
+              <Flame className="w-4.5 h-4.5 fill-orange-500" />
             </div>
             <div>
-              <h4 className="font-bold text-sm text-stone-900 font-sans">
-                Daily Focus Station
-              </h4>
-              <p className="text-xs text-stone-500 font-sans">
+              <span className="font-bold text-xs text-stone-900 font-sans block">
+                Daily Focus Milestone
+              </span>
+              <span className="text-[10px] text-stone-400 font-sans">
                 Day {streakDays} Milestone Campfire
-              </p>
+              </span>
             </div>
           </div>
 
@@ -83,19 +89,19 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
             size="sm"
             onClick={toggleCampfireAudio}
             icon={isAudioPlaying ? Volume2 : VolumeX}
-            className={isAudioPlaying ? "border-orange-400 bg-orange-50 text-orange-800" : ""}
+            className={`text-xs ${isAudioPlaying ? "border-orange-300 bg-orange-50 text-orange-800" : ""}`}
           >
             {isAudioPlaying ? "Lo-Fi Active" : "Play Lo-Fi"}
           </Button>
         </div>
 
-        {/* 1 Atomic Thing Input */}
-        <Card variant="porcelain" className="p-5 rounded-2xl space-y-3">
-          <div className="space-y-1">
+        {/* 1 Atomic Thing Form */}
+        <div className="space-y-2">
+          <div>
             <label className="text-xs font-bold text-stone-900 font-sans block">
               What is the ONE atomic thing you are shipping today?
             </label>
-            <p className="text-[11px] text-stone-500 font-sans">
+            <p className="text-[11px] text-stone-400 font-sans">
               Eliminate morning decision paralysis. Pick one high-leverage task.
             </p>
           </div>
@@ -106,13 +112,13 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
               <span>You logged today&apos;s daily focus! Keep the momentum alive.</span>
             </div>
           ) : (
-            <form onSubmit={handleCommitGoal} className="space-y-3">
+            <form onSubmit={handleCommitGoal} className="space-y-2">
               <input
                 type="text"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
                 placeholder="e.g. Ship billing checkout drawer & verify webhook"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300/80 bg-white text-xs font-sans text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
+                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-stone-50 text-xs font-sans text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition"
               />
               <Button
                 type="submit"
@@ -120,31 +126,32 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
                 size="sm"
                 icon={Sparkles}
                 disabled={!goal.trim()}
-                className="w-full justify-center"
+                className="w-full justify-center text-xs font-bold"
               >
                 Log Atomic Ship (+25 XP)
               </Button>
             </form>
           )}
-        </Card>
+        </div>
 
         {/* 25-Minute Deep Work Pomodoro Timer */}
-        <Card variant="subtle-inset" className="p-4 rounded-2xl flex items-center justify-between">
-          <div className="space-y-0.5">
-            <span className="text-[11px] text-stone-500 font-sans font-medium block">
+        <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
+          <div>
+            <span className="text-[10px] text-stone-400 font-sans font-medium block">
               Deep Work Sprint
             </span>
-            <div className="text-2xl font-bold font-mono tracking-tight text-stone-900">
+            <div className="text-xl font-bold font-mono tracking-tight text-stone-900">
               {formatTime(timerSeconds)}
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <Button
               variant="dark"
               size="sm"
               onClick={() => setIsTimerRunning(!isTimerRunning)}
               icon={isTimerRunning ? Pause : Play}
+              className="text-xs"
             >
               {isTimerRunning ? "Pause" : "Start 25m"}
             </Button>
@@ -156,11 +163,12 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
                 setTimerSeconds(25 * 60);
               }}
               icon={RotateCcw}
+              className="text-xs"
             >
               Reset
             </Button>
           </div>
-        </Card>
+        </div>
       </div>
     </Modal>
   );

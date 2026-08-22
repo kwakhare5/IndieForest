@@ -19,6 +19,12 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Zero Box-Soup HUD Popover & Modal Architecture Overhaul (`Modal.tsx`, `SettingsModal.tsx`, `DashboardTopLeftNav.tsx`, `DashboardGameControls.tsx`, `AddTreeModal.tsx`, `ShareCardModal.tsx`, `TreeInspectorCard.tsx`, `CampfireFocusModal.tsx`, `CabinWarRoomModal.tsx`, `TentSabbaticalModal.tsx`):**
+    - Eliminated all nested card boxes and unnecessary borders inside popovers, replacing container clutter with clean, breathable flat rows separated by soft hairline dividers (`border-stone-100`).
+    - Standardized `SettingsModal` on a clean 3-tab segmented controller (`[GitHub Sync | Revenue Webhook | Badges & Links]`), presenting 1 focused developer action at a time with instant copy bars.
+    - Flattened `QuestsPopover` and `ModulesPopover` to lightweight list rows with inline progress bars and tactile one-click claim/unlock action discs.
+    - Streamlined `AddTreeModal` to a 2-option pill toggle (`Shipping Pine` vs `Revenue Oak`) with high-contrast inputs and direct sprout actions.
+    - Synchronized directional transform origins (`origin-top-right`, `origin-top-left`, `origin-bottom`) so every popover expands smoothly from its exact triggering button.
   - **Pure Precision Typographic System Standardized (Geist Sans, PP Editorial New, Jersey 10, Geist Mono):**
     - Purged legacy fonts (`Satoshi`, `Plus_Jakarta_Sans`, `VT323`, `Silkscreen`, `Jersey 15`) and configured Vercel **Geist Sans** as the universal primary sans-serif for 100% of UI titles, buttons, cards, modals, and body copy.
     - Standardized **PP Editorial New / Instrument Serif** for luxury editorial hero headlines.

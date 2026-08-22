@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   Settings,
   Github,
-  Copy,
   Check,
   ExternalLink,
   RefreshCw,
@@ -16,7 +15,7 @@ import {
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { sound } from "@/lib/sound";
 import { useForestStore, getRankTitle } from "@/store/useForestStore";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
@@ -26,7 +25,10 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
+type TabType = "github" | "revenue" | "badge";
+
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+  const [activeTab, setActiveTab] = useState<TabType>("github");
   const [copiedWebhook, setCopiedWebhook] = useState(false);
   const [copiedProfile, setCopiedProfile] = useState(false);
   const [copiedBadgeMd, setCopiedBadgeMd] = useState(false);
@@ -104,15 +106,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       title="Settings & Integrations"
       badgeText="Developer Console"
       icon={Settings}
-      maxWidth="lg"
+      maxWidth="md"
       position="top-right"
     >
       <div className="space-y-4 font-sans text-xs text-stone-700">
         
-        {/* 1. Account & Profile Section */}
-        <Card variant="subtle-inset" className="p-3 flex items-center justify-between">
+        {/* Account Row */}
+        <div className="flex items-center justify-between pb-3 border-b border-stone-100">
           {isLoaded && isSignedIn ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <UserButton />
               <div>
                 <div className="flex items-center gap-1.5">
@@ -120,28 +122,23 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     {clerkUser?.fullName || `@${user.username}`}
                   </span>
                   <Badge variant="emerald" size="sm">
-                    Tier {badge} • {rankTitle}
+                    Tier {badge} · {rankTitle}
                   </Badge>
                 </div>
-                <span className="text-[10px] font-mono text-stone-500">
+                <span className="text-[10px] font-mono text-stone-500 block">
                   {clerkUser?.primaryEmailAddress?.emailAddress}
                 </span>
               </div>
             </div>
           ) : (
             <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center font-bold text-xs">
-                  ?
-                </div>
-                <div>
-                  <span className="font-bold text-stone-900 text-xs block">
-                    Guest Mode (@{user.username})
-                  </span>
-                  <span className="text-[10px] text-stone-500">
-                    Sign in with Clerk to persist to cloud
-                  </span>
-                </div>
+              <div>
+                <span className="font-bold text-stone-900 text-xs block">
+                  Guest Mode (@{user.username})
+                </span>
+                <span className="text-[10px] text-stone-500">
+                  Sign in to persist your island across devices
+                </span>
               </div>
               <SignInButton mode="modal">
                 <Button variant="emerald" size="sm" icon={LogIn}>
@@ -150,169 +147,153 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </SignInButton>
             </div>
           )}
-        </Card>
-
-        {/* 2. Zero-Touch GitHub Real-Time Island Sync */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
-              <Github className="w-3.5 h-3.5 text-stone-900" />
-              <span>1. GitHub Shipping Conifers</span>
-            </span>
-            <Badge variant="emerald" size="sm">Zero-Touch</Badge>
-          </div>
-
-          <Card variant="subtle-inset" className="p-3 space-y-2.5">
-            <p className="text-[11px] text-stone-600 leading-relaxed font-sans">
-              Type your GitHub username. Every repository sprouts a 3D Conifer that grows on daily commits.
-            </p>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={githubInput}
-                onChange={(e) => setGithubInput(e.target.value)}
-                placeholder="kwakhare5"
-                className="flex-1 bg-white border border-stone-300 rounded-xl px-3 py-1.5 text-xs text-stone-900 font-mono outline-none focus:border-emerald-600 shadow-xs"
-              />
-              <Button
-                variant="emerald"
-                size="sm"
-                onClick={handleSyncGitHub}
-                disabled={isSyncing}
-                icon={RefreshCw}
-              >
-                {isSyncing ? "Syncing..." : "Sync Island"}
-              </Button>
-            </div>
-
-            {syncSuccess && (
-              <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-sans font-medium flex items-center gap-1.5 animate-in fade-in">
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Island state successfully synced with GitHub!</span>
-              </div>
-            )}
-          </Card>
         </div>
 
-        {/* 3. Universal Revenue Webhook */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
-              <CreditCard className="w-3.5 h-3.5 text-amber-600" />
-              <span>2. Stripe, Lemon Squeezy & Polar Revenue</span>
-            </span>
-            <Badge variant="amber" size="sm">Auto-Sprout</Badge>
-          </div>
+        {/* Tab Selector */}
+        <SegmentedControl
+          value={activeTab}
+          onChange={(val) => setActiveTab(val as TabType)}
+          size="sm"
+          options={[
+            { value: "github", label: "GitHub", icon: Github },
+            { value: "revenue", label: "Revenue Webhook", icon: CreditCard },
+            { value: "badge", label: "Badges & Links", icon: Sparkles },
+          ]}
+        />
 
-          <Card variant="subtle-inset" className="p-3 space-y-2.5">
-            <div className="space-y-1">
-              <p className="text-[11px] text-stone-600 leading-relaxed font-sans">
-                Auto-sprout Golden Money Oaks whenever real customers pay you.
+        {/* TAB 1: GITHUB SYNC */}
+        {activeTab === "github" && (
+          <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
+            <div>
+              <label className="font-semibold text-stone-800 text-xs block mb-1">
+                GitHub Username / Handle
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-2.5 text-stone-400 font-mono text-xs select-none">
+                    github.com/
+                  </span>
+                  <input
+                    type="text"
+                    value={githubInput}
+                    onChange={(e) => setGithubInput(e.target.value)}
+                    placeholder="kwakhare5"
+                    className="w-full pl-24 pr-3 py-2 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs font-mono focus:outline-hidden focus:border-emerald-600 focus:bg-white transition"
+                  />
+                </div>
+                <Button
+                  onClick={handleSyncGitHub}
+                  variant="emerald"
+                  size="sm"
+                  disabled={isSyncing || !githubInput.trim()}
+                  icon={isSyncing ? RefreshCw : Check}
+                >
+                  {isSyncing ? "Syncing..." : syncSuccess ? "Synced!" : "Sync"}
+                </Button>
+              </div>
+              <p className="text-[11px] text-stone-500 mt-1.5 leading-relaxed">
+                Sprouts an Evergreen Pine for each repository. Commits pushed to your main branch level up tree tiers.
               </p>
-              <div className="text-[10px] text-stone-500 bg-amber-50/70 border border-amber-200/60 rounded-lg p-2 font-mono space-y-0.5">
-                <div className="text-amber-900 font-bold font-sans">How to connect:</div>
-                <div>1. Copy your webhook URL below.</div>
-                <div>2. In Stripe/Lemon Squeezy, go to <span className="font-semibold text-stone-800">Developers &gt; Webhooks &gt; Add Endpoint</span>.</div>
-                <div>3. Paste URL and select <span className="font-semibold text-stone-800">payment_intent.succeeded</span> or <span className="font-semibold text-stone-800">subscription.created</span>.</div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: REVENUE WEBHOOKS */}
+        {activeTab === "revenue" && (
+          <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
+            <div>
+              <label className="font-semibold text-stone-800 text-xs block mb-1">
+                Universal Ingestion Endpoint
+              </label>
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50 border border-stone-200">
+                <input
+                  type="text"
+                  readOnly
+                  value={webhookUrl}
+                  className="bg-transparent font-mono text-[11px] text-stone-800 w-full focus:outline-hidden select-all"
+                />
+                <button
+                  onClick={handleCopyWebhook}
+                  className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-semibold text-[11px] transition shrink-0 cursor-pointer shadow-xs"
+                >
+                  {copiedWebhook ? "Copied!" : "Copy"}
+                </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                readOnly
-                value={webhookUrl}
-                className="flex-1 bg-white border border-stone-300 rounded-xl px-3 py-1.5 text-[11px] text-stone-800 font-mono outline-none select-all shadow-xs"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopyWebhook}
-                icon={copiedWebhook ? Check : Copy}
-              >
-                {copiedWebhook ? "Copied" : "Copy URL"}
-              </Button>
+            <div className="space-y-1.5 text-[11px] text-stone-600 leading-relaxed">
+              <span className="font-bold text-stone-900 block text-xs">Setup in 30 seconds:</span>
+              <p>1. Open Stripe / Polar / Lemon Squeezy $\rightarrow$ <strong>Developers $\rightarrow$ Webhooks</strong>.</p>
+              <p>2. Paste this URL and listen for <code>payment_intent.succeeded</code> or <code>subscription.created</code>.</p>
+              <p>3. Every sale will sprout a Golden Revenue Oak on your East grove.</p>
             </div>
-          </Card>
-        </div>
-
-        {/* 4. Dynamic GitHub Profile README SVG Badge */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-              <span>3. GitHub README Live SVG Badge</span>
-            </span>
-            <Badge variant="stone" size="sm">Markdown</Badge>
           </div>
+        )}
 
-          <Card variant="subtle-inset" className="p-3 space-y-2">
-            <p className="text-[11px] text-stone-600 leading-relaxed font-sans">
-              Embed a live porcelain diorama card in your GitHub profile README.md:
-            </p>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                readOnly
-                value={badgeMarkdown}
-                className="flex-1 bg-white border border-stone-300 rounded-xl px-3 py-1.5 text-[10px] text-stone-800 font-mono outline-none select-all shadow-xs"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopyBadgeMd}
-                icon={copiedBadgeMd ? Check : Copy}
-              >
-                {copiedBadgeMd ? "Copied" : "Copy"}
-              </Button>
+        {/* TAB 3: BADGES & SOCIAL LINKS */}
+        {activeTab === "badge" && (
+          <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
+            <div>
+              <label className="font-semibold text-stone-800 text-xs block mb-1">
+                GitHub Profile README Embed
+              </label>
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50 border border-stone-200">
+                <input
+                  type="text"
+                  readOnly
+                  value={badgeMarkdown}
+                  className="bg-transparent font-mono text-[11px] text-stone-800 w-full focus:outline-hidden select-all"
+                />
+                <button
+                  onClick={handleCopyBadgeMd}
+                  className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-semibold text-[11px] transition shrink-0 cursor-pointer shadow-xs"
+                >
+                  {copiedBadgeMd ? "Copied!" : "Copy"}
+                </button>
+              </div>
             </div>
-          </Card>
-        </div>
 
-        {/* 5. Public 3D Profile Link */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
-              <ExternalLink className="w-3.5 h-3.5 text-emerald-700" />
-              <span>4. Public Island Showcase</span>
-            </span>
-            <Badge variant="stone" size="sm">Shareable Link</Badge>
+            <div>
+              <label className="font-semibold text-stone-800 text-xs block mb-1">
+                Public Island Showcase Link
+              </label>
+              <div className="flex items-center justify-between p-2 rounded-xl bg-stone-50 border border-stone-200">
+                <span className="font-mono text-[11px] text-stone-800 truncate pr-2">
+                  {profileUrl}
+                </span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    onClick={handleCopyProfile}
+                    className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-semibold text-[11px] transition cursor-pointer shadow-xs"
+                  >
+                    {copiedProfile ? "Copied!" : "Copy"}
+                  </button>
+                  <a
+                    href={profileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-1 rounded-lg text-stone-500 hover:text-stone-900 transition"
+                    title="Open public island"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
+        )}
 
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              readOnly
-              value={profileUrl}
-              className="flex-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-1.5 text-xs text-stone-800 font-mono outline-none select-all shadow-xs"
-            />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopyProfile}
-              icon={copiedProfile ? Check : Copy}
-            >
-              {copiedProfile ? "Copied" : "Copy Link"}
-            </Button>
-          </div>
-        </div>
-
-        {/* Footer Actions */}
-        <div className="pt-2 border-t border-stone-200 flex items-center justify-between gap-3">
-          <Button
-            variant="danger"
-            size="sm"
+        {/* Subtle Footer Action */}
+        <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-400">
+          <span>IndieForest v1.0 · Zero-Touch Ingestion</span>
+          <button
             onClick={handleResetCache}
-            icon={RotateCcw}
+            className="text-stone-400 hover:text-rose-600 transition cursor-pointer flex items-center gap-1"
           >
-            Clear Cache / Reset
-          </Button>
-
-          <Button variant="emerald" size="sm" onClick={onClose}>
-            Done
-          </Button>
+            <RotateCcw className="w-3 h-3" /> Reset Cache
+          </button>
         </div>
+
       </div>
     </Modal>
   );

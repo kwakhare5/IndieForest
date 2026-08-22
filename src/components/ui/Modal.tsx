@@ -50,6 +50,13 @@ export function Modal({
     "bottom-center": "fixed inset-0 z-50 flex items-end justify-center p-4 sm:p-6 pb-24 sm:pb-24 bg-stone-900/20 backdrop-blur-[2px]",
   }[position];
 
+  const originClasses = {
+    center: "origin-center",
+    "top-right": "origin-top-right",
+    "top-left": "origin-top-left",
+    "bottom-center": "origin-bottom",
+  }[position];
+
   return (
     <div
       className={`${positionClasses} animate-in fade-in duration-150 font-sans`}
@@ -61,7 +68,7 @@ export function Modal({
     >
       {/* Outer Tactile Chamfered Glass Bezel (Exact Navbar Match & Safe Max-Height) */}
       <div
-        className={`w-full ${maxWidthClass} max-h-[calc(100vh-5.5rem)] overflow-y-auto p-1.5 rounded-[2rem] glass-dock shadow-2xl relative animate-in zoom-in-95 duration-150 custom-scrollbar`}
+        className={`w-full ${maxWidthClass} ${originClasses} max-h-[calc(100vh-5.5rem)] overflow-y-auto p-1.5 rounded-[2rem] glass-dock shadow-2xl relative animate-in zoom-in-95 duration-150 custom-scrollbar`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Inner Porcelain Chamber */}
@@ -85,7 +92,7 @@ export function Modal({
             )}
             <div>
               {badgeText && (
-                <span className="font-pixel text-[11px] uppercase tracking-wider font-bold text-emerald-800 block mb-0.5">
+                <span className="font-sans text-[10px] uppercase tracking-wider font-bold text-emerald-800 block mb-0.5">
                   {badgeText}
                 </span>
               )}
