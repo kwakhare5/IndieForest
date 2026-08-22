@@ -200,6 +200,7 @@ Living 3D world: ${profileUrl}`,
       badgeText="Build in Public"
       icon={Share2}
       maxWidth="lg"
+      position="bottom-center"
     >
       <div className="space-y-4 font-satoshi">
         {/* Template Selector */}

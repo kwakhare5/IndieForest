@@ -135,7 +135,7 @@ export function DashboardGameControls({
 
       {/* 2. Floating Tactile Porcelain Modules Popover (Spring Animated) */}
       {isModulesPopoverOpen && (
-        <div className="mt-3 w-84 sm:w-96 p-1 rounded-3xl glass-dock shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200 z-50">
+        <div className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm p-1 rounded-3xl glass-dock shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200 z-50">
           <div className="p-4 rounded-[22px] porcelain-surface flex flex-col max-h-[75vh] overflow-hidden">
             
             {/* Popover Header */}

@@ -98,6 +98,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
       title="Plant Island Tree & Sync Webhooks"
       badgeText="Sovereign Progression"
       icon={Trees}
+      position="bottom-center"
     >
       <div className="space-y-4 font-satoshi">
         

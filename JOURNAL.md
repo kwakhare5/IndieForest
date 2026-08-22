@@ -19,6 +19,10 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Spatial Anchored HUD Popovers & Crystal-Clear Developer Guides (`Modal.tsx`, `SettingsModal.tsx`, `AddTreeModal.tsx`, `ShareCardModal.tsx`):**
+    - Enhanced universal `Modal.tsx` with localized anchoring (`top-right`, `top-left`, `bottom-center`) and strict edge margin safety (`w-[calc(100vw-2.5rem)]`, `max-h-[calc(100vh-5.5rem)]`), preventing popovers from ever touching screen boundaries.
+    - Anchored `SettingsModal` to the top-right adjacent to the settings trigger with 1-click copyable developer guides for GitHub zero-touch commit ingestion and Stripe / Lemon Squeezy / Polar automated revenue webhooks.
+    - Anchored `AddTreeModal` and `ShareCardModal` cleanly above the bottom action dock with backdrop click dismiss.
   - **Pristine 3D Diorama Interaction & Zero-Text Hover Experience (`BlockTree.tsx`, `CampProps.tsx`):**
     - Completely removed all floating text labels and badges on hover across trees, campsite stations, and monuments.
     - Maintained tactile cursor feedback (`pointer`), smooth spring elevation physics (`+0.12` on hover), and direct click triggers to double-bezel modals and inspector cards.
