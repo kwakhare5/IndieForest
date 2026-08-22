@@ -154,24 +154,98 @@ TIER I: SAPLING           TIER II: YOUNG PINE       TIER III: MATURE PINE      T
 
 ---
 
-## 6. Retention, Anti-Burnout & Viral Distribution
+## 6. Daily Quests & Pinecone Economy Specification
 
-### A. Retention Engine (Utility > Heavy Games):
-* **Instant 1200×675 3D Share Card + Human Tweet Copy:** 1-click generation of numbers-led social cards for X/LinkedIn in <10 seconds.
-* **The "Welcome-Back Rain" (Anti-Guilt Return):** Returning after 14+ days triggers a soothing rain shower + awards +3 Pinecones and a rare cosmetic seed (zero shaming or broken streak penalty).
-* **1-Click Repo Archiving:** Cleanly hides dead experiments into mossy stones.
-* **Rolling 30-Day Forest Health %:**
-  $$\text{Forest Health} = \left(\frac{\text{Active Shipping Days in Past 30 Days}}{30}\right) \times 100$$
-  * `Pristine (90%+)`, `Lush (75%)`, `Dormant (50%)`, `Drought (<50%)`.
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        THE PINECONE ECONOMY                            │
+│                                                                        │
+│   EARN PINECONES (Zero-Spam Quests)      SPEND IN CAMP SHOP            │
+│   ├── Daily Atomic Ship (+10 🌰)          ├── Biome Shaders (Autumn,    │
+│   ├── 7-Day Streak Milestone (+25 🌰)    │   Cyberpunk, Nordic, Zen)   │
+│   ├── Customer Touchpoint (+20 🌰)       ├── Custom SVG Flagpole       │
+│   └── Public Visitor Cheer (+5 🌰)        ├── Procedural Lo-Fi Synthesizer│
+│                                          └── Emergency Streak Shields  │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
-### B. Viral Growth Wedges:
-1. **Dynamic GitHub README SVG Badge (`/api/badge/[username]`):** Real-time vector SVG rendering streak, rank tier, 30-day health %, and 3D diorama preview.
-2. **10-Second 3D Turntable Video Exporter:** 60fps browser-based MediaRecorder orbit reel.
-3. **Campsite Visitor Bulletin Board:** Visitors at `/u/[username]` can water trees (1x/day) and pin 80-character notes.
+### A. The 4 High-Signal Daily Quests (Tailored to Builders):
+1. **"The Atomic Commit" (Daily Core):** Push $\ge 1$ verified git commit to `main`/`master` ($+100\text{ XP}$, $+10\text{ 🌰}$).
+2. **"The Build-in-Public Slice" (Distribution):** Export and share 3D card or ship link to X/LinkedIn ($+50\text{ XP}$, $+15\text{ 🌰}$).
+3. **"Customer Touchpoint" (Revenue/Feedback):** Log user feedback response, bug fix verification, or Stripe subscriber event ($+75\text{ XP}$, $+20\text{ 🌰}$).
+4. **"Grove Stewardship" (Social):** Visit a peer founder's island and send a Visitor Cheer ($+30\text{ XP}$, $+5\text{ 🌰}$).
+
+### B. Camp Shop Catalog (100% Aesthetic & Anti-Slop):
+* **Night Lantern Posts (100 🌰):** Place low-poly ambient lantern posts along the central walkway.
+* **Custom SVG Startup Flagpole (150 🌰):** Hoists custom project icon on the North-West bluff.
+* **Procedural Lo-Fi Synthesizer (200 🌰):** Unlocks deep-work generative audio modes (Campfire, Rain, Lo-Fi chimes).
+* **Seasonal Biome Shaders (250 🌰):** Autumn Amber, Midnight Cyberpunk Neon, Nordic Frost, Sakura Blossom.
+* **Emergency Streak Shield (300 🌰):** Purchase a backup shield if cap (<2) is not met.
+* **Project Graveyard Composting:** Archiving a dead repo turns its tree into a mossy rune stone and refunds $100\text{ 🌰}$ toward the next project.
 
 ---
 
-## 7. Frontend Component Hierarchy & Stack
+## 7. Developer Utility & Daily Workflow Hooks
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        THE DEVELOPER WORKFLOW                          │
+│                                                                        │
+│  [ CLI / Git Hook ] ──▶ [ VS Code / Cursor ] ──▶ [ Zen Focus Timer ]   │
+│  git commit -m "..."    Mini status bar tree    25-min Pomodoro session│
+│         │                       │                       │              │
+│         └───────────────────────┼───────────────────────┘              │
+│                                 ▼                                      │
+│                      [ 3D Living Island Sync ]                         │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **CLI & Git Post-Commit Hook (`npx indieforest init-hook`):**
+   * Automatically executes on `git commit`, playing a subtle retro terminal chime and syncing the 3D diorama in the cloud without opening a browser.
+2. **VS Code & Cursor Status Bar Extension:**
+   * Displays micro status item: `🌲 IndieForest: 14d Streak | Health: 98%`.
+   * 1-click opens an interactive Webview popup of the 3D diorama directly inside the editor.
+3. **Zen Focus & Pomodoro Station (Web Audio API):**
+   * 25m / 50m deep work sprints. Lighting dims to midnight, procedural fire/rain ambiance fades in, and a special Bonsai Sapling grows in real-time during the sprint.
+4. **Founder Voice Memos & Milestone Capsules:**
+   * Attach a 10-second audio note or markdown log to a tree's growth tier (e.g. *"Day we launched v1 and auth broke at 3 AM"*). Anyone clicking the tree in 2 years can replay the time capsule.
+
+---
+
+## 8. In-World Diorama Delights, Wildlife & Milestone Relics
+
+### A. Living Wildlife (Spawned by Consistency):
+* **Day 5+ Streak:** Low-poly robin nests in the tallest Emerald Pine.
+* **Day 10+ Streak:** Campsite dog/cat sleeps by the campfire and follows camera orbit.
+* **High Activity / MRR:** Golden koi fish jump in the turquoise oasis pond with water ripple shaders.
+
+### B. Milestone Achievement Totems:
+* **Product Hunt Launch Day:** Miniature rocket totem on the North shore.
+* **Hacker News #1 / Viral Launch:** Glowing beacon lighthouse shooting a soft volumetric beam into the sky.
+* **First \$100 MRR:** Solid golden river boulder engraved with the milestone date.
+* **1,000 GitHub Stars:** Glowing star relic suspended above the central grove.
+* **Night Sky Commit Constellations:** During night mode, stars in the 3D sky align into geometric constellations mapped to active repo names.
+
+---
+
+## 9. Multiplayer, Guilds & Social Distribution (V2)
+
+1. **Archipelago Bridges (Co-Founder & Small Team Mode):**
+   * When 2 founders co-build a startup, a wooden suspension rope bridge joins their two islands over the water, showing both members' trees side-by-side.
+2. **Hacker Houses / Squad Guilds (Up to 5 Friends):**
+   * An archipelago cluster of 5 friend islands arranged around a shared central community bonfire. Accountability without toxic meetings: friend islands dim if no commits occur for 3+ days.
+3. **Live Visitor Ghost Shadows:**
+   * When visitors explore `/u/[username]`, their cursor renders as a subtle glowing firefly or wanderer exploring the campsite.
+4. **Auto-Generated Friday Recap Cards:**
+   * 4-panel visual comparison comparing Monday morning vs Friday evening island growth (+3 branches, +28 commits, +$120 MRR).
+5. **Interactive Embed iFrames:**
+   ```html
+   <iframe src="https://indieforest.vercel.app/embed/kwakhare5" width="400" height="400"></iframe>
+   ```
+
+---
+
+## 10. Frontend Component Hierarchy & Stack
 
 ```
 src/
@@ -225,7 +299,7 @@ src/
 
 ---
 
-## 8. SaaS Monetization Model
+## 11. SaaS Monetization Model
 
 | Tier | Price | Inclusions |
 |---|---|---|
@@ -236,7 +310,7 @@ src/
 
 ---
 
-## 9. Phased Implementation Status
+## 12. Phased Implementation Roadmap & Live Status
 
 ```
 ✅ PHASE 1: Core Sharing Engine & Dynamic SVG Badge (COMPLETED)
@@ -261,4 +335,15 @@ src/
 ├── Canvas stream MediaRecorder capture loop at 60fps
 ├── 360° camera orbit synchronized to Timeline Scrubber playback
 └── Instant MP4/WebM download with founder watermark & stats
+
+🚀 PHASE 5: Live Production Vercel Launch (COMPLETED)
+├── Promoted to https://indieforest.vercel.app
+├── Resolved Edge Middleware invocation crash
+└── 48/48 Vitest domain tests passing + 0 ESLint warnings
+
+🔮 PHASE 6: Multiplayer Archipelagos & CLI Tooling (NEXT UP)
+├── npx indieforest init-hook git post-commit CLI
+├── VS Code / Cursor status bar extension
+├── Co-founder twin island suspension bridge
+└── Squad Guild bonfires for 5-person hacker circles
 ```
