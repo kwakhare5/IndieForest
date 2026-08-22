@@ -13,21 +13,10 @@ export function CampProps() {
   const flameRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.PointLight>(null);
   const smokeRef = useRef<THREE.Group>(null);
-  const cloudsRef = useRef<THREE.Group>(null);
 
   const isNightOrSunset = timeOfDay === "night" || timeOfDay === "sunset";
 
-  // Cloud initial offsets
-  const clouds = useMemo(
-    () => [
-      { x: -5, y: 5.5, z: -3, scale: 1.2, speed: 0.2 },
-      { x: 2, y: 6.2, z: 4, scale: 0.9, speed: 0.15 },
-      { x: 6, y: 5.0, z: -2, scale: 1.1, speed: 0.18 },
-    ],
-    []
-  );
-
-  // Animate flame, rising smoke, and drifting clouds
+  // Animate flame and rising smoke
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
 
@@ -50,40 +39,10 @@ export function CampProps() {
         puff.position.x = Math.sin(t + idx) * 0.06;
       });
     }
-
-    // Drifting clouds
-    if (cloudsRef.current) {
-      cloudsRef.current.children.forEach((cloud, i) => {
-        cloud.position.x += 0.003 * (i + 1);
-        if (cloud.position.x > 9) {
-          cloud.position.x = -9;
-        }
-      });
-    }
   });
 
   return (
     <group>
-      {/* --- Floating Low-Poly White Clouds Drifting in Sky --- */}
-      <group ref={cloudsRef}>
-        {clouds.map((c, i) => (
-          <group key={i} position={[c.x, c.y, c.z]} scale={c.scale}>
-            {/* Center Cloud Puffs */}
-            <mesh castShadow>
-              <boxGeometry args={[1.6, 0.5, 0.9]} />
-              <meshStandardMaterial color="#ffffff" roughness={0.3} flatShading />
-            </mesh>
-            <mesh position={[0.4, 0.3, 0]} castShadow>
-              <boxGeometry args={[0.9, 0.5, 0.7]} />
-              <meshStandardMaterial color="#f8fafc" roughness={0.3} flatShading />
-            </mesh>
-            <mesh position={[-0.4, 0.2, 0.1]} castShadow>
-              <boxGeometry args={[0.8, 0.4, 0.7]} />
-              <meshStandardMaterial color="#ffffff" roughness={0.3} flatShading />
-            </mesh>
-          </group>
-        ))}
-      </group>
 
       {/* 1. CAMPFIRE (Unlocked at streak >= 3) */}
       {streakDays >= 3 && (

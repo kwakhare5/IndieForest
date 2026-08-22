@@ -32,9 +32,11 @@ export function BlockTree({ tree, onSelect }: BlockTreeProps) {
     }
 
     const targetScale = hovered ? 1.08 : 1.0;
-    meshRef.current.scale.x = THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, 0.15);
-    meshRef.current.scale.y = THREE.MathUtils.lerp(meshRef.current.scale.y, targetScale, 0.15);
-    meshRef.current.scale.z = THREE.MathUtils.lerp(meshRef.current.scale.z, targetScale, 0.15);
+    const targetY = hovered ? 0.22 : 0.0;
+    meshRef.current.scale.x = THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, 0.18);
+    meshRef.current.scale.y = THREE.MathUtils.lerp(meshRef.current.scale.y, targetScale, 0.18);
+    meshRef.current.scale.z = THREE.MathUtils.lerp(meshRef.current.scale.z, targetScale, 0.18);
+    meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, targetY, 0.18);
   });
 
   // Dual-Grove Palette: Golden Amber for Revenue vs Emerald Green for Shipping
@@ -219,12 +221,25 @@ export function BlockTree({ tree, onSelect }: BlockTreeProps) {
           0,
         ]}
         center
-        className="pointer-events-none select-none font-satoshi transition-transform duration-150"
+        className="select-none font-satoshi transition-transform duration-150"
       >
         <div
-          className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-tight whitespace-nowrap flex items-center gap-1.5 shadow-md border backdrop-blur-md transition-all duration-200 ${
+          onMouseEnter={() => {
+            setHovered(true);
+            document.body.style.cursor = "pointer";
+          }}
+          onMouseLeave={() => {
+            setHovered(false);
+            document.body.style.cursor = "auto";
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            sound.playClick();
+            if (onSelect) onSelect(tree);
+          }}
+          className={`pointer-events-auto cursor-pointer px-2.5 py-1 rounded-full text-[10px] font-bold tracking-tight whitespace-nowrap flex items-center gap-1.5 shadow-md border backdrop-blur-md transition-all duration-200 ${
             hovered
-              ? "scale-110 bg-white/95 border-emerald-500 text-stone-950 shadow-lg"
+              ? "scale-115 bg-white/95 border-emerald-500 text-stone-950 shadow-lg ring-2 ring-emerald-400/50"
               : isRevenue
               ? "bg-[#fef9c3]/90 border-amber-300 text-amber-950 shadow-xs"
               : "bg-white/85 border-stone-200 text-stone-800 shadow-xs"
