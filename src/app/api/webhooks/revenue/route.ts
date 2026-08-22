@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseUniversalRevenueEvent } from "@/lib/revenueWebhook";
-import { supabase } from "@/lib/supabase";
+import { supabase, type TreeRow } from "@/lib/supabase";
 
 /**
  * Universal Revenue Webhook Route for IndieForest
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     // Direct Supabase Insertion if userId is present
     if (userId) {
       try {
-        await supabase.from("trees").insert({
+        const treeRow: TreeRow = {
           id: `tree-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
           user_id: userId,
           name: normalizedTree.customerName,
@@ -46,7 +46,8 @@ export async function POST(req: NextRequest) {
           grid_x: 2.0,
           grid_z: -1.0,
           planted_at: new Date().toISOString(),
-        } as any);
+        };
+        await supabase.from("trees").insert(treeRow);
       } catch (dbErr) {
         console.warn("Webhook DB insert fallback:", dbErr);
       }

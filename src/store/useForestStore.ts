@@ -23,7 +23,7 @@ import {
   DEFAULT_DAILY_QUESTS,
   CAMP_SHOP_CATALOG,
 } from "@/lib/gamification";
-import { syncProfileToSupabase, loadProfileFromSupabase } from "@/lib/supabase";
+import { islandSyncEngine } from "@/lib/syncEngine";
 
 export type { GrowthTier, TreeType, TreeData, ShipLog, TimeOfDay, DailyQuest, QuestId, CampShopItem };
 export { getRankTitle, getXpForLevel, getLocalDateString };
@@ -424,7 +424,7 @@ export const useForestStore = create<ForestState>()(
 
         set({ isAutoSyncing: true });
         try {
-          await syncProfileToSupabase({
+          const success = await islandSyncEngine.dispatch({
             userId,
             username: state.user.username,
             level: state.level,
@@ -437,9 +437,9 @@ export const useForestStore = create<ForestState>()(
             trees: state.trees,
             shipHistory: state.shipHistory,
           });
-          set({ lastSyncTime: new Date().toISOString() });
-        } catch {
-          // Graceful silent fallback
+          if (success) {
+            set({ lastSyncTime: new Date().toISOString() });
+          }
         } finally {
           set({ isAutoSyncing: false });
         }
@@ -448,7 +448,7 @@ export const useForestStore = create<ForestState>()(
       loadCloudIsland: async (userId: string) => {
         if (!userId || userId === "guest") return false;
         try {
-          const cloudData = await loadProfileFromSupabase(userId);
+          const cloudData = await islandSyncEngine.hydrate(userId);
           if (cloudData && cloudData.profile) {
             set((s) => ({
               level: cloudData.profile.level || s.level,
