@@ -19,6 +19,11 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Button Polish & Fake Data Purge (`AddProjectModal.tsx`, `DashboardControls.tsx`, `OverviewModal.tsx`, `TreeCard.tsx`, `LandingHero.tsx`, `LandingBento.tsx`):**
+    - **Fixed "Add Project" Button Double Plus:** Resolved duplicate `+ + Add Project` bug in `DashboardControls.tsx` where an explicit `icon={Plus}` prop collided with raw `+` text.
+    - **AddProjectModal Polish:** Centered the modal on screen (`position="center"`) and styled the submit action dynamically with emerald for code repositories and amber for revenue projects (`icon={TrendingUp}`).
+    - **Project Deletion & Archival:** Added a direct `Remove` action to `TreeCard.tsx` with user confirmation so builders can easily manage manual projects.
+    - **Purged Fabricated Demo Data:** Deleted hardcoded fake demo trees (`pro-mrr`, `$1,250 MRR`, `side-quest`) from `LandingHero.tsx` and `LandingBento.tsx`, replacing them with authentic initial starter seedling data and real preview states.
   - **Maximum Performance & Runtime Optimization (`IslandTree.tsx`, `Weather.tsx`, `LandingHero.tsx`, `dashboard/page.tsx`, `u/[username]/page.tsx`, `sound.ts`, `next.config.ts`):**
     - **SSR-Free Dynamic Canvas Hydration (`next/dynamic`):** Dynamically split the Three.js 3D WebGL bundle across the landing hero, dashboard, and public profile pages with instant porcelain skeletons, slashing initial page load time by over 60%.
     - **Zero-GC Vector Allocations & Spring Lerp Short-Circuiting (`IslandTree.tsx`):** Replaced `new THREE.Vector3()` instantiation inside 60 FPS animation loops with `scale.set()`, and added rest-state short-circuiting so non-hovered trees skip CPU/GPU computation entirely.
