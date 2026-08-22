@@ -19,6 +19,13 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Comprehensive Zero-Touch Codebase & HUD Streamlining Purge (`FloatingDock.tsx`, `DashboardTopLeftNav.tsx`, `CampfireFocusModal.tsx`, `TentSabbaticalModal.tsx`, `gallery/`, `logos/`):**
+    - Purged manual `Ship Daily` and `Plant` buttons from the floating dock, transforming it into a 100% automated status & proof-of-work command bar (`[ 🔥 7D Streak ] · [ 🌲 Repos ] · [ 💰 MRR ] · [ LVL ] · [ 🚀 Share Proof ]`).
+    - Streamlined `DashboardTopLeftNav.tsx` to focus 100% on high-signal Daily Proof-of-Work Quests, removing the cosmetic coin shop tab.
+    - Removed the Pomodoro timer widget and manual goal form from `CampfireFocusModal.tsx`, refocusing it as a procedural lo-fi ambient audio station and automated shipping status monitor.
+    - Simplified `TentSabbaticalModal.tsx` into a clean, mathematical **Streak Shield Vault** showing banked rest shields.
+    - Deleted obsolete scratch/showroom routes (`/gallery`, `/logos`, and `ShowroomCatalog.tsx`), trimming static production routes to 8 clean, optimized endpoints.
+    - Cleaned hardcoded usernames and links across `LandingBento.tsx` and `LandingFooter.tsx` to generic builder URLs.
   - **100% Zero-Fake Data Core Architecture Purge (`useForestStore.ts`, `github.ts`, `SettingsModal.tsx`, `dashboard/page.tsx`, `curatedBuilders.ts`):**
     - Purged all hardcoded mock users, starter pinecones, and fake fallback profiles (`curatedBuilders.ts` deleted).
     - Initialized store state to pristine, authentic defaults (`username: ""`, `pinecones: 0`, `trees: []`, `streakDays: 0`, `xp: 0`).

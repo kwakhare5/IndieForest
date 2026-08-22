@@ -29,7 +29,7 @@ export function LandingBento() {
 
   const handleCopyText = () => {
     navigator.clipboard.writeText(
-      `Day 14 of shipping daily on IndieForest.\n• Tier IV (Island Architect · Lvl 12)\n• 4 Active Projects | $1,250/mo MRR\n• 30-Day Forest Health: ${demoHealth}%\n\nLiving diorama: indieforest.dev/u/kwakhare5`
+      `Day 14 of shipping daily on IndieForest.\n• Tier IV (Island Architect · Lvl 12)\n• 4 Active Projects | $1,250/mo MRR\n• 30-Day Forest Health: ${demoHealth}%\n\nLiving diorama: indieforest.dev/u/builder`
     );
     setCopiedText(true);
     setTimeout(() => setCopiedText(false), 2000);
@@ -191,7 +191,7 @@ export function LandingBento() {
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
             <span>Direct WebGL Compositor</span>
-            <span className="font-mono text-xs font-semibold text-emerald-800">indieforest.dev/u/kwakhare5</span>
+            <span className="font-mono text-xs font-semibold text-emerald-800">indieforest.dev/u/builder</span>
           </div>
         </Card>
       </div>

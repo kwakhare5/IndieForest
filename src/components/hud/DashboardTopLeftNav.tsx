@@ -2,49 +2,41 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Target, X, CheckCircle2, Zap, Sparkles, Lock } from "lucide-react";
+import {
+  ArrowLeft,
+  Target,
+  X,
+  CheckCircle2,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { SegmentedControl } from "@/components/ui/SegmentedControl";
-import { useForestStore } from "@/store/useForestStore";
 import { sound } from "@/lib/sound";
-import type { QuestId } from "@/types/game";
+import { useForestStore, QuestId } from "@/store/useForestStore";
 
 interface DashboardTopLeftNavProps {
+  backHref?: string;
+  backLabel?: string;
   unclaimedQuestsCount?: number;
   completedQuestsCount?: number;
   totalQuestsCount?: number;
-  backHref?: string;
-  backLabel?: string;
 }
 
 export function DashboardTopLeftNav({
+  backHref = "/",
+  backLabel = "Home",
   unclaimedQuestsCount = 0,
   completedQuestsCount = 0,
   totalQuestsCount = 4,
-  backHref = "/",
-  backLabel = "Home",
 }: DashboardTopLeftNavProps) {
   const [isQuestsPopoverOpen, setIsQuestsPopoverOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"quests" | "shop">("quests");
 
-  const pinecones = useForestStore((s) => s.pinecones);
   const dailyQuests = useForestStore((s) => s.dailyQuests);
-  const shopItems = useForestStore((s) => s.shopItems);
   const claimQuestReward = useForestStore((s) => s.claimQuestReward);
-  const buyShopItem = useForestStore((s) => s.buyShopItem);
-  const streakShields = useForestStore((s) => s.streakShields);
 
   const handleClaim = (questId: QuestId) => {
-    sound.playCoin();
+    sound.playLevelUp();
     claimQuestReward(questId);
-  };
-
-  const handleBuy = (itemId: string) => {
-    const success = buyShopItem(itemId);
-    if (!success) {
-      sound.playClick();
-    }
   };
 
   return (
@@ -76,7 +68,7 @@ export function DashboardTopLeftNav({
             }}
             icon={Target}
             className="relative shadow-xs active:scale-95 transition-transform text-xs"
-            title="Daily Builder Quests & Perk Store (Press Q)"
+            title="Daily Proof-of-Work Quests (Press Q)"
           >
             <span>Quests</span>
             <span className={`text-xs font-pixel ml-1 px-1.5 py-0.2 rounded-full ${isQuestsPopoverOpen || unclaimedQuestsCount > 0 ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
@@ -104,15 +96,15 @@ export function DashboardTopLeftNav({
                   <Target className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-stone-950 font-sans">Daily Quests</h3>
-                  <span className="text-[10px] text-stone-500 font-sans block">Proof-of-Work Economy</span>
+                  <h3 className="text-xs font-bold text-stone-950 font-sans">Daily Builder Quests</h3>
+                  <span className="text-[10px] text-stone-500 font-sans block">Proof-of-Work Milestones</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold font-pixel">
-                  🌰 {pinecones}
-                </span>
+                <Badge variant="emerald" size="sm">
+                  {completedQuestsCount}/{totalQuestsCount} Completed
+                </Badge>
                 <button
                   onClick={() => {
                     sound.playClick();
@@ -126,103 +118,51 @@ export function DashboardTopLeftNav({
               </div>
             </div>
 
-            {/* Tab Selector */}
-            <div className="my-3">
-              <SegmentedControl
-                value={activeTab}
-                onChange={(val) => setActiveTab(val as "quests" | "shop")}
-                size="sm"
-                options={[
-                  {
-                    value: "quests",
-                    label: `Quests ${completedQuestsCount > 0 ? `(${completedQuestsCount}/${totalQuestsCount})` : ""}`,
-                  },
-                  { value: "shop", label: "Perk Shop" },
-                ]}
-              />
-            </div>
-
             {/* Flat Scrollable List Rows */}
-            <div className="flex-1 overflow-y-auto space-y-3 pr-1 custom-scrollbar">
-              {activeTab === "quests" ? (
-                dailyQuests.map((quest) => (
-                  <div key={quest.id} className="pb-3 border-b border-stone-100 last:border-0 last:pb-0 space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-stone-900 text-xs font-sans">{quest.title}</span>
-                          <Badge variant={quest.category === "shipping" ? "emerald" : quest.category === "revenue" ? "amber" : "stone"} size="sm">
-                            {quest.category}
-                          </Badge>
-                        </div>
-                        <p className="text-[11px] text-stone-500 leading-relaxed mt-0.5 font-sans">{quest.description}</p>
+            <div className="flex-1 overflow-y-auto space-y-3 pt-3 pr-1 custom-scrollbar">
+              {dailyQuests.map((quest) => (
+                <div key={quest.id} className="pb-3 border-b border-stone-100 last:border-0 last:pb-0 space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-stone-900 text-xs font-sans">{quest.title}</span>
+                        <Badge variant={quest.category === "shipping" ? "emerald" : quest.category === "revenue" ? "amber" : "stone"} size="sm">
+                          {quest.category}
+                        </Badge>
                       </div>
-                      <span className="shrink-0 text-xs font-pixel font-bold text-emerald-800">
-                        +{quest.xpReward} XP
-                      </span>
+                      <p className="text-[11px] text-stone-500 leading-relaxed mt-0.5 font-sans">{quest.description}</p>
                     </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 flex-1 mr-3">
-                        <div className="flex-1 h-1.5 rounded-full bg-stone-100 overflow-hidden">
-                          <div
-                            className={`h-full ${quest.isCompleted ? "bg-emerald-600" : "bg-stone-300"}`}
-                            style={{ width: `${Math.min(100, (quest.progress / quest.target) * 100)}%` }}
-                          />
-                        </div>
-                        <span className="text-[10px] font-mono text-stone-400">{quest.progress}/{quest.target}</span>
-                      </div>
-
-                      {quest.isClaimed ? (
-                        <span className="flex items-center gap-1 text-emerald-700 text-[10px] font-bold">
-                          <CheckCircle2 className="w-3 h-3" /> Claimed
-                        </span>
-                      ) : quest.isCompleted ? (
-                        <Button variant="emerald" size="sm" onClick={() => handleClaim(quest.id)} icon={Zap} className="text-[10px] py-0.5 px-2">
-                          Claim
-                        </Button>
-                      ) : (
-                        <span className="text-[10px] text-stone-400 font-medium font-sans">In Progress</span>
-                      )}
-                    </div>
+                    <span className="shrink-0 text-xs font-pixel font-bold text-emerald-800">
+                      +{quest.xpReward} XP
+                    </span>
                   </div>
-                ))
-              ) : (
-                shopItems.map((item) => {
-                  const canAfford = pinecones >= item.price;
-                  const isMaxShields = item.id === "emergency-shield" && streakShields >= 2;
-                  return (
-                    <div key={item.id} className="pb-3 border-b border-stone-100 last:border-0 last:pb-0 flex items-center justify-between gap-2">
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-xs text-stone-900 font-sans">{item.name}</span>
-                          <Badge variant="stone" size="sm">{item.category}</Badge>
-                        </div>
-                        <p className="text-[11px] text-stone-500 mt-0.5 font-sans">{item.description}</p>
-                      </div>
-                      <div className="flex flex-col items-end gap-1 shrink-0">
-                        <span className="text-xs font-bold font-pixel text-amber-900">{item.price} 🌰</span>
-                        {item.isUnlocked && item.id !== "emergency-shield" ? (
-                          <Badge variant="emerald" size="sm">Unlocked</Badge>
-                        ) : (
-                          <Button
-                            variant={canAfford && !isMaxShields ? "emerald" : "outline"}
-                            size="sm"
-                            disabled={!canAfford || isMaxShields}
-                            onClick={() => handleBuy(item.id)}
-                            icon={canAfford ? Sparkles : Lock}
-                            className="text-[10px] py-0.5 px-2"
-                          >
-                            {isMaxShields ? "Max (2)" : "Unlock"}
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
 
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 flex-1 mr-3">
+                      <div className="flex-1 h-1.5 rounded-full bg-stone-100 overflow-hidden">
+                        <div
+                          className={`h-full ${quest.isCompleted ? "bg-emerald-600" : "bg-stone-300"}`}
+                          style={{ width: `${Math.min(100, (quest.progress / quest.target) * 100)}%` }}
+                        />
+                      </div>
+                      <span className="text-[10px] font-mono text-stone-400">{quest.progress}/{quest.target}</span>
+                    </div>
+
+                    {quest.isClaimed ? (
+                      <span className="flex items-center gap-1 text-emerald-700 text-[10px] font-bold">
+                        <CheckCircle2 className="w-3 h-3" /> Claimed
+                      </span>
+                    ) : quest.isCompleted ? (
+                      <Button variant="emerald" size="sm" onClick={() => handleClaim(quest.id)} icon={Zap} className="text-[10px] py-0.5 px-2">
+                        Claim +{quest.xpReward} XP
+                      </Button>
+                    ) : (
+                      <span className="text-[10px] text-stone-400 font-medium font-sans">In Progress</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

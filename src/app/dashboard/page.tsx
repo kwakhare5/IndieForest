@@ -31,7 +31,6 @@ export default function DashboardPage() {
   const level = useForestStore((s) => s.level);
   const streakDays = useForestStore((s) => s.streakDays);
   const streakShields = useForestStore((s) => s.streakShields);
-  const shipHistory = useForestStore((s) => s.shipHistory);
   const drought = useForestStore((s) => s.drought);
   const removeTree = useForestStore((s) => s.removeTree);
   const timeOfDay = useForestStore((s) => s.timeOfDay);
@@ -164,8 +163,6 @@ export default function DashboardPage() {
     );
   }
 
-  const todayStr = new Date().toISOString().split("T")[0];
-  const hasShippedToday = shipHistory.some((s) => s.date.startsWith(todayStr));
 
   const unclaimedQuestsCount = dailyQuests.filter(
     (q) => q.isCompleted && !q.isClaimed
@@ -272,13 +269,10 @@ export default function DashboardPage() {
             streakDays={streakDays}
             totalMrr={totalMrr}
             activeTreesCount={trees.length}
-            hasShippedToday={hasShippedToday}
-            onOpenShip={() => setIsCampfireModalOpen(true)}
             onOpenShare={() => {
               triggerQuestProgress("build-in-public", 1);
               setIsShareModalOpen(true);
             }}
-            onOpenAddTree={() => setIsAddTreeModalOpen(true)}
           />
         </>
       )}

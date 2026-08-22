@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
-import { Flame, Volume2, VolumeX, Play, Pause, RotateCcw, Sparkles, CheckCircle2 } from "lucide-react";
+import { Flame, Volume2, VolumeX, Sparkles, CheckCircle2 } from "lucide-react";
 import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
 
@@ -13,57 +13,24 @@ interface CampfireFocusModalProps {
 }
 
 export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps) {
-  const [goal, setGoal] = useState("");
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [timerSeconds, setTimerSeconds] = useState(25 * 60);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [hasShippedToday, setHasShippedToday] = useState(false);
-
-  const shipToday = useForestStore((s) => s.shipToday);
   const streakDays = useForestStore((s) => s.streakDays);
+  const shipHistory = useForestStore((s) => s.shipHistory);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isTimerRunning && timerSeconds > 0) {
-      interval = setInterval(() => {
-        setTimerSeconds((prev) => prev - 1);
-      }, 1000);
-    } else if (timerSeconds === 0 && isTimerRunning) {
-      setIsTimerRunning(false);
-      sound.playLevelUp();
-    }
-    return () => clearInterval(interval);
-  }, [isTimerRunning, timerSeconds]);
+  const todayStr = new Date().toISOString().split("T")[0];
+  const todayShip = shipHistory.find((s) => s.date.startsWith(todayStr));
 
   const toggleCampfireAudio = () => {
     const active = sound.toggleCampfireAmbiance();
     setIsAudioPlaying(active);
   };
 
-  const handleCommitGoal = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!goal.trim()) return;
-
-    shipToday(`Shipped focus goal: ${goal.trim()}`, "manual");
-    setHasShippedToday(true);
-    sound.playShipSuccess();
-    setGoal("");
-  };
-
-  const formatTime = (secs: number) => {
-    const m = Math.floor(secs / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = (secs % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Campsite Focus & Pomodoro"
-      badgeText="Proof of Work"
+      title="Campsite Deep Work & Ambiance"
+      badgeText="Day 3+ Milestone"
       icon={Flame}
       maxWidth="md"
     >
@@ -76,10 +43,10 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
             </div>
             <div>
               <span className="font-bold text-xs text-stone-900 font-sans block">
-                Daily Focus Milestone
+                Milestone Campfire
               </span>
               <span className="text-[10px] text-stone-400 font-sans">
-                Day {streakDays} Milestone Campfire
+                {streakDays > 0 ? `${streakDays}-Day Shipping Streak Active` : "Daily Deep Work Station"}
               </span>
             </div>
           </div>
@@ -89,85 +56,40 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
             size="sm"
             onClick={toggleCampfireAudio}
             icon={isAudioPlaying ? Volume2 : VolumeX}
-            className={`text-xs ${isAudioPlaying ? "border-orange-300 bg-orange-50 text-orange-800" : ""}`}
+            className={`text-xs ${isAudioPlaying ? "border-orange-300 bg-orange-50 text-orange-800 font-bold" : ""}`}
           >
-            {isAudioPlaying ? "Lo-Fi Active" : "Play Lo-Fi"}
+            {isAudioPlaying ? "Lo-Fi Playing" : "Play Lo-Fi Ambiance"}
           </Button>
         </div>
 
-        {/* 1 Atomic Thing Form */}
-        <div className="space-y-2">
-          <div>
-            <label className="text-xs font-bold text-stone-900 font-sans block">
-              What is the ONE atomic thing you are shipping today?
-            </label>
-            <p className="text-[11px] text-stone-400 font-sans">
-              Eliminate morning decision paralysis. Pick one high-leverage task.
-            </p>
+        {/* Automated Daily Shipping Status Card */}
+        <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-xs text-stone-900 font-sans">
+              Today&apos;s Automated Shipping Status
+            </span>
+            {todayShip ? (
+              <span className="flex items-center gap-1 text-emerald-700 text-[11px] font-bold">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Shipped Today
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-amber-700 text-[11px] font-bold">
+                <Sparkles className="w-3.5 h-3.5" /> Awaiting Git Push
+              </span>
+            )}
           </div>
 
-          {hasShippedToday ? (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>You logged today&apos;s daily focus! Keep the momentum alive.</span>
-            </div>
-          ) : (
-            <form onSubmit={handleCommitGoal} className="space-y-2">
-              <input
-                type="text"
-                value={goal}
-                onChange={(e) => setGoal(e.target.value)}
-                placeholder="e.g. Ship billing checkout drawer & verify webhook"
-                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-stone-50 text-xs font-sans text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition"
-              />
-              <Button
-                type="submit"
-                variant="emerald"
-                size="sm"
-                icon={Sparkles}
-                disabled={!goal.trim()}
-                className="w-full justify-center text-xs font-bold"
-              >
-                Log Atomic Ship (+25 XP)
-              </Button>
-            </form>
-          )}
+          <p className="text-[11px] text-stone-500 leading-relaxed font-sans">
+            {todayShip
+              ? `Auto-detected from git: "${todayShip.message}"`
+              : "Whenever you run git push in your terminal, IndieForest automatically detects your commits, levels up your pine trees, and advances your streak."}
+          </p>
         </div>
 
-        {/* 25-Minute Deep Work Pomodoro Timer */}
-        <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] text-stone-400 font-sans font-medium block">
-              Deep Work Sprint
-            </span>
-            <div className="text-xl font-bold font-mono tracking-tight text-stone-900">
-              {formatTime(timerSeconds)}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <Button
-              variant="dark"
-              size="sm"
-              onClick={() => setIsTimerRunning(!isTimerRunning)}
-              icon={isTimerRunning ? Pause : Play}
-              className="text-xs"
-            >
-              {isTimerRunning ? "Pause" : "Start 25m"}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setIsTimerRunning(false);
-                setTimerSeconds(25 * 60);
-              }}
-              icon={RotateCcw}
-              className="text-xs"
-            >
-              Reset
-            </Button>
-          </div>
+        {/* Ambient Coding Audio Description */}
+        <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-stone-500 text-[11px]">
+          <span>Procedural Web Audio synthesizer</span>
+          <span className="font-semibold text-stone-700">60Hz Campfire & Pink Noise</span>
         </div>
       </div>
     </Modal>
