@@ -19,6 +19,11 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **SegmentedControl Broken Multi-Line Wrapping & Tab Pill Overflow Fix (`SegmentedControl.tsx`, `SettingsModal.tsx`, `ShareCardModal.tsx`, `DashboardGameControls.tsx`):**
+    - Fixed the broken UI where verbose tab labels (e.g. *"Revenue Webhook"*) wrapped onto two lines inside pills, exploding the container height and throwing icons out of alignment.
+    - Added `whitespace-nowrap`, `truncate`, `overflow-hidden`, and fixed height (`h-7.5` sm / `h-9` md) to `SegmentedControl.tsx`.
+    - Standardized modal tab labels to clean, balanced keywords: `[ GitHub | Webhooks | Badges ]` in `SettingsModal.tsx` and `[ Milestone | Punchy | Story ]` in `ShareCardModal.tsx`.
+    - Upgraded `DashboardGameControls.tsx` active project search filters from custom raw buttons to universal `SegmentedControl` (`[ All Repos | Code | Revenue ]`).
   - **Top-Right HUD Profile Symmetrical Alignment & Divider Polish (`DashboardGameControls.tsx`):**
     - Enforced fixed `w-6 h-6 rounded-full` circular avatar container for Clerk `UserButton` / GitHub profile image, eliminating layout shifts and asymmetric padding.
     - Added hairline vertical dividers (`w-[1px] h-4 bg-stone-200`) separating lighting/audio controls, connected modules trigger, settings modal, and user profile avatar.
