@@ -237,25 +237,17 @@ export default function DashboardPage() {
                     </span>
                   </div>
                   <p className="text-[11px] text-stone-500 font-sans leading-relaxed">
-                    Connect your GitHub to sprout your public repositories into pines, or plant your first project manually.
+                    Connect your GitHub handle to sprout your public repositories into living pines automatically.
                   </p>
-                  <div className="flex items-center justify-center gap-2 pt-1">
+                  <div className="flex items-center justify-center pt-1">
                     <Button
                       variant="emerald"
                       size="sm"
                       onClick={() => setIsSettingsModalOpen(true)}
                       icon={Github}
-                      className="text-xs"
+                      className="text-xs font-bold"
                     >
-                      Connect GitHub
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setIsAddTreeModalOpen(true)}
-                      className="text-xs"
-                    >
-                      + Plant Project
+                      Connect GitHub Handle
                     </Button>
                   </div>
                 </div>

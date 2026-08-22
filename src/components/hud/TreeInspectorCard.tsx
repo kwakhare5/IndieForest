@@ -58,7 +58,7 @@ export function TreeInspectorCard({ tree, onClose }: TreeInspectorCardProps) {
         </div>
 
         {/* Flat Stat Metrics Row */}
-        <div className="grid grid-cols-2 gap-3 py-2.5 px-3 rounded-xl bg-stone-50 border border-stone-100">
+        <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-stone-50 border border-stone-100">
           <div>
             <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
               {isRevenue ? "Tracked MRR" : "Commit Activity"}

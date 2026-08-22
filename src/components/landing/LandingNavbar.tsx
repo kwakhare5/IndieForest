@@ -62,7 +62,7 @@ export function LandingNavbar() {
               <div className="flex items-center gap-2">
                 <Link href="/dashboard">
                   <Button variant="emerald" size="sm" showArrow arrowType="right">
-                    DASHBOARD
+                    Open Dashboard
                   </Button>
                 </Link>
                 <UserButton />
@@ -76,7 +76,7 @@ export function LandingNavbar() {
                   arrowType="right"
                   onClick={() => sound.playClick()}
                 >
-                  SIGN IN
+                  Sign In
                 </Button>
               </SignInButton>
             )}

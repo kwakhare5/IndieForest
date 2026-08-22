@@ -50,8 +50,8 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Plant New Island Tree"
-      badgeText="Sovereign Progression"
+      title="Add Custom / Offline Project"
+      badgeText="Manual Fallback"
       icon={Trees}
       maxWidth="sm"
       position="bottom-center"
