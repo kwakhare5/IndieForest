@@ -100,7 +100,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
       icon={Trees}
       position="bottom-center"
     >
-      <div className="space-y-4 font-satoshi">
+      <div className="space-y-4 font-sans">
         
         {/* Independent 3-Way Tab Switcher */}
         <SegmentedControl
@@ -111,7 +111,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
 
         {/* 1. Shipping Project Track (Independent of Revenue) */}
         {activeTab === "shipping" && (
-          <form onSubmit={handlePlantShippingTree} className="space-y-3.5 font-satoshi">
+          <form onSubmit={handlePlantShippingTree} className="space-y-3.5 font-sans">
             <div className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/80 text-xs text-emerald-950 space-y-1">
               <span className="font-bold block flex items-center gap-1">
                 <Trees className="w-3.5 h-3.5 text-emerald-700" /> Emerald Shipping Grove (Pre-Revenue Friendly)
@@ -122,7 +122,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-satoshi">
+              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-sans">
                 Project or Repository Name
               </label>
               <input
@@ -131,7 +131,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. IndieForest Core / Auth MVP"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 font-satoshi"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 font-sans"
               />
             </div>
 
@@ -149,7 +149,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
 
         {/* 2. Revenue Stream Track (Independent of Commits) */}
         {activeTab === "revenue" && (
-          <form onSubmit={handlePlantRevenueTree} className="space-y-3.5 font-satoshi">
+          <form onSubmit={handlePlantRevenueTree} className="space-y-3.5 font-sans">
             <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-950 space-y-1">
               <span className="font-bold block flex items-center gap-1">
                 <TrendingUp className="w-3.5 h-3.5 text-amber-700" /> Golden Revenue Grove (Monetization Track)
@@ -160,7 +160,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-satoshi">
+              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-sans">
                 Customer, Tier, or Business Name
               </label>
               <input
@@ -169,12 +169,12 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Acme Corp / Pro Plan"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20 font-satoshi"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20 font-sans"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-satoshi">
+              <label className="text-xs font-semibold text-stone-700 mb-1.5 block font-sans">
                 Monthly Recurring Revenue ($/mo)
               </label>
               <div className="relative">
@@ -204,7 +204,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
 
         {/* 3. Live Webhooks & Developer Sandbox */}
         {activeTab === "webhooks" && (
-          <div className="space-y-3.5 font-satoshi">
+          <div className="space-y-3.5 font-sans">
             <p className="text-xs text-stone-600 leading-relaxed">
               Connect your live payment gateway or GitHub repository to automate tree planting:
             </p>

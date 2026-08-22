@@ -8,7 +8,7 @@ import { Trees, TrendingUp } from "lucide-react";
 
 export function LandingShowcase() {
   return (
-    <section id="showcase" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-satoshi">
+    <section id="showcase" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-sans">
       <LandingSectionHeader
         badge="Dual-Grove Architecture"
         title="Progress from Day 1, even at $0 MRR."
@@ -25,7 +25,7 @@ export function LandingShowcase() {
           title="West Grove: Emerald Shipping Pines"
           description="Stepped conifer pines grown purely through daily code commits. Sprout at 1 commit, expand to Young Pine at 8 commits, Mature at 25, and crown with a golden halo at 60+ commits."
           previewWidget={
-            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-satoshi">
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-sans">
               <span>Powered by GitHub Events API</span>
               <Badge variant="emerald" size="sm">Pure Code Grind</Badge>
             </div>
@@ -42,7 +42,7 @@ export function LandingShowcase() {
           title="East Grove: Golden Revenue Pines"
           description="Shimmering metallic gold pines sprouted and scaled by paying customer subscriptions ($10 → $50 → $500 → $2,000+ MRR). Verified via Stripe, Lemon Squeezy, or Polar webhooks."
           previewWidget={
-            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-satoshi">
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-sans">
               <span>Universal HMAC Webhook</span>
               <Badge variant="amber" size="sm">Verified MRR</Badge>
             </div>

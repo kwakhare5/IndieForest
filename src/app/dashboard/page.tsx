@@ -163,7 +163,7 @@ export default function DashboardPage() {
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#ece7de] text-stone-600 font-mono text-xs">
         <div className="w-10 h-10 border-3 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-3" />
-        <span className="tracking-[0.2em] uppercase font-bold font-satoshi text-xs text-stone-700">
+        <span className="tracking-[0.2em] uppercase font-bold font-sans text-xs text-stone-700">
           Loading 3D Living Diorama...
         </span>
       </div>
@@ -188,7 +188,7 @@ export default function DashboardPage() {
           : timeOfDay === "sunset"
           ? "bg-[#fef2f2]"
           : "bg-[#ece7de]"
-      } text-stone-900 font-satoshi selection:bg-emerald-600 selection:text-white select-none transition-colors duration-700`}
+      } text-stone-900 font-sans selection:bg-emerald-600 selection:text-white select-none transition-colors duration-700`}
     >
       {/* 1. Full-Screen Edge-to-Edge 3D Diorama Game Canvas (Locked to Isometric View) */}
       <div className="absolute inset-0 w-full h-full z-0">
@@ -256,7 +256,7 @@ export default function DashboardPage() {
       {isHudHidden && (
         <button
           onClick={() => setIsHudHidden(false)}
-          className="fixed top-5 right-5 z-40 p-2.5 rounded-full bg-white border border-stone-300 shadow-2xl text-stone-700 hover:text-stone-950 transition cursor-pointer font-satoshi text-xs flex items-center gap-2"
+          className="fixed top-5 right-5 z-40 p-2.5 rounded-full bg-white border border-stone-300 shadow-2xl text-stone-700 hover:text-stone-950 transition cursor-pointer font-sans text-xs flex items-center gap-2"
         >
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-bold">Show HUD (Press H)</span>

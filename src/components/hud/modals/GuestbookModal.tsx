@@ -40,29 +40,29 @@ export function GuestbookModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`@${targetUsername}'s Campsite Guestbook`}>
-      <div className="space-y-4 font-satoshi">
+      <div className="space-y-4 font-sans">
         
         {/* Header Description */}
-        <p className="text-xs text-stone-600 leading-relaxed font-satoshi">
+        <p className="text-xs text-stone-600 leading-relaxed font-sans">
           Leave an encouraging 1-line note on @{targetUsername}&apos;s campsite bulletin board.
         </p>
 
         {/* Existing Notes Feed */}
         <div className="max-h-48 overflow-y-auto space-y-2.5 pr-1">
           {entries.length === 0 ? (
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 text-center text-xs text-stone-500 font-satoshi">
+            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 text-center text-xs text-stone-500 font-sans">
               No notes pinned yet. Be the first builder to leave encouragement! 🌲
             </div>
           ) : (
             entries.map((entry) => (
-              <Card key={entry.id} variant="subtle-inset" className="p-3 rounded-xl space-y-1 text-xs font-satoshi">
+              <Card key={entry.id} variant="subtle-inset" className="p-3 rounded-xl space-y-1 text-xs font-sans">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-stone-900 font-satoshi">{entry.author}</span>
+                  <span className="font-bold text-stone-900 font-sans">{entry.author}</span>
                   <span className="text-[10px] text-stone-500 font-mono">
                     {new Date(entry.timestamp).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-stone-700 font-satoshi leading-normal">{entry.message}</p>
+                <p className="text-stone-700 font-sans leading-normal">{entry.message}</p>
               </Card>
             ))
           )}
@@ -76,7 +76,7 @@ export function GuestbookModal({
               placeholder="Your Name / @handle"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
-              className="p-2 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-satoshi"
+              className="p-2 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans"
             />
             <input
               type="text"
@@ -84,12 +84,12 @@ export function GuestbookModal({
               value={noteMessage}
               onChange={(e) => setNoteMessage(e.target.value)}
               maxLength={120}
-              className="sm:col-span-2 p-2 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-satoshi"
+              className="sm:col-span-2 p-2 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans"
             />
           </div>
 
           <div className="flex items-center justify-between pt-1">
-            <span className="text-[10px] text-stone-500 font-satoshi font-semibold tracking-wider uppercase">MAX 120 CHARACTERS</span>
+            <span className="text-[10px] text-stone-500 font-sans font-semibold tracking-wider uppercase">MAX 120 CHARACTERS</span>
             
             <Button
               type="submit"

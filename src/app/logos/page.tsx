@@ -19,7 +19,7 @@ export default function LogosPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-satoshi py-12 px-4 sm:px-6 relative overflow-y-auto">
+    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-sans py-12 px-4 sm:px-6 relative overflow-y-auto">
       <div className="max-w-5xl mx-auto space-y-10">
         
         {/* Header Bar */}
@@ -39,7 +39,7 @@ export default function LogosPage() {
                 Official Master SVG
               </Badge>
             </div>
-            <p className="text-sm text-stone-600 max-w-xl font-satoshi">
+            <p className="text-sm text-stone-600 max-w-xl font-sans">
               The isometric Tree Stump timeline featuring 4 concentric golden annual growth rings and a green sprout on radiant Apple green.
             </p>
           </div>
@@ -77,10 +77,10 @@ export default function LogosPage() {
             </div>
 
             <div className="space-y-1">
-              <h3 className="font-bold text-lg text-stone-900 font-satoshi">
+              <h3 className="font-bold text-lg text-stone-900 font-sans">
                 IndieForest Tree Stump Timeline
               </h3>
-              <p className="font-satoshi text-xs text-stone-500 font-medium">
+              <p className="font-sans text-xs text-stone-500 font-medium">
                 512x512px Vector SVG • Continuous Squircle (rx=112)
               </p>
             </div>
@@ -91,7 +91,7 @@ export default function LogosPage() {
             
             {/* Scale Contexts (Favicon, Navbar, App Icon) */}
             <Card variant="porcelain" className="p-6 rounded-[2.5rem] shadow-sm space-y-4">
-              <h4 className="text-[11px] font-bold uppercase tracking-wider text-stone-500 font-satoshi">
+              <h4 className="text-[11px] font-bold uppercase tracking-wider text-stone-500 font-sans">
                 Scalability Verification
               </h4>
 

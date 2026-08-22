@@ -202,7 +202,7 @@ Living 3D world: ${profileUrl}`,
       maxWidth="lg"
       position="bottom-center"
     >
-      <div className="space-y-4 font-satoshi">
+      <div className="space-y-4 font-sans">
         {/* Template Selector */}
         <div className="flex items-center gap-1.5 p-1 rounded-xl bg-stone-200/70 border border-stone-300/80">
           {["Numbers-Led", "Short & Punchy", "Reflection"].map((label, idx) => (
@@ -224,14 +224,14 @@ Living 3D world: ${profileUrl}`,
         </div>
 
         {/* Live Tweet Preview Card */}
-        <Card variant="subtle-inset" className="p-4 text-left font-satoshi rounded-2xl space-y-3">
+        <Card variant="subtle-inset" className="p-4 text-left font-sans rounded-2xl space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs font-pixel">
                 {badge}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-stone-900 font-satoshi">
+                <h4 className="text-xs font-bold text-stone-900 font-sans">
                   @{user.username || "builder"}
                 </h4>
                 <span className="text-[10px] text-stone-500 font-pixel font-bold">
@@ -245,13 +245,13 @@ Living 3D world: ${profileUrl}`,
             </Badge>
           </div>
 
-          <pre className="p-3 rounded-xl bg-white border border-stone-200/90 text-xs text-stone-800 font-satoshi whitespace-pre-wrap leading-relaxed shadow-xs">
+          <pre className="p-3 rounded-xl bg-white border border-stone-200/90 text-xs text-stone-800 font-sans whitespace-pre-wrap leading-relaxed shadow-xs">
             {activeTweetText}
           </pre>
         </Card>
 
         {/* Action Buttons Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-satoshi">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-sans">
           <Button
             onClick={handleCopyImage}
             variant="outline"
@@ -289,7 +289,7 @@ Living 3D world: ${profileUrl}`,
         <div className="text-center">
           <button
             onClick={handleCopyText}
-            className="text-[11px] font-satoshi font-medium text-stone-500 hover:text-stone-800 underline transition-colors cursor-pointer"
+            className="text-[11px] font-sans font-medium text-stone-500 hover:text-stone-800 underline transition-colors cursor-pointer"
           >
             {copiedText ? "✓ Text copied to clipboard" : "or copy plain tweet text"}
           </button>

@@ -34,10 +34,10 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
               <Tent className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-sm text-stone-900 font-satoshi">
+              <h4 className="font-bold text-sm text-stone-900 font-sans">
                 Streak Shield Vault & Rest Planner
               </h4>
-              <p className="text-xs text-stone-500 font-satoshi">
+              <p className="text-xs text-stone-500 font-sans">
                 Anti-Burnout & Sabbatical Mode
               </p>
             </div>
@@ -61,7 +61,7 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
             <div className="w-8 h-8 mx-auto rounded-full bg-white shadow-sm flex items-center justify-center text-emerald-700">
               <Shield className={`w-4 h-4 ${streakShields >= 1 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-bold text-stone-900 font-satoshi">Shield Slot I</div>
+            <div className="text-xs font-bold text-stone-900 font-sans">Shield Slot I</div>
             <span className="text-[10px] text-stone-500 block">
               {streakShields >= 1 ? "Active Protection" : "Earned at 7-day streak"}
             </span>
@@ -78,7 +78,7 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
             <div className="w-8 h-8 mx-auto rounded-full bg-white shadow-sm flex items-center justify-center text-emerald-700">
               <Shield className={`w-4 h-4 ${streakShields >= 2 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-bold text-stone-900 font-satoshi">Shield Slot II</div>
+            <div className="text-xs font-bold text-stone-900 font-sans">Shield Slot II</div>
             <span className="text-[10px] text-stone-500 block">
               {streakShields >= 2 ? "Active Protection" : "Earned at 14-day streak"}
             </span>
@@ -93,7 +93,7 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
                 <Coffee className="w-4 h-4" />
               </div>
               <div>
-                <h5 className="text-xs font-bold text-stone-900 font-satoshi">
+                <h5 className="text-xs font-bold text-stone-900 font-sans">
                   Touch Grass / Sabbatical Mode
                 </h5>
                 <span className="text-[11px] text-stone-500">
@@ -111,7 +111,7 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
             </Button>
           </div>
 
-          <div className="flex items-start gap-2 pt-2 text-[11px] text-stone-500 border-t border-stone-200/80 font-satoshi">
+          <div className="flex items-start gap-2 pt-2 text-[11px] text-stone-500 border-t border-stone-200/80 font-sans">
             <Info className="w-3.5 h-3.5 text-stone-400 mt-0.5 shrink-0" />
             <span>
               IndieForest uses a rolling 30-day health ratio instead of punishing missed days. Sabbaticals preserve your momentum.

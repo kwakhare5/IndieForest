@@ -48,7 +48,7 @@ export function DashboardTopLeftNav({
   };
 
   return (
-    <div className="fixed top-4 left-5 z-40 flex flex-col font-satoshi pointer-events-auto select-none">
+    <div className="fixed top-4 left-5 z-40 flex flex-col font-sans pointer-events-auto select-none">
       {/* 1. Universal Double-Bezel Landing Page Capsule */}
       <div className="p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
         <div className="px-2.5 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">

@@ -118,7 +118,7 @@ export function LandingHero() {
   const displayLevel = activeProfile?.level || 12;
 
   return (
-    <section className="pt-28 pb-16 md:pt-36 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 font-satoshi">
+    <section className="pt-28 pb-16 md:pt-36 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 font-sans">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         {/* Left Hero Copy */}
         <div className="lg:col-span-6 space-y-6 text-left">
@@ -130,7 +130,7 @@ export function LandingHero() {
             Turn daily shipping into a <span className="italic font-normal text-emerald-800 underline decoration-emerald-500/30 underline-offset-8">living 3D world</span>.
           </h1>
 
-          <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl font-satoshi">
+          <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl font-sans">
             Automatically grow stepped emerald pines from GitHub commits and golden pines from Stripe revenue. 100% zero manual check-ins, zero streak anxiety, and instant 1200×675 share cards.
           </p>
 
@@ -146,7 +146,7 @@ export function LandingHero() {
                   placeholder="Type GitHub username (e.g. kwakhare5)"
                   value={searchUsername}
                   onChange={(e) => setSearchUsername(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-satoshi"
+                  className="w-full bg-transparent text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans"
                 />
                 <Button
                   type="submit"
@@ -162,7 +162,7 @@ export function LandingHero() {
             </form>
 
             {/* Quick Preview Chips */}
-            <div className="flex items-center gap-1.5 pt-2 text-[11px] text-stone-500 font-satoshi flex-wrap">
+            <div className="flex items-center gap-1.5 pt-2 text-[11px] text-stone-500 font-sans flex-wrap">
               <span className="font-medium text-stone-400">Explore builders:</span>
               {FAMOUS_BUILDER_HANDLES.map((handle) => (
                 <button
@@ -195,7 +195,7 @@ export function LandingHero() {
                     className="w-8 h-8 rounded-full border border-emerald-300"
                   />
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-stone-900 font-satoshi">
+                    <h4 className="text-xs sm:text-sm font-bold text-stone-900 font-sans">
                       @{activeProfile.username}
                     </h4>
                     <p className="text-[11px] text-emerald-800 font-medium">
@@ -209,7 +209,7 @@ export function LandingHero() {
               </div>
 
               <div className="pt-2 border-t border-emerald-200/60 flex items-center justify-between">
-                <span className="text-xs text-stone-600 font-satoshi">
+                <span className="text-xs text-stone-600 font-sans">
                   Level {activeProfile.level} · {activeProfile.xp} XP
                 </span>
 
@@ -265,14 +265,14 @@ export function LandingHero() {
             </div>
           )}
 
-          <div className="flex items-center gap-4 text-xs font-satoshi text-stone-500 pt-1">
-            <span className="flex items-center gap-1 font-semibold text-emerald-800 font-satoshi">
+          <div className="flex items-center gap-4 text-xs font-sans text-stone-500 pt-1">
+            <span className="flex items-center gap-1 font-semibold text-emerald-800 font-sans">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> 100% Zero-Touch
             </span>
             <span>•</span>
-            <span className="font-satoshi">No Manual Friction</span>
+            <span className="font-sans">No Manual Friction</span>
             <span>•</span>
-            <span className="font-satoshi">60fps Low-Poly Diorama</span>
+            <span className="font-sans">60fps Low-Poly Diorama</span>
           </div>
         </div>
 
@@ -285,10 +285,10 @@ export function LandingHero() {
                   <Trees className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-stone-900 text-xs sm:text-sm font-satoshi">
+                  <h3 className="font-bold text-stone-900 text-xs sm:text-sm font-sans">
                     Living Diorama Preview
                   </h3>
-                  <span className="text-[10px] text-stone-500 font-satoshi">
+                  <span className="text-[10px] text-stone-500 font-sans">
                     Interactive Orthographic Parallax
                   </span>
                 </div>

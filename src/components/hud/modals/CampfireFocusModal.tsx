@@ -69,10 +69,10 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
               <Flame className="w-5 h-5 fill-orange-500" />
             </div>
             <div>
-              <h4 className="font-bold text-sm text-stone-900 font-satoshi">
+              <h4 className="font-bold text-sm text-stone-900 font-sans">
                 Daily Focus Station
               </h4>
-              <p className="text-xs text-stone-500 font-satoshi">
+              <p className="text-xs text-stone-500 font-sans">
                 Day {streakDays} Milestone Campfire
               </p>
             </div>
@@ -92,10 +92,10 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
         {/* 1 Atomic Thing Input */}
         <Card variant="porcelain" className="p-5 rounded-2xl space-y-3">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-stone-900 font-satoshi block">
+            <label className="text-xs font-bold text-stone-900 font-sans block">
               What is the ONE atomic thing you are shipping today?
             </label>
-            <p className="text-[11px] text-stone-500 font-satoshi">
+            <p className="text-[11px] text-stone-500 font-sans">
               Eliminate morning decision paralysis. Pick one high-leverage task.
             </p>
           </div>
@@ -112,7 +112,7 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
                 placeholder="e.g. Ship billing checkout drawer & verify webhook"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300/80 bg-white text-xs font-satoshi text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300/80 bg-white text-xs font-sans text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
               />
               <Button
                 type="submit"
@@ -131,7 +131,7 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
         {/* 25-Minute Deep Work Pomodoro Timer */}
         <Card variant="subtle-inset" className="p-4 rounded-2xl flex items-center justify-between">
           <div className="space-y-0.5">
-            <span className="text-[11px] text-stone-500 font-satoshi font-medium block">
+            <span className="text-[11px] text-stone-500 font-sans font-medium block">
               Deep Work Sprint
             </span>
             <div className="text-2xl font-bold font-mono tracking-tight text-stone-900">

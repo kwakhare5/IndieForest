@@ -107,7 +107,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       maxWidth="lg"
       position="top-right"
     >
-      <div className="space-y-4 font-satoshi text-xs text-stone-700">
+      <div className="space-y-4 font-sans text-xs text-stone-700">
         
         {/* 1. Account & Profile Section */}
         <Card variant="subtle-inset" className="p-3 flex items-center justify-between">
@@ -116,7 +116,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <UserButton />
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-stone-900 text-xs font-satoshi">
+                  <span className="font-bold text-stone-900 text-xs font-sans">
                     {clerkUser?.fullName || `@${user.username}`}
                   </span>
                   <Badge variant="emerald" size="sm">
@@ -163,7 +163,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </div>
 
           <Card variant="subtle-inset" className="p-3 space-y-2.5">
-            <p className="text-[11px] text-stone-600 leading-relaxed font-satoshi">
+            <p className="text-[11px] text-stone-600 leading-relaxed font-sans">
               Type your GitHub username. Every repository sprouts a 3D Conifer that grows on daily commits.
             </p>
 
@@ -187,7 +187,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
 
             {syncSuccess && (
-              <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-satoshi font-medium flex items-center gap-1.5 animate-in fade-in">
+              <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-sans font-medium flex items-center gap-1.5 animate-in fade-in">
                 <Check className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Island state successfully synced with GitHub!</span>
               </div>
@@ -207,11 +207,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
           <Card variant="subtle-inset" className="p-3 space-y-2.5">
             <div className="space-y-1">
-              <p className="text-[11px] text-stone-600 leading-relaxed font-satoshi">
+              <p className="text-[11px] text-stone-600 leading-relaxed font-sans">
                 Auto-sprout Golden Money Oaks whenever real customers pay you.
               </p>
               <div className="text-[10px] text-stone-500 bg-amber-50/70 border border-amber-200/60 rounded-lg p-2 font-mono space-y-0.5">
-                <div className="text-amber-900 font-bold font-satoshi">How to connect:</div>
+                <div className="text-amber-900 font-bold font-sans">How to connect:</div>
                 <div>1. Copy your webhook URL below.</div>
                 <div>2. In Stripe/Lemon Squeezy, go to <span className="font-semibold text-stone-800">Developers &gt; Webhooks &gt; Add Endpoint</span>.</div>
                 <div>3. Paste URL and select <span className="font-semibold text-stone-800">payment_intent.succeeded</span> or <span className="font-semibold text-stone-800">subscription.created</span>.</div>
@@ -248,7 +248,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </div>
 
           <Card variant="subtle-inset" className="p-3 space-y-2">
-            <p className="text-[11px] text-stone-600 leading-relaxed font-satoshi">
+            <p className="text-[11px] text-stone-600 leading-relaxed font-sans">
               Embed a live porcelain diorama card in your GitHub profile README.md:
             </p>
             <div className="flex items-center gap-2">

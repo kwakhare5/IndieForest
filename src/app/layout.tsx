@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+
+const geist = Geist({
+  variable: "--font-geist",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -46,7 +52,7 @@ export default function RootLayout({
     <ClerkProvider publishableKey={clerkPubKey}>
       <html lang="en" className="scroll-smooth">
         <body
-          className={`${geistMono.variable} ${instrumentSerif.variable} antialiased bg-[#ece7de] text-stone-900 font-satoshi selection:bg-emerald-600 selection:text-white`}
+          className={`${geist.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white`}
         >
           {children}
         </body>

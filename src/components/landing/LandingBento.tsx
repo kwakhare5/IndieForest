@@ -36,7 +36,7 @@ export function LandingBento() {
   };
 
   return (
-    <section id="bento" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-satoshi">
+    <section id="bento" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-sans">
       <LandingSectionHeader
         badge="Anti-Burnout & Distribution"
         title="Engineered for sustainable discipline."
@@ -48,20 +48,20 @@ export function LandingBento() {
         {/* Bento 1: Rolling 30-Day Forest Health */}
         <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
           <div>
-            <span className="font-satoshi text-[11px] uppercase tracking-wider font-bold text-emerald-700 block mb-1">
+            <span className="font-sans text-[11px] uppercase tracking-wider font-bold text-emerald-700 block mb-1">
               ANTI-GUILT RETENTION
             </span>
-            <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-satoshi">
+            <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-sans">
               Rolling 30-Day Forest Health %
             </h3>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-satoshi">
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-sans">
               Missed a day? Your past work is never erased. Your island health reflects active shipping days in the past 30 days, allowing quick recovery.
             </p>
           </div>
 
-          <div className="mt-5 space-y-3 font-satoshi">
+          <div className="mt-5 space-y-3 font-sans">
             <Card variant="subtle-inset" className="p-4 rounded-xl space-y-2">
-              <div className="flex items-center justify-between text-xs sm:text-sm font-satoshi">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-sans">
                 <span className="text-stone-600 font-medium">Simulate 30-Day Activity:</span>
                 <span className={`font-bold font-pixel ${currentHealth.color}`}>
                   {demoHealth}% ({currentHealth.label})
@@ -78,7 +78,7 @@ export function LandingBento() {
             </Card>
           </div>
 
-          <div className="pt-4 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-500">
+          <div className="pt-4 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
             <span>Welcome-Back Rain triggers upon return</span>
             <span className="font-semibold text-emerald-800">Zero broken-streak shaming</span>
           </div>
@@ -91,15 +91,15 @@ export function LandingBento() {
               <Shield className="w-5 h-5 stroke-[1.75]" />
             </div>
 
-            <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-satoshi">
+            <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-sans">
               Streak Shield Vault &amp; Rest Mode
             </h3>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-satoshi">
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
               Earn 1 shield every 7 days (max 2). Sabbatical mode lets you schedule guilt-free offline breaks without losing momentum.
             </p>
           </div>
 
-          <div className="mt-5 space-y-3 font-satoshi">
+          <div className="mt-5 space-y-3 font-sans">
             <SegmentedControl
               options={SHIELD_OPTIONS}
               value={shieldState}
@@ -107,7 +107,7 @@ export function LandingBento() {
               size="sm"
             />
 
-            <Card variant="subtle-inset" className="p-3 rounded-xl text-xs text-stone-700 flex items-center justify-between font-satoshi">
+            <Card variant="subtle-inset" className="p-3 rounded-xl text-xs text-stone-700 flex items-center justify-between font-sans">
               <span>Status:</span>
               <span className={`font-bold ${shieldState === "armed" ? "text-emerald-700" : "text-amber-700"}`}>
                 {shieldState === "armed" ? "2 Shields Armed (Auto-Protect)" : "Rest Mode Active (No Anxiety)"}
@@ -115,9 +115,9 @@ export function LandingBento() {
             </Card>
           </div>
 
-          <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-600">
+          <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-600">
             <span>Burnout Prevention</span>
-            <span className="font-bold text-sky-800 font-satoshi text-xs uppercase tracking-wider">2 MAX CAPACITY</span>
+            <span className="font-bold text-sky-800 font-sans text-xs uppercase tracking-wider">2 MAX CAPACITY</span>
           </div>
         </Card>
 
@@ -127,26 +127,26 @@ export function LandingBento() {
             <div className="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-3 shadow-xs">
               <TrendingUp className="w-5 h-5 stroke-[1.75]" />
             </div>
-            <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-satoshi">
+            <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-sans">
               Universal Revenue Webhooks
             </h3>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-3 font-satoshi">
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-3 font-sans">
               Connect Stripe, Lemon Squeezy, or Polar in 1 click. New subscribers instantly sprout Golden Pines on your island:
             </p>
           </div>
 
-          <Card variant="subtle-inset" className="p-4 space-y-2.5 font-satoshi rounded-2xl">
-            <div className="flex items-center justify-between text-xs sm:text-sm font-satoshi">
+          <Card variant="subtle-inset" className="p-4 space-y-2.5 font-sans rounded-2xl">
+            <div className="flex items-center justify-between text-xs sm:text-sm font-sans">
               <span className="text-stone-500">Tracked Revenue:</span>
               <span className="font-bold text-emerald-800 text-sm font-pixel">$2,450/mo MRR</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs font-satoshi shadow-xs flex items-center justify-between">
+            <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs font-sans shadow-xs flex items-center justify-between">
               <span className="text-stone-900 font-bold">Pro Plan · Golden Pine IV</span>
               <Badge variant="amber" size="sm">Verified Stripe</Badge>
             </div>
           </Card>
 
-          <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-emerald-800">
+          <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-800">
             <span>Stripe · Polar · Lemon Squeezy</span>
             <span className="font-bold">Instant Normalizer</span>
           </div>
@@ -159,18 +159,18 @@ export function LandingBento() {
               <Badge variant="stone" size="sm">
                 Build in Public
               </Badge>
-              <span className="text-xs font-satoshi text-emerald-700 font-bold">Twitter / X Formatted</span>
+              <span className="text-xs font-sans text-emerald-700 font-bold">Twitter / X Formatted</span>
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-satoshi">
+            <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-sans">
               1-Click 3D Share Card &amp; Tweet Drafter
             </h3>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-satoshi">
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-sans">
               Generate numbers-led progress cards with direct WebGL canvas rendering in &lt;10 seconds. Zero AI slop:
             </p>
           </div>
 
-          <Card variant="subtle-inset" className="p-4 font-satoshi text-xs sm:text-sm text-stone-800 space-y-2 mt-2 rounded-2xl">
-            <p className="text-xs sm:text-sm text-stone-700 font-satoshi leading-relaxed">
+          <Card variant="subtle-inset" className="p-4 font-sans text-xs sm:text-sm text-stone-800 space-y-2 mt-2 rounded-2xl">
+            <p className="text-xs sm:text-sm text-stone-700 font-sans leading-relaxed">
               Day 14 of shipping daily on IndieForest.<br />
               • Tier IV (Island Architect · Lvl 12)<br />
               • 4 Active Projects | $1,250/mo MRR | 30d Health: {demoHealth}%
@@ -185,11 +185,11 @@ export function LandingBento() {
               >
                 {copiedText ? "Copied" : "Copy Formatted Post"}
               </Button>
-              <span className="text-[11px] text-stone-500 font-satoshi font-semibold uppercase tracking-wider">280 CHAR COMPLIANT</span>
+              <span className="text-[11px] text-stone-500 font-sans font-semibold uppercase tracking-wider">280 CHAR COMPLIANT</span>
             </div>
           </Card>
 
-          <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-500">
+          <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
             <span>Direct WebGL Compositor</span>
             <span className="font-mono text-xs font-semibold text-emerald-800">indieforest.dev/u/kwakhare5</span>
           </div>
