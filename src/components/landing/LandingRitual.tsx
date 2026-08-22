@@ -46,7 +46,7 @@ export function LandingRitual() {
                 <span className="flex items-center gap-1.5 font-bold font-sans">
                   <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" /> +100 XP
                 </span>
-                <span className="text-stone-700 font-sans text-[11px] font-bold uppercase tracking-wider">TIER II UNLOCKED</span>
+                <Badge variant="amber" size="sm">Tier II (Young)</Badge>
               </div>
             }
             footerIcon={CloudRain}

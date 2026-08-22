@@ -19,6 +19,13 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Complete UI/Design, Typography & Spacing Inconsistency Remediation (`LandingNavbar.tsx`, `LandingRitual.tsx`, `LandingHero.tsx`, `dashboard/page.tsx`, `DashboardGameControls.tsx`, `AddTreeModal.tsx`, `TreeInspectorCard.tsx`, `CabinWarRoomModal.tsx`):**
+    - Standardized all CTA buttons across `LandingNavbar.tsx` from all-caps (`"DASHBOARD"`, `"SIGN IN"`) to standard Title Case (`"Open Dashboard"`, `"Sign In"`).
+    - Replaced raw text status label in `LandingRitual.tsx` with unified design token `<Badge variant="amber" size="sm">Tier II (Young)</Badge>`.
+    - Streamlined dashboard zero-tree empty state card to a single high-contrast `[ 🐙 Connect GitHub Handle ]` primary action.
+    - Updated Modules Popover action label from gardening term `"Plant"` to developer-friendly `"+ Add Project"`.
+    - Retitled `AddTreeModal.tsx` to `"Add Custom / Offline Project"` (`badgeText="Manual Fallback"`).
+    - Normalized metric container padding across `TreeInspectorCard.tsx` and `CabinWarRoomModal.tsx` to `p-3 rounded-xl bg-stone-50 border border-stone-100` and grid gaps to `gap-3`.
   - **Comprehensive Zero-Touch Codebase & HUD Streamlining Purge (`FloatingDock.tsx`, `DashboardTopLeftNav.tsx`, `CampfireFocusModal.tsx`, `TentSabbaticalModal.tsx`, `gallery/`, `logos/`):**
     - Purged manual `Ship Daily` and `Plant` buttons from the floating dock, transforming it into a 100% automated status & proof-of-work command bar (`[ 🔥 7D Streak ] · [ 🌲 Repos ] · [ 💰 MRR ] · [ LVL ] · [ 🚀 Share Proof ]`).
     - Streamlined `DashboardTopLeftNav.tsx` to focus 100% on high-signal Daily Proof-of-Work Quests, removing the cosmetic coin shop tab.

@@ -161,7 +161,7 @@ export function DashboardGameControls({
                   icon={Plus}
                   className="text-[10px] py-1 px-2.5 shadow-xs"
                 >
-                  Plant
+                  + Add Project
                 </Button>
 
                 <button

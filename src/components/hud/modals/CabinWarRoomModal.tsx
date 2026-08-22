@@ -78,7 +78,7 @@ export function CabinWarRoomModal({
         </div>
 
         {/* Dual-Grove Aggregate Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Emerald Grove</span>
             <div className="text-base font-bold text-emerald-800 font-pixel flex items-center gap-1">

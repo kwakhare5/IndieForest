@@ -178,7 +178,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     type="text"
                     value={githubInput}
                     onChange={(e) => setGithubInput(e.target.value)}
-                    placeholder="kwakhare5"
+                    placeholder="octocat"
                     className="w-full pl-24 pr-3 py-2 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs font-mono focus:outline-hidden focus:border-emerald-600 focus:bg-white transition"
                   />
                 </div>

@@ -294,7 +294,7 @@ export function LandingHero() {
                           onClick={handleClaimData}
                           icon={Sparkles}
                         >
-                          Claim This Island
+                          Save to My Island
                         </Button>
                       </div>
                     </SignInButton>
