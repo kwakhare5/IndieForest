@@ -97,9 +97,9 @@ export const useForestStore = create<ForestState>()(
   persist(
     (set, get) => ({
       user: {
-        id: "kwakhare5",
-        username: "kwakhare5",
-        avatarUrl: "https://github.com/kwakhare5.png",
+        id: "",
+        username: "",
+        avatarUrl: "",
         isAuthenticated: false,
       },
 
@@ -107,7 +107,7 @@ export const useForestStore = create<ForestState>()(
       xp: 0,
       totalXp: 0,
 
-      pinecones: 75, // Starting starter bounty
+      pinecones: 0,
       streakDays: 0,
       bestStreak: 0,
       streakShields: 0,

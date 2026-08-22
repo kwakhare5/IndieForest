@@ -6,6 +6,8 @@ import { DashboardTopLeftNav } from "@/components/hud/DashboardTopLeftNav";
 import { DashboardGameControls } from "@/components/hud/DashboardGameControls";
 import { FloatingDock } from "@/components/hud/FloatingDock";
 import { TreeInspectorCard } from "@/components/hud/TreeInspectorCard";
+import { Button } from "@/components/ui/Button";
+import { Github } from "lucide-react";
 
 // On-Demand Dialog Modals
 import { CampfireFocusModal } from "@/components/hud/modals/CampfireFocusModal";
@@ -56,18 +58,12 @@ export default function DashboardPage() {
     checkStreakExpiry();
 
     async function initDashboard() {
-      let targetUsername = "kwakhare5";
-      let targetUserId = "kwakhare5";
-
       if (isLoaded && isSignedIn && clerkUser) {
         const username =
           clerkUser.username ||
           clerkUser.firstName ||
           clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
-          "builder";
-
-        targetUsername = username;
-        targetUserId = clerkUser.id;
+          "";
 
         setUser({
           id: clerkUser.id,
@@ -77,21 +73,19 @@ export default function DashboardPage() {
           avatarUrl: clerkUser.imageUrl,
           isAuthenticated: true,
         });
-      } else if (isLoaded && !isSignedIn) {
-        setUser({
-          id: "kwakhare5",
-          username: "kwakhare5",
-          avatarUrl: "https://github.com/kwakhare5.png",
-          isAuthenticated: false,
-        });
-      }
 
-      // Try loading from Supabase first
-      const hasCloudData = await loadCloudIsland(targetUserId);
-      if (!hasCloudData) {
-        if (trees.length === 0) {
-          await syncGitHubIsland(targetUsername);
-        } else {
+        // Try loading from Supabase first
+        const hasCloudData = await loadCloudIsland(clerkUser.id);
+        if (!hasCloudData && username) {
+          if (trees.length === 0) {
+            await syncGitHubIsland(username);
+          } else {
+            await autoCheckTodayCommits();
+          }
+        }
+      } else {
+        const currentUser = useForestStore.getState().user;
+        if (currentUser.username && currentUser.username !== "guest" && currentUser.username !== "") {
           await autoCheckTodayCommits();
         }
       }
@@ -107,6 +101,7 @@ export default function DashboardPage() {
     autoCheckTodayCommits,
     trees.length,
     checkStreakExpiry,
+    loadCloudIsland,
   ]);
 
   // Global Tactical Keyboard Shortcuts
@@ -147,7 +142,6 @@ export default function DashboardPage() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [triggerQuestProgress]);
-
 
   const handleDeleteTree = (id: string, name: string) => {
     if (confirm(`Are you sure you want to remove "${name}" from your island?`)) {
@@ -234,6 +228,44 @@ export default function DashboardPage() {
             onToggleTimeOfDay={toggleTimeOfDay}
           />
 
+          {/* Empty State Call to Action (When zero trees exist) */}
+          {trees.length === 0 && (
+            <div className="fixed bottom-24 inset-x-0 z-40 flex justify-center pointer-events-none px-4">
+              <div className="pointer-events-auto p-1.5 rounded-2xl glass-dock shadow-xl max-w-sm w-full animate-in fade-in slide-in-from-bottom-3 duration-300">
+                <div className="p-3.5 rounded-xl porcelain-surface text-center space-y-2">
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs font-bold text-stone-900 font-sans">
+                      Your Island is Ready to Sprout
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 font-sans leading-relaxed">
+                    Connect your GitHub to sprout your public repositories into pines, or plant your first project manually.
+                  </p>
+                  <div className="flex items-center justify-center gap-2 pt-1">
+                    <Button
+                      variant="emerald"
+                      size="sm"
+                      onClick={() => setIsSettingsModalOpen(true)}
+                      icon={Github}
+                      className="text-xs"
+                    >
+                      Connect GitHub
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsAddTreeModalOpen(true)}
+                      className="text-xs"
+                    >
+                      + Plant Project
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Bottom-Center: Command Center Resting Action Dock */}
           <FloatingDock
             level={level}
@@ -248,7 +280,6 @@ export default function DashboardPage() {
             }}
             onOpenAddTree={() => setIsAddTreeModalOpen(true)}
           />
-
         </>
       )}
 
@@ -308,4 +339,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

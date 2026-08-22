@@ -19,6 +19,11 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **100% Zero-Fake Data Core Architecture Purge (`useForestStore.ts`, `github.ts`, `SettingsModal.tsx`, `dashboard/page.tsx`, `curatedBuilders.ts`):**
+    - Purged all hardcoded mock users, starter pinecones, and fake fallback profiles (`curatedBuilders.ts` deleted).
+    - Initialized store state to pristine, authentic defaults (`username: ""`, `pinecones: 0`, `trees: []`, `streakDays: 0`, `xp: 0`).
+    - Standardized GitHub API fallback and 403 handlers to return pure zero-state island profiles rather than fabricating mock commits or fake trees.
+    - Added an empty-state onboarding card to the dashboard (`[ 🐙 Connect GitHub or Plant Your First Project ]`) guiding new builders to sprout their real repositories.
   - **Universal Button Component Normalization & Active State Fix (`Button.tsx`, `DashboardTopLeftNav.tsx`, `DashboardGameControls.tsx`):**
     - Fixed missing `dark` variant background class in `Button.tsx` (`bg-stone-900 text-white font-bold border border-stone-950`), resolving the active state issue where toggled Quests & Modules trigger buttons became transparent on click.
     - Standardized all button variants (`emerald`, `amber`, `dark`, `outline`, `ghost`, `danger`) to share identical height scales, padding, border radii, and `active:scale-[0.97]` tactile press physics.

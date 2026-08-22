@@ -79,12 +79,12 @@ describe("GitHub Ingestion & Gamification Stress-Testing", () => {
   });
 
   describe("Edge Case 5: Rate-Limited Fallback Simulation", () => {
-    it("returns resilient, authentic fallback state when GitHub API responds 403", () => {
+    it("returns resilient, clean zero-state profile when GitHub API responds 403", () => {
       const fallback = getFallbackIslandProfile("shadow_dev");
       expect(fallback.username).toBe("shadow_dev");
-      expect(fallback.trees.length).toBeGreaterThan(0);
-      expect(fallback.streakDays).toBeGreaterThan(0);
-      expect(fallback.level).toBeGreaterThanOrEqual(1);
+      expect(fallback.trees.length).toBe(0);
+      expect(fallback.streakDays).toBe(0);
+      expect(fallback.level).toBe(1);
     });
   });
 
