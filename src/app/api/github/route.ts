@@ -75,7 +75,14 @@ export async function GET(req: NextRequest) {
       url: c.html_url,
     }));
 
-    return NextResponse.json({ success: true, commits });
+    return NextResponse.json(
+      { success: true, commits },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=120, stale-while-revalidate=300",
+        },
+      }
+    );
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch GitHub commits";
     return NextResponse.json(
