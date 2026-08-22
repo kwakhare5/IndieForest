@@ -15,10 +15,12 @@ import {
   Plus,
   GitCommit,
   TrendingUp,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
+import { useForestStore } from "@/store/useForestStore";
 import type { TimeOfDay, TreeData } from "@/types/game";
 
 interface DashboardGameControlsProps {
@@ -38,6 +40,9 @@ export function DashboardGameControls({
   onDeleteTree,
   onToggleTimeOfDay,
 }: DashboardGameControlsProps) {
+  const { isLoaded, isSignedIn } = useUser();
+  const user = useForestStore((s) => s.user);
+
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isModulesPopoverOpen, setIsModulesPopoverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,11 +57,11 @@ export function DashboardGameControls({
   const getTimeIcon = () => {
     switch (timeOfDay) {
       case "sunset":
-        return <Sunset className="w-4 h-4 text-amber-600" />;
+        return <Sunset className="w-3.5 h-3.5 text-amber-600" />;
       case "night":
-        return <Moon className="w-4 h-4 text-indigo-400" />;
+        return <Moon className="w-3.5 h-3.5 text-indigo-400" />;
       default:
-        return <Sun className="w-4 h-4 text-amber-500" />;
+        return <Sun className="w-3.5 h-3.5 text-amber-500" />;
     }
   };
 
@@ -68,9 +73,9 @@ export function DashboardGameControls({
 
   return (
     <div className="fixed top-4 right-5 z-40 flex flex-col items-end font-sans pointer-events-auto select-none">
-      {/* 1. Universal Double-Bezel Landing Page Capsule */}
+      {/* 1. Symmetrical Double-Bezel Capsule */}
       <div className="p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
-        <div className="px-2 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
+        <div className="px-2.5 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
           
           {/* Lighting Mode Toggle */}
           {onToggleTimeOfDay && (
@@ -79,7 +84,7 @@ export function DashboardGameControls({
                 sound.playClick();
                 onToggleTimeOfDay();
               }}
-              className="p-2 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
+              className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
               title={`Lighting: ${timeOfDay.toUpperCase()}`}
             >
               {getTimeIcon()}
@@ -89,13 +94,15 @@ export function DashboardGameControls({
           {/* Lo-Fi Ambient Sound Toggle */}
           <button
             onClick={toggleSound}
-            className="p-2 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
+            className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
             title={isAudioMuted ? "Unmute Campfire Lo-Fi" : "Mute Campfire Lo-Fi"}
           >
-            {isAudioMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-emerald-700" />}
+            {isAudioMuted ? <VolumeX className="w-3.5 h-3.5 text-stone-400" /> : <Volume2 className="w-3.5 h-3.5 text-emerald-700" />}
           </button>
 
-          {/* Modules Inventory Trigger */}
+          <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
+
+          {/* Connected Modules Trigger */}
           <Button
             variant={isModulesPopoverOpen ? "dark" : "outline"}
             size="sm"
@@ -113,21 +120,34 @@ export function DashboardGameControls({
             </span>
           </Button>
 
+          <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
+
           {/* Settings Modal Button */}
           <button
             onClick={() => {
               sound.playClick();
               onOpenSettings();
             }}
-            className="p-2 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
+            className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
             title="Settings & Webhook Config"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-3.5 h-3.5" />
           </button>
 
-          {/* Clerk User Avatar */}
-          <div className="pl-0.5 pr-0.5">
-            <UserButton />
+          {/* Profile Avatar / UserButton Container (Guaranteed Fixed Dimensions & Alignment) */}
+          <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden shrink-0 border border-stone-200/80 bg-stone-100">
+            {isLoaded && isSignedIn ? (
+              <UserButton />
+            ) : user.username ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={user.avatarUrl || `https://github.com/${user.username}.png`}
+                alt={user.username}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User className="w-3.5 h-3.5 text-stone-500" />
+            )}
           </div>
         </div>
       </div>
@@ -144,8 +164,8 @@ export function DashboardGameControls({
                   <LayoutGrid className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-stone-950 font-sans">Active Modules</h3>
-                  <span className="text-[10px] text-stone-500 font-sans block">{trees.length} Island Projects</span>
+                  <h3 className="text-xs font-bold text-stone-950 font-sans">Active Projects</h3>
+                  <span className="text-[10px] text-stone-500 font-sans block">{trees.length} Connected Repos</span>
                 </div>
               </div>
 
