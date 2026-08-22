@@ -13,7 +13,7 @@ import { Windmill } from "./models/Windmill";
 import { HarborPier } from "./models/HarborPier";
 import { Lighthouse } from "./models/Lighthouse";
 
-interface CampPropsComponentProps {
+interface CampsiteProps {
   streakDays?: number;
   level?: number;
   streakShields?: number;
@@ -24,7 +24,7 @@ interface CampPropsComponentProps {
   drought?: boolean;
 }
 
-export function CampProps({
+export function Campsite({
   streakDays = 1,
   level = 1,
   timeOfDay = "day",
@@ -32,7 +32,7 @@ export function CampProps({
   onClickTent,
   onClickCabin,
   drought = false,
-}: CampPropsComponentProps) {
+}: CampsiteProps) {
   const isNight = timeOfDay === "night";
   const isSunset = timeOfDay === "sunset";
 

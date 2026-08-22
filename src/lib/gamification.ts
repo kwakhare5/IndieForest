@@ -12,7 +12,6 @@ import type {
   ForestHealth,
   Rank,
   DailyQuest,
-  CampShopItem,
 } from "@/types/game";
 
 export const RANK_TIERS: Rank[] = [
@@ -30,7 +29,6 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
     description: "Push at least 1 verified commit to grow your shipping pines.",
     category: "shipping",
     xpReward: 100,
-    pineconeReward: 10,
     progress: 0,
     target: 1,
     isCompleted: false,
@@ -42,7 +40,6 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
     description: "Export your 1200×675 3D share card or copy your progress tweet.",
     category: "distribution",
     xpReward: 50,
-    pineconeReward: 15,
     progress: 0,
     target: 1,
     isCompleted: false,
@@ -54,7 +51,6 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
     description: "Receive a Stripe/Lemon Squeezy sale or add a revenue project.",
     category: "revenue",
     xpReward: 75,
-    pineconeReward: 20,
     progress: 0,
     target: 1,
     isCompleted: false,
@@ -66,59 +62,10 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
     description: "Play campfire ambient audio or explore a peer builder's island.",
     category: "social",
     xpReward: 30,
-    pineconeReward: 5,
     progress: 0,
     target: 1,
     isCompleted: false,
     isClaimed: false,
-  },
-];
-
-export const CAMP_SHOP_CATALOG: CampShopItem[] = [
-  {
-    id: "night-lanterns",
-    name: "Ambient Night Lanterns",
-    description: "Low-poly amber lanterns that softly illuminate the central stone walkway at dusk and night.",
-    price: 50,
-    category: "decor",
-    isUnlocked: true,
-    iconName: "Lamp",
-  },
-  {
-    id: "startup-flagpole",
-    name: "Founder Startup Flagpole",
-    description: "A gleaming silver mast with an emerald silk flag hoisted proudly on the North-West bluff.",
-    price: 100,
-    category: "decor",
-    isUnlocked: true,
-    iconName: "Flag",
-  },
-  {
-    id: "lofi-synth",
-    name: "Procedural Lo-Fi Synthesizer",
-    description: "Unlocks procedural Web Audio deep-work soundscapes (Campfire crackle & pink noise).",
-    price: 150,
-    category: "audio",
-    isUnlocked: true,
-    iconName: "Volume2",
-  },
-  {
-    id: "autumn-biome",
-    name: "Autumn Amber Biome",
-    description: "Transforms your diorama into warm amber, pumpkin orange, and golden maple foliage.",
-    price: 250,
-    category: "biome",
-    isUnlocked: false,
-    iconName: "Sparkles",
-  },
-  {
-    id: "emergency-shield",
-    name: "Emergency Streak Shield",
-    description: "Burnout protection item defending against rest days (Max 2 banked shields).",
-    price: 300,
-    category: "utility",
-    isUnlocked: false,
-    iconName: "Shield",
   },
 ];
 

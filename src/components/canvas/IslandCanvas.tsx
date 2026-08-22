@@ -4,13 +4,13 @@ import React, { Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
-import { ModularIsland } from "./ModularIsland";
-import { BlockTree } from "./BlockTree";
-import { CampProps } from "./CampProps";
-import { WeatherSystem } from "./WeatherSystem";
+import { Island } from "./Island";
+import { IslandTree } from "./IslandTree";
+import { Campsite } from "./Campsite";
+import { Weather } from "./Weather";
 import type { TreeData, TimeOfDay } from "@/types/game";
 
-interface ForestCanvasProps {
+interface IslandCanvasProps {
   trees: TreeData[];
   level?: number;
   streakDays?: number;
@@ -29,7 +29,7 @@ interface ForestCanvasProps {
 }
 
 // -----------------------------------------------------------------------------
-// Flattering Low-Pitch Isometric Parallax Rig & Smooth Lerp Zoom Engine
+// Low-Pitch Isometric Parallax Rig & Smooth Lerp Zoom Engine
 // -----------------------------------------------------------------------------
 function IsometricCameraRig({
   enabled = true,
@@ -49,7 +49,7 @@ function IsometricCameraRig({
 
     if (!enabled) return;
 
-    // Subtle, gentle isometric tilt without displacing the diorama from under the pointer
+    // Subtle isometric tilt
     const targetX = 14.5 + pointer.x * 0.15;
     const targetZ = 14.5 - pointer.y * 0.15;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.05);
@@ -60,7 +60,7 @@ function IsometricCameraRig({
   return null;
 }
 
-export function ForestCanvas({
+export function IslandCanvas({
   trees = [],
   level = 1,
   streakDays = 1,
@@ -76,7 +76,7 @@ export function ForestCanvas({
   interactive = true,
   className = "w-full h-full min-h-[420px]",
   zoomLevel = 1,
-}: ForestCanvasProps) {
+}: IslandCanvasProps) {
   const hasRevenueTrees = trees.some((t) => t.type === "revenue" || (t.mrr && t.mrr > 0));
 
   // Dynamic Lighting Palette based on Time of Day
@@ -137,14 +137,14 @@ export function ForestCanvas({
             castShadow
           />
 
-          {/* Soft Sky Blue/Rose Rim Light */}
+          {/* Soft Rim Light */}
           <directionalLight
             position={[-10, 10, -10]}
             intensity={rimIntensity}
             color={rimColor}
           />
 
-          {/* 2. Soft Studio Contact Shadows (Positioned below the floating island keel) */}
+          {/* 2. Soft Studio Contact Shadows */}
           <ContactShadows
             position={[0, -0.48, 0]}
             opacity={drought ? 0.25 : isNight ? 0.6 : 0.45}
@@ -153,12 +153,12 @@ export function ForestCanvas({
             far={6}
           />
 
-          {/* 3. Progressive 1:1 Symmetrical Square Modular Island */}
-          <ModularIsland level={level} drought={drought} />
+          {/* 3. 1:1 Symmetrical Square Island Base */}
+          <Island level={level} drought={drought} />
 
-          {/* 4. 3D Trees (Dual-Grove Emerald Shipping & Golden Revenue) */}
+          {/* 4. 3D Trees (Shipping & Revenue) */}
           {trees.map((tree) => (
-            <BlockTree
+            <IslandTree
               key={tree.id}
               tree={tree}
               isSelected={selectedTreeId === tree.id}
@@ -167,8 +167,8 @@ export function ForestCanvas({
             />
           ))}
 
-          {/* 5. Milestone Campsite Props & Living Wildlife */}
-          <CampProps
+          {/* 5. Milestone Campsite Props & Wildlife */}
+          <Campsite
             streakDays={streakDays}
             level={level}
             streakShields={streakShields}
@@ -179,8 +179,8 @@ export function ForestCanvas({
             drought={drought}
           />
 
-          {/* 6. Dynamic Weather & Particle FX */}
-          <WeatherSystem
+          {/* 6. Dynamic Weather & Particles */}
+          <Weather
             drought={drought}
             isRaining={isRaining}
             hasRevenue={hasRevenueTrees}

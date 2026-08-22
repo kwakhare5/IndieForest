@@ -19,6 +19,13 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Clean Codebase Reorganization & Human-Centric Renaming (Zero AI Slop):**
+    - Replaced artificial metaphors and buzzwords with developer-native file names across all layers:
+      - 3D Canvas: `IslandCanvas.tsx`, `Island.tsx`, `IslandTree.tsx`, `Campsite.tsx`, `Weather.tsx`.
+      - HUD Overlays: `DashboardNav.tsx`, `DashboardControls.tsx`, `DashboardDock.tsx`, `TreeCard.tsx`.
+      - Dialog Modals: `AddProjectModal.tsx`, `OverviewModal.tsx`, `FocusModal.tsx`, `RestShieldModal.tsx`, `ShareModal.tsx`.
+    - Safely purged 14 obsolete files with zero broken references.
+    - Achieved 100% test pass rate (53/53 Vitest), 0 ESLint warnings, and flawless Next.js Turbopack production build.
   - **SegmentedControl Broken Multi-Line Wrapping & Tab Pill Overflow Fix (`SegmentedControl.tsx`, `SettingsModal.tsx`, `ShareCardModal.tsx`, `DashboardGameControls.tsx`):**
     - Fixed the broken UI where verbose tab labels (e.g. *"Revenue Webhook"*) wrapped onto two lines inside pills, exploding the container height and throwing icons out of alignment.
     - Added `whitespace-nowrap`, `truncate`, `overflow-hidden`, and fixed height (`h-7.5` sm / `h-9` md) to `SegmentedControl.tsx`.

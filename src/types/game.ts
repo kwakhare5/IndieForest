@@ -154,20 +154,78 @@ export interface DailyQuest {
   description: string;
   category: "shipping" | "distribution" | "revenue" | "social";
   xpReward: number;
-  pineconeReward: number;
   progress: number;
   target: number;
   isCompleted: boolean;
   isClaimed: boolean;
 }
 
-export interface CampShopItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: "decor" | "audio" | "biome" | "utility";
-  isUnlocked: boolean;
-  iconName?: string;
+export interface ForestState {
+  user: {
+    id: string;
+    username: string;
+    avatarUrl: string;
+    isAuthenticated: boolean;
+    githubRepo?: string;
+  };
+
+  level: number;
+  xp: number;
+  totalXp: number;
+
+  streakDays: number;
+  bestStreak: number;
+  streakShields: number;
+  lastShipDate: string | null;
+  drought: boolean;
+
+  timeOfDay: TimeOfDay;
+  dailyQuests: DailyQuest[];
+
+  trees: TreeData[];
+  shipHistory: ShipLog[];
+
+  isAutoSyncing: boolean;
+  lastSyncTime: string | null;
+
+  setUser: (userData: Partial<ForestState["user"]>) => void;
+  loginUser: (userData: Partial<ForestState["user"]>) => void;
+  logoutUser: () => void;
+  setGithubRepo: (repo: string) => void;
+  setTimeOfDay: (time: TimeOfDay) => void;
+  toggleTimeOfDay: () => void;
+  claimQuestReward: (questId: QuestId) => void;
+  triggerQuestProgress: (questId: QuestId, amount?: number) => void;
+  shipToday: (
+    message: string,
+    source?: "github" | "manual",
+    proofUrl?: string,
+    repo?: string
+  ) => void;
+  addTree: (
+    name: string,
+    mrr?: number,
+    tier?: GrowthTier,
+    type?: TreeType
+  ) => void;
+  removeTree: (id: string) => void;
+  updateTreeTier: (id: string, tier: GrowthTier) => void;
+  checkStreakExpiry: () => void;
+  resetIsland: () => void;
+  syncGitHubIsland: (username: string) => Promise<void>;
+  autoCheckTodayCommits: () => Promise<boolean>;
+  syncCloudIsland: () => Promise<void>;
+  loadCloudIsland: (userId: string) => Promise<boolean>;
+  mergeCloudData: (data: {
+    level?: number;
+    xp?: number;
+    totalXp?: number;
+    streakDays?: number;
+    bestStreak?: number;
+    streakShields?: number;
+    trees?: TreeData[];
+    shipHistory?: ShipLog[];
+  }) => void;
 }
+
 

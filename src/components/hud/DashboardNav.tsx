@@ -12,9 +12,10 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { sound } from "@/lib/sound";
-import { useForestStore, QuestId } from "@/store/useForestStore";
+import { useForestStore } from "@/store/useForestStore";
+import type { QuestId, DailyQuest } from "@/types/game";
 
-interface DashboardTopLeftNavProps {
+interface DashboardNavProps {
   backHref?: string;
   backLabel?: string;
   unclaimedQuestsCount?: number;
@@ -22,13 +23,13 @@ interface DashboardTopLeftNavProps {
   totalQuestsCount?: number;
 }
 
-export function DashboardTopLeftNav({
+export function DashboardNav({
   backHref = "/",
   backLabel = "Home",
   unclaimedQuestsCount = 0,
   completedQuestsCount = 0,
   totalQuestsCount = 4,
-}: DashboardTopLeftNavProps) {
+}: DashboardNavProps) {
   const [isQuestsPopoverOpen, setIsQuestsPopoverOpen] = useState(false);
 
   const dailyQuests = useForestStore((s) => s.dailyQuests);
@@ -41,7 +42,7 @@ export function DashboardTopLeftNav({
 
   return (
     <div className="fixed top-4 left-5 z-40 flex flex-col font-sans pointer-events-auto select-none">
-      {/* 1. Universal Double-Bezel Landing Page Capsule */}
+      {/* 1. Universal Double-Bezel Capsule */}
       <div className="p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
         <div className="px-2.5 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
           
@@ -84,7 +85,7 @@ export function DashboardTopLeftNav({
         </div>
       </div>
 
-      {/* 2. Floating Tactile Porcelain Quests Popover (Flat, Breathable, Zero Box-Soup) */}
+      {/* 2. Floating Tactile Porcelain Quests Popover */}
       {isQuestsPopoverOpen && (
         <div className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm p-1.5 rounded-[2rem] glass-dock shadow-2xl origin-top-left animate-in fade-in zoom-in-95 duration-150 z-50">
           <div className="p-4 sm:p-5 rounded-[calc(2rem-0.375rem)] porcelain-surface flex flex-col max-h-[75vh] overflow-hidden">
@@ -120,7 +121,7 @@ export function DashboardTopLeftNav({
 
             {/* Flat Scrollable List Rows */}
             <div className="flex-1 overflow-y-auto space-y-3 pt-3 pr-1 custom-scrollbar">
-              {dailyQuests.map((quest) => (
+              {dailyQuests.map((quest: DailyQuest) => (
                 <div key={quest.id} className="pb-3 border-b border-stone-100 last:border-0 last:pb-0 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <div>

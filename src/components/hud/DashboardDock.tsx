@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { sound } from "@/lib/sound";
 
-interface FloatingDockProps {
+interface DashboardDockProps {
   level: number;
   streakDays: number;
   totalMrr: number;
@@ -18,23 +18,19 @@ interface FloatingDockProps {
   onOpenShare?: () => void;
 }
 
-/**
- * FloatingDock — The Zero-Touch Command Center Status & Proof-of-Work Exporter.
- * Monolithic double-bezel porcelain bar with live stats & 1-click Twitter/README card export.
- */
-export function FloatingDock({
+export function DashboardDock({
   level,
   streakDays,
   totalMrr,
   activeTreesCount,
   onOpenShare,
-}: FloatingDockProps) {
+}: DashboardDockProps) {
   return (
     <div className="fixed bottom-6 inset-x-0 z-40 flex flex-col items-center px-4 pointer-events-none font-sans select-none">
       <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-xl transition-all duration-200">
         <div className="px-3 py-1.5 rounded-full porcelain-surface flex items-center gap-2 sm:gap-3">
           
-          {/* 1. Burnished Amber Streak Pill */}
+          {/* 1. Amber Streak Pill */}
           <div
             className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/90 text-amber-900 text-xs font-bold font-pixel shadow-xs"
             title={`${streakDays} Consecutive Shipping Days`}
@@ -45,10 +41,10 @@ export function FloatingDock({
 
           <div className="w-[1px] h-4 bg-stone-200 my-auto" />
 
-          {/* 2. Connected Repositories / Shipping Grove Count */}
+          {/* 2. Connected Repositories */}
           <div
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-700 font-sans"
-            title={`${activeTreesCount} Active Connected Modules`}
+            title={`${activeTreesCount} Active Connected Projects`}
           >
             <Trees className="w-3.5 h-3.5 text-emerald-600" />
             <span className="font-bold text-stone-900">{activeTreesCount}</span>
@@ -68,7 +64,7 @@ export function FloatingDock({
           {/* 4. Island Progression Level */}
           <div
             className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-600 font-sans font-pixel"
-            title={`Builder Progression Level ${level}`}
+            title={`Builder Level ${level}`}
           >
             <span>LVL</span>
             <span className="font-bold text-stone-900">{level}</span>
@@ -76,7 +72,7 @@ export function FloatingDock({
 
           <div className="w-[1px] h-4 bg-stone-200 my-auto" />
 
-          {/* 5. 1-Click Proof-of-Work Share Action */}
+          {/* 5. 1-Click Share Action */}
           <Button
             variant="emerald"
             size="sm"
@@ -86,7 +82,7 @@ export function FloatingDock({
             }}
             icon={Share2}
             className="font-bold shadow-xs active:scale-95 transition-transform text-xs"
-            title="Export 1200×675 3D Share Card & Tweet (Press S)"
+            title="Export 3D Share Card & Proof (Press S)"
           >
             Share Proof
           </Button>

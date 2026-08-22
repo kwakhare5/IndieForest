@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/Button";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import confetti from "canvas-confetti";
 
-interface AddTreeModalProps {
+interface AddProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
+export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
   const addTree = useForestStore((s) => s.addTree);
-  const [treeType, setTreeType] = useState<"shipping" | "revenue">("shipping");
+  const [projectType, setProjectType] = useState<"shipping" | "revenue">("shipping");
   const [name, setName] = useState("");
   const [mrr, setMrr] = useState("29");
 
@@ -23,7 +23,7 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
     e.preventDefault();
     if (!name.trim()) return;
 
-    if (treeType === "shipping") {
+    if (projectType === "shipping") {
       addTree(name.trim(), 0, "sapling", "shipping");
       confetti({
         particleCount: 50,
@@ -50,46 +50,46 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Add Custom / Offline Project"
+      title="Add Project"
       badgeText="Manual Fallback"
       icon={Trees}
       maxWidth="sm"
       position="bottom-center"
     >
       <form onSubmit={handleSubmit} className="space-y-3.5 font-sans">
-        {/* Track Switcher */}
+        {/* Project Type Switcher */}
         <SegmentedControl
-          value={treeType}
-          onChange={(val) => setTreeType(val as "shipping" | "revenue")}
+          value={projectType}
+          onChange={(val) => setProjectType(val as "shipping" | "revenue")}
           size="sm"
           options={[
-            { value: "shipping", label: "Shipping Pine", icon: GitBranch },
-            { value: "revenue", label: "Revenue Oak", icon: TrendingUp },
+            { value: "shipping", label: "Code Repo", icon: GitBranch },
+            { value: "revenue", label: "Revenue", icon: TrendingUp },
           ]}
         />
 
         {/* Project Name Input */}
         <div>
           <label className="text-xs font-semibold text-stone-800 mb-1 block">
-            {treeType === "shipping" ? "Repository or Project Name" : "Customer or Product Name"}
+            {projectType === "shipping" ? "Repository or Project Name" : "Customer or Product Name"}
           </label>
           <input
             type="text"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder={treeType === "shipping" ? "e.g. Auth Engine MVP" : "e.g. Acme Pro Plan"}
+            placeholder={projectType === "shipping" ? "e.g. Auth Engine MVP" : "e.g. Acme Pro Plan"}
             className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white transition"
           />
           <p className="text-[11px] text-stone-500 mt-1">
-            {treeType === "shipping"
+            {projectType === "shipping"
               ? "Grows on the West grove as you ship commits and daily milestones."
               : "Sprouts on the East grove representing recurring revenue."}
           </p>
         </div>
 
         {/* MRR Input (Only for Revenue) */}
-        {treeType === "revenue" && (
+        {projectType === "revenue" && (
           <div>
             <label className="text-xs font-semibold text-stone-800 mb-1 block">
               Monthly Recurring Revenue ($/mo)
@@ -111,11 +111,11 @@ export function AddTreeModal({ isOpen, onClose }: AddTreeModalProps) {
         {/* Submit Button */}
         <Button
           type="submit"
-          variant={treeType === "shipping" ? "emerald" : "dark"}
+          variant={projectType === "shipping" ? "emerald" : "dark"}
           size="md"
           className="w-full mt-2 justify-center font-bold text-xs"
         >
-          {treeType === "shipping" ? "Sprout Shipping Pine" : "Sprout Revenue Oak"}
+          {projectType === "shipping" ? "Add Code Project" : "Add Revenue Project"}
         </Button>
       </form>
     </Modal>

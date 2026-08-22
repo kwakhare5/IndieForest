@@ -16,8 +16,8 @@ import { getRankTitle } from "@/lib/gamification";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { IslandCanvas } from "@/components/canvas/IslandCanvas";
 import { GuestbookModal } from "@/components/hud/modals/GuestbookModal";
-import { ForestCanvas } from "@/components/canvas/ForestCanvas";
 import { GitHubIslandProfile } from "@/lib/github";
 import { GuestbookEntry } from "@/types/game";
 import { sound } from "@/lib/sound";
@@ -170,7 +170,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
           className="p-2 sm:p-4 rounded-3xl overflow-hidden border border-stone-300/80 shadow-xl bg-gradient-to-b from-[#f5f0ea] to-[#ece7de] relative"
         >
           <div className="w-full h-[460px] rounded-2xl overflow-hidden relative">
-            <ForestCanvas
+            <IslandCanvas
               trees={trees}
               level={level}
               streakDays={streakDays}

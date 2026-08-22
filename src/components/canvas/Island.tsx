@@ -2,12 +2,12 @@
 
 import React, { useMemo } from "react";
 
-interface ModularIslandProps {
+interface IslandProps {
   level?: number;
   drought?: boolean;
 }
 
-export function ModularIsland({ level = 1, drought = false }: ModularIslandProps) {
+export function Island({ level = 1, drought = false }: IslandProps) {
   const grassColor = drought ? "#78716c" : "#10b981";
   const mountainGrassColor = drought ? "#6b645c" : "#059669";
   const baseColor = drought ? "#57534e" : "#78350f";

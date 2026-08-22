@@ -39,7 +39,14 @@ export function GuestbookModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`@${targetUsername}'s Campsite Guestbook`}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`@${targetUsername}'s Guestbook`}
+      badgeText="Campsite Bulletin"
+      icon={Send}
+      maxWidth="md"
+    >
       <div className="space-y-4 font-sans">
         
         {/* Header Description */}
@@ -76,7 +83,7 @@ export function GuestbookModal({
               placeholder="Your Name / @handle"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
-              className="p-2 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans"
+              className="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:bg-white focus:border-emerald-500 transition font-sans"
             />
             <input
               type="text"
@@ -84,7 +91,7 @@ export function GuestbookModal({
               value={noteMessage}
               onChange={(e) => setNoteMessage(e.target.value)}
               maxLength={120}
-              className="sm:col-span-2 p-2 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans"
+              className="sm:col-span-2 p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:bg-white focus:border-emerald-500 transition font-sans"
             />
           </div>
 

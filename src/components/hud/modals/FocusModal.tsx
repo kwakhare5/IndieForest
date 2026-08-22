@@ -6,19 +6,20 @@ import { Button } from "@/components/ui/Button";
 import { Flame, Volume2, VolumeX, Sparkles, CheckCircle2 } from "lucide-react";
 import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
+import type { ShipLog } from "@/types/game";
 
-interface CampfireFocusModalProps {
+interface FocusModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps) {
+export function FocusModal({ isOpen, onClose }: FocusModalProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const streakDays = useForestStore((s) => s.streakDays);
   const shipHistory = useForestStore((s) => s.shipHistory);
 
   const todayStr = new Date().toISOString().split("T")[0];
-  const todayShip = shipHistory.find((s) => s.date.startsWith(todayStr));
+  const todayShip = shipHistory.find((s: ShipLog) => s.date.startsWith(todayStr));
 
   const toggleCampfireAudio = () => {
     const active = sound.toggleCampfireAmbiance();
@@ -29,8 +30,8 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Campsite Deep Work & Ambiance"
-      badgeText="Day 3+ Milestone"
+      title="Focus Station & Ambiance"
+      badgeText="Campfire Milestone"
       icon={Flame}
       maxWidth="md"
     >
@@ -43,10 +44,10 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
             </div>
             <div>
               <span className="font-bold text-xs text-stone-900 font-sans block">
-                Milestone Campfire
+                Campfire Focus
               </span>
               <span className="text-[10px] text-stone-400 font-sans">
-                {streakDays > 0 ? `${streakDays}-Day Shipping Streak Active` : "Daily Deep Work Station"}
+                {streakDays > 0 ? `${streakDays}-day streak active` : "Deep work station"}
               </span>
             </div>
           </div>
@@ -66,7 +67,7 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
         <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 space-y-2">
           <div className="flex items-center justify-between">
             <span className="font-bold text-xs text-stone-900 font-sans">
-              Today&apos;s Automated Shipping Status
+              Today&apos;s Shipping Status
             </span>
             {todayShip ? (
               <span className="flex items-center gap-1 text-emerald-700 text-[11px] font-bold">
@@ -82,14 +83,8 @@ export function CampfireFocusModal({ isOpen, onClose }: CampfireFocusModalProps)
           <p className="text-[11px] text-stone-500 leading-relaxed font-sans">
             {todayShip
               ? `Auto-detected from git: "${todayShip.message}"`
-              : "Whenever you run git push in your terminal, IndieForest automatically detects your commits, levels up your pine trees, and advances your streak."}
+              : "When you push commits to GitHub, IndieForest automatically detects your activity, grows your trees, and extends your streak."}
           </p>
-        </div>
-
-        {/* Ambient Coding Audio Description */}
-        <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-stone-500 text-[11px]">
-          <span>Procedural Web Audio synthesizer</span>
-          <span className="font-semibold text-stone-700">60Hz Campfire & Pink Noise</span>
         </div>
       </div>
     </Modal>

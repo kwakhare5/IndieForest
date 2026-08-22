@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { ForestCanvas } from "@/components/canvas/ForestCanvas";
+import { IslandCanvas } from "@/components/canvas/IslandCanvas";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import { GitHubIslandProfile } from "@/lib/github";
@@ -246,7 +246,7 @@ export function LandingHero() {
         <div className="lg:col-span-6 relative">
           <div className="relative w-full aspect-square max-w-lg mx-auto p-2 rounded-[2.5rem] glass-dock shadow-2xl overflow-hidden">
             <div className="w-full h-full rounded-[2rem] porcelain-surface overflow-hidden relative">
-              <ForestCanvas
+              <IslandCanvas
                 trees={displayedTrees}
                 level={displayLevel}
                 streakDays={displayStreak}
