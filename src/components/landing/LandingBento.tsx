@@ -9,8 +9,8 @@ import { LandingSectionHeader } from "./LandingSectionHeader";
 import { Shield, TrendingUp, Check, Copy } from "lucide-react";
 
 const SHIELD_OPTIONS: SegmentedOption<"armed" | "rest">[] = [
-  { value: "armed", label: "Shields Armed" },
-  { value: "rest", label: "Sabbatical Mode" },
+  { value: "armed", label: "Shields Active" },
+  { value: "rest", label: "Rest Day" },
 ];
 
 export function LandingBento() {
@@ -38,9 +38,9 @@ export function LandingBento() {
   return (
     <section id="bento" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-sans">
       <LandingSectionHeader
-        badge="Anti-Burnout & Distribution"
-        title="Engineered for sustainable discipline."
-        description="Traditional streak apps induce anxiety and guilt. IndieForest is built around healthy momentum, rest protection, and frictionless social proof."
+        badge="Built for Real Builders"
+        title="Sustainable shipping without burnout."
+        description="Traditional streak trackers make you feel guilty when life happens. IndieForest protects your momentum with rest shields and rolling consistency."
         className="mb-14"
       />
 
@@ -49,20 +49,20 @@ export function LandingBento() {
         <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
           <div>
             <span className="font-sans text-[11px] uppercase tracking-wider font-bold text-emerald-700 block mb-1">
-              ANTI-GUILT RETENTION
+              ZERO-GUILT CONSISTENCY
             </span>
             <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-sans">
-              Rolling 30-Day Forest Health %
+              Rolling 30-Day Island Health
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-sans">
-              Missed a day? Your past work is never erased. Your island health reflects active shipping days in the past 30 days, allowing quick recovery.
+              Missed a day? Your past work is never erased. Your island health shows your active days across the past 30 days so you can bounce back quickly.
             </p>
           </div>
 
           <div className="mt-5 space-y-3 font-sans">
             <Card variant="subtle-inset" className="p-4 rounded-xl space-y-2">
               <div className="flex items-center justify-between text-xs sm:text-sm font-sans">
-                <span className="text-stone-600 font-medium">Simulate 30-Day Activity:</span>
+                <span className="text-stone-600 font-medium">30-Day Activity Ratio:</span>
                 <span className={`font-bold font-pixel ${currentHealth.color}`}>
                   {demoHealth}% ({currentHealth.label})
                 </span>
@@ -79,8 +79,8 @@ export function LandingBento() {
           </div>
 
           <div className="pt-4 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
-            <span>Welcome-Back Rain triggers upon return</span>
-            <span className="font-semibold text-emerald-800">Zero broken-streak shaming</span>
+            <span>Welcome-Back Rain revives dormant pines</span>
+            <span className="font-semibold text-emerald-800">Zero streak shaming</span>
           </div>
         </Card>
 
@@ -92,10 +92,10 @@ export function LandingBento() {
             </div>
 
             <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-sans">
-              Streak Shield Vault &amp; Rest Mode
+              Rest Shields
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-              Earn 1 shield every 7 days (max 2). Sabbatical mode lets you schedule guilt-free offline breaks without losing momentum.
+              Earn 1 shield every 7 days of shipping (up to 2). Take weekends off without resetting your streak to zero.
             </p>
           </div>
 
@@ -108,16 +108,16 @@ export function LandingBento() {
             />
 
             <Card variant="subtle-inset" className="p-3 rounded-xl text-xs text-stone-700 flex items-center justify-between font-sans">
-              <span>Status:</span>
+              <span>Protection:</span>
               <span className={`font-bold ${shieldState === "armed" ? "text-emerald-700" : "text-amber-700"}`}>
-                {shieldState === "armed" ? "2 Shields Armed (Auto-Protect)" : "Rest Mode Active (No Anxiety)"}
+                {shieldState === "armed" ? "2 Shields Active (Auto-Deploy)" : "Rest Protected (Streak Safe)"}
               </span>
             </Card>
           </div>
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-600">
-            <span>Burnout Prevention</span>
-            <span className="font-bold text-sky-800 font-sans text-xs uppercase tracking-wider">2 MAX CAPACITY</span>
+            <span>Rest Protection</span>
+            <span className="font-bold text-sky-800 font-sans text-xs">2 Max Banked</span>
           </div>
         </Card>
 
@@ -128,27 +128,27 @@ export function LandingBento() {
               <TrendingUp className="w-5 h-5 stroke-[1.75]" />
             </div>
             <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-sans">
-              Universal Revenue Webhooks
+              Stripe &amp; Payment Webhooks
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-3 font-sans">
-              Connect Stripe, Lemon Squeezy, or Polar in 1 click. New subscribers instantly sprout Golden Pines on your island:
+              Connect Stripe, Lemon Squeezy, or Polar in 30 seconds. Customer sales sprout golden revenue trees on your island:
             </p>
           </div>
 
           <Card variant="subtle-inset" className="p-4 space-y-2.5 font-sans rounded-2xl">
             <div className="flex items-center justify-between text-xs sm:text-sm font-sans">
-              <span className="text-stone-500">Tracked Revenue:</span>
-              <span className="font-bold text-emerald-800 text-sm font-pixel">$2,450/mo MRR</span>
+              <span className="text-stone-500">Live MRR:</span>
+              <span className="font-bold text-emerald-800 text-sm font-pixel">$2,450/mo</span>
             </div>
             <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs font-sans shadow-xs flex items-center justify-between">
-              <span className="text-stone-900 font-bold">Pro Plan · Golden Pine IV</span>
+              <span className="text-stone-900 font-bold">Pro Plan · Golden Oak</span>
               <Badge variant="amber" size="sm">Verified Stripe</Badge>
             </div>
           </Card>
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-800">
-            <span>Stripe · Polar · Lemon Squeezy</span>
-            <span className="font-bold">Instant Normalizer</span>
+            <span>Stripe · Lemon Squeezy · Polar</span>
+            <span className="font-bold">Direct Webhook</span>
           </div>
         </Card>
 
@@ -159,13 +159,13 @@ export function LandingBento() {
               <Badge variant="stone" size="sm">
                 Build in Public
               </Badge>
-              <span className="text-xs font-sans text-emerald-700 font-bold">Twitter / X Formatted</span>
+              <span className="text-xs font-sans text-emerald-700 font-bold">X &amp; LinkedIn Ready</span>
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-sans">
-              1-Click 3D Share Card &amp; Tweet Drafter
+              1-Click 3D Share Cards &amp; Clean Tweets
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-sans">
-              Generate numbers-led progress cards with direct WebGL canvas rendering in &lt;10 seconds. Zero AI slop:
+              Export verified 3D diorama cards with your exact stats in under 10 seconds. Zero cringe, zero AI slop:
             </p>
           </div>
 
@@ -185,12 +185,12 @@ export function LandingBento() {
               >
                 {copiedText ? "Copied" : "Copy Formatted Post"}
               </Button>
-              <span className="text-[11px] text-stone-500 font-sans font-semibold uppercase tracking-wider">280 CHAR COMPLIANT</span>
+              <span className="text-[11px] text-stone-500 font-sans font-semibold uppercase tracking-wider">280 CHARACTERS</span>
             </div>
           </Card>
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
-            <span>Direct WebGL Compositor</span>
+            <span>Direct 1200×675 Render</span>
             <span className="font-mono text-xs font-semibold text-emerald-800">indieforest.dev/u/builder</span>
           </div>
         </Card>

@@ -123,15 +123,15 @@ export function LandingHero() {
         {/* Left Hero Copy */}
         <div className="lg:col-span-6 space-y-6 text-left">
           <Badge variant="emerald" dot size="md" className="mb-2 shadow-2xs">
-            Zero-Touch 3D Living Diorama
+            Automated 3D Shipping Diorama
           </Badge>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-stone-950 leading-[1.06] tracking-tight font-editorial">
-            Turn daily shipping into a <span className="italic font-normal text-emerald-800 underline decoration-emerald-500/30 underline-offset-8">living 3D world</span>.
+            Your code and revenue, <span className="italic font-normal text-emerald-800 underline decoration-emerald-500/30 underline-offset-8">living in 3D</span>.
           </h1>
 
           <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl font-sans">
-            Automatically grow stepped emerald pines from GitHub commits and golden pines from Stripe revenue. 100% zero manual check-ins, zero streak anxiety, and instant 1200×675 share cards.
+            Connect your GitHub. Your repositories sprout as evergreen trees. Daily commits make them grow taller. Stripe sales turn them gold. 100% automated with zero manual logging.
           </p>
 
           {/* Instant Search Bar */}
@@ -143,7 +143,7 @@ export function LandingHero() {
                 </div>
                 <input
                   type="text"
-                  placeholder="Type GitHub username"
+                  placeholder="Enter your GitHub handle"
                   value={searchUsername}
                   onChange={(e) => setSearchUsername(e.target.value)}
                   className="w-full bg-transparent text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans"
@@ -156,7 +156,7 @@ export function LandingHero() {
                   icon={isSearching ? Loader2 : Sparkles}
                   className="shrink-0"
                 >
-                  {isSearching ? "Sprouting..." : "Sprout Island"}
+                  {isSearching ? "Loading..." : "Preview Island"}
                 </Button>
               </div>
             </form>

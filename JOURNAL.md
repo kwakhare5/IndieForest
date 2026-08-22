@@ -19,6 +19,12 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **High-Signal, Anti-Slop Copywriting Overhaul Across Landing & HUD (`LandingHero.tsx`, `LandingRitual.tsx`, `LandingShowcase.tsx`, `LandingBento.tsx`, `LandingFaq.tsx`, `LandingFooter.tsx`, `gamification.ts`):**
+    - Rewrote all marketing copy to be direct, transparent, respectful, and crystal-clear for solo developers and indie hackers.
+    - Simplified landing hero headline to *"Your code and revenue, living in 3D"* with 3-second comprehension subtitle explaining automatic git commit and Stripe revenue tree growth.
+    - Overhauled 3-step ritual to direct steps: 01 / Push to GitHub, 02 / Pines Grow with Commits, 03 / 1-Click Social Proof.
+    - Rewrote daily quest titles from arcade tropes to practical developer actions: *"Daily Git Push"*, *"Share Proof of Work"*, *"Revenue Milestone"*, *"Deep Work & Focus"*.
+    - Replaced generic FAQ with honest, straightforward answers regarding private repo source code safety, \$0 MRR pre-revenue usage, webhook setup, and rest shields.
   - **Complete UI/Design, Typography & Spacing Inconsistency Remediation (`LandingNavbar.tsx`, `LandingRitual.tsx`, `LandingHero.tsx`, `dashboard/page.tsx`, `DashboardGameControls.tsx`, `AddTreeModal.tsx`, `TreeInspectorCard.tsx`, `CabinWarRoomModal.tsx`):**
     - Standardized all CTA buttons across `LandingNavbar.tsx` from all-caps (`"DASHBOARD"`, `"SIGN IN"`) to standard Title Case (`"Open Dashboard"`, `"Sign In"`).
     - Replaced raw text status label in `LandingRitual.tsx` with unified design token `<Badge variant="amber" size="sm">Tier II (Young)</Badge>`.

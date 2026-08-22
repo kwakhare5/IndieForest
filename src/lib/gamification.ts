@@ -26,8 +26,8 @@ export const RANK_TIERS: Rank[] = [
 export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   {
     id: "atomic-commit",
-    title: "The Atomic Commit",
-    description: "Push ≥1 verified commit or log a daily ship to grow your Emerald Pine.",
+    title: "Daily Git Push",
+    description: "Push at least 1 verified commit to grow your shipping pines.",
     category: "shipping",
     xpReward: 100,
     pineconeReward: 10,
@@ -38,8 +38,8 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   },
   {
     id: "build-in-public",
-    title: "Build-in-Public Slice",
-    description: "Open the 3D Share Card modal and export your 1200×675 proof-of-work card.",
+    title: "Share Proof of Work",
+    description: "Export your 1200×675 3D share card or copy your progress tweet.",
     category: "distribution",
     xpReward: 50,
     pineconeReward: 15,
@@ -50,8 +50,8 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   },
   {
     id: "customer-touchpoint",
-    title: "Customer Touchpoint",
-    description: "Plant or update a Golden Revenue module, or simulate a customer webhook.",
+    title: "Revenue Milestone",
+    description: "Receive a Stripe/Lemon Squeezy sale or add a revenue project.",
     category: "revenue",
     xpReward: 75,
     pineconeReward: 20,
@@ -62,8 +62,8 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   },
   {
     id: "grove-stewardship",
-    title: "Grove Stewardship",
-    description: "Visit a peer builder's island or toggle Lo-Fi campfire deep work audio.",
+    title: "Deep Work & Focus",
+    description: "Play campfire ambient audio or explore a peer builder's island.",
     category: "social",
     xpReward: 30,
     pineconeReward: 5,
