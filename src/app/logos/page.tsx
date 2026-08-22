@@ -80,7 +80,7 @@ export default function LogosPage() {
               <h3 className="font-bold text-lg text-stone-900 font-satoshi">
                 IndieForest Tree Stump Timeline
               </h3>
-              <p className="font-pixel text-xs font-bold text-stone-500">
+              <p className="font-satoshi text-xs text-stone-500 font-medium">
                 512x512px Vector SVG • Continuous Squircle (rx=112)
               </p>
             </div>
@@ -91,7 +91,7 @@ export default function LogosPage() {
             
             {/* Scale Contexts (Favicon, Navbar, App Icon) */}
             <Card variant="porcelain" className="p-6 rounded-[2.5rem] shadow-sm space-y-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 font-pixel">
+              <h4 className="text-[11px] font-bold uppercase tracking-wider text-stone-500 font-satoshi">
                 Scalability Verification
               </h4>
 

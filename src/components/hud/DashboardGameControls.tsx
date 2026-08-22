@@ -219,7 +219,7 @@ export function DashboardGameControls({
                       </div>
                       <div className="flex flex-col truncate">
                         <span className="font-bold text-xs text-stone-950 truncate">{tree.name}</span>
-                        <span className="text-xs text-stone-500 uppercase font-pixel">
+                        <span className="text-[10px] text-stone-500 uppercase font-satoshi font-semibold tracking-wider">
                           {tree.type === "revenue" ? `$${tree.mrr || 0}/mo` : `${tree.commits || 0} commits`} · {tree.tier}
                         </span>
                       </div>

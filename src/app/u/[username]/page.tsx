@@ -212,7 +212,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                     Tier {badge}
                   </Badge>
                 </div>
-                <p className="text-xs text-stone-600 font-pixel font-bold mt-1">
+                <p className="text-xs text-stone-600 font-satoshi font-medium mt-1">
                   {title} · Level {level}
                 </p>
               </div>
@@ -295,7 +295,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                         <h4 className="font-bold text-sm text-stone-950 font-satoshi truncate max-w-[160px]">
                           {tree.name}
                         </h4>
-                        <span className="text-[11px] text-stone-500 uppercase font-pixel">
+                        <span className="text-[10px] text-stone-500 uppercase font-satoshi font-semibold tracking-wider">
                           {tree.tier} Tier
                         </span>
                       </div>

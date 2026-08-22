@@ -139,7 +139,7 @@ export function CabinWarRoomModal({
                   </div>
                   <div>
                     <span className="font-bold text-stone-900">{t.name}</span>
-                    <span className="text-[10px] text-stone-500 block uppercase font-pixel">
+                    <span className="text-[10px] text-stone-500 block uppercase font-satoshi font-semibold tracking-wider">
                       {t.tier} Tier
                     </span>
                   </div>
