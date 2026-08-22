@@ -48,7 +48,7 @@ export function LandingBento() {
         {/* Bento 1: Rolling 30-Day Forest Health */}
         <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
           <div>
-            <span className="font-pixel text-xs uppercase tracking-wider font-bold text-emerald-700 block mb-1">
+            <span className="font-satoshi text-[11px] uppercase tracking-wider font-bold text-emerald-700 block mb-1">
               ANTI-GUILT RETENTION
             </span>
             <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-satoshi">
@@ -117,7 +117,7 @@ export function LandingBento() {
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-600">
             <span>Burnout Prevention</span>
-            <span className="font-bold text-sky-800 font-pixel text-xs">2 MAX CAPACITY</span>
+            <span className="font-bold text-sky-800 font-satoshi text-xs uppercase tracking-wider">2 MAX CAPACITY</span>
           </div>
         </Card>
 
@@ -185,13 +185,13 @@ export function LandingBento() {
               >
                 {copiedText ? "Copied" : "Copy Formatted Post"}
               </Button>
-              <span className="text-xs text-stone-500 font-pixel font-bold">280 CHAR COMPLIANT</span>
+              <span className="text-[11px] text-stone-500 font-satoshi font-semibold uppercase tracking-wider">280 CHAR COMPLIANT</span>
             </div>
           </Card>
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-satoshi text-stone-500">
             <span>Direct WebGL Compositor</span>
-            <span className="font-semibold text-emerald-800 font-pixel text-xs">indieforest.dev/u/kwakhare5</span>
+            <span className="font-mono text-xs font-semibold text-emerald-800">indieforest.dev/u/kwakhare5</span>
           </div>
         </Card>
       </div>

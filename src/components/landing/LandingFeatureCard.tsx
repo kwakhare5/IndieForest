@@ -43,7 +43,7 @@ export function LandingFeatureCard({
       <div>
         {stepTag && (
           <span
-            className={`font-pixel text-xs font-bold block mb-2 ${stepTagColor}`}
+            className={`font-satoshi text-[11px] font-bold uppercase tracking-wider block mb-2 ${stepTagColor}`}
           >
             {stepTag}
           </span>

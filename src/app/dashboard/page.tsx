@@ -163,7 +163,7 @@ export default function DashboardPage() {
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#ece7de] text-stone-600 font-mono text-xs">
         <div className="w-10 h-10 border-3 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-3" />
-        <span className="tracking-[0.2em] uppercase font-bold font-pixel text-sm">
+        <span className="tracking-[0.2em] uppercase font-bold font-satoshi text-xs text-stone-700">
           Loading 3D Living Diorama...
         </span>
       </div>

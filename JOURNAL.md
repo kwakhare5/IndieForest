@@ -19,6 +19,11 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Bespoke Typographic System Standardized (Satoshi, PP Editorial New, Jersey 10, Geist Mono):**
+    - Purged legacy fonts (`Plus_Jakarta_Sans`, `VT323`, `Silkscreen`, `Jersey 15`) and configured Fontshare **Satoshi** as the universal geometric sans-serif for 100% of UI titles, buttons, cards, modals, and body copy.
+    - Standardized **PP Editorial New / Instrument Serif** for luxury editorial hero headlines.
+    - Restricted **Jersey 10** (`font-pixel`) strictly to gamified numerical counters (streaks, pinecones, MRR numbers), replacing leaked pixel text across loading states, modal subtitles, and inspector labels with clean `font-satoshi`.
+    - Standardized **Geist Mono** for hashes, URLs, and code snippets.
   - **Spatial Anchored HUD Popovers & Crystal-Clear Developer Guides (`Modal.tsx`, `SettingsModal.tsx`, `AddTreeModal.tsx`, `ShareCardModal.tsx`):**
     - Enhanced universal `Modal.tsx` with localized anchoring (`top-right`, `top-left`, `bottom-center`) and strict edge margin safety (`w-[calc(100vw-2.5rem)]`, `max-h-[calc(100vh-5.5rem)]`), preventing popovers from ever touching screen boundaries.
     - Anchored `SettingsModal` to the top-right adjacent to the settings trigger with 1-click copyable developer guides for GitHub zero-touch commit ingestion and Stripe / Lemon Squeezy / Polar automated revenue webhooks.
