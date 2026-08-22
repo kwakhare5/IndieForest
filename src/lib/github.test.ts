@@ -43,8 +43,24 @@ describe("GitHub Ingestion Engine", () => {
         type: "PushEvent",
         actor: { login: "testdev", avatar_url: "https://avatar.test/1" },
         repo: { id: 102, name: "testdev/AppB" },
-        payload: { size: 30 },
+        payload: { size: 10 },
         created_at: "2026-08-21T10:00:00Z",
+      },
+      {
+        id: "evt-3",
+        type: "PushEvent",
+        actor: { login: "testdev", avatar_url: "https://avatar.test/1" },
+        repo: { id: 102, name: "testdev/AppB" },
+        payload: { size: 10 },
+        created_at: "2026-08-20T10:00:00Z",
+      },
+      {
+        id: "evt-4",
+        type: "PushEvent",
+        actor: { login: "testdev", avatar_url: "https://avatar.test/1" },
+        repo: { id: 102, name: "testdev/AppB" },
+        payload: { size: 10 },
+        created_at: "2026-08-19T10:00:00Z",
       },
     ];
 
@@ -57,7 +73,7 @@ describe("GitHub Ingestion Engine", () => {
     expect(profile.trees[0].tier).toBe("mature");
     expect(profile.trees[1].name).toBe("AppA"); // 10 commits -> young tier
     expect(profile.trees[1].tier).toBe("young");
-    expect(profile.streakDays).toBe(2);
+    expect(profile.streakDays).toBe(4);
   });
 
   it("validates GitHub username formatting according to official RFC rules", () => {
@@ -75,11 +91,11 @@ describe("GitHub Ingestion Engine", () => {
     expect(isValidGitHubUsername("a".repeat(40))).toBe(false);
   });
 
-  it("provides valid fallback profile when rate-limited", () => {
-    const fallback = getFallbackIslandProfile("kwakhare5");
-    expect(fallback.username).toBe("kwakhare5");
-    expect(fallback.trees.length).toBeGreaterThan(0);
-    expect(fallback.totalCommits).toBeGreaterThan(0);
+  it("provides valid zero-state profile when rate-limited", () => {
+    const fallback = getFallbackIslandProfile("testuser");
+    expect(fallback.username).toBe("testuser");
+    expect(fallback.totalCommits).toBe(0);
+    expect(fallback.trees.length).toBe(0);
   });
 });
 

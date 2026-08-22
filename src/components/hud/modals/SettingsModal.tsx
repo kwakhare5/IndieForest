@@ -41,14 +41,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const resetIsland = useForestStore((s) => s.resetIsland);
   const { badge, title: rankTitle } = getRankTitle(level);
 
-  const [githubInput, setGithubInput] = useState(user.username || "kwakhare5");
+  const [githubInput, setGithubInput] = useState(user.username || "");
   const { isSignedIn, isLoaded, user: clerkUser } = useUser();
 
+  const activeHandle = user.username || clerkUser?.username || "builder";
   const userToken = user.id || "builder_token";
   const origin = typeof window !== "undefined" ? window.location.origin : "https://indieforest.vercel.app";
-  const webhookUrl = `${origin}/api/webhooks/revenue?token=${userToken}&userId=${user.id || "kwakhare5"}`;
-  const profileUrl = `${origin}/u/${user.username || "kwakhare5"}`;
-  const badgeMarkdown = `[![IndieForest](${origin}/api/badge/${user.username || "kwakhare5"})](${origin}/u/${user.username || "kwakhare5"})`;
+  const webhookUrl = `${origin}/api/webhooks/revenue?token=${userToken}&userId=${user.id || activeHandle}`;
+  const profileUrl = `${origin}/u/${activeHandle}`;
+  const badgeMarkdown = `[![IndieForest](${origin}/api/badge/${activeHandle})](${origin}/u/${activeHandle})`;
 
   const handleCopyWebhook = () => {
     navigator.clipboard.writeText(webhookUrl);
