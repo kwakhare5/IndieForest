@@ -26,6 +26,7 @@ import { sound } from "@/lib/sound";
 import { GitHubIslandProfile } from "@/lib/github";
 import { useForestStore } from "@/store/useForestStore";
 import { calculateTreeTier } from "@/lib/gamification";
+import { FAMOUS_BUILDER_HANDLES, CURATED_FAMOUS_BUILDERS } from "@/lib/curatedBuilders";
 
 
 // Dynamic import for the Island Canvas (Mode: Preview)
@@ -139,6 +140,16 @@ export default function LandingPage() {
       setSearchError(msg);
     } finally {
       setIsSearching(false);
+    }
+  };
+
+  const handleQuickSproutFamous = (handle: string) => {
+    sound.playClick();
+    setSearchUsername(handle);
+    const profile = CURATED_FAMOUS_BUILDERS[handle];
+    if (profile) {
+      setActiveProfile(profile);
+      sound.playShipSuccess();
     }
   };
 
@@ -291,6 +302,21 @@ export default function LandingPage() {
                   </Button>
                 </div>
               </form>
+
+              {/* 1-Click Famous Builders Preview Chips */}
+              <div className="flex items-center gap-1.5 pt-2 text-[11px] text-stone-500 font-satoshi flex-wrap">
+                <span className="font-medium text-stone-400">Try live:</span>
+                {FAMOUS_BUILDER_HANDLES.map((handle) => (
+                  <button
+                    key={handle}
+                    type="button"
+                    onClick={() => handleQuickSproutFamous(handle)}
+                    className="px-2 py-0.5 rounded-full bg-white/70 hover:bg-emerald-50 hover:text-emerald-800 border border-stone-200/80 hover:border-emerald-300 font-mono text-[10px] text-stone-600 transition shadow-2xs cursor-pointer"
+                  >
+                    @{handle}
+                  </button>
+                ))}
+              </div>
 
               {searchError && (
                 <p className="text-xs text-rose-600 mt-2 pl-2 font-medium">

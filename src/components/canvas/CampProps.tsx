@@ -87,7 +87,7 @@ export function CampProps() {
 
       {/* 1. CAMPFIRE (Unlocked at streak >= 3) */}
       {streakDays >= 3 && (
-        <group position={[1.8, 0, 1.8]}>
+        <group position={[-2.4, 0, 2.4]}>
           {/* Wood Foundation Box */}
           <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
             <boxGeometry args={[1.1, 0.2, 0.9]} />
@@ -173,8 +173,8 @@ export function CampProps() {
       )}
 
       {/* 2. CAMPING TENT (Unlocked at streak >= 7) */}
-      {streakDays >= 7 && (
-        <group position={[-2.4, 0, 1.6]} rotation={[0, Math.PI / 4, 0]}>
+      {streakDays >= 7 && streakDays < 14 && (
+        <group position={[-2.8, 0, 1.6]} rotation={[0, Math.PI / 4, 0]}>
           {/* Blue/Teal Canvas Tent */}
           <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
             <coneGeometry args={[0.9, 1.0, 3]} />
@@ -188,9 +188,9 @@ export function CampProps() {
         </group>
       )}
 
-      {/* 3. LOG CABIN (Unlocked at streak >= 14) */}
+      {/* 3. LOG CABIN (Unlocked at streak >= 14, upgrades from tent) */}
       {streakDays >= 14 && (
-        <group position={[-2.2, 0, -1.8]} rotation={[0, -Math.PI / 6, 0]}>
+        <group position={[-2.8, 0, 1.6]} rotation={[0, -Math.PI / 6, 0]}>
           {/* Timber Walls */}
           <mesh position={[0, 0.55, 0]} castShadow receiveShadow>
             <boxGeometry args={[1.3, 0.9, 1.2]} />
@@ -215,7 +215,7 @@ export function CampProps() {
 
       {/* 4. PINECONE SHOP DECOR: Night Lantern Posts */}
       {unlockedDecor.includes("night_lanterns") && (
-        <group position={[0.8, 0, -1.8]}>
+        <group position={[0.8, 0, 2.4]}>
           <mesh position={[0, 0.6, 0]} castShadow>
             <cylinderGeometry args={[0.04, 0.05, 1.2, 4]} />
             <meshStandardMaterial color="#451a03" roughness={0.8} flatShading />
@@ -237,17 +237,17 @@ export function CampProps() {
 
       {/* 5. PINECONE SHOP DECOR: Wooden Pond Pier */}
       {unlockedDecor.includes("pond_pier") && (
-        <group position={[0, -0.05, 0.9]} rotation={[0, 0.1, 0]}>
+        <group position={[0, -0.05, 1.3]} rotation={[0, 0, 0]}>
           <mesh position={[0, 0, 0]} castShadow receiveShadow>
-            <boxGeometry args={[0.6, 0.08, 1.2]} />
+            <boxGeometry args={[0.6, 0.08, 0.9]} />
             <meshStandardMaterial color="#854d0e" roughness={0.8} flatShading />
           </mesh>
           {/* Support Pilings */}
-          <mesh position={[-0.25, -0.2, 0.4]} castShadow>
+          <mesh position={[-0.25, -0.2, 0.3]} castShadow>
             <cylinderGeometry args={[0.04, 0.04, 0.4, 4]} />
             <meshStandardMaterial color="#5c3810" roughness={0.9} />
           </mesh>
-          <mesh position={[0.25, -0.2, 0.4]} castShadow>
+          <mesh position={[0.25, -0.2, 0.3]} castShadow>
             <cylinderGeometry args={[0.04, 0.04, 0.4, 4]} />
             <meshStandardMaterial color="#5c3810" roughness={0.9} />
           </mesh>
@@ -256,7 +256,7 @@ export function CampProps() {
 
       {/* 6. PINECONE SHOP DECOR: Cozy Hammock */}
       {unlockedDecor.includes("hammock") && (
-        <group position={[1.5, 0.35, -1.8]} rotation={[0, -0.3, 0]}>
+        <group position={[2.6, 0.35, 2.2]} rotation={[0, -0.3, 0]}>
           <mesh castShadow>
             <boxGeometry args={[1.2, 0.06, 0.45]} />
             <meshStandardMaterial color="#f8fafc" roughness={0.8} flatShading />

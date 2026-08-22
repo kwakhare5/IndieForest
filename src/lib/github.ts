@@ -2,6 +2,7 @@
 // Parses public events from api.github.com/users/{username}/events into living 3D island state
 
 import { TreeData, GrowthTier } from "@/types/game";
+import { CURATED_FAMOUS_BUILDERS } from "./curatedBuilders";
 import {
   calculateTreeTier,
   evaluateLevelProgress,
@@ -238,6 +239,11 @@ export async function fetchGitHubUserIsland(username: string): Promise<GitHubIsl
   const cleanUsername = username.trim().replace(/^@/, "");
   if (!cleanUsername || !isValidGitHubUsername(cleanUsername)) {
     throw new Error(`Invalid GitHub username: "${username}"`);
+  }
+
+  // Pre-warmed zero-latency lookup for famous builders
+  if (CURATED_FAMOUS_BUILDERS[cleanUsername.toLowerCase()]) {
+    return CURATED_FAMOUS_BUILDERS[cleanUsername.toLowerCase()];
   }
 
 

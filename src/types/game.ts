@@ -148,3 +148,12 @@ export interface StreakEvaluationOutput {
   drought: boolean;
 }
 
+export interface ForestHealth {
+  healthPercent: number;
+  activeDaysCount: number;
+  totalDaysEvaluated: number;
+  status: "pristine" | "lush" | "dormant" | "drought";
+  label: string;
+  badgeClass: string;
+}
+

@@ -48,26 +48,27 @@ export const DEFAULT_CAMP_DECOR_CATALOG: CampDecorItem[] = [
 ];
 
 // 16 Non-Overlapping Canonical Radial Coordinate Slots on Island Surface
+// Strictly mapped to North and Mid quadrants (Z <= 0.8) so South (Z > 1.2) remains dedicated to Campsite, Pond & Pier
 export const WEST_EMERALD_SLOTS: Array<[number, number]> = [
   [-1.2, -0.8],
-  [-1.8, 0.4],
-  [-0.6, -1.8],
-  [-1.5, 1.5],
-  [-0.3, 1.8],
-  [-2.1, -1.5],
-  [-2.4, -0.2],
-  [-1.0, 2.2],
+  [-2.2, -0.6],
+  [-1.2, -2.2],
+  [-2.4, -2.0],
+  [-1.6, 0.6],
+  [-2.8, 0.4],
+  [-0.6, -1.5],
+  [-2.8, -1.2],
 ];
 
 export const EAST_GOLDEN_SLOTS: Array<[number, number]> = [
   [1.2, -0.8],
-  [1.8, 0.4],
-  [0.6, -1.8],
-  [1.5, 1.5],
-  [0.3, 1.8],
-  [2.1, -1.5],
-  [2.4, -0.2],
-  [1.0, 2.2],
+  [2.2, -0.6],
+  [1.2, -2.2],
+  [2.4, -2.0],
+  [1.6, 0.6],
+  [2.8, 0.4],
+  [0.6, -1.5],
+  [2.8, -1.2],
 ];
 
 /**
@@ -292,4 +293,69 @@ export function reconstructHistoricalIsland(
       // Scale down tier if historical commits were lower
       return tree;
     });
+}
+
+/**
+ * Calculates the rolling 30-day Forest Health % (Consistency Metric).
+ * Health % = (Active Shipping Days in past 30 days / 30) * 100
+ */
+export function calculateForestHealth(
+  activeDates: string[],
+  todayStr: string = getLocalDateString()
+): {
+  healthPercent: number;
+  activeDaysCount: number;
+  totalDaysEvaluated: number;
+  status: "pristine" | "lush" | "dormant" | "drought";
+  label: string;
+  badgeClass: string;
+} {
+  const today = new Date(todayStr);
+  const thirtyDaysAgo = new Date(today.getTime() - 30 * 86400000);
+
+  // Extract unique active days falling strictly within the rolling 30-day window
+  const uniqueActiveDaysInWindow = Array.from(
+    new Set(
+      activeDates
+        .map((d) => d.slice(0, 10))
+        .filter((d) => {
+          const dateObj = new Date(d);
+          return dateObj >= thirtyDaysAgo && dateObj <= today;
+        })
+    )
+  );
+
+  const activeDaysCount = uniqueActiveDaysInWindow.length;
+  const healthPercent = Math.min(Math.round((activeDaysCount / 30) * 100), 100);
+
+  let status: "pristine" | "lush" | "dormant" | "drought" = "drought";
+  let label = "Drought";
+  let badgeClass = "bg-stone-500/10 text-stone-600 border-stone-300";
+
+  if (healthPercent >= 90) {
+    status = "pristine";
+    label = "Pristine";
+    badgeClass = "bg-emerald-500/10 text-emerald-700 border-emerald-300 shadow-xs";
+  } else if (healthPercent >= 75) {
+    status = "lush";
+    label = "Lush";
+    badgeClass = "bg-teal-500/10 text-teal-700 border-teal-300";
+  } else if (healthPercent >= 50) {
+    status = "dormant";
+    label = "Dormant";
+    badgeClass = "bg-amber-500/10 text-amber-700 border-amber-300";
+  } else {
+    status = "drought";
+    label = "Drought";
+    badgeClass = "bg-stone-500/10 text-stone-600 border-stone-300";
+  }
+
+  return {
+    healthPercent,
+    activeDaysCount,
+    totalDaysEvaluated: 30,
+    status,
+    label,
+    badgeClass,
+  };
 }

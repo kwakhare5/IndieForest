@@ -30,37 +30,6 @@ interface ForestCanvasProps {
   customTrees?: TreeData[];
 }
 
-/**
- * CameraRig provides smooth mouse cursor parallax tilt.
- */
-function CameraRig({ isInteractive = true }: { isInteractive?: boolean }) {
-  const mouse = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (!isInteractive) return;
-    const handleMouseMove = (e: MouseEvent) => {
-      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [isInteractive]);
-
-  useFrame((state) => {
-    if (!isInteractive) return;
-    const targetX = 18 + mouse.current.x * 1.5;
-    const targetY = 18 + mouse.current.y * 1.5;
-    const targetZ = 18;
-
-    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, targetX, 0.04);
-    state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetY, 0.04);
-    state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.04);
-    state.camera.lookAt(0, 0.2, 0);
-  });
-
-  return null;
-}
-
 export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) {
   const storeTrees = useForestStore((s) => s.trees);
   const removeTree = useForestStore((s) => s.removeTree);
@@ -92,7 +61,7 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
         orthographic
         camera={{
           position: [18, 18, 18],
-          zoom: isPreview ? 24 : mode === "profile" ? 28 : 29,
+          zoom: isPreview ? 36 : mode === "profile" ? 42 : 44,
           near: -100,
           far: 200,
         }}
@@ -106,7 +75,6 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          <CameraRig isInteractive={true} />
           <WeatherSystem />
           <TerrainIsland />
           <CampProps />
@@ -129,9 +97,14 @@ export function ForestCanvas({ mode = "full", customTrees }: ForestCanvasProps) 
           />
 
           <OrbitControls
-            enableRotate={false}
+            enableRotate={true}
             enablePan={false}
-            enableZoom={false}
+            enableZoom={true}
+            minZoom={25}
+            maxZoom={75}
+            minPolarAngle={Math.PI / 6}
+            maxPolarAngle={Math.PI / 2.25}
+            dampingFactor={0.05}
           />
         </Suspense>
       </Canvas>

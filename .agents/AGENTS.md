@@ -77,18 +77,16 @@ npm run lint       # ESLint + TypeScript check
 
 ## 7. SESSION RESUME
 
-**Last session date:** 2026-08-22
-
-- **Deep Codebase Cleanup & Progression Single Source of Truth:** Unified all tree tier calculations under canonical `calculateTreeTier` in `src/lib/gamification.ts` with strict support for dormant stumps on churn and dual-gated shipping progression. Eliminated duplicate/obsolete helper math from `revenueWebhook.ts`.
-- **Zero-`any` Type System & Domain Consolidation:** Consolidated canonical domain entity types (`GrowthTier`, `TreeType`, `WeatherType`, `TreeData`, `ShipLog`, `CampDecorItem`, `DailyQuest`, `Rank`, `BadgeData`, `NormalizedCustomerTree`) in `src/types/game.ts`. Replaced loose casts with strict typed schemas for Stripe, Lemon Squeezy, and Polar webhook events.
-- **State & Store Optimization (`useForestStore.ts`):** Streamlined store actions, eliminated redundant type aliases, added strict `WeatherType` support and verified SSR-safe storage.
-- **Dynamic GitHub README SVG Badge Endpoint (`/api/badge/[username]`):** Built server-rendered SVG generator (`src/lib/badge.ts` + `/api/badge/[username]/route.ts`) supporting both 600×200px porcelain diorama cards and compact shields.io pills with 100% test-driven Vitest coverage.
-- **3D Timeline Scrubber & 10s Time-Lapse Player (`TimelineScrubber.tsx`):** Built floating interactive scrubber on dashboard (`src/app/dashboard/page.tsx`) and public profile (`src/app/u/[username]/page.tsx`) with quick-jumps (`7d`, `30d`, `90d`, `All`) and automated 10-second turntable growth animation for Twitter/X video clips.
-- **Multi-Tiered Weather Particle Engine (`WeatherSystem.tsx`):** Upgraded weather system with distinct particle FX: gentle emerald mist/rain for commits, dramatic thunderstorm lightning & golden sunrays for streak milestones, and radiant golden particle showers for Stripe sales.
-- **Verifiable Proof Popovers & Tree Inspector (`ForestCanvas.tsx`):** Upgraded 3D tree inspector to display verified GitHub commit SHAs with clickable diff links and Stripe webhook confirmation badges.
-- **Public Living Portfolio & Visitor Social Interaction (`u/[username]/page.tsx`):** Integrated 1-click **"💧 Water Tree"** visitor cheers (+5 XP toast) and campsite guestbook modal (`GuestbookModal.tsx`) for 1-line encouraging notes from fellow builders.
-- **16 Non-Overlapping Radial Slots & Smart Proof-of-Ship (`gamification.ts`):** Enforced 16 canonical radial sector slots (`WEST_EMERALD_SLOTS`, `EAST_GOLDEN_SLOTS`) to eliminate tree clipping.
-- **100% Test-Driven Quality:** 55/55 Vitest unit tests passing with zero Turbopack build or lint errors.
+- **Complete 3D Diorama Spatial Slot Refactor:** Mapped all 16 radial tree slots strictly to North/Mid quadrants ($Z \le 0.8$) and dedicated the South quadrant ($Z \ge 1.2$) exclusively to Campsite, Pond & Pier, eliminating 100% of mesh collisions.
+- **Milestone Campsite Progression:** Added dynamic upgrades (Day 3 Campfire $\rightarrow$ Day 7 Canvas Tent $\rightarrow$ Day 14 Log Cabin $\rightarrow$ Day 30 Pier & Lanterns).
+- **Orthographic In-World Badge Scale Normalization:** Removed `distanceFactor` from `@react-three/drei` `<Html>` tags to prevent orthographic magnification distortion.
+- **100% Zero-Touch Automatic GitHub Ingestion:** Implemented `syncGitHubIsland` and `autoCheckTodayCommits` in `useForestStore.ts` and wired `window.onfocus` tab-switch detection in `src/app/dashboard/page.tsx` so pushing commits from terminal automatically waters the island and levels up trees without manual clicking.
+- **Floating 3D In-World Porcelain Billboard Badges:** Added `@react-three/drei` `<Html center>` billboard tags in `BlockTree.tsx` hovering over each tree displaying repo name and commit tier (`🌲 IndieForest · IV (42c)` or `🪙 Pro Plan · $199/mo`).
+- **Semantic-Only 3D Diorama & Clutter Purge:** Purged non-semantic random clutter rocks and boulders from `TerrainIsland.tsx` to maintain a pristine, razor-sharp porcelain aesthetic.
+- **1-Click Famous Builders Instant Hero Hook:** Created `src/lib/curatedBuilders.ts` and added instant hero preview chips (`@levelsio`, `@shadcn`, `@antfu`, `@marclou`) on `src/app/page.tsx` loading in <10ms with zero GitHub API rate-limit consumption.
+- **Rolling 30-Day Forest Health % (Consistency Metric):** Implemented `calculateForestHealth` in `src/lib/gamification.ts` with 4 health tiers (`Pristine 90%+`, `Lush 75–89%`, `Dormant 50–74%`, `Drought <50%`), displayed in `TopStatusBar.tsx` with live sync status.
+- **Single Canonical Master Specification:** Consolidated all product, architecture, math, visual, and UX documentation into a single canonical file `docs/MASTER_SPECIFICATION.md` and purged redundant docs.
+- **100% Test-Driven Quality:** 61/61 Vitest unit tests passing with zero Turbopack build or lint errors.
 
 **Immediate next task:**
 

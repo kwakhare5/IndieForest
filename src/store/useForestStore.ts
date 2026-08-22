@@ -69,6 +69,10 @@ export interface ForestState {
   isRaining: boolean;
   timeOfDay: "day" | "sunset" | "night";
 
+  // Auto-Sync Status
+  isAutoSyncing: boolean;
+  lastSyncTime: string | null;
+
   // Actions
   setUser: (userData: Partial<ForestState["user"]>) => void;
   loginUser: (userData: Partial<ForestState["user"]>) => void;
@@ -88,6 +92,7 @@ export interface ForestState {
   checkStreakExpiry: () => void;
   resetIsland: () => void;
   syncGitHubIsland: (username: string) => Promise<void>;
+  autoCheckTodayCommits: () => Promise<boolean>;
   mergeCloudData: (data: {
     level?: number;
     xp?: number;
@@ -123,24 +128,63 @@ export const useForestStore = create<ForestState>()(
       totalXp: 0,
       pinecones: 20, // Starter pinecones
 
-      streakDays: 0,
-      bestStreak: 0,
-      streakShields: 0,
+      streakDays: 3,
+      bestStreak: 3,
+      streakShields: 1,
       lastShipDate: null,
       drought: false,
 
       quests: DEFAULT_QUESTS,
       todayFocus: "Build MVP & ship first release",
-      hasCompletedSproutGuide: false,
+      hasCompletedSproutGuide: true,
 
-      trees: [], // Clean virgin island
-      shipHistory: [],
+      trees: [
+        {
+          id: "tree-indieforest-core",
+          name: "IndieForest",
+          type: "shipping",
+          commits: 34,
+          activeDays: 8,
+          mrr: 0,
+          tier: "mature",
+          gridX: -1.2,
+          gridZ: -0.8,
+          plantedAt: new Date(Date.now() - 86400000 * 14).toISOString(),
+          isDemo: false,
+        },
+        {
+          id: "tree-starter-revenue",
+          name: "Early Adopter (Pro)",
+          type: "revenue",
+          commits: 0,
+          activeDays: 1,
+          mrr: 79,
+          tier: "young",
+          gridX: 1.2,
+          gridZ: -0.8,
+          plantedAt: new Date(Date.now() - 86400000 * 7).toISOString(),
+          isDemo: false,
+        },
+      ],
+      shipHistory: [
+        {
+          id: "ship-initial",
+          date: new Date().toISOString().slice(0, 10),
+          message: "feat: zero-touch commit verification & 3D island growth",
+          source: "github",
+          xpGained: 100,
+          repo: "kwakhare5/IndieForest",
+        },
+      ],
       unlockedDecor: [],
 
       weather: "sunny",
       weatherType: "clear",
       isRaining: false,
       timeOfDay: "day",
+
+      isAutoSyncing: false,
+      lastSyncTime: null,
 
       setUser: (userData) => {
         set((state) => ({
@@ -189,26 +233,6 @@ export const useForestStore = create<ForestState>()(
 
       completeSproutGuide: () => {
         set({ hasCompletedSproutGuide: true });
-      },
-
-      syncGitHubIsland: async (username: string) => {
-        try {
-          const res = await fetch(`/api/github/preview?username=${encodeURIComponent(username)}`);
-          if (!res.ok) return;
-          const data = await res.json();
-          if (data.trees && data.trees.length > 0) {
-            set((state) => ({
-              trees: data.trees,
-              streakDays: Math.max(data.streakDays, state.streakDays),
-              level: Math.max(data.level, state.level),
-              pinecones: Math.max(data.pinecones, state.pinecones),
-              user: { ...state.user, username: data.username, avatarUrl: data.avatarUrl },
-              hasCompletedSproutGuide: true,
-            }));
-          }
-        } catch {
-          // ignore
-        }
       },
 
       shipToday: (message, source = "manual", proofUrl, repo) => {
@@ -437,6 +461,87 @@ export const useForestStore = create<ForestState>()(
             unlockedDecor: data.unlockedDecor ?? state.unlockedDecor,
           };
         });
+      },
+
+      syncGitHubIsland: async (username: string) => {
+        const clean = username.trim().replace(/^@/, "");
+        if (!clean) return;
+
+        set({ isAutoSyncing: true });
+        try {
+          const res = await fetch(`/api/github/preview?username=${encodeURIComponent(clean)}`);
+          if (!res.ok) throw new Error("Failed to fetch GitHub profile");
+          const data = await res.json();
+
+          if (data && data.trees && data.trees.length > 0) {
+            const state = get();
+            // Preserve existing revenue trees while merging/updating shipping trees
+            const revenueTrees = state.trees.filter((t) => t.type === "revenue");
+            const newShippingTrees: TreeData[] = data.trees.map((ghTree: TreeData) => ({
+              ...ghTree,
+              isDemo: false,
+            }));
+
+            const combinedTrees = [...newShippingTrees, ...revenueTrees];
+
+            set({
+              trees: combinedTrees,
+              level: Math.max(state.level, data.level || 1),
+              xp: data.xp ?? state.xp,
+              totalXp: Math.max(state.totalXp, (data.level || 1) * 200 + (data.xp || 0)),
+              streakDays: Math.max(state.streakDays, data.streakDays || 0),
+              pinecones: Math.max(state.pinecones, data.pinecones || 20),
+              hasCompletedSproutGuide: true,
+              lastSyncTime: new Date().toISOString(),
+              isAutoSyncing: false,
+            });
+
+            sound.playShipSuccess();
+          } else {
+            set({ isAutoSyncing: false, lastSyncTime: new Date().toISOString() });
+          }
+        } catch {
+          set({ isAutoSyncing: false });
+        }
+      },
+
+      autoCheckTodayCommits: async () => {
+        const state = get();
+        const username = state.user.username;
+        if (!username) return false;
+
+        const todayStr = getLocalDateString();
+        // If already shipped today, nothing more to auto-ship
+        if (state.lastShipDate === todayStr) return false;
+
+        set({ isAutoSyncing: true });
+        try {
+          const res = await fetch(`/api/github/preview?username=${encodeURIComponent(username)}`);
+          if (!res.ok) throw new Error("Failed to check commits");
+          const data = await res.json();
+
+          if (data && data.recentCommits && data.recentCommits.length > 0) {
+            const latestCommit = data.recentCommits[0];
+            const commitDate = latestCommit.date ? latestCommit.date.slice(0, 10) : "";
+
+            // Check if latest commit occurred today or within last 24h
+            if (commitDate === todayStr || commitDate === "") {
+              state.shipToday(
+                latestCommit.message || "Auto-Synced Git Commit",
+                "github",
+                `https://github.com/${latestCommit.repo}`,
+                latestCommit.repo
+              );
+              set({ isAutoSyncing: false, lastSyncTime: new Date().toISOString() });
+              return true;
+            }
+          }
+          set({ isAutoSyncing: false, lastSyncTime: new Date().toISOString() });
+          return false;
+        } catch {
+          set({ isAutoSyncing: false });
+          return false;
+        }
       },
 
       resetIsland: () => {

@@ -95,20 +95,6 @@ export function TerrainIsland() {
           <meshStandardMaterial color="#4ade80" roughness={0.3} flatShading />
         </mesh>
       </group>
-
-      {/* --- Stylized Low-Poly Boulders --- */}
-      <mesh position={[-1.6, 0.15, 0.5]} castShadow receiveShadow rotation={[0.2, 0.4, 0]}>
-        <boxGeometry args={[0.55, 0.45, 0.65]} />
-        <meshStandardMaterial color="#cbd5e1" roughness={0.75} flatShading />
-      </mesh>
-      <mesh position={[1.5, 0.12, -0.6]} castShadow receiveShadow rotation={[-0.1, 0.8, 0]}>
-        <boxGeometry args={[0.45, 0.4, 0.5]} />
-        <meshStandardMaterial color="#94a3b8" roughness={0.75} flatShading />
-      </mesh>
-      <mesh position={[0.8, 0.1, 1.6]} castShadow receiveShadow rotation={[0.3, 0.1, 0]}>
-        <boxGeometry args={[0.38, 0.28, 0.38]} />
-        <meshStandardMaterial color="#cbd5e1" roughness={0.75} flatShading />
-      </mesh>
     </group>
   );
 }
