@@ -4,119 +4,92 @@ import React from "react";
 import { Button } from "@/components/ui/Button";
 import {
   Share2,
-  CheckCircle2,
-  Sparkles,
   Flame,
-  TreePine,
-  Plus,
+  Trees,
+  TrendingUp,
 } from "lucide-react";
 import { sound } from "@/lib/sound";
 
 interface FloatingDockProps {
-  // Progression & Stats Props
   level: number;
-  xp?: number;
   streakDays: number;
-  totalCommits?: number;
   totalMrr: number;
   activeTreesCount: number;
-
-  // Actions
-  onOpenShip?: () => void;
   onOpenShare?: () => void;
-  onOpenAddTree?: () => void;
-  hasShippedToday?: boolean;
 }
 
 /**
- * FloatingDock — The Command Center Front Resting Dock.
- * Monolithic double-bezel porcelain bar with 1-click access to all primary builder workflows.
+ * FloatingDock — The Zero-Touch Command Center Status & Proof-of-Work Exporter.
+ * Monolithic double-bezel porcelain bar with live stats & 1-click Twitter/README card export.
  */
 export function FloatingDock({
   level,
   streakDays,
   totalMrr,
   activeTreesCount,
-  onOpenShip,
   onOpenShare,
-  onOpenAddTree,
-  hasShippedToday = false,
 }: FloatingDockProps) {
   return (
     <div className="fixed bottom-6 inset-x-0 z-40 flex flex-col items-center px-4 pointer-events-none font-sans select-none">
       <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-xl transition-all duration-200">
-        <div className="px-2.5 py-1.5 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
+        <div className="px-3 py-1.5 rounded-full porcelain-surface flex items-center gap-2 sm:gap-3">
           
           {/* 1. Burnished Amber Streak Pill */}
           <div
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold font-pixel shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/90 text-amber-900 text-xs font-bold font-pixel shadow-xs"
             title={`${streakDays} Consecutive Shipping Days`}
           >
             <Flame className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
-            <span>{streakDays}D</span>
+            <span>{streakDays}D STREAK</span>
           </div>
 
-          <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
+          <div className="w-[1px] h-4 bg-stone-200 my-auto" />
 
-          {/* 2. Primary Momentum Action: Highland Emerald Ship */}
-          <Button
-            variant={hasShippedToday ? "outline" : "emerald"}
-            size="sm"
-            onClick={() => {
-              sound.playClick();
-              onOpenShip?.();
-            }}
-            icon={hasShippedToday ? CheckCircle2 : Sparkles}
-            className="font-bold shadow-xs active:scale-95 transition-transform text-xs"
+          {/* 2. Connected Repositories / Shipping Grove Count */}
+          <div
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-700 font-sans"
+            title={`${activeTreesCount} Active Connected Modules`}
           >
-            {hasShippedToday ? "Shipped" : "Ship Daily"}
-          </Button>
+            <Trees className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="font-bold text-stone-900">{activeTreesCount}</span>
+            <span className="text-[10px] text-stone-400 font-medium">REPOS</span>
+          </div>
 
-          {/* 3. Plant New Project Action */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              sound.playClick();
-              onOpenAddTree?.();
-            }}
-            icon={Plus}
-            className="shadow-xs active:scale-95 transition-transform text-xs"
+          {/* 3. Verified Revenue / MRR Pill */}
+          <div
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-700 font-sans"
+            title={`$${totalMrr.toLocaleString()} Monthly Recurring Revenue`}
           >
-            Plant
-          </Button>
+            <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
+            <span className="font-bold text-amber-900 font-mono">${totalMrr.toLocaleString()}</span>
+            <span className="text-[10px] text-stone-400 font-medium">MRR</span>
+          </div>
 
-          {/* 4. Share Proof-of-Work Action */}
+          {/* 4. Island Progression Level */}
+          <div
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-600 font-sans font-pixel"
+            title={`Builder Progression Level ${level}`}
+          >
+            <span>LVL</span>
+            <span className="font-bold text-stone-900">{level}</span>
+          </div>
+
+          <div className="w-[1px] h-4 bg-stone-200 my-auto" />
+
+          {/* 5. 1-Click Proof-of-Work Share Action */}
           <Button
-            variant="outline"
+            variant="emerald"
             size="sm"
             onClick={() => {
               sound.playClick();
               onOpenShare?.();
             }}
             icon={Share2}
-            className="shadow-xs active:scale-95 transition-transform text-xs"
+            className="font-bold shadow-xs active:scale-95 transition-transform text-xs"
+            title="Export 1200×675 3D Share Card & Tweet (Press S)"
           >
-            Share
+            Share Proof
           </Button>
-
-          <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
-
-          {/* 5. Live Glanceable Island Summary Pill */}
-          <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-stone-50 border border-stone-200 text-xs font-medium text-stone-700">
-            <span className="flex items-center gap-1 font-bold text-stone-900" title="Active Island Trees">
-              <TreePine className="w-3.5 h-3.5 text-emerald-600" />
-              {activeTreesCount}
-            </span>
-            <span className="w-1 h-1 rounded-full bg-stone-300" />
-            <span className="flex items-center gap-0.5 font-bold text-amber-900 font-mono" title="Monthly Recurring Revenue">
-              ${totalMrr.toLocaleString()}
-            </span>
-            <span className="w-1 h-1 rounded-full bg-stone-300" />
-            <span className="font-pixel text-xs text-stone-500 font-bold" title={`Builder Level ${level}`}>
-              LVL {level}
-            </span>
-          </div>
 
         </div>
       </div>

@@ -71,8 +71,8 @@ export function LandingFooter() {
           <Link href="/dashboard" className="hover:text-stone-900 transition">
             Open Dashboard
           </Link>
-          <Link href="/u/kwakhare5" className="hover:text-stone-900 transition">
-            Public Profile
+          <Link href="/dashboard" className="hover:text-stone-900 transition">
+            Live Showcase
           </Link>
         </div>
       </footer>

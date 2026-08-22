@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Modal } from "@/components/ui/Modal";
-import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Tent, Shield, Coffee, Info } from "lucide-react";
+import { Tent, Shield, HeartHandshake, Info } from "lucide-react";
 import { useForestStore } from "@/store/useForestStore";
-import { sound } from "@/lib/sound";
 
 interface TentSabbaticalModalProps {
   isOpen: boolean;
@@ -15,19 +13,14 @@ interface TentSabbaticalModalProps {
 
 export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProps) {
   const streakShields = useForestStore((s) => s.streakShields);
-  const [isSabbaticalActive, setIsSabbaticalActive] = useState(false);
-
-  const handleToggleSabbatical = () => {
-    sound.playClick();
-    setIsSabbaticalActive(!isSabbaticalActive);
-  };
+  const streakDays = useForestStore((s) => s.streakDays);
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Campsite Rest & Sabbatical"
-      badgeText="Anti-Burnout"
+      title="Streak Shield Vault & Rest Protection"
+      badgeText="Day 7+ Milestone"
       icon={Tent}
       maxWidth="md"
     >
@@ -40,16 +33,16 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
             </div>
             <div>
               <span className="font-bold text-xs text-stone-900 font-sans block">
-                Streak Shield Vault
+                Automatic Rest Protection
               </span>
               <span className="text-[10px] text-stone-400 font-sans">
-                Anti-Burnout & Rest Planner
+                Day {streakDays} Milestone Canvas Tent
               </span>
             </div>
           </div>
 
           <Badge variant={streakShields > 0 ? "emerald" : "stone"} size="md">
-            {streakShields} / 2 Shields Active
+            {streakShields} / 2 Shields Banked
           </Badge>
         </div>
 
@@ -65,9 +58,9 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
             <div className="w-7 h-7 mx-auto rounded-full bg-white shadow-xs flex items-center justify-center text-emerald-700">
               <Shield className={`w-3.5 h-3.5 ${streakShields >= 1 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-bold text-stone-900 font-sans">Shield Slot I</div>
+            <div className="text-xs font-bold text-stone-900 font-sans">Streak Shield I</div>
             <span className="text-[10px] text-stone-500 block">
-              {streakShields >= 1 ? "Active Protection" : "Earned at 7-day streak"}
+              {streakShields >= 1 ? "Active · Protects 1 Rest Day" : "Earned at 7-day streak"}
             </span>
           </div>
 
@@ -81,44 +74,31 @@ export function TentSabbaticalModal({ isOpen, onClose }: TentSabbaticalModalProp
             <div className="w-7 h-7 mx-auto rounded-full bg-white shadow-xs flex items-center justify-center text-emerald-700">
               <Shield className={`w-3.5 h-3.5 ${streakShields >= 2 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-bold text-stone-900 font-sans">Shield Slot II</div>
+            <div className="text-xs font-bold text-stone-900 font-sans">Streak Shield II</div>
             <span className="text-[10px] text-stone-500 block">
-              {streakShields >= 2 ? "Active Protection" : "Earned at 14-day streak"}
+              {streakShields >= 2 ? "Active · Protects 1 Rest Day" : "Earned at 14-day streak"}
             </span>
           </div>
         </div>
 
-        {/* Sabbatical Action Row */}
-        <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-              <Coffee className="w-3.5 h-3.5" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-stone-900 font-sans block">
-                Sabbatical Rest Mode
-              </span>
-              <span className="text-[10px] text-stone-400">
-                Pause without losing momentum
-              </span>
-            </div>
+        {/* Anti-Burnout Philosophy Card */}
+        <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 flex items-start gap-2.5">
+          <HeartHandshake className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+          <div className="space-y-1">
+            <span className="text-xs font-bold text-stone-900 font-sans block">
+              Zero Streak Shaming Architecture
+            </span>
+            <p className="text-[11px] text-stone-500 leading-relaxed font-sans">
+              IndieForest calculates your discipline on a rolling 30-day health ratio. If you take a weekend off or get sick, your shields automatically deploy to protect your streak.
+            </p>
           </div>
-
-          <Button
-            variant={isSabbaticalActive ? "emerald" : "outline"}
-            size="sm"
-            onClick={handleToggleSabbatical}
-            className="text-xs"
-          >
-            {isSabbaticalActive ? "Active (Resting)" : "Schedule Rest"}
-          </Button>
         </div>
 
         {/* Helper Note */}
-        <div className="flex items-start gap-1.5 pt-1 text-[11px] text-stone-400 font-sans">
+        <div className="flex items-start gap-1.5 pt-1 text-[11px] text-stone-400 font-sans border-t border-stone-100">
           <Info className="w-3.5 h-3.5 text-stone-400 mt-0.5 shrink-0" />
           <span>
-            IndieForest uses a rolling 30-day health metric instead of punishing missed days. Sabbaticals protect your streaks.
+            Returning builders are greeted with Welcome-Back Rain that revives dormant pines without erasing past work.
           </span>
         </div>
       </div>
