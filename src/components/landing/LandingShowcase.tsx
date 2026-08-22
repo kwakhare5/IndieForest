@@ -10,9 +10,9 @@ export function LandingShowcase() {
   return (
     <section id="showcase" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-sans">
       <LandingSectionHeader
-        badge="Dual-Grove Architecture"
-        title="Progress from Day 1, even at $0 MRR."
-        description="95% of builders spend months building before making their first dollar. IndieForest separates the grind from revenue so pre-revenue founders always feel progress."
+        badge="Dual Groves"
+        title="Momentum from Day 1, even at $0 MRR."
+        description="Building takes months before making money. IndieForest separates code progress from revenue so pre-revenue founders always see their daily momentum."
         className="mb-12"
       />
 
@@ -22,15 +22,15 @@ export function LandingShowcase() {
           icon={Trees}
           iconBg="bg-emerald-50 border-emerald-200"
           iconColor="text-emerald-700"
-          title="West Grove: Emerald Shipping Pines"
-          description="Stepped conifer pines grown purely through daily code commits. Sprout at 1 commit, expand to Young Pine at 8 commits, Mature at 25, and crown with a golden halo at 60+ commits."
+          title="West Grove: Code & Shipping"
+          description="Evergreen pines grown purely through daily git commits. Sprout at 1 commit, expand to Young Pine at 8 commits, Mature at 25, and crown with a golden halo at 60+ commits."
           previewWidget={
             <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-sans">
-              <span>Powered by GitHub Events API</span>
-              <Badge variant="emerald" size="sm">Pure Code Grind</Badge>
+              <span>Automatic GitHub API tracking</span>
+              <Badge variant="emerald" size="sm">Code Momentum</Badge>
             </div>
           }
-          footerText="100% Pre-Revenue Friendly"
+          footerText="100% Pre-revenue friendly"
           footerColor="text-emerald-800"
         />
 
@@ -39,15 +39,15 @@ export function LandingShowcase() {
           icon={TrendingUp}
           iconBg="bg-amber-50 border-amber-200"
           iconColor="text-amber-700"
-          title="East Grove: Golden Revenue Pines"
-          description="Shimmering metallic gold pines sprouted and scaled by paying customer subscriptions ($10 → $50 → $500 → $2,000+ MRR). Verified via Stripe, Lemon Squeezy, or Polar webhooks."
+          title="East Grove: Customers & Revenue"
+          description="Golden oaks that sprout and grow from real customer payments ($10 → $50 → $500 → $2,000+ MRR). Verified directly via Stripe, Lemon Squeezy, or Polar webhooks."
           previewWidget={
             <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-sans">
-              <span>Universal HMAC Webhook</span>
+              <span>Direct webhook verification</span>
               <Badge variant="amber" size="sm">Verified MRR</Badge>
             </div>
           }
-          footerText="Stripe · Polar · Lemon Squeezy"
+          footerText="Stripe · Lemon Squeezy · Polar"
           footerColor="text-amber-800"
         />
       </div>

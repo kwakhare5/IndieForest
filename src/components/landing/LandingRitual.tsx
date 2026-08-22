@@ -11,19 +11,19 @@ export function LandingRitual() {
     <section id="overview" className="py-20 bg-[#e6e1d7] border-y border-stone-300/80 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <LandingSectionHeader
-          badge="Daily Shipping Loop"
-          title="Zero friction. Pure momentum."
-          description="Traditional habit apps fail because logging feels like chores. IndieForest operates in the background with zero manual check-ins."
+          badge="How It Works"
+          title="Zero manual tracking. Just code and ship."
+          description="You already write code and push to GitHub. IndieForest runs in the background and turns your daily shipping into a living 3D diorama."
           className="mb-12"
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {/* Step 1 */}
           <LandingFeatureCard
-            stepTag="01 / ZERO-TOUCH SYNC"
+            stepTag="01 / WRITE CODE"
             stepTagColor="text-emerald-700"
-            title="Push Code to GitHub"
-            description="Write code and push to your repos. IndieForest automatically syncs your commit activity and waters your island."
+            title="Push to GitHub"
+            description="Push commits to your repositories from your terminal. IndieForest automatically syncs your commit activity in the background."
             previewWidget={
               <div className="p-3 rounded-xl bg-stone-900 text-stone-100 font-mono text-xs flex items-center justify-between shadow-inner">
                 <span className="text-emerald-400">$ git push origin main</span>
@@ -31,16 +31,16 @@ export function LandingRitual() {
               </div>
             }
             footerIcon={Github}
-            footerText="Edge-cached API sync"
+            footerText="Auto-syncs via GitHub API"
             footerColor="text-stone-500"
           />
 
           {/* Step 2 */}
           <LandingFeatureCard
-            stepTag="02 / DUAL PROGRESSION"
+            stepTag="02 / WATCH IT GROW"
             stepTagColor="text-amber-700"
-            title="Sprout Pines & Level Up"
-            description="Each active project grows an Emerald Shipping Pine. Stripe sales sprout Golden Revenue Pines. Collect streak shields as you build."
+            title="Pines Grow with Commits"
+            description="Every repository becomes an evergreen pine. More commits make it taller. Stripe sales sprout golden revenue oaks."
             previewWidget={
               <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between shadow-xs">
                 <span className="flex items-center gap-1.5 font-bold font-sans">
@@ -50,7 +50,7 @@ export function LandingRitual() {
               </div>
             }
             footerIcon={CloudRain}
-            footerText="Rolling 30-Day Forest Health"
+            footerText="Rolling 30-day health ratio"
             footerColor="text-amber-800"
           />
 
@@ -58,18 +58,18 @@ export function LandingRitual() {
           <LandingFeatureCard
             stepTag="03 / PROOF OF WORK"
             stepTagColor="text-emerald-700"
-            title="1-Click Verified Social Cards"
-            description="Export 1200×675 3D render cards and 10s turntable orbit video reels to share your verified progress on X/Twitter in seconds."
+            title="1-Click Social Proof"
+            description="Export verified 1200×675 3D cards and human tweets to share on X, LinkedIn, or embed in your GitHub README."
             previewWidget={
               <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between shadow-xs">
                 <span className="flex items-center gap-1.5 font-bold font-sans">
                   <Zap className="w-3.5 h-3.5 text-emerald-700" /> 1200×675 Card
                 </span>
-                <Badge variant="emerald" size="sm">60fps HD</Badge>
+                <Badge variant="emerald" size="sm">HD Export</Badge>
               </div>
             }
             footerIcon={TrendingUp}
-            footerText="Numbers-led anti-slop copy"
+            footerText="Authentic proof with real stats"
             footerColor="text-emerald-800"
           />
         </div>

@@ -6,24 +6,24 @@ import { LandingSectionHeader } from "./LandingSectionHeader";
 
 const FAQ_ITEMS = [
   {
-    question: "Do you read or store my private GitHub source code?",
+    question: "Do you read or store my private code?",
     answer:
-      "Never. IndieForest only fetches public repository commit timestamps and author names to verify that you shipped code today. We never request private repo write permissions or read code contents.",
+      "Never. IndieForest only checks public commit timestamps and authors to verify that you shipped code today. We never request private repo write permissions or read your source code.",
   },
   {
-    question: "Can I use IndieForest if I am pre-revenue ($0 MRR)?",
+    question: "Can I use IndieForest if I have $0 MRR?",
     answer:
-      "Yes, absolutely! The Emerald Shipping Grove (West pasture) levels up purely through code commits and consistency. Pre-revenue builders get full visual progression without needing revenue.",
+      "Yes, absolutely. The code grove (West side) grows purely through git commits. You don't need paying customers or revenue to build a living island.",
   },
   {
     question: "How does Stripe or Lemon Squeezy integration work?",
     answer:
-      "You simply paste your unique IndieForest Webhook URL into your Stripe, Lemon Squeezy, or Polar webhook settings. When a customer purchases a subscription, our webhook normalizer automatically sprouts a Golden Pine tree in your revenue grove.",
+      "Paste your unique webhook URL into Stripe, Lemon Squeezy, or Polar. When someone buys a subscription, a golden revenue oak sprouts automatically on your island.",
   },
   {
-    question: "What happens if I take a weekend or vacation off?",
+    question: "What happens if I take a weekend or rest day off?",
     answer:
-      "We believe in sustainable coding, not burnout. For every 7 days of consecutive shipping, you earn 1 Streak Shield (up to 2 maximum). When you take a rest day, a shield is automatically consumed to protect your streak from resetting.",
+      "You earn Rest Shields every 7 days of shipping (up to 2 banked). When you take a rest day, a shield is used automatically to keep your streak intact.",
   },
 ];
 
@@ -32,9 +32,9 @@ export function LandingFaq() {
     <section id="faq" className="py-20 bg-[#e6e1d7] border-t border-stone-300/80 font-sans">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <LandingSectionHeader
-          badge="Transparent & Zero-Slop"
+          badge="FAQ"
           title="Frequently Asked Questions"
-          description="Everything you need to know about zero-touch diorama tracking, privacy, and streak safety."
+          description="Everything you need to know about automated diorama tracking, privacy, and rest shields."
           className="mb-12"
         />
 

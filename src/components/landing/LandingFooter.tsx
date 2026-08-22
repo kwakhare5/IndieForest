@@ -31,7 +31,7 @@ export function LandingFooter() {
           {isLoaded && isSignedIn ? (
             <Link href="/dashboard">
               <Button variant="emerald" size="lg" showArrow arrowType="right">
-                OPEN DASHBOARD
+                Open Dashboard
               </Button>
             </Link>
           ) : (
@@ -43,14 +43,14 @@ export function LandingFooter() {
                 arrowType="right"
                 onClick={() => sound.playClick()}
               >
-                START FREE WITH GITHUB
+                Start Free with GitHub
               </Button>
             </SignInButton>
           )}
         </div>
 
         <p className="text-xs font-sans text-stone-500 pt-2">
-          Free forever • 100% Zero-touch sync • Instant 3D diorama
+          Free forever • 100% automated • Instant 3D diorama
         </p>
       </Card>
 
