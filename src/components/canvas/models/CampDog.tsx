@@ -14,7 +14,7 @@ export function CampDog({
   wireframe = false,
   interactive = true,
 }: CampDogProps) {
-  const groupRef = useRef<THREE.Group>(null);
+  const jumpGroupRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
   const bodyRef = useRef<THREE.Group>(null);
@@ -51,12 +51,12 @@ export function CampDog({
       bodyRef.current.position.y = 0.24 + Math.sin(t * 2.4) * 0.01;
     }
 
-    // Playful jump on click
-    if (groupRef.current) {
+    // Playful jump on click (moves internal jumpGroup, not the collision hitbox)
+    if (jumpGroupRef.current) {
       if (isExcited) {
-        groupRef.current.position.y = Math.abs(Math.sin(t * 12)) * 0.18;
+        jumpGroupRef.current.position.y = Math.abs(Math.sin(t * 12)) * 0.18;
       } else {
-        groupRef.current.position.y = 0;
+        jumpGroupRef.current.position.y = 0;
       }
     }
   });
@@ -68,110 +68,161 @@ export function CampDog({
   const medalColor = "#fbbf24"; // Golden medal
 
   return (
-    <group ref={groupRef} onClick={handleClick}>
-      {/* 1. Torso Body with Breathing Motion */}
-      <group ref={bodyRef}>
-        <mesh castShadow>
-          <boxGeometry args={[0.24, 0.22, 0.46]} />
+    <group>
+      {/* 1. True Transparent Stationary Collision Hitbox */}
+      {interactive && (
+        <mesh
+          position={[0, 0.26, 0]}
+          onClick={handleClick}
+          onPointerOver={(e) => {
+            e.stopPropagation();
+            document.body.style.cursor = "pointer";
+          }}
+          onPointerOut={() => {
+            document.body.style.cursor = "auto";
+          }}
+        >
+          <boxGeometry args={[0.5, 0.6, 0.75]} />
+          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+        </mesh>
+      )}
+
+      {/* 2. Visual Animated Mesh Group */}
+      <group ref={jumpGroupRef}>
+        {/* Torso Body with Breathing Motion */}
+        <group ref={bodyRef}>
+          <mesh castShadow>
+            <boxGeometry args={[0.24, 0.22, 0.46]} />
+            <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
+          </mesh>
+
+          {/* Cream Belly Undercoat */}
+          <mesh position={[0, -0.06, 0.02]}>
+            <boxGeometry args={[0.2, 0.1, 0.36]} />
+            <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
+          </mesh>
+        </group>
+
+        {/* 4 Standing Legs with Cream Paws */}
+        {/* Front Left */}
+        <mesh position={[-0.1, 0.08, 0.16]} castShadow>
+          <boxGeometry args={[0.08, 0.16, 0.08]} />
           <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
         </mesh>
-
-        {/* Cream Belly Undercoat */}
-        <mesh position={[0, -0.06, 0.02]}>
-          <boxGeometry args={[0.2, 0.12, 0.38]} />
+        <mesh position={[-0.1, 0.015, 0.17]}>
+          <boxGeometry args={[0.082, 0.03, 0.09]} />
           <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
         </mesh>
 
-        {/* Fluffy Front Chest Bib */}
-        <mesh position={[0, 0.02, 0.24]}>
-          <boxGeometry args={[0.18, 0.18, 0.04]} />
+        {/* Front Right */}
+        <mesh position={[0.1, 0.08, 0.16]} castShadow>
+          <boxGeometry args={[0.08, 0.16, 0.08]} />
+          <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
+        </mesh>
+        <mesh position={[0.1, 0.015, 0.17]}>
+          <boxGeometry args={[0.082, 0.03, 0.09]} />
           <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
         </mesh>
 
-        {/* Crimson Leather Collar & Gold Tag */}
-        <mesh position={[0, 0.1, 0.22]} rotation={[0.2, 0, 0]}>
-          <boxGeometry args={[0.22, 0.04, 0.06]} />
-          <meshStandardMaterial color={collarColor} roughness={0.6} />
-        </mesh>
-        <mesh position={[0, 0.07, 0.26]}>
-          <cylinderGeometry args={[0.02, 0.02, 0.015, 6]} />
-          <meshStandardMaterial color={medalColor} metalness={0.8} roughness={0.2} />
-        </mesh>
-      </group>
-
-      {/* 2. Four Geometric Standing Legs & Paws */}
-      {/* Front Left */}
-      <mesh position={[-0.09, 0.1, 0.15]} castShadow>
-        <boxGeometry args={[0.065, 0.2, 0.07]} />
-        <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
-      </mesh>
-      {/* Front Right */}
-      <mesh position={[0.09, 0.1, 0.15]} castShadow>
-        <boxGeometry args={[0.065, 0.2, 0.07]} />
-        <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
-      </mesh>
-      {/* Rear Left */}
-      <mesh position={[-0.09, 0.1, -0.15]} castShadow>
-        <boxGeometry args={[0.07, 0.2, 0.075]} />
-        <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
-      </mesh>
-      {/* Rear Right */}
-      <mesh position={[0.09, 0.1, -0.15]} castShadow>
-        <boxGeometry args={[0.07, 0.2, 0.075]} />
-        <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
-      </mesh>
-
-      {/* 3. Expressive Head with Ears & Snout */}
-      <group ref={headRef} position={[0, 0.42, 0.24]}>
-        {/* Head Block */}
-        <mesh castShadow>
-          <boxGeometry args={[0.22, 0.2, 0.22]} />
+        {/* Back Left */}
+        <mesh position={[-0.1, 0.08, -0.16]} castShadow>
+          <boxGeometry args={[0.08, 0.16, 0.08]} />
           <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
         </mesh>
-
-        {/* Cream Muzzle */}
-        <mesh position={[0, -0.03, 0.13]}>
-          <boxGeometry args={[0.12, 0.1, 0.12]} />
-          <meshStandardMaterial color={creamColor} roughness={0.7} flatShading wireframe={wireframe} />
-        </mesh>
-
-        {/* Dark Nose */}
-        <mesh position={[0, 0.01, 0.2]}>
-          <boxGeometry args={[0.04, 0.035, 0.03]} />
-          <meshStandardMaterial color={darkColor} roughness={0.4} />
-        </mesh>
-
-        {/* Dark Eyes */}
-        <mesh position={[-0.065, 0.03, 0.115]}>
-          <boxGeometry args={[0.025, 0.03, 0.02]} />
-          <meshBasicMaterial color={darkColor} />
-        </mesh>
-        <mesh position={[0.065, 0.03, 0.115]}>
-          <boxGeometry args={[0.025, 0.03, 0.02]} />
-          <meshBasicMaterial color={darkColor} />
-        </mesh>
-
-        {/* Triangular Golden Ears */}
-        <mesh position={[-0.09, 0.13, -0.02]} rotation={[0.2, -0.2, 0.3]} castShadow>
-          <coneGeometry args={[0.055, 0.11, 4]} />
-          <meshStandardMaterial color="#b45309" roughness={0.7} flatShading wireframe={wireframe} />
-        </mesh>
-        <mesh position={[0.09, 0.13, -0.02]} rotation={[0.2, 0.2, -0.3]} castShadow>
-          <coneGeometry args={[0.055, 0.11, 4]} />
-          <meshStandardMaterial color="#b45309" roughness={0.7} flatShading wireframe={wireframe} />
-        </mesh>
-      </group>
-
-      {/* 4. Playful Arched Wagging Tail */}
-      <group ref={tailRef} position={[0, 0.32, -0.22]}>
-        <mesh position={[0, 0.11, -0.08]} rotation={[-0.6, 0, 0]} castShadow>
-          <boxGeometry args={[0.065, 0.18, 0.065]} />
-          <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
-        </mesh>
-        <mesh position={[0, 0.18, -0.04]} rotation={[0.4, 0, 0]}>
-          <boxGeometry args={[0.055, 0.08, 0.055]} />
+        <mesh position={[-0.1, 0.015, -0.15]}>
+          <boxGeometry args={[0.082, 0.03, 0.09]} />
           <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
         </mesh>
+
+        {/* Back Right */}
+        <mesh position={[0.1, 0.08, -0.16]} castShadow>
+          <boxGeometry args={[0.08, 0.16, 0.08]} />
+          <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
+        </mesh>
+        <mesh position={[0.1, 0.015, -0.15]}>
+          <boxGeometry args={[0.082, 0.03, 0.09]} />
+          <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
+        </mesh>
+
+        {/* Head & Neck Assembly */}
+        <group position={[0, 0.36, 0.24]} ref={headRef}>
+          {/* Head Skull */}
+          <mesh castShadow>
+            <boxGeometry args={[0.22, 0.2, 0.22]} />
+            <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
+          </mesh>
+
+          {/* Cream Snout / Muzzle */}
+          <mesh position={[0, -0.04, 0.13]}>
+            <boxGeometry args={[0.14, 0.1, 0.12]} />
+            <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
+          </mesh>
+
+          {/* Espresso Nose */}
+          <mesh position={[0, 0.0, 0.195]}>
+            <boxGeometry args={[0.06, 0.04, 0.03]} />
+            <meshStandardMaterial color={darkColor} roughness={0.5} flatShading />
+          </mesh>
+
+          {/* Left Eye */}
+          <mesh position={[-0.07, 0.03, 0.115]}>
+            <boxGeometry args={[0.03, 0.03, 0.02]} />
+            <meshStandardMaterial color={darkColor} roughness={0.2} />
+          </mesh>
+
+          {/* Right Eye */}
+          <mesh position={[0.07, 0.03, 0.115]}>
+            <boxGeometry args={[0.03, 0.03, 0.02]} />
+            <meshStandardMaterial color={darkColor} roughness={0.2} />
+          </mesh>
+
+          {/* Perky Shiba Ears */}
+          {/* Left Ear */}
+          <mesh position={[-0.08, 0.13, -0.02]} rotation={[-0.1, 0, 0.2]}>
+            <coneGeometry args={[0.05, 0.1, 4]} />
+            <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
+          </mesh>
+          <mesh position={[-0.08, 0.12, -0.01]} rotation={[-0.1, 0, 0.2]}>
+            <coneGeometry args={[0.03, 0.07, 4]} />
+            <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
+          </mesh>
+
+          {/* Right Ear */}
+          <mesh position={[0.08, 0.13, -0.02]} rotation={[-0.1, 0, -0.2]}>
+            <coneGeometry args={[0.05, 0.1, 4]} />
+            <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
+          </mesh>
+          <mesh position={[0.08, 0.12, -0.01]} rotation={[-0.1, 0, -0.2]}>
+            <coneGeometry args={[0.03, 0.07, 4]} />
+            <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
+          </mesh>
+
+          {/* Crimson Leather Collar */}
+          <mesh position={[0, -0.11, -0.04]}>
+            <boxGeometry args={[0.225, 0.04, 0.225]} />
+            <meshStandardMaterial color={collarColor} roughness={0.5} />
+          </mesh>
+
+          {/* Gold Founder Medal */}
+          <mesh position={[0, -0.14, 0.08]}>
+            <cylinderGeometry args={[0.03, 0.03, 0.01, 8]} />
+            <meshStandardMaterial color={medalColor} metalness={0.8} roughness={0.2} />
+          </mesh>
+        </group>
+
+        {/* Dynamic Arched Bushy Tail */}
+        <group position={[0, 0.3, -0.24]} ref={tailRef}>
+          {/* Base */}
+          <mesh position={[0, 0.06, -0.05]} rotation={[0.6, 0, 0]}>
+            <boxGeometry args={[0.08, 0.14, 0.08]} />
+            <meshStandardMaterial color={coatColor} roughness={0.7} flatShading wireframe={wireframe} />
+          </mesh>
+          {/* Arched Tip */}
+          <mesh position={[0, 0.16, -0.02]} rotation={[1.1, 0, 0]}>
+            <boxGeometry args={[0.07, 0.1, 0.07]} />
+            <meshStandardMaterial color={creamColor} roughness={0.8} flatShading wireframe={wireframe} />
+          </mesh>
+        </group>
       </group>
     </group>
   );

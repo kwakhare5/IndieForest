@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { Html } from "@react-three/drei";
-import { Flame, Tent, Home, Shield } from "lucide-react";
+import React from "react";
 import type { TimeOfDay } from "@/types/game";
 import { Campfire } from "./models/Campfire";
 import { CanvasTent } from "./models/CanvasTent";
@@ -24,22 +22,17 @@ interface CampPropsComponentProps {
   onClickTent?: () => void;
   onClickCabin?: () => void;
   drought?: boolean;
-  showBadges?: boolean;
 }
 
 export function CampProps({
   streakDays = 1,
   level = 1,
-  streakShields = 0,
   timeOfDay = "day",
   onClickCampfire,
   onClickTent,
   onClickCabin,
   drought = false,
-  showBadges = false,
 }: CampPropsComponentProps) {
-  const [hoveredProp, setHoveredProp] = useState<"campfire" | "tent" | "cabin" | null>(null);
-
   const isNight = timeOfDay === "night";
   const isSunset = timeOfDay === "sunset";
 
@@ -52,7 +45,7 @@ export function CampProps({
   const hasRobin = streakDays >= 5 || level >= 4;
   const hasCampDog = streakDays >= 10 || level >= 7;
 
-  // Option 2 (Bilateral Farmstead) Canonical Coordinates on Symmetrical Square
+  // Canonical Coordinates on Symmetrical Square
   const cabinPos: [number, number, number] = [-0.6, 0.25, 1.8];
   const tentPos: [number, number, number] = [-3.8, 0.25, 2.8];
   const campfirePos: [number, number, number] = [1.8, 0.25, 2.8];
@@ -68,115 +61,86 @@ export function CampProps({
     <group>
       {/* 1. Milestone Campfire (Daily Focus Station) */}
       {hasCampfire && (
-        <group
-          position={campfirePos}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClickCampfire?.();
-          }}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            setHoveredProp("campfire");
-          }}
-          onPointerOut={() => setHoveredProp(null)}
-        >
-          <Campfire isNight={isNight} isSunset={isSunset} drought={drought} />
+        <group position={campfirePos}>
+          {/* True Transparent Stationary Hitbox */}
+          <mesh
+            position={[0, 0.45, 0]}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickCampfire?.();
+            }}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = "auto";
+            }}
+          >
+            <cylinderGeometry args={[0.75, 0.75, 0.9, 12]} />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          </mesh>
 
-          {/* Clickable Tooltip Badge */}
-          {(showBadges || hoveredProp === "campfire") && (
-            <Html
-              position={[0, 0.85, 0]}
-              center
-              distanceFactor={13}
-              className="pointer-events-none select-none transition-transform duration-200"
-            >
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-stone-900 border border-stone-300 shadow-md text-xs font-bold whitespace-nowrap">
-                <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                <span>Campfire Focus</span>
-              </div>
-            </Html>
-          )}
+          <Campfire isNight={isNight} isSunset={isSunset} drought={drought} />
         </group>
       )}
 
       {/* 2. Sabbatical Canvas Tent (Rest & Streak Freeze Vault) */}
       {hasTent && (
-        <group
-          position={tentPos}
-          rotation={[0, 0.2, 0]}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClickTent?.();
-          }}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            setHoveredProp("tent");
-          }}
-          onPointerOut={() => setHoveredProp(null)}
-        >
-          <CanvasTent drought={drought} />
+        <group position={tentPos} rotation={[0, 0.2, 0]}>
+          {/* True Transparent Stationary Hitbox */}
+          <mesh
+            position={[0, 0.65, 0]}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickTent?.();
+            }}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = "auto";
+            }}
+          >
+            <boxGeometry args={[1.7, 1.4, 1.7]} />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          </mesh>
 
-          {/* Clickable Tooltip Badge with Shields */}
-          {(showBadges || hoveredProp === "tent") && (
-            <Html
-              position={[0, 1.25, 0]}
-              center
-              distanceFactor={13}
-              className="pointer-events-none select-none transition-transform duration-200"
-            >
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-stone-900 border border-stone-300 shadow-md text-xs font-bold whitespace-nowrap">
-                <Tent className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Rest Vault</span>
-                {streakShields > 0 && (
-                  <span className="flex items-center gap-0.5 text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-mono">
-                    <Shield className="w-2.5 h-2.5" />
-                    {streakShields}
-                  </span>
-                )}
-              </div>
-            </Html>
-          )}
+          <CanvasTent drought={drought} />
         </group>
       )}
 
       {/* 3. Founder's War Room HQ Cabin (Commanding Center-South Ranch) */}
       {hasCabin && (
-        <group
-          position={cabinPos}
-          rotation={[0, 0.45, 0]}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClickCabin?.();
-          }}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            setHoveredProp("cabin");
-          }}
-          onPointerOut={() => setHoveredProp(null)}
-        >
-          <LogCabin isNight={isNight} drought={drought} />
+        <group position={cabinPos} rotation={[0, 0.45, 0]}>
+          {/* True Transparent Stationary Hitbox */}
+          <mesh
+            position={[0, 0.85, 0]}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickCabin?.();
+            }}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = "auto";
+            }}
+          >
+            <boxGeometry args={[2.1, 1.8, 2.1]} />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          </mesh>
 
-          {/* Clickable Tooltip Badge */}
-          {(showBadges || hoveredProp === "cabin") && (
-            <Html
-              position={[0, 1.6, 0]}
-              center
-              distanceFactor={13}
-              className="pointer-events-none select-none transition-transform duration-200"
-            >
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-stone-900 border border-stone-300 shadow-md text-xs font-bold whitespace-nowrap">
-                <Home className="w-3.5 h-3.5 text-amber-700" />
-                <span>War Room</span>
-              </div>
-            </Html>
-          )}
+          <LogCabin isNight={isNight} drought={drought} />
         </group>
       )}
 
-      {/* 4. Living Wildlife: Camp Shiba Dog */}
+      {/* 4. Living Wildlife: Standing Golden Companion */}
       {hasCampDog && (
         <group position={dogPos} rotation={[0, -0.5, 0]}>
-          <CampDog />
+          <CampDog interactive />
         </group>
       )}
 
@@ -201,23 +165,65 @@ export function CampProps({
         </group>
       )}
 
-      {/* 8. Elite Monument: Alpine Windmill */}
+      {/* 8. Elite Monument: Alpine Windmill (Unlocks at Level 15) */}
       {level >= 15 && (
         <group position={windmillPos} rotation={[0, -0.2, 0]}>
+          <mesh
+            position={[0, 1.3, 0]}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = "auto";
+            }}
+          >
+            <cylinderGeometry args={[1.0, 1.2, 2.6, 8]} />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          </mesh>
+
           <Windmill isNight={isNight} drought={drought} />
         </group>
       )}
 
-      {/* 9. Elite Monument: Harbor Pier & Cargo Boat */}
+      {/* 9. Elite Monument: Harbor Pier & Cargo Boat (Unlocks at Level 25) */}
       {level >= 25 && (
         <group position={pierPos}>
+          <mesh
+            position={[0, 0.35, 0]}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = "auto";
+            }}
+          >
+            <boxGeometry args={[1.7, 0.7, 1.7]} />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          </mesh>
+
           <HarborPier isNight={isNight} drought={drought} />
         </group>
       )}
 
-      {/* 10. Elite Monument: Coast Lighthouse */}
+      {/* 10. Elite Monument: Coast Lighthouse (Unlocks at Level 35) */}
       {level >= 35 && (
         <group position={lighthousePos}>
+          <mesh
+            position={[0, 1.9, 0]}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = "auto";
+            }}
+          >
+            <cylinderGeometry args={[0.8, 1.1, 4.0, 8]} />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          </mesh>
+
           <Lighthouse isNight={isNight} drought={drought} />
         </group>
       )}

@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, ContactShadows } from "@react-three/drei";
+import { ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 import { ModularIsland } from "./ModularIsland";
 import { BlockTree } from "./BlockTree";
@@ -28,10 +28,12 @@ interface ForestCanvasProps {
   zoomLevel?: 1 | 2;
 }
 
-// Flattering Low-Pitch Isometric Parallax Rig & Smooth Zoom Animator
+// -----------------------------------------------------------------------------
+// Flattering Low-Pitch Isometric Parallax Rig & Smooth Lerp Zoom Engine
+// -----------------------------------------------------------------------------
 function IsometricCameraRig({
   enabled = true,
-  targetZoom = 28,
+  targetZoom = 38,
 }: {
   enabled?: boolean;
   targetZoom?: number;
@@ -39,21 +41,22 @@ function IsometricCameraRig({
   useFrame((state) => {
     const { pointer, camera } = state;
 
-    // Smoothly interpolate zoom between the 2 discrete levels (Level 1: 28, Level 2: 38)
-    if (camera.zoom !== targetZoom) {
-      camera.zoom = THREE.MathUtils.lerp(camera.zoom, targetZoom, 0.1);
+    // Smoothly interpolate orthographic zoom
+    if (Math.abs(camera.zoom - targetZoom) > 0.01) {
+      camera.zoom = THREE.MathUtils.lerp(camera.zoom, targetZoom, 0.12);
       camera.updateProjectionMatrix();
     }
 
     if (!enabled) return;
 
-    // Subtle elastic tilt on the flattering low-pitch isometric angle
-    const targetX = 14.5 + pointer.x * 1.0;
-    const targetZ = 14.5 - pointer.y * 1.0;
+    // Subtle, gentle isometric tilt without displacing the diorama from under the pointer
+    const targetX = 14.5 + pointer.x * 0.15;
+    const targetZ = 14.5 - pointer.y * 0.15;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.05);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
     camera.lookAt(0, 0.35, 0);
   });
+
   return null;
 }
 
@@ -101,9 +104,12 @@ export function ForestCanvas({
   const rimColor = isNight ? "#38bdf8" : isSunset ? "#e879f9" : "#93c5fd";
   const rimIntensity = isNight ? 0.25 : 0.35;
 
-  // Discrete Zoom Levels scaled proportionally with island expansion
+  // Calibrated Discrete Zoom Levels scaled with pure 1:1 square island dimensions
   const baseZoom = level >= 50 ? 28 : level >= 20 ? 34 : level >= 10 ? 38 : 42;
-  const targetZoom = zoomLevel === 2 ? baseZoom * 1.35 : baseZoom;
+  const targetZoom = zoomLevel === 2 ? baseZoom * 1.45 : baseZoom;
+
+  // Calibrated Contact Shadow Scale for 1:1 square foundations
+  const shadowScale = level >= 20 ? 34 : level >= 10 ? 28 : level >= 5 ? 22 : 18;
 
   return (
     <div className={`relative ${className} select-none overflow-hidden transition-colors duration-700`}>
@@ -118,20 +124,9 @@ export function ForestCanvas({
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          {interactive && (
-            <OrbitControls
-              target={[0, 0.35, 0]}
-              enablePan={false}
-              enableRotate={false} /* 🔒 Locked to flattering low-pitch isometric farm angle */
-              enableZoom={true}
-              minZoom={24}
-              maxZoom={60}
-            />
-          )}
-
           <IsometricCameraRig enabled={interactive} targetZoom={targetZoom} />
 
-          {/* 2. Studio Lighting Environment with Organic Day/Night Cycle */}
+          {/* 1. Studio Lighting Environment with Organic Day/Night Cycle */}
           <ambientLight intensity={ambientIntensity} color={ambientColor} />
 
           {/* Directional Key Sun Light */}
@@ -149,19 +144,19 @@ export function ForestCanvas({
             color={rimColor}
           />
 
-          {/* 3. Soft Studio Contact Shadows (Positioned below the floating island keel) */}
+          {/* 2. Soft Studio Contact Shadows (Positioned below the floating island keel) */}
           <ContactShadows
             position={[0, -0.48, 0]}
             opacity={drought ? 0.25 : isNight ? 0.6 : 0.45}
-            scale={level >= 20 ? 32 : 18}
+            scale={shadowScale}
             blur={2.4}
             far={6}
           />
 
-          {/* 4. Progressive Modular Land Slabs (Option A: Scales dynamically with level) */}
+          {/* 3. Progressive 1:1 Symmetrical Square Modular Island */}
           <ModularIsland level={level} drought={drought} />
 
-          {/* 5. 3D Trees (Dual-Grove Emerald Shipping & Golden Revenue) */}
+          {/* 4. 3D Trees (Dual-Grove Emerald Shipping & Golden Revenue) */}
           {trees.map((tree) => (
             <BlockTree
               key={tree.id}
@@ -172,7 +167,7 @@ export function ForestCanvas({
             />
           ))}
 
-          {/* 6. Milestone Campsite Props & Living Wildlife */}
+          {/* 5. Milestone Campsite Props & Living Wildlife */}
           <CampProps
             streakDays={streakDays}
             level={level}
@@ -184,7 +179,7 @@ export function ForestCanvas({
             drought={drought}
           />
 
-          {/* 7. Dynamic Weather & Particle FX */}
+          {/* 6. Dynamic Weather & Particle FX */}
           <WeatherSystem
             drought={drought}
             isRaining={isRaining}
