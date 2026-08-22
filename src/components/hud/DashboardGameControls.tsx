@@ -17,7 +17,6 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { UserButton } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import type { TimeOfDay, TreeData } from "@/types/game";
@@ -96,7 +95,7 @@ export function DashboardGameControls({
             {isAudioMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-emerald-700" />}
           </button>
 
-          {/* Subtle Porcelain Modules Inventory Popover Trigger */}
+          {/* Modules Inventory Trigger */}
           <Button
             variant={isModulesPopoverOpen ? "dark" : "outline"}
             size="sm"
@@ -133,20 +132,20 @@ export function DashboardGameControls({
         </div>
       </div>
 
-      {/* 2. Floating Tactile Porcelain Modules Popover (Spring Animated) */}
+      {/* 2. Floating Tactile Porcelain Modules Popover (Flat, Breathable, Zero Box-Soup) */}
       {isModulesPopoverOpen && (
-        <div className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm p-1 rounded-3xl glass-dock shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200 z-50">
-          <div className="p-4 rounded-[22px] porcelain-surface flex flex-col max-h-[75vh] overflow-hidden">
+        <div className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm p-1.5 rounded-[2rem] glass-dock shadow-2xl origin-top-right animate-in fade-in zoom-in-95 duration-150 z-50">
+          <div className="p-4 sm:p-5 rounded-[calc(2rem-0.375rem)] porcelain-surface flex flex-col max-h-[75vh] overflow-hidden">
             
             {/* Popover Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-stone-200/80">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-100">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-xl bg-stone-100 text-stone-800 border border-stone-200 shadow-2xs">
-                  <LayoutGrid className="w-4 h-4 text-emerald-700" />
+                <div className="w-7 h-7 rounded-xl bg-stone-100 text-stone-800 border border-stone-200/80 flex items-center justify-center">
+                  <LayoutGrid className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-stone-950">Active Modules</h3>
-                  <span className="text-[10px] text-stone-500 font-mono">{trees.length} Connected Island Trees</span>
+                  <h3 className="text-xs font-bold text-stone-950 font-sans">Active Modules</h3>
+                  <span className="text-[10px] text-stone-500 font-sans block">{trees.length} Island Projects</span>
                 </div>
               </div>
 
@@ -171,6 +170,7 @@ export function DashboardGameControls({
                     setIsModulesPopoverOpen(false);
                   }}
                   className="p-1 rounded-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition cursor-pointer"
+                  title="Close Modules"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -183,14 +183,14 @@ export function DashboardGameControls({
                 <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Search repos or revenue..."
+                  placeholder="Search projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-950 placeholder-stone-400 outline-none focus:border-emerald-500 focus:bg-white transition"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-950 placeholder-stone-400 outline-none focus:border-emerald-500 focus:bg-white transition font-sans"
                 />
               </div>
 
-              <div className="flex items-center gap-1 text-[11px] font-medium">
+              <div className="flex items-center gap-1 text-[11px] font-medium font-sans">
                 {(["all", "shipping", "revenue"] as const).map((t) => (
                   <button
                     key={t}
@@ -208,18 +208,18 @@ export function DashboardGameControls({
               </div>
             </div>
 
-            {/* Module Items Scrollable List */}
-            <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+            {/* Flat Module Items List */}
+            <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 custom-scrollbar">
               {filteredTrees.length > 0 ? (
                 filteredTrees.map((tree) => (
-                  <Card key={tree.id} variant="subtle-inset" className="p-2.5 rounded-xl flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 truncate">
-                      <div className={`p-1.5 rounded-lg shrink-0 ${tree.type === "revenue" ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"}`}>
+                  <div key={tree.id} className="pb-2.5 border-b border-stone-100 last:border-0 last:pb-0 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 truncate">
+                      <div className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center ${tree.type === "revenue" ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"}`}>
                         {tree.type === "revenue" ? <TrendingUp className="w-3.5 h-3.5" /> : <GitCommit className="w-3.5 h-3.5" />}
                       </div>
                       <div className="flex flex-col truncate">
-                        <span className="font-bold text-xs text-stone-950 truncate">{tree.name}</span>
-                        <span className="text-[10px] text-stone-500 uppercase font-sans font-semibold tracking-wider">
+                        <span className="font-bold text-xs text-stone-950 truncate font-sans">{tree.name}</span>
+                        <span className="text-[10px] text-stone-500 uppercase font-sans font-medium tracking-wider">
                           {tree.type === "revenue" ? `$${tree.mrr || 0}/mo` : `${tree.commits || 0} commits`} · {tree.tier}
                         </span>
                       </div>
@@ -227,15 +227,15 @@ export function DashboardGameControls({
 
                     <button
                       onClick={() => onDeleteTree(tree.id, tree.name)}
-                      className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                      className="p-1 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
                       title="Prune / Delete Tree"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
-                  </Card>
+                  </div>
                 ))
               ) : (
-                <div className="text-center py-6 text-xs text-stone-400">
+                <div className="text-center py-6 text-xs text-stone-400 font-sans">
                   No matching modules found.
                 </div>
               )}

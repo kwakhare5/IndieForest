@@ -6,7 +6,7 @@ import { Share2, Check, Flame, Download, ImageIcon } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { sound } from "@/lib/sound";
 
 interface ShareCardModalProps {
@@ -199,42 +199,34 @@ Living 3D world: ${profileUrl}`,
       title="Export 3D Social Card & Proof"
       badgeText="Build in Public"
       icon={Share2}
-      maxWidth="lg"
+      maxWidth="md"
       position="bottom-center"
     >
-      <div className="space-y-4 font-sans">
+      <div className="space-y-3.5 font-sans">
         {/* Template Selector */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-stone-200/70 border border-stone-300/80">
-          {["Numbers-Led", "Short & Punchy", "Reflection"].map((label, idx) => (
-            <button
-              key={label}
-              onClick={() => {
-                sound.playClick();
-                setSelectedTemplateIndex(idx);
-              }}
-              className={`flex-1 py-1 px-2 rounded-lg text-xs font-bold transition ${
-                selectedTemplateIndex === idx
-                  ? "bg-white text-stone-950 shadow-xs"
-                  : "text-stone-600 hover:text-stone-900"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <SegmentedControl
+          value={selectedTemplateIndex}
+          onChange={(val) => setSelectedTemplateIndex(Number(val))}
+          size="sm"
+          options={[
+            { value: 0, label: "Numbers-Led" },
+            { value: 1, label: "Short & Punchy" },
+            { value: 2, label: "Reflection" },
+          ]}
+        />
 
-        {/* Live Tweet Preview Card */}
-        <Card variant="subtle-inset" className="p-4 text-left font-sans rounded-2xl space-y-3">
+        {/* Live Tweet Preview */}
+        <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-left font-sans space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs font-pixel">
+              <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
                 {badge}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-stone-900 font-sans">
+                <span className="text-xs font-bold text-stone-900 font-sans block leading-none">
                   @{user.username || "builder"}
-                </h4>
-                <span className="text-[10px] text-stone-500 font-pixel font-bold">
+                </span>
+                <span className="text-[10px] text-stone-400 font-sans font-medium">
                   {title} · Level {level}
                 </span>
               </div>
@@ -245,10 +237,10 @@ Living 3D world: ${profileUrl}`,
             </Badge>
           </div>
 
-          <pre className="p-3 rounded-xl bg-white border border-stone-200/90 text-xs text-stone-800 font-sans whitespace-pre-wrap leading-relaxed shadow-xs">
+          <pre className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs text-stone-800 font-sans whitespace-pre-wrap leading-relaxed">
             {activeTweetText}
           </pre>
-        </Card>
+        </div>
 
         {/* Action Buttons Row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-sans">
@@ -257,10 +249,10 @@ Living 3D world: ${profileUrl}`,
             variant="outline"
             size="md"
             icon={copiedImage ? Check : ImageIcon}
-            className="justify-center"
+            className="justify-center text-xs"
             disabled={isGeneratingImage}
           >
-            {copiedImage ? "Image Copied!" : "Copy 3D Card"}
+            {copiedImage ? "Copied Image!" : "Copy 3D Card"}
           </Button>
 
           <Button
@@ -268,10 +260,10 @@ Living 3D world: ${profileUrl}`,
             variant="outline"
             size="md"
             icon={Download}
-            className="justify-center"
+            className="justify-center text-xs"
             disabled={isGeneratingImage}
           >
-            Download 1200×675
+            Download PNG
           </Button>
 
           <Button
@@ -280,7 +272,7 @@ Living 3D world: ${profileUrl}`,
             size="md"
             showArrow
             arrowType="up-right"
-            className="justify-between"
+            className="justify-between text-xs"
           >
             POST TO X
           </Button>
@@ -289,7 +281,7 @@ Living 3D world: ${profileUrl}`,
         <div className="text-center">
           <button
             onClick={handleCopyText}
-            className="text-[11px] font-sans font-medium text-stone-500 hover:text-stone-800 underline transition-colors cursor-pointer"
+            className="text-[11px] font-sans font-medium text-stone-400 hover:text-stone-700 underline transition-colors cursor-pointer"
           >
             {copiedText ? "✓ Text copied to clipboard" : "or copy plain tweet text"}
           </button>

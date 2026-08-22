@@ -3,10 +3,9 @@
 import React from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { Home, Trees, TrendingUp, Sparkles } from "lucide-react";
-import { useForestStore } from "@/store/useForestStore";
+import { Trees, TrendingUp, Sparkles, Building2 } from "lucide-react";
+import { useForestStore, getRankTitle } from "@/store/useForestStore";
 
 interface CabinWarRoomModalProps {
   isOpen: boolean;
@@ -21,94 +20,106 @@ export function CabinWarRoomModal({
   onOpenShare,
   onOpenAddTree,
 }: CabinWarRoomModalProps) {
-  const trees = useForestStore((s) => s.trees);
+  const user = useForestStore((s) => s.user);
   const level = useForestStore((s) => s.level);
   const xp = useForestStore((s) => s.xp);
   const streakDays = useForestStore((s) => s.streakDays);
+  const trees = useForestStore((s) => s.trees);
 
-  const shippingTrees = trees.filter((t) => t.type !== "revenue");
+  const { title, badge } = getRankTitle(level);
+  const shippingTrees = trees.filter((t) => t.type === "shipping");
   const revenueTrees = trees.filter((t) => t.type === "revenue");
-
-  const totalCommits = shippingTrees.reduce((acc, t) => acc + (t.commits || 0), 0);
   const totalMrr = revenueTrees.reduce((acc, t) => acc + (t.mrr || 0), 0);
+  const totalCommits = shippingTrees.reduce((acc, t) => acc + (t.commits || 0), 0);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Founder's War Room HQ" maxWidth="lg">
-      <div className="space-y-5">
-        {/* War Room Header */}
-        <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-stone-100 to-amber-50 border border-stone-300/70">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-900 text-amber-100 flex items-center justify-center shadow-inner">
-              <Home className="w-5 h-5" />
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Builder War Room & Analytics"
+      badgeText="Homestead Command"
+      icon={Building2}
+      maxWidth="lg"
+    >
+      <div className="space-y-4 font-sans text-xs text-stone-700">
+        {/* Profile Command Header */}
+        <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+              {badge}
             </div>
             <div>
-              <h4 className="font-bold text-sm text-stone-900 font-sans">
-                Multi-Repo Command Center
-              </h4>
-              <p className="text-xs text-stone-500 font-sans">
-                Consolidated receipts across all active modules
-              </p>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-stone-900 text-xs font-sans">
+                  @{user.username || "builder"}
+                </span>
+                <Badge variant="emerald" size="sm">
+                  Tier {badge} · {title}
+                </Badge>
+              </div>
+              <span className="text-[10px] text-stone-400 font-sans block">
+                Level {level} Builder · {xp} Earned XP
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                onClose();
-                onOpenShare?.();
-              }}
-              icon={Sparkles}
-            >
-              Export Proof
-            </Button>
-          </div>
+          <Button
+            variant="emerald"
+            size="sm"
+            onClick={() => {
+              onClose();
+              onOpenShare?.();
+            }}
+            icon={Sparkles}
+            className="text-xs"
+          >
+            Export Proof
+          </Button>
         </div>
 
         {/* Dual-Grove Aggregate Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-sans block">Emerald Grove</span>
-            <div className="text-lg font-bold text-emerald-800 font-pixel flex items-center gap-1.5">
-              <Trees className="w-4 h-4 text-emerald-600" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+            <span className="text-[10px] text-stone-400 font-medium block">Emerald Grove</span>
+            <div className="text-base font-bold text-emerald-800 font-pixel flex items-center gap-1">
+              <Trees className="w-3.5 h-3.5 text-emerald-600" />
               {shippingTrees.length} REPOS
             </div>
-            <span className="text-[10px] text-stone-500">{totalCommits} total commits</span>
-          </Card>
+            <span className="text-[10px] text-stone-400">{totalCommits} commits</span>
+          </div>
 
-          <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-sans block">Golden Grove</span>
-            <div className="text-lg font-bold text-amber-700 font-pixel flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-amber-600" />
+          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+            <span className="text-[10px] text-stone-400 font-medium block">Golden Grove</span>
+            <div className="text-base font-bold text-amber-700 font-pixel flex items-center gap-1">
+              <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
               ${totalMrr}/MO
             </div>
-            <span className="text-[10px] text-stone-500">{revenueTrees.length} revenue trees</span>
-          </Card>
+            <span className="text-[10px] text-stone-400">{revenueTrees.length} oaks</span>
+          </div>
 
-          <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-sans block">Consistency</span>
-            <div className="text-lg font-bold text-amber-800 font-pixel">
+          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+            <span className="text-[10px] text-stone-400 font-medium block">Consistency</span>
+            <div className="text-base font-bold text-stone-900 font-pixel">
               {streakDays} DAYS
             </div>
-            <span className="text-[10px] text-stone-500">Unbroken shipping</span>
-          </Card>
+            <span className="text-[10px] text-stone-400">Unbroken streak</span>
+          </div>
 
-          <Card variant="porcelain" className="p-3.5 rounded-2xl space-y-1">
-            <span className="text-[11px] text-stone-500 font-sans block">Rank & XP</span>
-            <div className="text-lg font-bold text-stone-900 font-pixel">
+          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+            <span className="text-[10px] text-stone-400 font-medium block">Island Rank</span>
+            <div className="text-base font-bold text-stone-900 font-pixel">
               LVL {level}
             </div>
-            <span className="text-[10px] text-stone-500">{xp} earned XP</span>
-          </Card>
+            <span className="text-[10px] text-stone-400">{xp} earned XP</span>
+          </div>
         </div>
 
         {/* Active Modules Breakdown */}
-        <div className="space-y-3">
+        <div className="space-y-2.5 pt-1">
           <div className="flex items-center justify-between">
-            <h5 className="text-xs font-bold text-stone-900 font-sans uppercase tracking-wider">
-              Verified Module Inventory ({trees.length})
-            </h5>
+            <span className="text-xs font-bold text-stone-900 font-sans uppercase tracking-wider">
+              Connected Modules ({trees.length})
+            </span>
             <Button
               variant="outline"
               size="sm"
@@ -116,30 +127,31 @@ export function CabinWarRoomModal({
                 onClose();
                 onOpenAddTree?.();
               }}
+              className="text-xs"
             >
               + Add Module
             </Button>
           </div>
 
-          <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
+          <div className="max-h-44 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
             {trees.map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-white border border-stone-200/80 text-xs font-sans"
+                className="flex items-center justify-between pb-2 border-b border-stone-100 last:border-0 last:pb-0 text-xs font-sans"
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 truncate">
                   <div
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                    className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
                       t.type === "revenue"
                         ? "bg-amber-100 text-amber-800"
                         : "bg-emerald-100 text-emerald-800"
                     }`}
                   >
-                    {t.type === "revenue" ? <TrendingUp className="w-3.5 h-3.5" /> : <Trees className="w-3.5 h-3.5" />}
+                    {t.type === "revenue" ? <TrendingUp className="w-3 h-3" /> : <Trees className="w-3 h-3" />}
                   </div>
-                  <div>
-                    <span className="font-bold text-stone-900">{t.name}</span>
-                    <span className="text-[10px] text-stone-500 block uppercase font-sans font-semibold tracking-wider">
+                  <div className="truncate">
+                    <span className="font-bold text-stone-900 truncate block">{t.name}</span>
+                    <span className="text-[10px] text-stone-400 block uppercase font-sans font-medium tracking-wider">
                       {t.tier} Tier
                     </span>
                   </div>
