@@ -209,9 +209,9 @@ Living 3D world: ${profileUrl}`,
           onChange={(val) => setSelectedTemplateIndex(Number(val))}
           size="sm"
           options={[
-            { value: 0, label: "Numbers-Led" },
-            { value: 1, label: "Short & Punchy" },
-            { value: 2, label: "Reflection" },
+            { value: 0, label: "Milestone" },
+            { value: 1, label: "Punchy" },
+            { value: 2, label: "Story" },
           ]}
         />
 

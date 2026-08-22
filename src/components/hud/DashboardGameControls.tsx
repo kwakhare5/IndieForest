@@ -18,6 +18,7 @@ import {
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
@@ -210,22 +211,19 @@ export function DashboardGameControls({
                 />
               </div>
 
-              <div className="flex items-center gap-1 text-[11px] font-medium font-sans">
-                {(["all", "shipping", "revenue"] as const).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => {
-                      sound.playClick();
-                      setFilterType(t);
-                    }}
-                    className={`px-2.5 py-0.5 rounded-lg capitalize transition cursor-pointer ${
-                      filterType === t ? "bg-stone-900 text-white font-bold shadow-2xs" : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
+              <SegmentedControl
+                value={filterType}
+                onChange={(val) => {
+                  sound.playClick();
+                  setFilterType(val as "all" | "shipping" | "revenue");
+                }}
+                size="sm"
+                options={[
+                  { value: "all", label: "All Repos" },
+                  { value: "shipping", label: "Code" },
+                  { value: "revenue", label: "Revenue" },
+                ]}
+              />
             </div>
 
             {/* Flat Module Items List */}

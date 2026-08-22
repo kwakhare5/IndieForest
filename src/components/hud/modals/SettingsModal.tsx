@@ -157,8 +157,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           size="sm"
           options={[
             { value: "github", label: "GitHub", icon: Github },
-            { value: "revenue", label: "Revenue Webhook", icon: CreditCard },
-            { value: "badge", label: "Badges & Links", icon: Sparkles },
+            { value: "revenue", label: "Webhooks", icon: CreditCard },
+            { value: "badge", label: "Badges", icon: Sparkles },
           ]}
         />
 
