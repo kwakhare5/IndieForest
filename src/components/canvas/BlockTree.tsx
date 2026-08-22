@@ -7,7 +7,7 @@ import { Html } from "@react-three/drei";
 import { TreeData } from "@/types/game";
 import { useForestStore } from "@/store/useForestStore";
 import { sound } from "@/lib/sound";
-import { GitBranch, DollarSign, Sparkles } from "lucide-react";
+import { GitBranch, DollarSign } from "lucide-react";
 
 interface BlockTreeProps {
   tree: TreeData;
