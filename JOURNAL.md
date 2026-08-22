@@ -15,9 +15,11 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
-### [IndieForest — Dead Code Purge, Fake Data Eradication & Full-Screen Game HUD] 2026-08-22
-- **Commit**: `b8e4f1a` (3D Porcelain Diorama Engine, Milestone Campsite Modals, Timeline Scrubber & Turntable Exporter)
+### [IndieForest — Live Vercel Production Launch & Master Blueprint Architecture] 2026-08-22
+- **Commit**: `75ce335` (Live Vercel Production Launch, Middleware Resilience & Master Blueprint Architecture)
 - **Shipped**:
+  - **Live Production Deployment to Vercel (https://indieforest.vercel.app):** Successfully resolved Edge Middleware 500 error (`MIDDLEWARE_INVOCATION_FAILED`) by purging unused edge middleware interceptor and supplying resilient fallback publishable key for `<ClerkProvider>`. Promoted production build to Vercel live domain.
+  - **Master Product Blueprint & Roadmap (`docs/PRODUCT_BLUEPRINT_AND_ROADMAP.md`):** Documented complete 12-section canonical specification covering vision, 3D farm layout, conifer micro-anatomy, camera & organic lighting, milestone campsite hubs, daily quest & pinecone shop economy, developer workflow hooks (CLI hook, VS Code extension, Zen focus station), in-world wildlife/relics, multiplayer archipelagos, and phased roadmap.
   - **Dead Code & Obsolete Components Purged:** Deleted `src/components/dashboard/` entirely (`DashboardHeader.tsx`, `DashboardStatsGrid.tsx`, `DashboardModulesList.tsx`, and `DashboardInfoCards.tsx`), eliminating 100% of dead, unreferenced dashboard code.
   - **Fake Data & Legacy Artifacts Eradicated:** 100% purged all `pinecones` fields and calculations across `src/types/game.ts`, `src/lib/gamification.ts`, `src/lib/gamification.test.ts`, `src/lib/github.ts`, `src/lib/curatedBuilders.ts`, `src/store/useForestStore.ts`, and `LandingHero.tsx`. Fixed XP display bug on landing hero preview card.
   - **Canonical Tier I Alignment:** Updated SVG badge route fallback title from legacy "Seedling Scout" to canonical "Sprout Planter".
