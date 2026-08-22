@@ -52,8 +52,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const clerkPubKey =
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+    "pk_test_Y2xlcmsuaW5kaWVmb3Jlc3QuZGV2JA";
+
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={clerkPubKey}>
       <html lang="en" className="scroll-smooth">
         <body
           className={`${instrumentSerif.variable} ${jakartaSans.variable} ${vt323.variable} ${geistMono.variable} antialiased bg-[#ece7de] text-stone-900 overflow-y-auto overflow-x-hidden min-h-screen`}

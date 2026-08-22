@@ -1,12 +1,23 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-export default function middleware(req: any, evt: any) {
+export default async function middleware(req: any, evt: any) {
   // If Clerk environment keys are not configured yet, pass through gracefully
-  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && !process.env.CLERK_SECRET_KEY) {
+  const hasClerkKeys =
+    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+    Boolean(process.env.CLERK_SECRET_KEY);
+
+  if (!hasClerkKeys) {
     return NextResponse.next();
   }
-  return clerkMiddleware()(req, evt);
+
+  try {
+    const handler = clerkMiddleware();
+    return await handler(req, evt);
+  } catch (error) {
+    console.error("Clerk middleware initialization fallback:", error);
+    return NextResponse.next();
+  }
 }
 
 export const config = {
