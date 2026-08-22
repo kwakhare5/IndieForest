@@ -19,6 +19,11 @@ During the Session End ritual (called automatically whenever significant changes
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Zero-Jump Fixed Height Locking (`AddProjectModal.tsx`, `SettingsModal.tsx`, `DashboardControls.tsx`, `DashboardNav.tsx`, `ShareModal.tsx`):**
+    - **AddProjectModal Fixed Input Slots:** Reserved a dedicated matched-height info slot (`min-h-[148px]`) so toggling between "Code Repo" and "Revenue" maintains the exact same modal height and locked button position.
+    - **SettingsModal Unified Tab Heights:** Wrapped tab bodies in a stable `min-h-[195px]` container so switching between GitHub sync, Webhooks, and Badges never resizes the dialog.
+    - **HUD Popovers Rock-Solid Heights:** Locked the scrollable containers in `DashboardControls.tsx` (`h-56`) and `DashboardNav.tsx` (`h-64`) so filtering, searching, or claiming quests never collapses or expands the popover height.
+    - **ShareModal Fixed Preview Box:** Constrained the live tweet preview box to a fixed `h-32` scrollable frame so switching between Milestone, Punchy, and Story copy templates causes zero height movement.
   - **Button Polish & Fake Data Purge (`AddProjectModal.tsx`, `DashboardControls.tsx`, `OverviewModal.tsx`, `TreeCard.tsx`, `LandingHero.tsx`, `LandingBento.tsx`):**
     - **Fixed "Add Project" Button Double Plus:** Resolved duplicate `+ + Add Project` bug in `DashboardControls.tsx` where an explicit `icon={Plus}` prop collided with raw `+` text.
     - **AddProjectModal Polish:** Centered the modal on screen (`position="center"`) and styled the submit action dynamically with emerald for code repositories and amber for revenue projects (`icon={TrendingUp}`).
