@@ -56,6 +56,8 @@ export function Weather({
   }, []);
 
   useFrame((_, delta) => {
+    if (!isRaining && !hasRevenue && !drought) return;
+
     // Rain Animation
     if (rainRef.current && isRaining) {
       const positions = rainRef.current.geometry.attributes.position.array as Float32Array;

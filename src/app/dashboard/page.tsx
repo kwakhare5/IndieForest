@@ -1,13 +1,28 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { IslandCanvas } from "@/components/canvas/IslandCanvas";
+import dynamic from "next/dynamic";
 import { DashboardNav } from "@/components/hud/DashboardNav";
 import { DashboardControls } from "@/components/hud/DashboardControls";
 import { DashboardDock } from "@/components/hud/DashboardDock";
 import { TreeCard } from "@/components/hud/TreeCard";
 import { Button } from "@/components/ui/Button";
 import { Github } from "lucide-react";
+
+const IslandCanvas = dynamic(
+  () => import("@/components/canvas/IslandCanvas").then((mod) => mod.IslandCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
+        <span className="text-xs font-bold uppercase tracking-wider text-stone-500 font-pixel">
+          Loading Island Diorama...
+        </span>
+      </div>
+    ),
+  }
+);
 
 // Modals
 import { FocusModal } from "@/components/hud/modals/FocusModal";

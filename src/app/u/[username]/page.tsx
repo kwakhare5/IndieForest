@@ -12,16 +12,31 @@ import {
   CheckCircle2,
   Droplets,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { getRankTitle } from "@/lib/gamification";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { IslandCanvas } from "@/components/canvas/IslandCanvas";
 import { GuestbookModal } from "@/components/hud/modals/GuestbookModal";
 import { GitHubIslandProfile } from "@/lib/github";
 import { GuestbookEntry } from "@/types/game";
 import { sound } from "@/lib/sound";
 import { loadProfileFromSupabase, fetchGuestbookEntries, saveGuestbookEntry } from "@/lib/supabase";
+
+const IslandCanvas = dynamic(
+  () => import("@/components/canvas/IslandCanvas").then((mod) => mod.IslandCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] rounded-2xl gap-2">
+        <div className="w-6 h-6 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
+        <span className="text-[11px] font-bold text-stone-500 font-sans">
+          Loading 3D Diorama...
+        </span>
+      </div>
+    ),
+  }
+);
 
 interface PublicProfileProps {
   params: Promise<{ username: string }>;

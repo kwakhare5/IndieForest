@@ -9,15 +9,30 @@ import {
   Loader2,
   Trees,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { IslandCanvas } from "@/components/canvas/IslandCanvas";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import { GitHubIslandProfile } from "@/lib/github";
 import { useForestStore } from "@/store/useForestStore";
 import type { TreeData } from "@/types/game";
+
+const IslandCanvas = dynamic(
+  () => import("@/components/canvas/IslandCanvas").then((mod) => mod.IslandCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] rounded-[2rem] gap-2">
+        <div className="w-6 h-6 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
+        <span className="text-[11px] font-bold text-stone-500 font-sans">
+          Loading 3D Diorama...
+        </span>
+      </div>
+    ),
+  }
+);
 
 const FAMOUS_BUILDER_HANDLES = ["shadcn", "antfu", "torvalds"] as const;
 

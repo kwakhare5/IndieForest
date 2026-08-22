@@ -27,23 +27,28 @@ export function IslandTree({
   const isRevenue = tree.type === "revenue";
   const tier = tree.tier || "sapling";
 
-  // Smooth spring lerp on the visual mesh only (Hitbox remains rock-solid stationary)
+  // Smooth spring lerp on the visual mesh only (Zero Vector3 GC allocations & rest short-circuit)
   useFrame((state) => {
     if (visualGroupRef.current) {
+      const currentY = visualGroupRef.current.position.y;
+      const currentScale = visualGroupRef.current.scale.x;
+
+      if (!hovered && Math.abs(currentY) < 0.001 && Math.abs(currentScale - 1.0) < 0.001) {
+        return;
+      }
+
       const targetY = hovered
         ? 0.12 + Math.sin(state.clock.elapsedTime * 4) * 0.02
         : 0;
       visualGroupRef.current.position.y = THREE.MathUtils.lerp(
-        visualGroupRef.current.position.y,
+        currentY,
         targetY,
         0.15
       );
 
       const targetScale = hovered ? 1.05 : 1.0;
-      visualGroupRef.current.scale.lerp(
-        new THREE.Vector3(targetScale, targetScale, targetScale),
-        0.15
-      );
+      const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.15);
+      visualGroupRef.current.scale.set(newScale, newScale, newScale);
     }
   });
 
