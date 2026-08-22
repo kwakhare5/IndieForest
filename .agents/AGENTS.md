@@ -75,20 +75,23 @@ npm run lint       # ESLint + TypeScript check
 
 ## 7. SESSION RESUME
 
-- **Codebase Reorganization & Human-Centric Renaming (Zero AI Slop):**
-  - Standardized all file names across 3D canvas, HUD overlays, and dialog modals to developer-friendly English (`IslandCanvas`, `Island`, `IslandTree`, `Campsite`, `Weather`, `DashboardNav`, `DashboardControls`, `DashboardDock`, `TreeCard`, `AddProjectModal`, `OverviewModal`, `FocusModal`, `RestShieldModal`, `ShareModal`).
-  - Purged 14 obsolete/redundant files with zero broken references.
-- **Top-Right HUD Profile & Symmetrical Double-Bezel Capsule:**
-  - Wrapped user avatar in dedicated `w-6 h-6 rounded-full` container with vertical hairline dividers.
-- **SegmentedControl Fixed Multi-Line Overflow:**
-  - Standardized tab height and text truncation across all dialogs.
-- **100% Test, Lint & Production Build Cleanliness:**
-  - 53/53 Vitest tests passing, 0 ESLint warnings, Next.js 16.3.1 Turbopack build 100% green.
-  - Safe guarded local commits on `main` (remote push awaiting user directive).
+- **Maximum Performance & Runtime Optimization:**
+  - Dynamic SSR-free 3D WebGL bundle chunking (`next/dynamic`) across landing, dashboard, and public profile.
+  - Zero-GC vector lerp (`scale.set`) and rest-state animation short-circuiting.
+  - Web Audio memory disconnection on sound end (`osc.onended`).
+  - Compiler package tree-shaking for Three.js and Lucide in `next.config.ts`.
+- **Button Polish, Fake Data Purge & Zero-Jump Height Locking:**
+  - Resolved `[+] + Add Project` duplicate icon bug and styled adaptive submit buttons.
+  - Deleted all fabricated demo trees and fake metrics, replacing with authentic starter trees.
+  - Fixed-height slot containers in `AddProjectModal`, `SettingsModal`, `DashboardControls`, `DashboardNav`, and `ShareModal` so popups never bounce or jump during tab switches.
+- **Production Deployment & GitHub Sync:**
+  - 100% test-driven domain core (53/53 Vitest passing), 0 ESLint warnings, Turbopack build green.
+  - Live deployed and synced to Vercel production: https://indieforest.vercel.app.
+  - All commits synced to GitHub `main` (`ee105ac`).
 
 **Immediate next task:**
 
-- Awaiting user review and next instructions.
+- Ready for user's next product feature or milestone.
 
 **Open blockers:**
 
