@@ -16,9 +16,23 @@ During the Session End ritual (called automatically whenever significant changes
 ## Log Entries
 
 ### [IndieForest — Pure 1:1 Symmetrical Square Diorama, Standing Golden Mascot, Supabase Cloud & Full HUD Overhaul] 2026-08-22
-- **Commit**: `d08c190` (Symmetrical 1:1 Square Diorama, Standing Golden Companion Mascot, Supabase PostgreSQL Cloud Sync, Revenue Webhook DB Insertion, HUD UI Overhaul)
+- **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Pristine 3D Diorama Interaction & Zero-Text Hover Experience (`BlockTree.tsx`, `CampProps.tsx`):**
+    - Completely removed all floating text labels and badges on hover across trees, campsite stations, and monuments.
+    - Maintained tactile cursor feedback (`pointer`), smooth spring elevation physics (`+0.12` on hover), and direct click triggers to double-bezel modals and inspector cards.
+  - **Rock-Solid 3D Raycasting Hitboxes & Parallax Stabilization (`ForestCanvas.tsx`, `BlockTree.tsx`, `CampProps.tsx`):**
+    - Replaced `visible={false}` (which skips Three.js raycasting) with transparent depthWrite-disabled hitboxes (`transparent opacity={0} depthWrite={false}`).
+    - Decoupled stationary collision hitboxes from internal animated visual meshes, eliminating the 60 FPS lift-and-drop feedback oscillation loop.
+    - Calibrated camera parallax tilt to `pointer.x * 0.15` in `ForestCanvas.tsx`, preserving subtle 3D depth without displacing objects from under the mouse.
+  - **Test-Driven Development (TDD) Seam Verification (54/54 Tests Passing):**
+    - **Island Sync Engine Tests (`src/lib/syncEngine.test.ts`):** 5 isolated unit tests covering async queue dispatching, guest filtering, and error resilience.
+    - **Dual-Grove High-Tier Coordinates & Multi-Level Leap Tests (`src/lib/gamification.test.ts`):** Verified algorithmic non-clipping slot generation and multi-level XP leap progressions.
+  - **Codebase Architecture Deepening & Domain Separation (`syncEngine.ts`, `ShowroomCatalog.tsx`):**
+    - **Island Sync Engine Seam (`src/lib/syncEngine.ts`):** Encapsulated asynchronous cloud persistence, offline queueing, and hydration behind a deep interface (`islandSyncEngine.dispatch()`, `islandSyncEngine.hydrate()`), decoupling the Zustand store from storage side effects.
+    - **Modular Showroom Catalog (`src/components/gallery/ShowroomCatalog.tsx`):** Extracted 5 rows of 3D asset pedestals into a dedicated showroom catalog module, reducing `gallery/page.tsx` line count and decoupling diorama simulation from catalog rendering.
+    - **Domain Separation Enforcement:** Strict separation between Landing Page marketing flows (`src/components/landing/*`), Game Dashboard diorama mechanics (`src/components/hud/*`, `src/components/canvas/*`), and shared double-bezel porcelain design primitives (`src/components/ui/*`).
   - **Pure 1:1 Symmetrical Square Modular Island Architecture (`ModularIsland.tsx`):**
     - Symmetrical $1:1$ width-to-depth isometric square geometry across all progression tiers:
       - **Level 1–4:** $9.0 \times 9.0$ Square (Cozy, dense starter homestead holding Cabin, Campfire, and Sprout seedlings).
@@ -74,7 +88,7 @@ During the Session End ritual (called automatically whenever significant changes
   - **Dynamic GitHub README SVG Badge Endpoint (`/api/badge/[username]`):** Built server-rendered SVG generator supporting both 600×200px porcelain diorama cards and compact shields.io pills with 100% test-driven Vitest coverage.
   - **Multi-Tiered Weather Particle Engine (`WeatherSystem.tsx`):** Weather system with distinct particle FX: gentle emerald mist/rain for commits, thunderstorm lightning & golden sunrays for streak milestones, and radiant golden particle showers for Stripe sales.
   - **100% Zero-Touch Automatic GitHub Ingestion:** Auto-sync on dashboard login and `window.onfocus` tab-switch commit detection so pushes in terminal automatically water the island and sprout/expand 3D trees without manual clicking.
-  - **100% Test, Lint & Turbopack Cleanliness:** 48/48 Vitest tests passing across 8 suites, ESLint 0 errors / 0 warnings, Next.js 16.3.1 Turbopack build 100% green.
+  - **100% Test, Lint & Turbopack Cleanliness:** 54/54 Vitest tests passing across 8 suites, ESLint 0 errors / 0 warnings, Next.js 16.3.1 Turbopack build 100% green.
 
 ---
 
