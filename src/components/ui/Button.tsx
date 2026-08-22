@@ -32,20 +32,20 @@ export function Button({
   // Height & padding normalization
   const sizeStyles = showArrow
     ? {
-        sm: "h-9 pl-3.5 pr-2 py-1.5 text-[11px] gap-2",
-        md: "h-11 pl-4.5 pr-2 py-2 text-xs gap-2.5",
-        lg: "h-12 pl-6 pr-2.5 py-2.5 text-xs tracking-wider gap-3.5",
+        sm: "h-8.5 pl-3 pr-1.5 py-1 text-[11px] gap-2",
+        md: "h-10 pl-4 pr-2 py-1.5 text-xs gap-2.5",
+        lg: "h-11 pl-5.5 pr-2.5 py-2 text-xs tracking-wider gap-3",
       }[size]
     : {
-        sm: "h-9 px-3.5 py-1.5 text-[11px] gap-1.5",
-        md: "h-11 px-4.5 py-2 text-xs gap-2",
-        lg: "h-12 px-6 py-2.5 text-xs tracking-wider gap-2.5",
+        sm: "h-8.5 px-3 py-1 text-[11px] gap-1.5",
+        md: "h-10 px-4 py-1.5 text-xs gap-2",
+        lg: "h-11 px-5.5 py-2 text-xs tracking-wider gap-2.5",
       }[size];
 
   const tokenSizes = {
     sm: "w-5 h-5",
-    md: "w-6 h-6",
-    lg: "w-7 h-7",
+    md: "w-5.5 h-5.5",
+    lg: "w-6.5 h-6.5",
   }[size];
 
   const iconSizes = {
@@ -54,14 +54,20 @@ export function Button({
     lg: "w-4 h-4",
   }[size];
 
-  // Tactile Specular Variant Styling
+  // Tactile Specular Variant Styling (Solid Backgrounds & Guaranteed Visibility)
   const variantStyles = {
-    emerald: "btn-specular-emerald text-white font-bold",
-    amber: "bg-amber-600 hover:bg-amber-700 text-white font-bold border border-amber-700/80 shadow-[0_4px_14px_-2px_rgba(217,119,6,0.3),inset_0_1px_1px_rgba(255,255,255,0.35)]",
-    dark: "btn-specular-dark text-white font-bold",
-    outline: "btn-specular-porcelain font-semibold text-stone-800",
-    ghost: "bg-transparent hover:bg-stone-100/80 text-stone-700 font-medium",
-    danger: "bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-semibold shadow-xs",
+    emerald:
+      "bg-emerald-600 hover:bg-emerald-700 text-white font-bold border border-emerald-700/80 shadow-[0_2px_8px_-2px_rgba(5,150,105,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    amber:
+      "bg-amber-600 hover:bg-amber-700 text-white font-bold border border-amber-700/80 shadow-[0_2px_8px_-2px_rgba(217,119,6,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    dark:
+      "bg-stone-900 hover:bg-stone-950 text-white font-bold border border-stone-950 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)]",
+    outline:
+      "bg-white hover:bg-stone-50 text-stone-800 font-semibold border border-stone-200/90 shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,1)]",
+    ghost:
+      "bg-transparent hover:bg-stone-100/90 text-stone-700 font-medium",
+    danger:
+      "bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-semibold shadow-xs",
   }[variant];
 
   // Recessed Action Disc Backgrounds
@@ -69,11 +75,10 @@ export function Button({
     emerald: "bg-white/20 text-white shadow-inner",
     amber: "bg-white/20 text-white shadow-inner",
     dark: "bg-white/20 text-white shadow-inner",
-    outline: "bg-stone-100/90 text-stone-700 shadow-inner border border-stone-200/80",
+    outline: "bg-stone-100 text-stone-700 shadow-inner border border-stone-200/80",
     ghost: "bg-stone-100 text-stone-700",
     danger: "bg-red-200/60 text-red-700",
   }[variant];
-
 
   const renderDiscIcon = () => {
     if (DiscIcon) {

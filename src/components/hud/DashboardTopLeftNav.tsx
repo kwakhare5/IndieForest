@@ -79,7 +79,7 @@ export function DashboardTopLeftNav({
             title="Daily Builder Quests & Perk Store (Press Q)"
           >
             <span>Quests</span>
-            <span className="text-xs font-pixel ml-1 px-1.5 py-0.2 rounded-full bg-stone-100 text-stone-700">
+            <span className={`text-xs font-pixel ml-1 px-1.5 py-0.2 rounded-full ${isQuestsPopoverOpen || unclaimedQuestsCount > 0 ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
               {completedQuestsCount}/{totalQuestsCount}
             </span>
             {unclaimedQuestsCount > 0 && (
