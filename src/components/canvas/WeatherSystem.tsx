@@ -19,38 +19,38 @@ export function WeatherSystem({
   const sparklesRef = useRef<THREE.Points>(null);
   const fogRef = useRef<THREE.Points>(null);
 
-  // Rain Drops Geometry
+  // Rain Drops Geometry spanning full 1:1 square island boundaries (±9.5 units)
   const { rainPositions, rainCount } = useMemo(() => {
-    const count = 120;
+    const count = 180;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 10;
-      positions[i * 3 + 1] = Math.random() * 6 + 1;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      positions[i * 3] = (Math.random() - 0.5) * 19;
+      positions[i * 3 + 1] = Math.random() * 8 + 1;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 19;
     }
     return { rainPositions: positions, rainCount: count };
   }, []);
 
-  // Golden Sparkles for East Grove
+  // Golden Sparkles for East Revenue Grove
   const { sparklePositions, sparkleCount } = useMemo(() => {
-    const count = 40;
+    const count = 50;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = Math.random() * 4 + 0.5; // East side
-      positions[i * 3 + 1] = Math.random() * 2.5 + 0.5;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 6;
+      positions[i * 3] = Math.random() * 7 + 1.0; // East side
+      positions[i * 3 + 1] = Math.random() * 3.5 + 0.5;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 14;
     }
     return { sparklePositions: positions, sparkleCount: count };
   }, []);
 
   // Drought Fog Geometry
   const { fogPositions } = useMemo(() => {
-    const count = 50;
+    const count = 60;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 9;
-      positions[i * 3 + 1] = Math.random() * 0.5 + 0.2;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 9;
+      positions[i * 3] = (Math.random() - 0.5) * 18;
+      positions[i * 3 + 1] = Math.random() * 0.6 + 0.2;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 18;
     }
     return { fogPositions: positions };
   }, []);
@@ -62,7 +62,7 @@ export function WeatherSystem({
       for (let i = 0; i < rainCount; i++) {
         positions[i * 3 + 1] -= delta * 9;
         if (positions[i * 3 + 1] < 0.2) {
-          positions[i * 3 + 1] = 6 + Math.random() * 2;
+          positions[i * 3 + 1] = 8 + Math.random() * 2;
         }
       }
       rainRef.current.geometry.attributes.position.needsUpdate = true;
@@ -103,8 +103,8 @@ export function WeatherSystem({
         </points>
       )}
 
-      {/* 2. Golden Revenue Sparkle Bursts */}
-      {hasRevenue && !drought && (
+      {/* 2. Golden Sales Revenue Sparkles */}
+      {hasRevenue && (
         <points ref={sparklesRef}>
           <bufferGeometry>
             <bufferAttribute
@@ -114,14 +114,14 @@ export function WeatherSystem({
           </bufferGeometry>
           <pointsMaterial
             size={0.08}
-            color="#facc15"
+            color="#fbbf24"
             transparent
             opacity={0.85}
           />
         </points>
       )}
 
-      {/* 3. Drought Dormancy Fog */}
+      {/* 3. Drought Fog Atmosphere */}
       {drought && (
         <points ref={fogRef}>
           <bufferGeometry>
@@ -131,10 +131,10 @@ export function WeatherSystem({
             />
           </bufferGeometry>
           <pointsMaterial
-            size={0.25}
-            color="#a8a29e"
+            size={0.15}
+            color="#78716c"
             transparent
-            opacity={0.4}
+            opacity={0.3}
           />
         </points>
       )}
