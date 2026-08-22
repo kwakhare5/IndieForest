@@ -11,6 +11,7 @@ export interface ModalProps {
   icon?: LucideIcon;
   children: React.ReactNode;
   maxWidth?: "sm" | "md" | "lg" | "xl";
+  position?: "center" | "top-right" | "top-left" | "bottom-center";
 }
 
 export function Modal({
@@ -21,6 +22,7 @@ export function Modal({
   icon: Icon,
   children,
   maxWidth = "md",
+  position = "center",
 }: ModalProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,45 +43,60 @@ export function Modal({
     xl: "max-w-xl",
   }[maxWidth];
 
+  const positionClasses = {
+    center: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/35 backdrop-blur-sm",
+    "top-right": "fixed inset-0 z-50 flex items-start justify-end p-4 sm:p-6 pt-16 sm:pt-16 bg-stone-900/20 backdrop-blur-[2px]",
+    "top-left": "fixed inset-0 z-50 flex items-start justify-start p-4 sm:p-6 pt-16 sm:pt-16 bg-stone-900/20 backdrop-blur-[2px]",
+    "bottom-center": "fixed inset-0 z-50 flex items-end justify-center p-4 sm:p-6 pb-24 sm:pb-24 bg-stone-900/20 backdrop-blur-[2px]",
+  }[position];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/35 backdrop-blur-md animate-in fade-in duration-150 font-satoshi">
-      {/* Outer Tactile Chamfered Glass Bezel (Exact Navbar Match) */}
+    <div
+      className={`${positionClasses} animate-in fade-in duration-150 font-satoshi`}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      {/* Outer Tactile Chamfered Glass Bezel (Exact Navbar Match & Safe Max-Height) */}
       <div
-        className={`w-full ${maxWidthClass} p-1.5 rounded-[2rem] glass-dock shadow-2xl relative animate-in zoom-in-95 duration-150`}
+        className={`w-full ${maxWidthClass} max-h-[calc(100vh-5.5rem)] overflow-y-auto p-1.5 rounded-[2rem] glass-dock shadow-2xl relative animate-in zoom-in-95 duration-150 custom-scrollbar`}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Inner Porcelain Chamber */}
-        <div className="rounded-[calc(2rem-0.375rem)] porcelain-surface bg-white p-6 sm:p-7 text-stone-900 relative">
+        <div className="rounded-[calc(2rem-0.375rem)] porcelain-surface bg-white p-5 sm:p-6 text-stone-900 relative">
           
           {/* Tactile Close Button-in-Button Pod */}
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 p-1.5 rounded-full btn-specular-porcelain text-stone-400 hover:text-stone-800 transition active:scale-[0.95] cursor-pointer"
-            title="Close Modal"
+            className="absolute top-4 right-4 p-1.5 rounded-full btn-specular-porcelain text-stone-400 hover:text-stone-800 transition active:scale-[0.95] cursor-pointer"
+            title="Close"
           >
             <X className="w-4 h-4 stroke-[2]" />
           </button>
 
           {/* Header */}
-          <div className="flex items-center gap-3.5 mb-5 pr-8">
+          <div className="flex items-center gap-3.5 mb-4 pr-8">
             {Icon && (
-              <div className="w-10 h-10 rounded-2xl bg-stone-100 border border-stone-200/80 flex items-center justify-center text-emerald-800 shrink-0 shadow-xs">
-                <Icon className="w-5 h-5 stroke-[1.75]" />
+              <div className="w-9 h-9 rounded-2xl bg-stone-100 border border-stone-200/80 flex items-center justify-center text-emerald-800 shrink-0 shadow-xs">
+                <Icon className="w-4.5 h-4.5 stroke-[1.75]" />
               </div>
             )}
             <div>
               {badgeText && (
-                <span className="font-pixel text-xs uppercase tracking-wider font-bold text-emerald-800 block mb-0.5">
+                <span className="font-pixel text-[11px] uppercase tracking-wider font-bold text-emerald-800 block mb-0.5">
                   {badgeText}
                 </span>
               )}
-              <h2 className="text-base sm:text-lg font-bold text-stone-950 tracking-tight font-satoshi">
+              <h2 className="text-base font-bold text-stone-950 tracking-tight font-satoshi">
                 {title}
               </h2>
             </div>
           </div>
 
           {/* Modal Content */}
-          <div className="space-y-4">
+          <div className="space-y-3.5">
             {children}
           </div>
         </div>
