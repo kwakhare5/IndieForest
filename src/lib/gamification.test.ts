@@ -12,6 +12,7 @@ import {
   getTreeSlotCoordinate,
   calculateTreeTier,
   reconstructHistoricalIsland,
+  calculateForestHealth,
 } from "./gamification";
 
 
@@ -200,6 +201,63 @@ describe("Gamification Engine — Clean Code & TDD", () => {
 
       const stateAtAug20 = reconstructHistoricalIsland(testTrees, "2026-08-20");
       expect(stateAtAug20.length).toBe(2);
+    });
+
+    it("returns empty array if cutoff is before any tree was planted", () => {
+      const trees: TreeData[] = [
+        { id: "1", name: "Tree", tier: "young", gridX: 0, gridZ: 0, plantedAt: "2026-08-15T00:00:00.000Z" },
+      ];
+      const result = reconstructHistoricalIsland(trees, "2026-08-10T00:00:00.000Z");
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe("Seam 8: Rolling 30-Day Forest Health %", () => {
+    it("calculates 100% pristine health for 30/30 active days", () => {
+      const activeDates: string[] = [];
+      const baseDate = new Date("2026-08-22T00:00:00Z");
+      for (let i = 0; i < 30; i++) {
+        const d = new Date(baseDate.getTime() - i * 86400000);
+        activeDates.push(d.toISOString().slice(0, 10));
+      }
+
+      const health = calculateForestHealth(activeDates, "2026-08-22");
+      expect(health.healthPercent).toBe(100);
+      expect(health.status).toBe("pristine");
+      expect(health.activeDaysCount).toBe(30);
+    });
+
+    it("calculates lush health for 24/30 active days (80%)", () => {
+      const activeDates: string[] = [];
+      const baseDate = new Date("2026-08-22T00:00:00Z");
+      for (let i = 0; i < 24; i++) {
+        const d = new Date(baseDate.getTime() - i * 86400000);
+        activeDates.push(d.toISOString().slice(0, 10));
+      }
+
+      const health = calculateForestHealth(activeDates, "2026-08-22");
+      expect(health.healthPercent).toBe(80);
+      expect(health.status).toBe("lush");
+    });
+
+    it("calculates dormant health for 18/30 active days (60%)", () => {
+      const activeDates: string[] = [];
+      const baseDate = new Date("2026-08-22T00:00:00Z");
+      for (let i = 0; i < 18; i++) {
+        const d = new Date(baseDate.getTime() - i * 86400000);
+        activeDates.push(d.toISOString().slice(0, 10));
+      }
+
+      const health = calculateForestHealth(activeDates, "2026-08-22");
+      expect(health.healthPercent).toBe(60);
+      expect(health.status).toBe("dormant");
+    });
+
+    it("calculates drought health for < 50% active days", () => {
+      const activeDates = ["2026-08-20", "2026-08-15"];
+      const health = calculateForestHealth(activeDates, "2026-08-22");
+      expect(health.healthPercent).toBe(7);
+      expect(health.status).toBe("drought");
     });
   });
 });

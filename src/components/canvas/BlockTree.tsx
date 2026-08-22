@@ -3,9 +3,11 @@
 import React, { useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame, ThreeEvent } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import { TreeData } from "@/types/game";
 import { useForestStore } from "@/store/useForestStore";
 import { sound } from "@/lib/sound";
+import { GitBranch, DollarSign, Sparkles } from "lucide-react";
 
 interface BlockTreeProps {
   tree: TreeData;
@@ -200,6 +202,53 @@ export function BlockTree({ tree, onSelect }: BlockTreeProps) {
           </mesh>
         </group>
       )}
+
+      {/* Floating 3D Porcelain Billboard Badge */}
+      <Html
+        position={[
+          0,
+          tree.tier === "majestic"
+            ? 3.8
+            : tree.tier === "mature"
+            ? 2.85
+            : tree.tier === "young"
+            ? 2.05
+            : tree.tier === "sapling"
+            ? 1.2
+            : 0.65,
+          0,
+        ]}
+        center
+        className="pointer-events-none select-none font-satoshi transition-transform duration-150"
+      >
+        <div
+          className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-tight whitespace-nowrap flex items-center gap-1.5 shadow-md border backdrop-blur-md transition-all duration-200 ${
+            hovered
+              ? "scale-110 bg-white/95 border-emerald-500 text-stone-950 shadow-lg"
+              : isRevenue
+              ? "bg-[#fef9c3]/90 border-amber-300 text-amber-950 shadow-xs"
+              : "bg-white/85 border-stone-200 text-stone-800 shadow-xs"
+          }`}
+        >
+          {isRevenue ? (
+            <DollarSign size={11} className="text-amber-700 shrink-0" strokeWidth={2.5} />
+          ) : (
+            <GitBranch size={11} className="text-emerald-700 shrink-0" strokeWidth={2.5} />
+          )}
+          <span className="max-w-[110px] truncate">{tree.name}</span>
+          <span className="opacity-60 text-[9px] font-mono">
+            {isRevenue
+              ? `$${tree.mrr || 0}`
+              : tree.tier === "majestic"
+              ? "IV"
+              : tree.tier === "mature"
+              ? "III"
+              : tree.tier === "young"
+              ? "II"
+              : "I"}
+          </span>
+        </div>
+      </Html>
     </group>
   );
 }

@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useForestStore, getRankTitle, getXpForLevel } from "@/store/useForestStore";
+import { calculateForestHealth } from "@/lib/gamification";
 import {
   ArrowLeft,
   Sun,
@@ -19,6 +20,9 @@ import {
   ChevronUp,
   User,
   Sliders,
+  Flame,
+  Shield,
+  RefreshCw,
 } from "lucide-react";
 import { sound } from "@/lib/sound";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
@@ -37,6 +41,11 @@ export function TopStatusBar({
   const level = useForestStore((s) => s.level);
   const xp = useForestStore((s) => s.xp);
   const pinecones = useForestStore((s) => s.pinecones);
+  const streakDays = useForestStore((s) => s.streakDays);
+  const streakShields = useForestStore((s) => s.streakShields);
+  const shipHistory = useForestStore((s) => s.shipHistory);
+  const isAutoSyncing = useForestStore((s) => s.isAutoSyncing);
+  const syncGitHubIsland = useForestStore((s) => s.syncGitHubIsland);
   const timeOfDay = useForestStore((s) => s.timeOfDay);
   const setTimeOfDay = useForestStore((s) => s.setTimeOfDay);
   const setUser = useForestStore((s) => s.setUser);
@@ -57,6 +66,16 @@ export function TopStatusBar({
     completedQuestCount === quests.length && quests.length > 0;
 
   const { badge, title: rankTitle } = getRankTitle(level);
+
+  // Calculate 30-day Forest Health %
+  const activeDates = shipHistory.map((s) => s.date);
+  if (activeDates.length === 0 && streakDays > 0) {
+    const base = new Date();
+    for (let i = 0; i < Math.min(streakDays, 30); i++) {
+      activeDates.push(new Date(base.getTime() - i * 86400000).toISOString().slice(0, 10));
+    }
+  }
+  const forestHealth = calculateForestHealth(activeDates);
 
   // Click outside listener for dropdowns
   useEffect(() => {
@@ -257,7 +276,7 @@ export function TopStatusBar({
               <span className="font-pixel text-sm font-normal text-stone-600 uppercase">
                 LVL {level}
               </span>
-              <div className="w-14 sm:w-16 h-1.5 rounded-full bg-stone-200 overflow-hidden relative shadow-inner">
+              <div className="w-12 sm:w-16 h-1.5 rounded-full bg-stone-200 overflow-hidden relative shadow-inner">
                 <div
                   className="h-full bg-emerald-600 rounded-full transition-all duration-300"
                   style={{ width: `${xpPercent}%` }}
@@ -267,6 +286,49 @@ export function TopStatusBar({
                 {xpPercent}%
               </span>
             </div>
+
+            <div className="w-[1px] h-3.5 bg-stone-200" />
+
+            {/* Streak & Burnout Shield */}
+            <div
+              className="flex items-center gap-1.5 text-stone-800 font-semibold cursor-default"
+              title={`Active Streak: ${streakDays} days • ${streakShields} Burnout Shields active`}
+            >
+              <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
+              <span className="font-pixel text-sm font-normal">{streakDays}d</span>
+              {streakShields > 0 && (
+                <div className="flex items-center gap-0.5 text-teal-700 bg-teal-50 px-1 py-0.2 rounded border border-teal-200 text-[10px]">
+                  <Shield className="w-2.5 h-2.5" />
+                  <span>{streakShields}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="w-[1px] h-3.5 bg-stone-200" />
+
+            {/* 30-Day Forest Health % */}
+            <div
+              className={`hidden sm:flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-bold ${forestHealth.badgeClass}`}
+              title={`30-Day Forest Health: ${forestHealth.healthPercent}% (${forestHealth.activeDaysCount}/30 days) • Status: ${forestHealth.label}`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="font-pixel text-xs">{forestHealth.healthPercent}% HEALTH</span>
+            </div>
+
+            <div className="hidden sm:block w-[1px] h-3.5 bg-stone-200" />
+
+            {/* Live Auto-Sync Status Indicator */}
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                syncGitHubIsland(user.username || "kwakhare5");
+              }}
+              className="p-1 rounded-full hover:bg-emerald-50 text-stone-500 hover:text-emerald-700 transition cursor-pointer"
+              title={isAutoSyncing ? "Auto-Syncing GitHub..." : "Click to Force Sync GitHub"}
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isAutoSyncing ? "animate-spin text-emerald-600" : ""}`} />
+            </button>
 
             <div className="w-[1px] h-3.5 bg-stone-200" />
 

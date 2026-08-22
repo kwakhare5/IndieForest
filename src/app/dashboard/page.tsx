@@ -36,7 +36,11 @@ export default function DashboardPage() {
   const checkStreakExpiry = useForestStore((s) => s.checkStreakExpiry);
   const hasCompletedSproutGuide = useForestStore((s) => s.hasCompletedSproutGuide);
   const trees = useForestStore((s) => s.trees);
+  const user = useForestStore((s) => s.user);
   const setUser = useForestStore((s) => s.setUser);
+  const syncGitHubIsland = useForestStore((s) => s.syncGitHubIsland);
+  const autoCheckTodayCommits = useForestStore((s) => s.autoCheckTodayCommits);
+  const isAutoSyncing = useForestStore((s) => s.isAutoSyncing);
 
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
 
@@ -54,6 +58,8 @@ export default function DashboardPage() {
     setMounted(true);
     checkStreakExpiry();
 
+    let targetUsername = "kwakhare5";
+
     if (isLoaded && isSignedIn && clerkUser) {
       const username =
         clerkUser.username ||
@@ -61,6 +67,7 @@ export default function DashboardPage() {
         clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
         "builder";
 
+      targetUsername = username;
       setUser({
         id: clerkUser.id,
         email: clerkUser.primaryEmailAddress?.emailAddress,
@@ -78,7 +85,23 @@ export default function DashboardPage() {
       });
     }
 
-  }, [isLoaded, isSignedIn, clerkUser, checkStreakExpiry, setUser]);
+    // Auto-Sync GitHub Repos if Island is empty
+    if (trees.length === 0) {
+      syncGitHubIsland(targetUsername);
+    } else {
+      autoCheckTodayCommits();
+    }
+
+    // Smart Tab-Focus Auto-Sync (Watches for commits when switching back to window)
+    const handleWindowFocus = () => {
+      autoCheckTodayCommits();
+    };
+
+    window.addEventListener("focus", handleWindowFocus);
+    return () => {
+      window.removeEventListener("focus", handleWindowFocus);
+    };
+  }, [isLoaded, isSignedIn, clerkUser, checkStreakExpiry, setUser, syncGitHubIsland, autoCheckTodayCommits, trees.length]);
 
   if (!mounted) {
     return (
