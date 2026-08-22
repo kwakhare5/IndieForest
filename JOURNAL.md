@@ -25,8 +25,8 @@ During the Session End ritual (called automatically whenever significant changes
     - Flattened `QuestsPopover` and `ModulesPopover` to lightweight list rows with inline progress bars and tactile one-click claim/unlock action discs.
     - Streamlined `AddTreeModal` to a 2-option pill toggle (`Shipping Pine` vs `Revenue Oak`) with high-contrast inputs and direct sprout actions.
     - Synchronized directional transform origins (`origin-top-right`, `origin-top-left`, `origin-bottom`) so every popover expands smoothly from its exact triggering button.
-  - **Pure Precision Typographic System Standardized (Geist Sans, PP Editorial New, Jersey 10, Geist Mono):**
-    - Purged legacy fonts (`Satoshi`, `Plus_Jakarta_Sans`, `VT323`, `Silkscreen`, `Jersey 15`) and configured Vercel **Geist Sans** as the universal primary sans-serif for 100% of UI titles, buttons, cards, modals, and body copy.
+  - **Pure Precision Typographic System Standardized (Plus Jakarta Sans, PP Editorial New, Jersey 10, Geist Mono):**
+    - Configured **Plus Jakarta Sans** (`--font-sans`) as the universal primary sans-serif for 100% of UI titles, buttons, cards, modals, and body copy.
     - Standardized **PP Editorial New / Instrument Serif** for luxury editorial hero headlines.
     - Restricted **Jersey 10** (`font-pixel`) strictly to gamified numerical counters (streaks, pinecones, MRR numbers), replacing leaked pixel text across loading states, modal subtitles, and inspector labels with clean `font-sans`.
     - Standardized **Geist Mono** for hashes, URLs, and code snippets.
