@@ -108,7 +108,7 @@ export function DashboardGameControls({
             title="Connected Repos & Modules Popover (Press M / I)"
           >
             <span>Modules</span>
-            <span className="text-xs font-pixel ml-0.5 px-1.5 py-0.2 rounded-full bg-stone-100 text-stone-700">
+            <span className={`text-xs font-pixel ml-0.5 px-1.5 py-0.2 rounded-full ${isModulesPopoverOpen ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
               {trees.length}
             </span>
           </Button>
