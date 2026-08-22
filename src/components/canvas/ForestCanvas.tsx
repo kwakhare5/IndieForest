@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useRef, useState, useEffect, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useState, Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls, ContactShadows } from "@react-three/drei";
-import * as THREE from "three";
 import { TerrainIsland } from "./TerrainIsland";
 import { BlockTree } from "./BlockTree";
 import { CampProps } from "./CampProps";

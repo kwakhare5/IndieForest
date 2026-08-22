@@ -36,11 +36,9 @@ export default function DashboardPage() {
   const checkStreakExpiry = useForestStore((s) => s.checkStreakExpiry);
   const hasCompletedSproutGuide = useForestStore((s) => s.hasCompletedSproutGuide);
   const trees = useForestStore((s) => s.trees);
-  const user = useForestStore((s) => s.user);
   const setUser = useForestStore((s) => s.setUser);
   const syncGitHubIsland = useForestStore((s) => s.syncGitHubIsland);
   const autoCheckTodayCommits = useForestStore((s) => s.autoCheckTodayCommits);
-  const isAutoSyncing = useForestStore((s) => s.isAutoSyncing);
 
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
 
