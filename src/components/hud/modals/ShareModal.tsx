@@ -221,7 +221,7 @@ Living 3D world: ${profileUrl}`,
             </Badge>
           </div>
 
-          <pre className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs text-stone-800 font-sans whitespace-pre-wrap leading-relaxed">
+          <pre className="h-32 min-h-[8rem] max-h-32 overflow-y-auto p-2.5 rounded-xl bg-white border border-stone-200 text-xs text-stone-800 font-sans whitespace-pre-wrap leading-relaxed custom-scrollbar">
             {activeTweetText}
           </pre>
         </div>

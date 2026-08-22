@@ -68,45 +68,53 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
           ]}
         />
 
-        {/* Project Name Input */}
-        <div>
-          <label className="text-xs font-semibold text-stone-800 mb-1 block">
-            {projectType === "shipping" ? "Repository or Project Name" : "Customer or Product Name"}
-          </label>
-          <input
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={projectType === "shipping" ? "e.g. Auth Engine MVP" : "e.g. Acme Pro Plan"}
-            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white transition"
-          />
-          <p className="text-[11px] text-stone-500 mt-1">
-            {projectType === "shipping"
-              ? "Grows on the West grove as you ship commits and daily milestones."
-              : "Sprouts on the East grove representing recurring revenue."}
-          </p>
-        </div>
-
-        {/* MRR Input (Only for Revenue) */}
-        {projectType === "revenue" && (
+        {/* Fixed-Height Form Inputs Container (Zero Height Jump) */}
+        <div className="min-h-[148px] flex flex-col justify-start gap-3">
+          {/* Project Name Input */}
           <div>
             <label className="text-xs font-semibold text-stone-800 mb-1 block">
-              Monthly Recurring Revenue ($/mo)
+              {projectType === "shipping" ? "Repository or Project Name" : "Customer or Product Name"}
             </label>
-            <div className="relative">
-              <DollarSign className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-2.5" />
-              <input
-                type="number"
-                min="1"
-                value={mrr}
-                onChange={(e) => setMrr(e.target.value)}
-                placeholder="29"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs text-stone-900 font-mono font-bold outline-none focus:border-amber-600 focus:bg-white transition"
-              />
-            </div>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={projectType === "shipping" ? "e.g. Auth Engine MVP" : "e.g. Acme Pro Plan"}
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white transition"
+            />
+            <p className="text-[11px] text-stone-500 mt-1">
+              {projectType === "shipping"
+                ? "Grows on the West grove as you ship commits."
+                : "Sprouts on the East grove representing monthly revenue."}
+            </p>
           </div>
-        )}
+
+          {/* MRR Input (Only for Revenue) or Code Info Slot */}
+          {projectType === "revenue" ? (
+            <div>
+              <label className="text-xs font-semibold text-stone-800 mb-1 block">
+                Monthly Recurring Revenue ($/mo)
+              </label>
+              <div className="relative">
+                <DollarSign className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-2.5" />
+                <input
+                  type="number"
+                  min="1"
+                  value={mrr}
+                  onChange={(e) => setMrr(e.target.value)}
+                  placeholder="29"
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs text-stone-900 font-mono font-bold outline-none focus:border-amber-600 focus:bg-white transition"
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+              <span>Automatic GitHub API Tracking</span>
+              <span className="font-semibold text-emerald-800">Zero-Touch</span>
+            </div>
+          )}
+        </div>
 
         {/* Submit Button */}
         <Button
@@ -114,7 +122,7 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
           variant={projectType === "shipping" ? "emerald" : "amber"}
           size="md"
           icon={projectType === "shipping" ? GitBranch : TrendingUp}
-          className="w-full mt-2 justify-center font-bold text-xs shadow-md"
+          className="w-full mt-1 justify-center font-bold text-xs shadow-md"
         >
           {projectType === "shipping" ? "Add Code Project" : "Add Revenue Project"}
         </Button>

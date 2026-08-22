@@ -119,8 +119,8 @@ export function DashboardNav({
               </div>
             </div>
 
-            {/* Flat Scrollable List Rows */}
-            <div className="flex-1 overflow-y-auto space-y-3 pt-3 pr-1 custom-scrollbar">
+            {/* Flat Scrollable List Rows (Stable Fixed Height) */}
+            <div className="h-64 min-h-[16rem] overflow-y-auto space-y-3 pt-3 pr-1 custom-scrollbar">
               {dailyQuests.map((quest: DailyQuest) => (
                 <div key={quest.id} className="pb-3 border-b border-stone-100 last:border-0 last:pb-0 space-y-2">
                   <div className="flex items-start justify-between gap-2">
