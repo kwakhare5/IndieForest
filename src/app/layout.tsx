@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
@@ -10,8 +10,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -53,7 +53,7 @@ export default function RootLayout({
     <ClerkProvider publishableKey={clerkPubKey}>
       <html lang="en" className="scroll-smooth">
         <body
-          className={`${plusJakartaSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white`}
+          className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} antialiased bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white`}
         >
           {children}
         </body>

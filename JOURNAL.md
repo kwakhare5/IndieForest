@@ -29,11 +29,11 @@ During the Session End ritual (called automatically whenever significant changes
     - Flattened `QuestsPopover` and `ModulesPopover` to lightweight list rows with inline progress bars and tactile one-click claim/unlock action discs.
     - Streamlined `AddTreeModal` to a 2-option pill toggle (`Shipping Pine` vs `Revenue Oak`) with high-contrast inputs and direct sprout actions.
     - Synchronized directional transform origins (`origin-top-right`, `origin-top-left`, `origin-bottom`) so every popover expands smoothly from its exact triggering button.
-  - **Pure Precision Typographic System Standardized (Plus Jakarta Sans, PP Editorial New, Jersey 10, Geist Mono):**
+  - **Pure Precision Typographic System Standardized (Plus Jakarta Sans, PP Editorial New, Jersey 10, JetBrains Mono):**
     - Configured **Plus Jakarta Sans** (`--font-sans`) as the universal primary sans-serif for 100% of UI titles, buttons, cards, modals, and body copy.
     - Standardized **PP Editorial New / Instrument Serif** for luxury editorial hero headlines.
     - Restricted **Jersey 10** (`font-pixel`) strictly to gamified numerical counters (streaks, pinecones, MRR numbers), replacing leaked pixel text across loading states, modal subtitles, and inspector labels with clean `font-sans`.
-    - Standardized **Geist Mono** for hashes, URLs, and code snippets.
+    - Standardized **JetBrains Mono** (`--font-mono`) for hashes, URLs, and code snippets, completely purging Geist.
   - **Spatial Anchored HUD Popovers & Crystal-Clear Developer Guides (`Modal.tsx`, `SettingsModal.tsx`, `AddTreeModal.tsx`, `ShareCardModal.tsx`):**
     - Enhanced universal `Modal.tsx` with localized anchoring (`top-right`, `top-left`, `bottom-center`) and strict edge margin safety (`w-[calc(100vw-2.5rem)]`, `max-h-[calc(100vh-5.5rem)]`), preventing popovers from ever touching screen boundaries.
     - Anchored `SettingsModal` to the top-right adjacent to the settings trigger with 1-click copyable developer guides for GitHub zero-touch commit ingestion and Stripe / Lemon Squeezy / Polar automated revenue webhooks.
