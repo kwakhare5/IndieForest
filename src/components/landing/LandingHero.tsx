@@ -36,35 +36,15 @@ const IslandCanvas = dynamic(
 
 const FAMOUS_BUILDER_HANDLES = ["shadcn", "antfu", "torvalds"] as const;
 
-const DEFAULT_DEMO_TREES: TreeData[] = [
+const INITIAL_STARTER_TREES: TreeData[] = [
   {
-    id: "hero-tree-1",
+    id: "initial-tree-1",
     name: "indieforest",
     type: "shipping",
-    commits: 42,
-    tier: "majestic",
+    commits: 1,
+    tier: "sapling",
     gridX: -1.8,
     gridZ: -1.0,
-    plantedAt: new Date().toISOString(),
-  },
-  {
-    id: "hero-tree-2",
-    name: "pro-mrr",
-    type: "revenue",
-    mrr: 1250,
-    tier: "mature",
-    gridX: 1.8,
-    gridZ: -1.0,
-    plantedAt: new Date().toISOString(),
-  },
-  {
-    id: "hero-tree-3",
-    name: "side-quest",
-    type: "shipping",
-    commits: 12,
-    tier: "young",
-    gridX: -1.8,
-    gridZ: 1.0,
     plantedAt: new Date().toISOString(),
   },
 ];
@@ -127,10 +107,10 @@ export function LandingHero() {
 
   const displayedTrees = activeProfile?.trees && activeProfile.trees.length > 0
     ? activeProfile.trees
-    : DEFAULT_DEMO_TREES;
+    : INITIAL_STARTER_TREES;
 
-  const displayStreak = activeProfile?.streakDays || 24;
-  const displayLevel = activeProfile?.level || 12;
+  const displayStreak = activeProfile?.streakDays || 1;
+  const displayLevel = activeProfile?.level || 1;
 
   return (
     <section className="pt-28 pb-16 md:pt-36 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 font-sans">

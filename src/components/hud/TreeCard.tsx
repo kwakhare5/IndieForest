@@ -3,17 +3,17 @@
 import React from "react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { Trees, TrendingUp, X, Calendar, GitCommit, DollarSign } from "lucide-react";
+import { Trees, TrendingUp, X, Calendar, GitCommit, DollarSign, Trash2 } from "lucide-react";
 import { TreeData } from "@/types/game";
 import { sound } from "@/lib/sound";
 
 interface TreeCardProps {
   tree: TreeData | null;
   onClose: () => void;
-  onDelete: (id: string, name: string) => void;
+  onDelete?: (id: string, name: string) => void;
 }
 
-export function TreeCard({ tree, onClose }: TreeCardProps) {
+export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
   if (!tree) return null;
 
   const isRevenue = tree.type === "revenue";
@@ -88,15 +88,26 @@ export function TreeCard({ tree, onClose }: TreeCardProps) {
           </div>
         </div>
 
-        {/* Date & Coordinates Footer */}
-        <div className="flex items-center justify-between text-xs text-stone-400 font-sans pt-0.5 border-t border-stone-100">
+        {/* Date & Coordinates / Delete Footer */}
+        <div className="flex items-center justify-between text-xs text-stone-400 font-sans pt-2 border-t border-stone-100">
           <span className="flex items-center gap-1 text-[11px]">
             <Calendar className="w-3 h-3 text-stone-400" />
             Planted {new Date(tree.plantedAt).toLocaleDateString()}
           </span>
-          <span className="text-[10px] font-mono text-stone-400">
-            [{tree.gridX.toFixed(1)}, {tree.gridZ.toFixed(1)}]
-          </span>
+          <button
+            onClick={() => {
+              if (confirm(`Remove project "${tree.name}" from your island?`)) {
+                sound.playClick();
+                onDelete?.(tree.id, tree.name);
+                onClose();
+              }
+            }}
+            className="flex items-center gap-1 text-[11px] text-stone-400 hover:text-red-600 transition cursor-pointer"
+            title="Remove Project"
+          >
+            <Trash2 className="w-3 h-3" />
+            <span>Remove</span>
+          </button>
         </div>
       </Card>
     </div>

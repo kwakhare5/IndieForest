@@ -29,7 +29,7 @@ export function LandingBento() {
 
   const handleCopyText = () => {
     navigator.clipboard.writeText(
-      `Day 14 of shipping daily on IndieForest.\n• Tier IV (Island Architect · Lvl 12)\n• 4 Active Projects | $1,250/mo MRR\n• 30-Day Forest Health: ${demoHealth}%\n\nLiving diorama: indieforest.dev/u/builder`
+      `Day 14 of shipping daily on IndieForest.\n• Tier IV (Island Architect · Lvl 12)\n• 4 Active Projects\n• 30-Day Forest Health: ${demoHealth}%\n\nLiving diorama: indieforest.dev/u/builder`
     );
     setCopiedText(true);
     setTimeout(() => setCopiedText(false), 2000);
