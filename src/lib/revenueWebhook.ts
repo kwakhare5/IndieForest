@@ -62,10 +62,6 @@ interface PolarWebhookPayload {
   };
 }
 
-/**
- * Universal Revenue Webhook Parser
- * Parses and normalizes incoming payment/subscription events across Stripe, Lemon Squeezy, and Polar.
- */
 export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomerTree {
   if (!payload || typeof payload !== "object") {
     return {
@@ -91,11 +87,10 @@ export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomer
       obj.customer_name ||
       obj.customer_email ||
       obj.customer_details?.name ||
-      "Stripe Customer";
+      "Stripe Pro User";
     const currency = (obj.currency || "usd").toLowerCase();
     const isZeroDecimal = ZERO_DECIMAL_CURRENCIES.has(currency);
 
-    // Churn / Cancellation event
     if (
       eventType === "customer.subscription.deleted" ||
       eventType === "customer.subscription.paused" ||
@@ -123,7 +118,7 @@ export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomer
     return {
       customerName: name,
       mrr,
-      tier: calculateTreeTier("revenue", 0, mrr).tier,
+      tier: calculateTreeTier("revenue", mrr),
       source: "stripe",
       isValid,
     };
@@ -140,7 +135,6 @@ export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomer
       data.customer_name ||
       "Lemon Squeezy Customer";
 
-    // Churn / Cancellation event
     if (
       eventName === "subscription_cancelled" ||
       eventName === "subscription_expired" ||
@@ -168,7 +162,7 @@ export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomer
     return {
       customerName: name,
       mrr,
-      tier: calculateTreeTier("revenue", 0, mrr).tier,
+      tier: calculateTreeTier("revenue", mrr),
       source: "lemonsqueezy",
       isValid,
     };
@@ -181,7 +175,6 @@ export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomer
     const order = polarPayload.data || {};
     const name = order.customer?.name || order.customer?.email || "Polar Backer";
 
-    // Churn / Cancellation event
     if (eventName === "subscription.canceled" || eventName === "subscription.revoked") {
       return {
         customerName: name,
@@ -205,7 +198,7 @@ export function parseUniversalRevenueEvent(payload: unknown): NormalizedCustomer
     return {
       customerName: name,
       mrr,
-      tier: calculateTreeTier("revenue", 0, mrr).tier,
+      tier: calculateTreeTier("revenue", mrr),
       source: "polar",
       isValid,
     };

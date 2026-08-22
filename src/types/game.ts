@@ -1,8 +1,7 @@
-// Canonical Domain Entities & Game Types for IndieForest
+// Canonical Domain Entities & Types for IndieForest
 
 export type GrowthTier = "sapling" | "young" | "mature" | "majestic" | "stump";
 export type TreeType = "shipping" | "revenue";
-export type WeatherType = "clear" | "rain_emerald" | "thunder_milestone" | "gold_shower" | "drought";
 
 export interface CommitProof {
   sha: string;
@@ -70,21 +69,6 @@ export interface ShipLog {
   commitSha?: string;
 }
 
-export interface CampDecorItem {
-  id: string;
-  name: string;
-  icon: "flame" | "lamp" | "pier" | "tent";
-  cost: number;
-  description: string;
-}
-
-export interface DailyQuest {
-  id: string;
-  title: string;
-  xpReward: number;
-  completed: boolean;
-}
-
 export interface Rank {
   title: string;
   badge: string;
@@ -119,7 +103,6 @@ export interface ShipRewardInput {
 
 export interface ShipRewards {
   xpGained: number;
-  pineconesGained: number;
   shieldsGained: number;
 }
 
@@ -156,4 +139,3 @@ export interface ForestHealth {
   label: string;
   badgeClass: string;
 }
-

@@ -24,43 +24,68 @@ export function ShareCardModal({ isOpen, onClose }: ShareCardModalProps) {
   const [copiedText, setCopiedText] = useState(false);
   const [copiedImage, setCopiedImage] = useState(false);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [selectedTemplateIndex, setSelectedTemplateIndex] = useState(0);
 
   const { title, badge } = getRankTitle(level);
-  const latestShip = shipHistory[0]?.message || "Building my indie hacker island diorama";
+  const latestShip = shipHistory[0]?.message || "Building my indie hacker living diorama";
   const totalMrr = trees.reduce((acc, t) => acc + (t.mrr || 0), 0);
+  const totalCommits = trees.reduce((acc, t) => acc + (t.commits || 0), 0);
+  const profileUrl = `indieforest.dev/u/${user.username || "builder"}`;
 
-  const tweetText = `Day ${streakDays} of shipping daily on IndieForest.
+  // 3 Human Indie Hacker Tweet Templates (Anti-AI Slop)
+  const tweetTemplates = [
+    // Template 1: Numbers-Led Milestone
+    `Day ${streakDays} of shipping daily on IndieForest.
 
-Rank: Tier ${badge} — ${title} (Level ${level})
-Trees: ${trees.length} Active | $${totalMrr}/mo MRR
-Today's Ship: "${latestShip}"
+• Tier ${badge} (${title} · Lvl ${level})
+• ${trees.length} Active Modules | ${totalCommits} Commits | $${totalMrr}/mo MRR
+• Today's Ship: "${latestShip}"
 
-Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
+Living diorama: ${profileUrl}`,
+
+    // Template 2: Short & Punchy Proof-of-Work
+    `Zero manual trackers. Just pure shipping.
+
+Day ${streakDays} streak on @IndieForest.
+${trees.length} trees grown from verified commits & Stripe webhooks.
+
+Inspect my island: ${profileUrl}`,
+
+    // Template 3: Builder Reflection
+    `Consistency compounds.
+
+Day ${streakDays} of building in public.
+Current status: Tier ${badge} (${title}) with ${trees.length} active projects.
+
+Living 3D world: ${profileUrl}`,
+  ];
+
+  const activeTweetText = tweetTemplates[selectedTemplateIndex];
 
   const handleCopyText = () => {
-    navigator.clipboard.writeText(tweetText);
+    navigator.clipboard.writeText(activeTweetText);
     sound.playCoin();
     setCopiedText(true);
     setTimeout(() => setCopiedText(false), 2000);
   };
 
   const handleOpenTwitter = () => {
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(activeTweetText)}`;
     window.open(url, "_blank");
   };
 
   /**
-   * Generates a composited high-resolution PNG image containing the 3D Canvas
-   * and a clean stats overlay box.
+   * Generates a 1200x675 composited PNG image containing the 3D Canvas
+   * and a porcelain stats overlay box.
    */
   const generateCompositeImage = async (): Promise<Blob | null> => {
-    const canvasElement = document.getElementById("forest-3d-canvas") as HTMLCanvasElement | null;
+    const canvasElement = document.querySelector("canvas") as HTMLCanvasElement | null;
     if (!canvasElement) {
       return null;
     }
 
     const outputWidth = 1200;
-    const outputHeight = 630;
+    const outputHeight = 675;
     const offscreen = document.createElement("canvas");
     offscreen.width = outputWidth;
     offscreen.height = outputHeight;
@@ -87,39 +112,39 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
 
     ctx.drawImage(canvasElement, drawX, drawY, drawW, drawH);
 
-    // Bottom Stats Overlay Card
+    // Bottom Stats Double-Bezel Overlay Card
     const cardX = 40;
-    const cardY = outputHeight - 160;
+    const cardY = outputHeight - 140;
     const cardW = outputWidth - 80;
-    const cardH = 120;
+    const cardH = 105;
 
     // Outer Bezel
-    ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+    ctx.fillStyle = "rgba(236, 231, 222, 0.85)";
     ctx.beginPath();
-    ctx.roundRect(cardX, cardY, cardW, cardH, 24);
+    ctx.roundRect(cardX, cardY, cardW, cardH, 20);
     ctx.fill();
-    ctx.strokeStyle = "rgba(214, 207, 197, 0.8)";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(168, 162, 158, 0.7)";
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Inner Surface
+    // Inner Porcelain Surface
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.roundRect(cardX + 8, cardY + 8, cardW - 16, cardH - 16, 18);
+    ctx.roundRect(cardX + 6, cardY + 6, cardW - 12, cardH - 12, 16);
     ctx.fill();
 
     // Text & Stats
     ctx.fillStyle = "#047857";
-    ctx.font = "bold 20px sans-serif";
-    ctx.fillText("IndieForest • Daily Shipping Diorama", cardX + 32, cardY + 42);
+    ctx.font = "bold 16px sans-serif";
+    ctx.fillText("IndieForest • Living Proof-of-Work Diorama", cardX + 24, cardY + 36);
 
     ctx.fillStyle = "#1c1917";
-    ctx.font = "bold 32px sans-serif";
-    ctx.fillText(`Day ${streakDays} Streak • Tier ${badge}: ${title}`, cardX + 32, cardY + 84);
+    ctx.font = "bold 26px sans-serif";
+    ctx.fillText(`Day ${streakDays} Streak • Tier ${badge}: ${title}`, cardX + 24, cardY + 74);
 
     ctx.fillStyle = "#57534e";
-    ctx.font = "18px monospace";
-    ctx.fillText(`${trees.length} Active Trees • $${totalMrr}/mo MRR`, cardX + cardW - 360, cardY + 84);
+    ctx.font = "bold 16px monospace";
+    ctx.fillText(`${trees.length} Trees • $${totalMrr}/mo MRR`, cardX + cardW - 320, cardY + 74);
 
     return new Promise((resolve) => {
       offscreen.toBlob((blob) => resolve(blob), "image/png");
@@ -140,11 +165,9 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
         setCopiedImage(true);
         setTimeout(() => setCopiedImage(false), 2500);
       } else {
-        // Fallback to text copy
         handleCopyText();
       }
-    } catch (err) {
-      console.warn("Clipboard image copy not supported, falling back to text copy:", err);
+    } catch {
       handleCopyText();
     } finally {
       setIsGeneratingImage(false);
@@ -160,7 +183,7 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `indieforest-day-${streakDays}.png`;
+        a.download = `indieforest-${user.username || "builder"}-day-${streakDays}.png`;
         a.click();
         URL.revokeObjectURL(url);
       }
@@ -173,21 +196,46 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Share Daily Progress"
+      title="Export 3D Social Card & Proof"
       badgeText="Build in Public"
       icon={Share2}
+      maxWidth="lg"
     >
       <div className="space-y-4 font-satoshi">
-        {/* Preview Card */}
-        <Card variant="subtle-inset" className="p-4 text-left font-satoshi rounded-2xl">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-white border border-stone-200 flex items-center justify-center font-pixel text-xs font-bold text-stone-800 shadow-xs">
+        {/* Template Selector */}
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-stone-200/70 border border-stone-300/80">
+          {["Numbers-Led", "Short & Punchy", "Reflection"].map((label, idx) => (
+            <button
+              key={label}
+              onClick={() => {
+                sound.playClick();
+                setSelectedTemplateIndex(idx);
+              }}
+              className={`flex-1 py-1 px-2 rounded-lg text-xs font-bold transition ${
+                selectedTemplateIndex === idx
+                  ? "bg-white text-stone-950 shadow-xs"
+                  : "text-stone-600 hover:text-stone-900"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Live Tweet Preview Card */}
+        <Card variant="subtle-inset" className="p-4 text-left font-satoshi rounded-2xl space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs font-pixel">
                 {badge}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-stone-900 font-satoshi">{title}</h4>
-                <span className="font-pixel text-xs font-bold text-stone-500">LVL {level}</span>
+                <h4 className="text-xs font-bold text-stone-900 font-satoshi">
+                  @{user.username || "builder"}
+                </h4>
+                <span className="text-[10px] text-stone-500 font-pixel font-bold">
+                  {title} · Level {level}
+                </span>
               </div>
             </div>
 
@@ -196,26 +244,12 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
             </Badge>
           </div>
 
-          <div className="p-3 rounded-xl bg-white border border-stone-200/90 text-xs text-stone-700 my-2.5 shadow-xs">
-            <span className="font-pixel text-xs uppercase font-bold text-stone-500 block mb-1">
-              TODAY&apos;S SHIP:
-            </span>
-            <p className="line-clamp-2 text-xs text-stone-900 font-medium font-satoshi">
-              &ldquo;{latestShip}&rdquo;
-            </p>
-          </div>
-
-          <div className="flex items-center justify-between font-pixel text-xs font-bold text-stone-500 pt-1">
-            <span>
-              {trees.length} TREES • ${totalMrr}/MO MRR
-            </span>
-            <span className="text-emerald-800">
-              indieforest.dev/u/{user.username}
-            </span>
-          </div>
+          <pre className="p-3 rounded-xl bg-white border border-stone-200/90 text-xs text-stone-800 font-satoshi whitespace-pre-wrap leading-relaxed shadow-xs">
+            {activeTweetText}
+          </pre>
         </Card>
 
-        {/* Action Buttons */}
+        {/* Action Buttons Row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-satoshi">
           <Button
             onClick={handleCopyImage}
@@ -225,7 +259,7 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
             className="justify-center"
             disabled={isGeneratingImage}
           >
-            {copiedImage ? "Image Copied!" : "Copy 3D Image"}
+            {copiedImage ? "Image Copied!" : "Copy 3D Card"}
           </Button>
 
           <Button
@@ -236,7 +270,7 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
             className="justify-center"
             disabled={isGeneratingImage}
           >
-            Download PNG
+            Download 1200×675
           </Button>
 
           <Button
@@ -254,7 +288,7 @@ Building in public on indieforest.dev/u/${user.username || "kwakhare5"}`;
         <div className="text-center">
           <button
             onClick={handleCopyText}
-            className="text-[11px] font-satoshi font-medium text-stone-500 hover:text-stone-800 underline transition-colors"
+            className="text-[11px] font-satoshi font-medium text-stone-500 hover:text-stone-800 underline transition-colors cursor-pointer"
           >
             {copiedText ? "✓ Text copied to clipboard" : "or copy plain tweet text"}
           </button>

@@ -1,98 +1,205 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
-import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
-import { useForestStore } from "@/store/useForestStore";
+import React, { useMemo } from "react";
 
-export function TerrainIsland() {
-  const drought = useForestStore((s) => s.drought);
-  const waterRef = useRef<THREE.Mesh>(null);
+interface TerrainIslandProps {
+  level?: number;
+  drought?: boolean;
+}
 
-  // Vibrant Ghibli / Animal Crossing Colors
-  const grassColor = useMemo(() => (drought ? "#a3a886" : "#22c55e"), [drought]);
-  const grassDarkColor = useMemo(() => (drought ? "#7e8563" : "#16a34a"), [drought]);
-  const dirtTopColor = useMemo(() => "#b45309", []);
-  const dirtBaseColor = useMemo(() => "#78350f", []);
-  const waterColor = useMemo(() => (drought ? "#64748b" : "#06b6d4"), [drought]);
-
-  // Water gentle breathing animation
-  useFrame(({ clock }) => {
-    if (waterRef.current) {
-      const t = clock.getElapsedTime();
-      waterRef.current.scale.y = 1 + Math.sin(t * 2) * 0.08;
+export function TerrainIsland({ level = 1, drought = false }: TerrainIslandProps) {
+  // Island dimensions based on progression level
+  const { width, depth, baseThickness, topThickness } = useMemo(() => {
+    let w = 8.5;
+    let d = 8.0;
+    if (level >= 20) {
+      w = 13.0;
+      d = 12.5;
+    } else if (level >= 10) {
+      w = 10.5;
+      d = 10.0;
+    } else if (level < 5) {
+      w = 7.5;
+      d = 7.0;
     }
-  });
+    return {
+      width: w,
+      depth: d,
+      baseThickness: 0.45,
+      topThickness: 0.25,
+    };
+  }, [level]);
+
+  // Materials & Colors (Tactile matte porcelain/clay aesthetic)
+  const grassEmeraldColor = drought ? "#78716c" : "#22c55e";
+  const grassRevenueColor = drought ? "#a8a29e" : "#16a34a";
+  const baseFoundationColor = drought ? "#57534e" : "#854d0e";
+  const waterColor = drought ? "#64748b" : "#06b6d4";
+  const stoneColor = drought ? "#78716c" : "#94a3b8";
+  const woodColor = "#78350f";
+
+  // Central riverstone stepping stones
+  const steppingStones = useMemo(() => {
+    const count = 7;
+    const stones = [];
+    const startZ = -depth / 2 + 1.2;
+    const endZ = depth / 2 - 1.2;
+    const step = (endZ - startZ) / (count - 1);
+
+    for (let i = 0; i < count; i++) {
+      stones.push({
+        x: Math.sin(i * 1.5) * 0.1,
+        z: startZ + i * step,
+        radius: 0.22 + (i % 3) * 0.04,
+        rotY: i * 0.4,
+      });
+    }
+    return stones;
+  }, [depth]);
+
+  // Lily pads on the turquoise pond
+  const lilyPads = useMemo(
+    () => [
+      { x: width * 0.28, z: depth * 0.28, rot: 0.5, scale: 0.28 },
+      { x: width * 0.35, z: depth * 0.33, rot: 1.8, scale: 0.22 },
+      { x: width * 0.24, z: depth * 0.36, rot: 3.2, scale: 0.18 },
+    ],
+    [width, depth]
+  );
 
   return (
     <group position={[0, 0, 0]}>
-      {/* --- Main Ground Base (Floating Earth Voxel Block) --- */}
-      {/* Top Grass Surface Plate (8x8 grid, 0.5 height) */}
-      <mesh position={[0, -0.25, 0]} receiveShadow castShadow>
-        <boxGeometry args={[8, 0.5, 8]} />
-        <meshStandardMaterial color={grassColor} roughness={0.6} flatShading />
+      {/* 1. Terracotta Foundation Keel (Solid bottom block with weight) */}
+      <mesh position={[0, -baseThickness / 2, 0]} receiveShadow>
+        <boxGeometry args={[width, baseThickness, depth]} />
+        <meshStandardMaterial
+          color={baseFoundationColor}
+          roughness={0.8}
+          metalness={0.05}
+          flatShading
+        />
       </mesh>
 
-      {/* Layered Rich Earth Strata 1 */}
-      <mesh position={[0, -1.0, 0]} receiveShadow>
-        <boxGeometry args={[8, 1.0, 8]} />
-        <meshStandardMaterial color={dirtTopColor} roughness={0.85} flatShading />
+      {/* 2. Dual-Grove Top Meadow Slab */}
+      {/* West Pasture: Emerald Shipping Pasture (Commits & Code) */}
+      <mesh position={[-width / 4, topThickness / 2, 0]} receiveShadow>
+        <boxGeometry args={[width / 2 - 0.05, topThickness, depth]} />
+        <meshStandardMaterial
+          color={grassEmeraldColor}
+          roughness={0.6}
+          metalness={0.05}
+          flatShading
+        />
       </mesh>
 
-      {/* Layered Earth Strata 2 (Deep Terracotta Clay) */}
-      <mesh position={[0, -2.0, 0]} receiveShadow>
-        <boxGeometry args={[7.8, 1.0, 7.8]} />
-        <meshStandardMaterial color={dirtBaseColor} roughness={0.9} flatShading />
+      {/* East Pasture: Golden-Loam Revenue Pasture (MRR & Customers) */}
+      <mesh position={[width / 4, topThickness / 2, 0]} receiveShadow>
+        <boxGeometry args={[width / 2 - 0.05, topThickness, depth]} />
+        <meshStandardMaterial
+          color={grassRevenueColor}
+          roughness={0.55}
+          metalness={0.08}
+          flatShading
+        />
       </mesh>
 
-      {/* Bottom Bedrock Keel */}
-      <mesh position={[0, -2.8, 0]}>
-        <boxGeometry args={[6.5, 0.6, 6.5]} />
-        <meshStandardMaterial color="#451a03" roughness={1.0} flatShading />
-      </mesh>
+      {/* 3. Central Riverstone Spine (X = 0 Walkway) */}
+      <group position={[0, topThickness + 0.02, 0]}>
+        {steppingStones.map((s, idx) => (
+          <mesh
+            key={idx}
+            position={[s.x, 0, s.z]}
+            rotation={[-Math.PI / 2, 0, s.rotY]}
+            receiveShadow
+          >
+            <cylinderGeometry args={[s.radius, s.radius * 1.1, 0.04, 7]} />
+            <meshStandardMaterial
+              color={stoneColor}
+              roughness={0.9}
+              metalness={0.02}
+              flatShading
+            />
+          </mesh>
+        ))}
+      </group>
 
-      {/* --- Raised Grass Plateaus (Matching Reference Photo 2) --- */}
-      {/* North-West Elevation */}
-      <mesh position={[-2.8, 0.15, -2.8]} castShadow receiveShadow>
-        <boxGeometry args={[2.2, 0.3, 2.2]} />
-        <meshStandardMaterial color={grassDarkColor} roughness={0.6} flatShading />
-      </mesh>
-
-      {/* South-East Elevation */}
-      <mesh position={[2.6, 0.1, 2.6]} castShadow receiveShadow>
-        <boxGeometry args={[2.4, 0.2, 2.4]} />
-        <meshStandardMaterial color={grassDarkColor} roughness={0.6} flatShading />
-      </mesh>
-
-      {/* --- Central Sunken Pond Oasis --- */}
-      <group position={[0, 0, 0]}>
-        {/* Sunken Stone Basin */}
-        <mesh position={[0, -0.2, 0]}>
-          <boxGeometry args={[2.7, 0.2, 2.7]} />
-          <meshStandardMaterial color="#e2e8f0" roughness={0.7} flatShading />
-        </mesh>
-
-        {/* Shimmering Turquoise Water Mesh */}
-        <mesh ref={waterRef} position={[0, -0.05, 0]}>
-          <boxGeometry args={[2.4, 0.12, 2.4]} />
+      {/* 4. South-East Oasis Turquoise Pond Basin */}
+      <group position={[width * 0.28, topThickness + 0.01, depth * 0.28]}>
+        {/* Recessed Basin Shoreline Border */}
+        <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <cylinderGeometry args={[1.3, 1.4, 0.03, 16]} />
           <meshStandardMaterial
-            color={waterColor}
-            roughness={0.05}
-            metalness={0.15}
-            transparent
-            opacity={0.9}
+            color={stoneColor}
+            roughness={0.8}
+            metalness={0.05}
             flatShading
           />
         </mesh>
 
-        {/* Floating Lily Pads & Sparkle Circles */}
-        <mesh position={[-0.4, 0.02, -0.3]}>
-          <cylinderGeometry args={[0.26, 0.26, 0.02, 6]} />
-          <meshStandardMaterial color="#86efac" roughness={0.3} flatShading />
+        {/* Crystal Turquoise Water Plane */}
+        <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[1.15, 16]} />
+          <meshStandardMaterial
+            color={waterColor}
+            roughness={0.2}
+            metalness={0.3}
+            transparent
+            opacity={0.85}
+          />
         </mesh>
-        <mesh position={[0.5, 0.02, 0.4]}>
-          <cylinderGeometry args={[0.2, 0.2, 0.02, 6]} />
-          <meshStandardMaterial color="#4ade80" roughness={0.3} flatShading />
+
+        {/* Stepped Wooden Pier Deck */}
+        <group position={[-0.85, 0.08, -0.2]} rotation={[0, 0.3, 0]}>
+          <mesh position={[0, 0, 0]} receiveShadow castShadow>
+            <boxGeometry args={[0.9, 0.06, 0.45]} />
+            <meshStandardMaterial
+              color={woodColor}
+              roughness={0.7}
+              metalness={0.05}
+              flatShading
+            />
+          </mesh>
+          {/* Pier Support Stilts */}
+          <mesh position={[0.3, -0.1, 0.15]} castShadow>
+            <cylinderGeometry args={[0.03, 0.03, 0.2, 6]} />
+            <meshStandardMaterial color={woodColor} roughness={0.9} />
+          </mesh>
+          <mesh position={[0.3, -0.1, -0.15]} castShadow>
+            <cylinderGeometry args={[0.03, 0.03, 0.2, 6]} />
+            <meshStandardMaterial color={woodColor} roughness={0.9} />
+          </mesh>
+        </group>
+
+        {/* Floating Lily Pads */}
+        {lilyPads.map((pad, idx) => (
+          <mesh
+            key={idx}
+            position={[pad.x - width * 0.28, 0.03, pad.z - depth * 0.28]}
+            rotation={[-Math.PI / 2, 0, pad.rot]}
+          >
+            <circleGeometry args={[pad.scale, 7]} />
+            <meshStandardMaterial
+              color={drought ? "#78716c" : "#10b981"}
+              roughness={0.7}
+              flatShading
+            />
+          </mesh>
+        ))}
+      </group>
+
+      {/* 5. Natural Shoreline Border Stones */}
+      <group position={[0, topThickness + 0.02, 0]}>
+        <mesh position={[-width / 2 + 0.3, 0, -depth / 2 + 0.4]} rotation={[0, 0.8, 0]} castShadow>
+          <dodecahedronGeometry args={[0.18, 0]} />
+          <meshStandardMaterial color={stoneColor} roughness={0.9} flatShading />
+        </mesh>
+        <mesh position={[width / 2 - 0.4, 0, -depth / 2 + 0.5]} rotation={[0, 1.4, 0]} castShadow>
+          <dodecahedronGeometry args={[0.22, 0]} />
+          <meshStandardMaterial color={stoneColor} roughness={0.9} flatShading />
+        </mesh>
+        <mesh position={[-width / 2 + 0.5, 0, depth / 2 - 0.5]} rotation={[0, 2.1, 0]} castShadow>
+          <dodecahedronGeometry args={[0.15, 0]} />
+          <meshStandardMaterial color={stoneColor} roughness={0.9} flatShading />
         </mesh>
       </group>
     </group>

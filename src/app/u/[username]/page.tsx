@@ -1,31 +1,26 @@
 "use client";
 
 import React, { use, useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Flame, Trees, TrendingUp, Sparkles, Droplets, MessageSquare } from "lucide-react";
+import {
+  Flame,
+  Trees,
+  TrendingUp,
+  Sparkles,
+  MessageSquare,
+  ArrowLeft,
+  CheckCircle2,
+  Droplets,
+} from "lucide-react";
 import { getRankTitle } from "@/lib/gamification";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { TimelineScrubber } from "@/components/hud/TimelineScrubber";
+import { Card } from "@/components/ui/Card";
 import { GuestbookModal } from "@/components/hud/GuestbookModal";
+import { ForestCanvas } from "@/components/canvas/ForestCanvas";
 import { GitHubIslandProfile } from "@/lib/github";
-import { TreeData, GuestbookEntry } from "@/types/game";
+import { GuestbookEntry } from "@/types/game";
 import { sound } from "@/lib/sound";
-import { useForestStore } from "@/store/useForestStore";
-
-const ForestCanvas = dynamic(
-  () => import("@/components/canvas/ForestCanvas").then((mod) => mod.ForestCanvas),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-screen flex flex-col items-center justify-center bg-[#ece7de] text-stone-600 font-mono text-xs">
-        <div className="w-8 h-8 border-2 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-2" />
-        <span className="uppercase tracking-widest font-pixel text-sm">Loading 3D Diorama...</span>
-      </div>
-    ),
-  }
-);
 
 interface PublicProfileProps {
   params: Promise<{ username: string }>;
@@ -33,14 +28,11 @@ interface PublicProfileProps {
 
 export default function PublicProfilePage({ params }: PublicProfileProps) {
   const { username } = use(params);
-  const triggerRain = useForestStore((s) => s.triggerRain);
 
   const [profile, setProfile] = useState<GitHubIslandProfile | null>(null);
-  const [scrubbedTrees, setScrubbedTrees] = useState<TreeData[] | null>(null);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
-  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
-  const [wateredCount, setWateredCount] = useState(0);
-  const [showWaterToast, setShowWaterToast] = useState(false);
+  const [isCheering, setIsCheering] = useState(false);
+  const [cheerCount, setCheerCount] = useState(12);
 
   const [guestbookEntries, setGuestbookEntries] = useState<GuestbookEntry[]>([
     {
@@ -52,7 +44,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
     {
       id: "entry-2",
       author: "Tibo",
-      message: "Your island looks incredible. Love the 3D diorama aesthetic!",
+      message: "Your profile looks incredible. Love the clean aesthetic!",
       timestamp: new Date(Date.now() - 86400000 * 5).toISOString(),
     },
   ]);
@@ -60,7 +52,9 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const res = await fetch(`/api/github/preview?username=${encodeURIComponent(username)}`);
+        const res = await fetch(
+          `/api/github/preview?username=${encodeURIComponent(username)}`
+        );
         if (res.ok) {
           const data: GitHubIslandProfile = await res.json();
           setProfile(data);
@@ -72,14 +66,6 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
     loadProfile();
   }, [username]);
 
-  const handleWaterTree = () => {
-    sound.playShipSuccess();
-    triggerRain(4500);
-    setWateredCount((c) => c + 1);
-    setShowWaterToast(true);
-    setTimeout(() => setShowWaterToast(false), 3500);
-  };
-
   const handleAddGuestbookNote = (message: string, author: string) => {
     const newEntry: GuestbookEntry = {
       id: `gb-${Date.now()}`,
@@ -90,6 +76,15 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
     setGuestbookEntries([newEntry, ...guestbookEntries]);
   };
 
+  const handleCheerWater = () => {
+    sound.playShipSuccess();
+    setIsCheering(true);
+    setCheerCount((c) => c + 1);
+    setTimeout(() => {
+      setIsCheering(false);
+    }, 4000);
+  };
+
   const level = profile ? profile.level : 1;
   const streakDays = profile ? profile.streakDays : 1;
   const trees = profile ? profile.trees : [];
@@ -97,145 +92,224 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
   const totalCommits = profile ? profile.totalCommits : 5;
 
   return (
-    <main className="relative w-full h-screen min-h-[100dvh] overflow-hidden font-satoshi bg-[#ece7de]">
-      
-      {/* Top Floating User Header Bar */}
-      <header className="absolute top-4 left-4 right-4 z-30 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-        
-        {/* Profile Identity Capsule */}
-        <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-lg">
-          <div className="px-3.5 py-1.5 rounded-full porcelain-surface flex items-center gap-3">
-            {profile?.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={profile.avatarUrl}
-                alt={username}
-                className="w-8 h-8 rounded-full border border-emerald-300 shadow-xs"
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-inner font-satoshi">
-                {username.slice(0, 2).toUpperCase()}
-              </div>
-            )}
-            <div className="pr-2">
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight font-satoshi">
-                  @{username}
-                </h1>
-                <Badge variant="emerald" size="sm">
-                  Tier {badge}
-                </Badge>
-              </div>
-              <span className="font-pixel text-xs text-stone-600 font-bold block mt-0.5">
-                {title} (Level {level})
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Controls */}
-        <div className="pointer-events-auto flex items-center gap-2">
-          {/* Water Tree Cheer Button */}
-          <Button
-            variant="emerald"
-            size="sm"
-            onClick={handleWaterTree}
-            icon={Droplets}
-            className="shadow-md"
+    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-satoshi selection:bg-emerald-600 selection:text-white relative pb-16">
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-40 w-full bg-[#ece7de] border-b border-stone-300/80 px-4 sm:px-8 py-3">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xs font-semibold text-stone-600 hover:text-stone-950 transition"
           >
-            {wateredCount > 0 ? `Watered ${wateredCount}x (+5 XP)` : "Water Forest (+5 XP)"}
-          </Button>
-
-          {/* Campsite Guestbook */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsGuestbookOpen(true)}
-            icon={MessageSquare}
-            className="shadow-md"
-          >
-            Guestbook ({guestbookEntries.length})
-          </Button>
-
-          <Link href="/">
-            <Button variant="dark" size="sm" showArrow arrowType="right" icon={Sparkles}>
-              Build Mine
-            </Button>
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Home</span>
           </Link>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCheerWater}
+              icon={Droplets}
+              className="text-cyan-800 border-cyan-300 bg-cyan-50/50"
+            >
+              Water Island ({cheerCount})
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                sound.playClick();
+                setIsGuestbookOpen(true);
+              }}
+              icon={MessageSquare}
+            >
+              Guestbook ({guestbookEntries.length})
+            </Button>
+
+            <Link href="/">
+              <Button
+                variant="emerald"
+                size="sm"
+                showArrow
+                arrowType="right"
+                icon={Sparkles}
+              >
+                Create Mine
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Watered Cheer Floating Toast */}
-      {showWaterToast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-40 p-1 rounded-full glass-dock shadow-xl animate-in slide-in-from-top-2 duration-200">
-          <div className="px-4 py-2 rounded-full porcelain-surface bg-emerald-50 text-emerald-900 text-xs font-bold font-satoshi flex items-center gap-2">
-            <Droplets className="w-4 h-4 text-emerald-600 fill-emerald-500 animate-bounce" />
-            <span>You watered @{username}&apos;s forest! (+5 Cheer XP sent)</span>
-          </div>
-        </div>
-      )}
+      {/* Main Container */}
+      <main className="max-w-5xl mx-auto px-4 sm:px-8 pt-6 space-y-6">
+        {/* 3D Living Diorama Enclosure */}
+        <Card
+          variant="porcelain"
+          className="p-2 sm:p-4 rounded-3xl overflow-hidden border border-stone-300/80 shadow-xl bg-gradient-to-b from-[#f5f0ea] to-[#ece7de] relative"
+        >
+          <div className="w-full h-[460px] rounded-2xl overflow-hidden relative">
+            <ForestCanvas
+              trees={trees}
+              level={level}
+              streakDays={streakDays}
+              streakShields={1}
+              isRaining={isCheering}
+              className="w-full h-full"
+            />
 
-      {/* 3D Diorama Canvas */}
-      <ForestCanvas
-        mode="profile"
-        customTrees={scrubbedTrees || (trees.length ? trees : undefined)}
-      />
-
-      {/* On-Demand 3D Timeline Scrubber */}
-      {isTimelineOpen && trees.length > 0 && (
-        <div className="fixed bottom-18 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4 animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-auto">
-          <TimelineScrubber
-            trees={trees}
-            onClose={() => {
-              setIsTimelineOpen(false);
-              setScrubbedTrees(null);
-            }}
-            onScrubChange={(active, date) => {
-              if (date === null) {
-                setScrubbedTrees(null);
-              } else {
-                setScrubbedTrees(active);
-              }
-            }}
-          />
-        </div>
-      )}
-
-      {/* Bottom Floating Verified Stats Pill with Timeline Toggle */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-auto p-1 rounded-full glass-dock shadow-xl">
-        <div className="px-4 sm:px-6 py-2 rounded-full porcelain-surface flex items-center gap-3 sm:gap-4 text-xs font-satoshi">
-          <div className="flex items-center gap-1.5 text-amber-800 font-pixel text-sm font-bold">
-            <Flame className="w-4 h-4 fill-amber-500 text-amber-600" />
-            <span>{streakDays}d</span>
+            {/* Public Diorama Tag */}
+            <div className="absolute top-4 left-4 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-stone-200/70 text-[11px] font-semibold text-stone-700 shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Live 3D Proof-of-Work Diorama · @{username}</span>
+            </div>
           </div>
-          <div className="w-[1px] h-3.5 bg-stone-200" />
-          <div className="flex items-center gap-1.5 text-emerald-800 font-pixel text-sm font-bold">
-            <Trees className="w-4 h-4 text-emerald-700" />
-            <span>{trees.length} Groves</span>
-          </div>
-          <div className="w-[1px] h-3.5 bg-stone-200" />
-          <div className="flex items-center gap-1.5 text-stone-800 font-pixel text-sm font-bold">
-            <TrendingUp className="w-4 h-4 text-emerald-700" />
-            <span>{totalCommits} Commits</span>
-          </div>
-          <div className="w-[1px] h-3.5 bg-stone-200" />
-          <button
-            onClick={() => {
-              sound.playClick();
-              setIsTimelineOpen(!isTimelineOpen);
-            }}
-            className={`px-2 py-0.5 rounded-full font-bold text-xs flex items-center gap-1 transition cursor-pointer ${
-              isTimelineOpen
-                ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
-                : "hover:bg-stone-100 text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <span>Timeline</span>
-          </button>
-        </div>
-      </div>
+        </Card>
 
-      {/* Campsite Guestbook Modal */}
+        {/* Profile Identity Card */}
+        <Card variant="porcelain" className="p-6 sm:p-8 rounded-3xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              {profile?.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={profile.avatarUrl}
+                  alt={username}
+                  className="w-16 h-16 rounded-2xl border-2 border-emerald-300 shadow-md"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-inner font-satoshi">
+                  {username.slice(0, 2).toUpperCase()}
+                </div>
+              )}
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl sm:text-2xl font-bold text-stone-950 tracking-tight font-satoshi">
+                    @{username}
+                  </h1>
+                  <Badge variant="emerald" size="sm">
+                    Tier {badge}
+                  </Badge>
+                </div>
+                <p className="text-xs text-stone-600 font-pixel font-bold mt-1">
+                  {title} · Level {level}
+                </p>
+              </div>
+            </div>
+
+            <Badge variant="stone" size="md">
+              Verified Public Profile
+            </Badge>
+          </div>
+
+          {/* Stats Metric Row */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+            <Card variant="subtle-inset" className="p-4 rounded-2xl space-y-1">
+              <span className="text-[11px] text-stone-500 font-satoshi block">
+                Active Consistency
+              </span>
+              <div className="text-xl font-bold text-amber-700 font-pixel flex items-center gap-1.5">
+                <Flame className="w-4 h-4 fill-amber-500 text-amber-600" />
+                {streakDays} DAYS
+              </div>
+              <span className="text-[10px] text-stone-500">Unbroken streak</span>
+            </Card>
+
+            <Card variant="subtle-inset" className="p-4 rounded-2xl space-y-1">
+              <span className="text-[11px] text-stone-500 font-satoshi block">
+                Active Modules
+              </span>
+              <div className="text-xl font-bold text-emerald-800 font-pixel flex items-center gap-1.5">
+                <Trees className="w-4 h-4 text-emerald-700" />
+                {trees.length} MODULES
+              </div>
+              <span className="text-[10px] text-stone-500">Tracked projects</span>
+            </Card>
+
+            <Card
+              variant="subtle-inset"
+              className="p-4 rounded-2xl space-y-1 col-span-2 sm:col-span-1"
+            >
+              <span className="text-[11px] text-stone-500 font-satoshi block">
+                Total Activity
+              </span>
+              <div className="text-xl font-bold text-stone-900 font-pixel flex items-center gap-1.5">
+                <TrendingUp className="w-4 h-4 text-emerald-700" />
+                {totalCommits} COMMITS
+              </div>
+              <span className="text-[10px] text-stone-500">Verified code pushes</span>
+            </Card>
+          </div>
+        </Card>
+
+        {/* Modules Section */}
+        <section className="space-y-4">
+          <h2 className="text-lg font-bold text-stone-950 font-satoshi">
+            Verified Project Modules
+          </h2>
+          {trees.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {trees.map((tree) => (
+                <Card
+                  key={tree.id}
+                  variant="porcelain"
+                  className="p-5 rounded-2xl space-y-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                          tree.type === "revenue"
+                            ? "bg-amber-50 text-amber-700 border border-amber-200"
+                            : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        }`}
+                      >
+                        {tree.type === "revenue" ? (
+                          <TrendingUp className="w-4 h-4" />
+                        ) : (
+                          <Trees className="w-4 h-4" />
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-stone-950 font-satoshi truncate max-w-[160px]">
+                          {tree.name}
+                        </h4>
+                        <span className="text-[11px] text-stone-500 uppercase font-pixel">
+                          {tree.tier} Tier
+                        </span>
+                      </div>
+                    </div>
+                    <Badge
+                      variant={tree.type === "revenue" ? "amber" : "emerald"}
+                      size="sm"
+                    >
+                      {tree.type === "revenue"
+                        ? `$${tree.mrr || 0}/mo`
+                        : `${tree.commits || 0} commits`}
+                    </Badge>
+                  </div>
+                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 font-satoshi">
+                    <span>Planted {new Date(tree.plantedAt).toLocaleDateString()}</span>
+                    <span className="text-emerald-800 font-semibold flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+                    </span>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card
+              variant="porcelain"
+              className="p-8 text-center rounded-2xl text-stone-500 text-xs"
+            >
+              No active modules planted yet.
+            </Card>
+          )}
+        </section>
+      </main>
+
+      {/* Guestbook Modal */}
       <GuestbookModal
         isOpen={isGuestbookOpen}
         onClose={() => setIsGuestbookOpen(false)}
@@ -243,6 +317,6 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
         entries={guestbookEntries}
         onAddEntry={handleAddGuestbookNote}
       />
-    </main>
+    </div>
   );
 }

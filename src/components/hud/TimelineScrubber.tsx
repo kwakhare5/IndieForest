@@ -1,215 +1,157 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, RotateCcw, Calendar, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { Play, Pause, RotateCcw, History } from "lucide-react";
 import { sound } from "@/lib/sound";
-import { TreeData } from "@/types/game";
+import type { TreeData, ShipLog } from "@/types/game";
 
-export interface TimelineScrubberProps {
+interface TimelineScrubberProps {
   trees: TreeData[];
-  onScrubChange: (activeTrees: TreeData[], activeDateStr: string | null) => void;
-  onClose?: () => void;
-  className?: string;
+  shipHistory?: ShipLog[];
+  onScrubDate?: (dateOffset: number) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export function TimelineScrubber({
   trees,
-  onScrubChange,
+  onScrubDate,
+  isOpen,
   onClose,
-  className = "",
 }: TimelineScrubberProps) {
-  // Sort trees by planted date to establish historical bounds
-  const sortedDates = React.useMemo(() => {
-    if (!trees.length) return [Date.now() - 86400000 * 30, Date.now()];
-    const timestamps = trees.map((t) => new Date(t.plantedAt).getTime()).filter((t) => !isNaN(t));
-    if (!timestamps.length) return [Date.now() - 86400000 * 30, Date.now()];
-    const min = Math.min(...timestamps, Date.now() - 86400000 * 30);
-    const max = Math.max(...timestamps, Date.now());
-    return [min, max];
-  }, [trees]);
-
-  const minTime = sortedDates[0];
-  const maxTime = sortedDates[1];
-  const totalDaysSpan = Math.max(Math.ceil((maxTime - minTime) / (1000 * 3600 * 24)), 7);
-
-  const [currentDayOffset, setCurrentDayOffset] = useState<number>(totalDaysSpan);
+  const [currentDayOffset, setCurrentDayOffset] = useState(0); // 0 is today, -30 is 30 days ago
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isScrubbingActive, setIsScrubbingActive] = useState(false);
-  const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Compute active date from slider offset
-  const currentTime = minTime + (currentDayOffset / totalDaysSpan) * (maxTime - minTime);
-  const currentDate = new Date(currentTime);
-  const currentDateStr = currentDate.toISOString().slice(0, 10);
-
-  // Compute trees visible at this point in time
-  const visibleTrees = React.useMemo(() => {
-    if (!isScrubbingActive) return trees;
-    return trees.filter((t) => new Date(t.plantedAt).getTime() <= currentTime);
-  }, [trees, currentTime, isScrubbingActive]);
-
-  // Notify parent on change
   useEffect(() => {
-    if (isScrubbingActive) {
-      onScrubChange(visibleTrees, currentDateStr);
-    } else {
-      onScrubChange(trees, null);
-    }
-  }, [visibleTrees, isScrubbingActive, currentDateStr, onScrubChange, trees]);
-
-  // Automated 10-Second Time-Lapse Player
-  const togglePlay = () => {
-    sound.playClick();
+    let timer: NodeJS.Timeout;
     if (isPlaying) {
-      setIsPlaying(false);
-      if (playIntervalRef.current) clearInterval(playIntervalRef.current);
-    } else {
-      setIsScrubbingActive(true);
-      setIsPlaying(true);
-      setCurrentDayOffset(1); // restart from day 1
-
-      playIntervalRef.current = setInterval(() => {
+      timer = setInterval(() => {
         setCurrentDayOffset((prev) => {
-          if (prev >= totalDaysSpan) {
+          if (prev >= 0) {
             setIsPlaying(false);
-            if (playIntervalRef.current) clearInterval(playIntervalRef.current);
-            sound.playLevelUp();
-            return totalDaysSpan;
+            return 0;
           }
-          return prev + 1;
+          const next = prev + 1;
+          onScrubDate?.(next);
+          sound.playClick();
+          return next;
         });
-      }, 10000 / totalDaysSpan); // exactly 10s total duration
+      }, 300);
     }
-  };
+    return () => clearInterval(timer);
+  }, [isPlaying, onScrubDate]);
 
-  useEffect(() => {
-    return () => {
-      if (playIntervalRef.current) clearInterval(playIntervalRef.current);
-    };
-  }, []);
+  if (!isOpen) return null;
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseInt(e.target.value);
-    setIsScrubbingActive(true);
-    setIsPlaying(false);
-    if (playIntervalRef.current) clearInterval(playIntervalRef.current);
+    const val = parseInt(e.target.value, 10);
     setCurrentDayOffset(val);
+    onScrubDate?.(val);
   };
 
-  const handleQuickJump = (daysBack: number) => {
+  const handleStartPlayback = () => {
     sound.playClick();
-    setIsScrubbingActive(true);
-    setIsPlaying(false);
-    if (playIntervalRef.current) clearInterval(playIntervalRef.current);
-    const targetOffset = Math.max(totalDaysSpan - daysBack, 1);
-    setCurrentDayOffset(targetOffset);
+    setCurrentDayOffset(-30);
+    setIsPlaying(true);
+    onScrubDate?.(-30);
   };
 
-  const handleResetLive = () => {
-    sound.playClick();
-    setIsPlaying(false);
-    if (playIntervalRef.current) clearInterval(playIntervalRef.current);
-    setIsScrubbingActive(false);
-    setCurrentDayOffset(totalDaysSpan);
+  const getDateLabel = (offset: number) => {
+    if (offset === 0) return "Today (Live)";
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   return (
-    <div className={`pointer-events-auto p-1.5 rounded-full glass-dock shadow-xl font-satoshi ${className}`}>
-      <div className="px-4 py-2 rounded-full porcelain-surface flex flex-wrap items-center gap-2.5 sm:gap-3.5">
-        
-        {/* Play/Pause Time-Lapse Button */}
-        <Button
-          variant={isPlaying ? "emerald" : "dark"}
-          size="sm"
-          onClick={togglePlay}
-          icon={isPlaying ? Pause : Play}
-          className="shrink-0"
-        >
-          {isPlaying ? "Pause" : "10s Replay"}
-        </Button>
+    <div className="fixed bottom-24 inset-x-0 z-30 flex justify-center px-4">
+      <Card
+        variant="porcelain"
+        className="w-full max-w-2xl p-4 sm:p-5 rounded-3xl shadow-xl border border-stone-300 bg-white space-y-4"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+              <History className="w-4 h-4" />
+            </div>
+            <div>
+              <h4 className="font-bold text-xs text-stone-900 font-satoshi">
+                30-Day Growth Time Capsule
+              </h4>
+              <span className="text-[11px] text-stone-500 font-satoshi">
+                Inspect past diorama states or auto-play time-lapse
+              </span>
+            </div>
+          </div>
 
-        {/* Quick Jumps */}
-        <div className="hidden sm:flex items-center gap-1 p-0.5 rounded-full bg-stone-100/90 border border-stone-200/80 text-[11px] font-bold text-stone-600">
-          <button
-            type="button"
-            onClick={() => handleQuickJump(7)}
-            className="px-2 py-0.5 rounded-full hover:bg-white hover:text-stone-900 transition active:scale-95 cursor-pointer"
-          >
-            7d
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickJump(30)}
-            className="px-2 py-0.5 rounded-full hover:bg-white hover:text-stone-900 transition active:scale-95 cursor-pointer"
-          >
-            30d
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickJump(90)}
-            className="px-2 py-0.5 rounded-full hover:bg-white hover:text-stone-900 transition active:scale-95 cursor-pointer"
-          >
-            90d
-          </button>
+          <div className="flex items-center gap-2">
+            <Badge variant={currentDayOffset === 0 ? "emerald" : "stone"} size="sm">
+              {getDateLabel(currentDayOffset)}
+            </Badge>
+            <Button variant="outline" size="sm" onClick={onClose}>
+              Close
+            </Button>
+          </div>
         </div>
 
-        {/* Timeline Slider */}
-        <div className="flex-1 min-w-[140px] sm:min-w-[180px] flex items-center gap-2">
-          <span className="text-[10px] font-bold font-pixel text-stone-500 uppercase shrink-0">Day 1</span>
+        {/* Scrubber Slider */}
+        <div className="space-y-2 pt-1">
           <input
             type="range"
-            min="1"
-            max={totalDaysSpan}
+            min={-30}
+            max={0}
             value={currentDayOffset}
             onChange={handleSliderChange}
-            className="w-full accent-emerald-700 cursor-pointer h-1.5 bg-stone-200 rounded-lg"
+            className="w-full h-2 bg-stone-300 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
           />
-          <span className="text-[10px] font-bold font-pixel text-emerald-800 uppercase shrink-0">
-            Day {currentDayOffset}
+
+          <div className="flex items-center justify-between text-[10px] text-stone-500 font-mono">
+            <span>30 Days Ago</span>
+            <span>15 Days Ago</span>
+            <span>Today (Live)</span>
+          </div>
+        </div>
+
+        {/* Playback Controls */}
+        <div className="flex items-center justify-between pt-2 border-t border-stone-200/70">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="emerald"
+              size="sm"
+              onClick={() => {
+                if (isPlaying) {
+                  setIsPlaying(false);
+                } else {
+                  handleStartPlayback();
+                }
+              }}
+              icon={isPlaying ? Pause : Play}
+            >
+              {isPlaying ? "Pause Timelapse" : "Play 10s Timelapse"}
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setIsPlaying(false);
+                setCurrentDayOffset(0);
+                onScrubDate?.(0);
+              }}
+              icon={RotateCcw}
+            >
+              Reset Live
+            </Button>
+          </div>
+
+          <span className="text-[11px] text-stone-500 font-satoshi">
+            {trees.length} Active Modules Tracked
           </span>
         </div>
-
-        {/* Historical Status Badge */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          {isScrubbingActive ? (
-            <div className="flex items-center gap-1.5">
-              <Badge variant="amber" size="sm" dot icon={Calendar}>
-                {currentDateStr} ({visibleTrees.length})
-              </Badge>
-              <button
-                type="button"
-                onClick={handleResetLive}
-                className="p-1 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition active:scale-95 cursor-pointer"
-                title="Return to Live Island"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          ) : (
-            <Badge variant="emerald" size="sm" dot>
-              Live State
-            </Badge>
-          )}
-
-          {onClose && (
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                handleResetLive();
-                onClose();
-              }}
-              className="p-1 rounded-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition active:scale-95 cursor-pointer ml-0.5"
-              title="Close Timeline"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
-
-      </div>
+      </Card>
     </div>
   );
 }

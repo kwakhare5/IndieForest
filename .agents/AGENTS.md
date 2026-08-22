@@ -50,17 +50,14 @@ npm run lint       # ESLint + TypeScript check
 
 ### Shared components
 
-- `src/components/canvas/ForestCanvas.tsx` — Locked orthographic 3D canvas with `<CameraRig />` parallax.
-- `src/components/canvas/TerrainIsland.tsx` — Procedural stepped voxel earth base, clay strata, and turquoise pond.
-- `src/components/canvas/BlockTree.tsx` — 5-tier stepped pine trees (Emerald Shipping vs Golden Revenue).
-- `src/components/canvas/CampProps.tsx` — Milestone campfire, tent, cabin, lantern posts, wooden pier, and hammock.
-- `src/components/canvas/WeatherSystem.tsx` — Multi-tiered particle system (emerald rain, milestone thunderstorm/sunrays, golden revenue showers).
-- `src/components/hud/TopStatusBar.tsx` — Zone 1: Profile, rank badge, XP bar, streaks, shields, lighting cycle, audio, settings.
-- `src/components/hud/FloatingDock.tsx` — Zone 3: Bottom Action Dock (`[ LOG DAILY SHIP ]`, `[ + Tree ]`, `[ Camp Shop ]`).
-- `src/components/hud/TimelineScrubber.tsx` — 3D Timeline Scrubber & 10s automated turntable time-lapse player.
-- `src/components/hud/GuestbookModal.tsx` — Campsite bulletin board guestbook modal for visitor notes.
-- `src/components/hud/CampShopModal.tsx` — Pinecone decor store for 3D island items.
-- `src/components/hud/AddTreeModal.tsx` — Dual-grove tree planter & live webhook simulator.
+- `src/components/ui/Card.tsx` — Universal double-bezel porcelain card & inset containers.
+- `src/components/ui/Button.tsx` — Tactile specular buttons with action discs and active physics.
+- `src/components/ui/Badge.tsx` — Status pills, rank badges, and live pulse dots.
+- `src/components/ui/Modal.tsx` — Double-bezel modal enclosure & backdrop blur.
+- `src/components/ui/SegmentedControl.tsx` — Sliding pill toggle controls.
+- `src/components/landing/*` — Dedicated modular landing page components.
+- `src/components/dashboard/*` — Dedicated modular dashboard components.
+- `src/components/hud/*` — Overlay modals (Settings, ShareCard, AddTree, Guestbook).
 
 ---
 
@@ -77,22 +74,21 @@ npm run lint       # ESLint + TypeScript check
 
 ## 7. SESSION RESUME
 
-- **Complete 3D Diorama Spatial Slot Refactor:** Mapped all 16 radial tree slots strictly to North/Mid quadrants ($Z \le 0.8$) and dedicated the South quadrant ($Z \ge 1.2$) exclusively to Campsite, Pond & Pier, eliminating 100% of mesh collisions.
-- **Milestone Campsite Progression:** Added dynamic upgrades (Day 3 Campfire $\rightarrow$ Day 7 Canvas Tent $\rightarrow$ Day 14 Log Cabin $\rightarrow$ Day 30 Pier & Lanterns).
-- **Orthographic In-World Badge Scale Normalization:** Removed `distanceFactor` from `@react-three/drei` `<Html>` tags to prevent orthographic magnification distortion.
-- **100% Zero-Touch Automatic GitHub Ingestion:** Implemented `syncGitHubIsland` and `autoCheckTodayCommits` in `useForestStore.ts` and wired `window.onfocus` tab-switch detection in `src/app/dashboard/page.tsx` so pushing commits from terminal automatically waters the island and levels up trees without manual clicking.
-- **Floating 3D In-World Porcelain Billboard Badges:** Added `@react-three/drei` `<Html center>` billboard tags in `BlockTree.tsx` hovering over each tree displaying repo name and commit tier (`🌲 IndieForest · IV (42c)` or `🪙 Pro Plan · $199/mo`).
-- **Semantic-Only 3D Diorama & Clutter Purge:** Purged non-semantic random clutter rocks and boulders from `TerrainIsland.tsx` to maintain a pristine, razor-sharp porcelain aesthetic.
-- **1-Click Famous Builders Instant Hero Hook:** Created `src/lib/curatedBuilders.ts` and added instant hero preview chips (`@levelsio`, `@shadcn`, `@antfu`, `@marclou`) on `src/app/page.tsx` loading in <10ms with zero GitHub API rate-limit consumption.
-- **Rolling 30-Day Forest Health % (Consistency Metric):** Implemented `calculateForestHealth` in `src/lib/gamification.ts` with 4 health tiers (`Pristine 90%+`, `Lush 75–89%`, `Dormant 50–74%`, `Drought <50%`), displayed in `TopStatusBar.tsx` with live sync status.
-- **Single Canonical Master Specification:** Consolidated all product, architecture, math, visual, and UX documentation into a single canonical file `docs/MASTER_SPECIFICATION.md` and purged redundant docs.
-- **100% Test-Driven Quality:** 61/61 Vitest unit tests passing with zero Turbopack build or lint errors.
+- **Full-Screen 3D Game Island Environment (`src/app/dashboard/page.tsx`):** Transformed `/dashboard` into an edge-to-edge `100vw × 100vh` game world (zero vertical document scrolling) where the orthographic isometric 3D canvas diorama serves as the primary persistent viewport.
+- **Tactical Porcelain Game HUD (`src/components/hud/*`):** Pinned Top-Left Builder Status Capsule (`DashboardBuilderCapsule.tsx`) with avatar, rank, level, XP progress bar, streak flame, shields, and 30-day health ratio; Top-Right Game Controls (`DashboardGameControls.tsx`) with fast-sync, campfire lo-fi audio toggle, and inventory trigger; Bottom-Center Porcelain Action Dock (`FloatingDock.tsx`); and interactive in-world billboard badges.
+- **Interactive Tree Inspector & Slide-Over Inventory Drawer:** Built `TreeInspectorCard.tsx` for in-world tree click inspection and `ModuleInventoryDrawer.tsx` for bulk module filtering, search, and deletion without unmounting the 3D diorama canvas. Added `H` key shortcut for Immersive Mode (hide/show HUD).
+- **Solid Porcelain White UI Architecture:** Replaced all translucent glassmorphism blur and `backdrop-filter` effects with solid, tactile porcelain white (`#ffffff`) surfaces, crisp borders, and subtle physical shadows matching the landing page button aesthetics.
+- **Dead Code Purge & Legacy Data Eradication:** Deleted obsolete `src/components/dashboard/` directory. Purged 100% of legacy `pinecones` currency across `types/game.ts`, `lib/gamification.ts`, `lib/github.ts`, `lib/curatedBuilders.ts`, `store/useForestStore.ts`, and `LandingHero.tsx`. Fixed XP display bug on landing hero preview card.
+- **Modular Landing Page Reuse:** Rebuilt landing page with extracted `LandingSectionHeader.tsx` and `LandingFeatureCard.tsx`, replacing all lingering "Lorem Ipsum" placeholders with authentic IndieForest copy.
+- **100% Test, Lint & Build Cleanliness:** 48/48 Vitest tests passing, ESLint 0 errors / 0 warnings, Next.js 16.3.1 Turbopack build 100% green.
 
 **Immediate next task:**
 
-- Launch on X / Product Hunt and draft post with `/build-in-public`.
+- Production deployment and Vercel launch.
 
 **Open blockers:**
 
 - [None]
+
+
 

@@ -1,131 +1,131 @@
 "use client";
 
 import React from "react";
-import { Share2, Tent, Plus, Flame, Shield, ArrowUpRight, History } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import {
+  Flame,
+  Plus,
+  Share2,
+  History,
+  Video,
+  Tent,
+  CheckCircle2,
+  Sparkles,
+} from "lucide-react";
 import { sound } from "@/lib/sound";
-import { useForestStore } from "@/store/useForestStore";
 
 interface FloatingDockProps {
-  onOpenShipModal: () => void;
-  onOpenShareModal: () => void;
-  onOpenAddTreeModal: () => void;
-  onOpenShopModal: () => void;
-  isTimelineOpen?: boolean;
-  onToggleTimeline?: () => void;
+  streakDays: number;
+  onOpenShip?: () => void;
+  onOpenAddTree?: () => void;
+  onOpenShare?: () => void;
+  onOpenTimeline?: () => void;
+  onOpenVideo?: () => void;
+  onOpenTent?: () => void;
+  isTimelineActive?: boolean;
+  hasShippedToday?: boolean;
 }
 
 export function FloatingDock({
-  onOpenShipModal,
-  onOpenShareModal,
-  onOpenAddTreeModal,
-  onOpenShopModal,
-  isTimelineOpen = false,
-  onToggleTimeline,
+  streakDays,
+  onOpenShip,
+  onOpenAddTree,
+  onOpenShare,
+  onOpenTimeline,
+  onOpenVideo,
+  onOpenTent,
+  isTimelineActive = false,
+  hasShippedToday = false,
 }: FloatingDockProps) {
-  const streakDays = useForestStore((s) => s.streakDays);
-  const streakShields = useForestStore((s) => s.streakShields);
-
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center justify-center font-satoshi select-none">
-      <div className="p-1 rounded-full glass-dock shadow-2xl transition-all duration-200">
-        <div className="h-11 px-2.5 sm:px-3 rounded-full porcelain-surface bg-white flex items-center gap-1.5 sm:gap-2 font-satoshi">
-          
-          {/* 1. Daily Streak & Burnout Shield Momentum Badge */}
-          <div
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50/90 border border-amber-200/90 text-amber-900 font-semibold cursor-default shrink-0 shadow-xs"
-            title={`${streakDays}-day shipping streak • ${streakShields} Streak Shield(s) protecting rest days`}
-          >
-            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600 shrink-0 animate-pulse" />
-            <span className="font-pixel text-xs sm:text-sm font-normal text-amber-950 leading-none">{streakDays}d</span>
-            <div className="w-[1px] h-3.5 bg-amber-300/80 mx-0.5" />
-            <div className="flex items-center gap-0.5 text-emerald-800 font-pixel text-xs sm:text-sm font-normal leading-none">
-              <Shield className="w-3 h-3 text-emerald-700 shrink-0" />
-              <span>x{streakShields}</span>
-            </div>
-          </div>
-
-          <div className="w-[1px] h-4 bg-stone-200 shrink-0" />
-
-          {/* 2. On-Demand 3D Timeline Toggle */}
-          {onToggleTimeline && (
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                onToggleTimeline();
-              }}
-              className={`h-8 px-2.5 rounded-full font-semibold text-xs flex items-center gap-1.5 transition-all duration-150 active:scale-95 cursor-pointer ${
-                isTimelineOpen
-                  ? "bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-inner"
-                  : "hover:bg-stone-100/90 text-stone-700 hover:text-stone-950"
-              }`}
-              title="Toggle 3D Growth Timeline & 10s Replay"
-            >
-              <History className={`w-3.5 h-3.5 ${isTimelineOpen ? "text-emerald-800" : "text-stone-600"}`} />
-              <span className="hidden sm:inline font-satoshi font-bold">Timeline</span>
-            </button>
-          )}
-
-          <div className="w-[1px] h-4 bg-stone-200 shrink-0" />
-
-          {/* 3. Primary Hero Action: LOG DAILY SHIP */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              onOpenShipModal();
-            }}
-            className="h-8.5 px-3.5 sm:px-4 rounded-full btn-specular-emerald text-white font-bold text-xs flex items-center gap-1.5 transition-all duration-150 active:scale-95 active:shadow-inner cursor-pointer shrink-0 tracking-wide font-satoshi shadow-xs"
-            title="Log Today's Ship & Grow Island"
-          >
-            <span>LOG DAILY SHIP</span>
-            <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
-          </button>
-
-          <div className="w-[1px] h-4 bg-stone-200 shrink-0" />
-
-          {/* 4. Add Tree */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              onOpenAddTreeModal();
-            }}
-            className="h-8 px-2 sm:px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1 transition-all duration-150 active:scale-95 cursor-pointer"
-            title="Plant Customer Revenue Tree or Milestone Sprout"
-          >
-            <Plus className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-            <span className="hidden sm:inline font-satoshi font-bold">Tree</span>
-          </button>
-
-          {/* 5. Camp Shop */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              onOpenShopModal();
-            }}
-            className="h-8 px-2 sm:px-2.5 rounded-full hover:bg-stone-100/90 text-stone-700 hover:text-stone-950 font-semibold text-xs flex items-center gap-1 transition-all duration-150 active:scale-95 cursor-pointer"
-            title="Open Pinecone Camp Shop"
-          >
-            <Tent className="w-3.5 h-3.5 text-amber-700" />
-            <span className="hidden sm:inline font-satoshi font-bold">Shop</span>
-          </button>
-
-          {/* 6. Share Card Exporter */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              onOpenShareModal();
-            }}
-            className="w-8 h-8 rounded-full hover:bg-stone-100/90 flex items-center justify-center text-stone-600 hover:text-stone-950 transition-all duration-150 active:scale-95 cursor-pointer shrink-0"
-            title="Share Daily Progress to X / Twitter"
-          >
-            <Share2 className="w-3.5 h-3.5" />
-          </button>
-
+    <div className="fixed bottom-6 inset-x-0 z-40 flex justify-center px-4 pointer-events-none">
+      {/* Universal Double-Bezel Floating Porcelain Dock (Solid White) */}
+      <div className="pointer-events-auto flex items-center gap-2 p-2 rounded-full bg-white border border-stone-300 shadow-xl shadow-stone-900/10">
+        {/* Streak Status Pill */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-50 border border-stone-200 shadow-xs text-xs font-bold font-pixel text-amber-800">
+          <Flame className="w-4 h-4 text-amber-600 fill-amber-500" />
+          <span>{streakDays}D STREAK</span>
         </div>
+
+        {/* 1-Click Ship CTA */}
+        <Button
+          variant={hasShippedToday ? "outline" : "emerald"}
+          size="sm"
+          onClick={() => {
+            sound.playClick();
+            onOpenShip?.();
+          }}
+          icon={hasShippedToday ? CheckCircle2 : Sparkles}
+        >
+          {hasShippedToday ? "Shipped Today" : "Ship Daily"}
+        </Button>
+
+        <div className="w-[1px] h-5 bg-stone-300/80 my-auto mx-0.5" />
+
+        {/* Plant Tree Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            sound.playClick();
+            onOpenAddTree?.();
+          }}
+          icon={Plus}
+        >
+          Plant
+        </Button>
+
+        {/* Rest Vault / Tent Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            sound.playClick();
+            onOpenTent?.();
+          }}
+          icon={Tent}
+        >
+          Vault
+        </Button>
+
+        {/* Timeline Scrubber Button */}
+        <Button
+          variant={isTimelineActive ? "dark" : "outline"}
+          size="sm"
+          onClick={() => {
+            sound.playClick();
+            onOpenTimeline?.();
+          }}
+          icon={History}
+        >
+          History
+        </Button>
+
+        {/* 10s 3D Turntable Video Export */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            sound.playClick();
+            onOpenVideo?.();
+          }}
+          icon={Video}
+        >
+          Orbit
+        </Button>
+
+        {/* Share 3D Card */}
+        <Button
+          variant="emerald"
+          size="sm"
+          onClick={() => {
+            sound.playClick();
+            onOpenShare?.();
+          }}
+          icon={Share2}
+        >
+          Share
+        </Button>
       </div>
     </div>
   );
