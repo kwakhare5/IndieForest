@@ -1,279 +1,251 @@
-<div align="center">
+# IndieForest
 
-# 🌲 IndieForest
-
-### Gamified 3D Low-Poly Island & Daily Shipping Momentum Engine for Indie Hackers
-
-[![Next.js 16](https://img.shields.io/badge/Next.js-16.3.1-black?logo=next.js&style=flat-square)](https://nextjs.org/)
-[![React 19](https://img.shields.io/badge/React-19.0.0-blue?logo=react&style=flat-square)](https://react.dev/)
-[![Three.js](https://img.shields.io/badge/Three.js-0.170.0-black?logo=three.js&style=flat-square)](https://threejs.org/)
-[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind-v4.0.0-38bdf8?logo=tailwindcss&style=flat-square)](https://tailwindcss.com/)
-[![Vitest](https://img.shields.io/badge/Vitest-48%2F48%20Passed-emerald?logo=vitest&style=flat-square)](https://vitest.dev/)
-[![Clerk Auth](https://img.shields.io/badge/Auth-Clerk-6C47FF?logo=clerk&style=flat-square)](https://clerk.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-
-*IndieForest turns your daily coding momentum into a living, physical 3D low-poly diorama. Ship code daily to water your island with real-time particle rain, level up your developer rank, sprout customer pine trees, and unlock milestone campsite structures.*
-
-[Live Demo](https://indieforest.dev) · [Report Bug](https://github.com/kwakhare5/IndieForest/issues) · [Brand Assets](https://indieforest.dev/logos)
+IndieForest is a gamified momentum and accountability dashboard for indie hackers and developers that turns daily shipping into living visual progress. Connect your GitHub repositories or revenue webhooks to track consistent daily shipping, build momentum, level up your rank, and share verified progress cards.
 
 ---
 
-</div>
+## Key Features
 
-## 📑 Table of Contents
-
-- [Overview & Vision](#-overview--vision)
-- [Key Features](#-key-features)
-- [Tech Stack & Architecture](#-tech-stack--architecture)
-- [Directory Structure](#-directory-structure)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation & Setup](#installation--setup)
-  - [Environment Variables](#environment-variables)
-- [Gamification Engine & Progression Math](#-gamification-engine--progression-math)
-  - [Level & XP Curve](#level--xp-curve)
-  - [Tree Growth Tiers & Coordinates](#tree-growth-tiers--coordinates)
-  - [Streak Shields & Burnout Protection](#streak-shields--burnout-protection)
-- [API Reference & Webhook Integration](#-api-reference--webhook-integration)
-  - [GitHub Zero-Touch Ingestion](#github-zero-touch-ingestion)
-  - [Universal Revenue Webhook](#universal-revenue-webhook)
-  - [Dynamic SVG README Badges](#dynamic-svg-readme-badges)
-- [Testing & Quality Assurance](#-testing--quality-assurance)
-- [Performance & Optimization](#-performance--optimization)
-- [Security & Trust Boundaries](#-security--trust-boundaries)
-- [Contributing & License](#-contributing--license)
+- **Zero-Touch GitHub Ingestion:** Automatically detects daily git commit pushes from public repositories and updates your shipping streak with verified commit proof.
+- **Universal Revenue Webhooks:** Ingest subscription and payment events across Stripe, Lemon Squeezy, and Polar into tracked revenue milestones.
+- **Dual-Grove Progression:**
+  - **Emerald Shipping Grove:** Track code repositories from Sapling to Majestic Pines based on active shipping days and commit volume.
+  - **Golden Revenue Grove:** Track customer subscriptions and monthly recurring revenue (MRR) milestones.
+- **Burnout Protection & Streak Shields:** 7-day shipping milestones grant Streak Shields that protect streaks during rest days.
+- **Dynamic README SVG Badges (`/api/badge/[username]`):** Server-rendered live badges for GitHub profile README files in card and pill formats.
+- **Tactile Porcelain Design System:** Universal double-bezel UI architecture engineered with Warm Studio Linen (`#ece7de`) and crisp physical micro-physics.
+- **1-Click Shareable Progress Cards:** Export high-resolution verified progress graphics with human-crafted copy ready for public building on X/Twitter.
 
 ---
 
-## 🌟 Overview & Vision
+## Tech Stack
 
-Indie hacking and building software in public can be an isolating grind. Existing productivity tools are dry spreadsheets or rigid kanban boards. **IndieForest** gamifies the developer journey:
-
-1. **Zero-Touch Automated Ingestion:** Connect your GitHub username or Stripe webhook. Every commit push and revenue transaction waters and grows your island automatically.
-2. **Full-Screen 3D Game World:** `/dashboard` is an edge-to-edge `100vw × 100vh` game environment with solid porcelain white tactical HUD chrome.
-3. **Sovereign Dual-Groves:** Pre-revenue builders grow lush emerald forests from pure commit grit; monetized builders grow golden revenue groves with floating MRR badges.
-
----
-
-## 🚀 Key Features
-
-* **🏝️ Living 3D Procedural Island (React Three Fiber v9 + Three.js 0.170):**
-  - Stepped 2-layer chamfered terrain slab, turquoise pond with wooden pier and lily pads, low-poly conifer pines, and smooth orthographic cursor parallax.
-* **🎮 Full-Screen Tactical Game HUD:**
-  - **Top-Left Status Capsule:** Avatar, Roman numeral rank tier, level, XP progress bar, active streak flame, streak shields, and 30-day health ratio.
-  - **Top-Right Controls:** 60s auto-sync toggle, procedural lo-fi campfire audio switch, and slide-over inventory drawer.
-  - **In-World Inspector:** Click any 3D tree to inspect its commits, MRR, canopy stage, and plot coordinates.
-  - **Slide-Over Inventory Drawer:** Bulk search, filter by grove (Shipping vs. Revenue), and delete/archive modules.
-* **⚡ Dual-Grove Independent Progression:**
-  - **Emerald Shipping Grove (West):** Grown via GitHub commits from Saplings to 5-tier Majestic Pines with golden halos.
-  - **Golden Revenue Grove (East):** Sprouted automatically when payments arrive from Stripe, Lemon Squeezy, or Polar.
-* **🛡️ Burnout Shield Protection & Rest Mode:**
-  - Earn 1 Streak Shield every 7 days (max 2) to protect streaks during rest days or sabbaticals.
-* **🏕️ Milestone Campsite Modals & Procedural Audio:**
-  - Campfire Focus Modal with Pomodoro timer and lo-fi audio (Day 3), Rest Vault Modal (Day 7), and Founder's War Room HQ (Day 14).
-* **⏳ 3D Timeline Scrubber & 10s Turntable Exporter:**
-  - Historical 30-day growth time-travel slider and 60fps MediaRecorder orbit video capture.
-* **🖼️ Dynamic SVG README Badges (`/api/badge/[username]`):**
-  - Server-rendered vector cards and shields.io pills for GitHub README profiles with 0 dependencies.
+- **Framework:** Next.js 16.3.1 (App Router with Turbopack)
+- **UI & Runtime:** React 19, TypeScript 5.7+
+- **Styling:** Tailwind CSS v4, Lucide React icons
+- **Authentication:** Clerk (`@clerk/nextjs`) with Google OAuth and session management
+- **State Management:** Zustand 5.0.3 with local persistence
+- **Testing:** Vitest 4.1.11 with 100% test-driven domain core (43/43 tests passing)
+- **Audio:** Synthesized Web Audio API retro chimes
+- **Deployment:** Vercel Edge & Serverless Runtime
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## Prerequisites
 
-| Layer | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Framework** | Next.js 16.3.1 (App Router + Turbopack) | Server Components, dynamic API routes, static prerendering |
-| **UI Engine** | React 19 + TypeScript 5.7+ | Strict strict-mode TypeScript with zero-`any` types |
-| **3D Graphics** | React Three Fiber v9, Three.js 0.170, Drei v10 | Orthographic isometric low-poly diorama canvas |
-| **Auth** | Clerk (`@clerk/nextjs` v7.8+) | Google OAuth, email sign-in, session tokens |
-| **Styling** | Tailwind CSS v4 + Satoshi + Jersey 10 | CSS-first configuration and porcelain double-bezel styling |
-| **State** | Zustand 5.0.3 + LocalStorage Persistence | SSR-safe store with `indieforest-storage-v2` |
-| **Testing** | Vitest 4.1.11 | Test-Driven domain core (48/48 unit tests passing) |
-| **Audio** | Web Audio API | Procedural lo-fi campfire crackle synthesizer & retro chimes |
+- **Node.js:** version 20.x or higher
+- **Package Manager:** `npm` (v10+), `pnpm`, or `yarn`
+- **Clerk Account:** Free API keys from [Clerk.com](https://clerk.com) for authentication
 
 ---
 
-## 📁 Directory Structure
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/kwakhare5/IndieForest.git
+cd IndieForest
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```bash
+cp .env.example .env.local
+```
+
+Populate the required environment variables:
+
+```ini
+# Clerk Authentication Keys (Required)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Public Application URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Optional Webhook Secrets
+REVENUE_WEBHOOK_SECRET=whsec_...
+```
+
+### 4. Run the Development Server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+
+---
+
+## Architecture & Directory Structure
 
 ```
 IndieForest/
-├── public/
-│   ├── logos/
-│   │   ├── indieforest_logo.svg       # Official 512x512 Master Squircle Logo
-│   │   └── indieforest_logo_mark.svg  # Transparent Official Logo Mark
-│   └── icon.svg                       # Browser Favicon
 ├── src/
 │   ├── app/
 │   │   ├── api/
-│   │   │   ├── badge/[username]/      # Dynamic SVG README Badge Endpoint
-│   │   │   ├── github/preview/        # Live Zero-Touch GitHub Ingestion API
-│   │   │   ├── og/                    # Dynamic Social Share OpenGraph Image
-│   │   │   └── webhooks/revenue/      # Universal Stripe / Lemon Squeezy / Polar Webhook
-│   │   ├── dashboard/page.tsx         # Full-screen 3D Game Island & HUD
-│   │   ├── logos/page.tsx             # Official brand identity & vector showcase
-│   │   ├── u/[username]/page.tsx      # Public shareable 3D diorama portfolio
-│   │   ├── layout.tsx                 # Root layout & ClerkProvider
-│   │   └── globals.css                # Tailwind CSS v4 & Porcelain tokens
+│   │   │   ├── badge/[username]/route.ts  # Dynamic SVG README badges
+│   │   │   ├── github/route.ts            # Public GitHub commit sync endpoint
+│   │   │   ├── github/preview/route.ts    # Instant profile preview endpoint
+│   │   │   ├── og/route.tsx               # OpenGraph social card generator
+│   │   │   └── webhooks/revenue/route.ts  # Stripe/LemonSqueezy/Polar webhook handler
+│   │   ├── dashboard/page.tsx             # Main authenticated builder dashboard
+│   │   ├── u/[username]/page.tsx          # Public diorama showcase profile
+│   │   ├── layout.tsx                     # Root layout with ClerkProvider
+│   │   └── page.tsx                       # Modular landing page composer
 │   ├── components/
-│   │   ├── canvas/                    # Three.js / React Three Fiber components
-│   │   │   ├── ForestCanvas.tsx       # Orthographic canvas & parallax rig
-│   │   │   ├── TerrainIsland.tsx      # Chamfered meadow slab & turquoise pond
-│   │   │   ├── BlockTree.tsx          # 5-tier pyramid conifers with 3D billboard tags
-│   │   │   ├── CampProps.tsx          # Milestone campfire, tent, cabin, pier, lanterns
-│   │   │   └── WeatherSystem.tsx      # Particle engines (Rain, gold bursts, fog)
-│   │   ├── hud/                       # Tactical porcelain game HUD overlays
-│   │   │   ├── DashboardBuilderCapsule.tsx # Top-left status capsule
-│   │   │   ├── DashboardGameControls.tsx   # Top-right controls & audio switch
-│   │   │   ├── FloatingDock.tsx            # Bottom porcelain action dock
-│   │   │   ├── TreeInspectorCard.tsx       # In-world tree click inspector card
-│   │   │   ├── ModuleInventoryDrawer.tsx   # Right slide-over module inventory
-│   │   │   ├── TimelineScrubber.tsx        # 30-day growth time-travel slider
-│   │   │   ├── TurntableExportModal.tsx    # 10s 60fps turntable video exporter
-│   │   │   ├── CampfireFocusModal.tsx      # Daily atomic focus & lo-fi station
-│   │   │   ├── TentSabbaticalModal.tsx     # Streak shield vault & sabbatical mode
-│   │   │   ├── CabinWarRoomModal.tsx       # Multi-repo command HQ
-│   │   │   ├── ShareCardModal.tsx          # 1200×675 3D card compositor
-│   │   │   ├── AddTreeModal.tsx            # Project tree planter & webhook simulator
-│   │   │   ├── SettingsModal.tsx           # Settings & webhook copy console
-│   │   │   └── GuestbookModal.tsx          # Campsite visitor guestbook
-│   │   ├── landing/                   # Modular landing page sub-components
-│   │   │   ├── LandingNavbar.tsx           # Floating porcelain navbar
-│   │   │   ├── LandingHero.tsx             # Live 3D interactive hero diorama
-│   │   │   ├── LandingSectionHeader.tsx    # Standardized section header
-│   │   │   ├── LandingFeatureCard.tsx      # Standardized porcelain feature card
-│   │   │   ├── LandingRitual.tsx           # 3-step zero-touch loop
-│   │   │   ├── LandingShowcase.tsx         # Dual-grove breakdown
-│   │   │   ├── LandingBento.tsx            # Anti-burnout & distribution bento
-│   │   │   ├── LandingFaq.tsx              # Transparent FAQ
-│   │   │   └── LandingFooter.tsx           # Final CTA card & links
-│   │   └── ui/                        # Atomic design system primitives
-│   │       ├── Button.tsx             # Tactile specular porcelain buttons
-│   │       ├── Card.tsx               # Porcelain double-bezel containers
-│   │       ├── Badge.tsx              # Status pill with live pulse dots
-│   │       ├── Modal.tsx              # Double-bezel modal enclosure
-│   │       └── SegmentedControl.tsx   # Tactile sliding pill toggle
+│   │   ├── landing/                       # Modular landing subcomponents
+│   │   │   ├── LandingNavbar.tsx          # Sticky navigation bar
+│   │   │   ├── LandingHero.tsx            # Hero section with interactive preview
+│   │   │   ├── LandingRitual.tsx          # Daily shipping ritual breakdown
+│   │   │   ├── LandingShowcase.tsx        # Multi-device diorama showcase
+│   │   │   ├── LandingBento.tsx           # Feature bento grid
+│   │   │   ├── LandingFaq.tsx             # Accordion FAQ section
+│   │   │   └── LandingFooter.tsx          # Footer with social links
+│   │   ├── dashboard/                     # Modular dashboard subcomponents
+│   │   │   ├── DashboardHeader.tsx        # Builder identity and action bar
+│   │   │   ├── DashboardStatsGrid.tsx     # Consistency and streak metrics
+│   │   │   ├── DashboardModulesList.tsx   # Active shipping & revenue modules
+│   │   │   └── DashboardInfoCards.tsx     # README badge & webhook setup guides
+│   │   ├── hud/                           # Overlay modals and tools
+│   │   │   ├── AddTreeModal.tsx           # Module planter and webhook URL copier
+│   │   │   ├── GuestbookModal.tsx         # Public visitor guestbook
+│   │   │   ├── SettingsModal.tsx          # Account settings and data sync
+│   │   │   └── ShareCardModal.tsx         # Progress graphic generator
+│   │   └── ui/                            # Atomic porcelain design system
+│   │       ├── Badge.tsx                  # Status pills and Roman rank badges
+│   │       ├── Button.tsx                 # Tactile specular action buttons
+│   │       ├── Card.tsx                   # Double-bezel porcelain card enclosures
+│   │       ├── Modal.tsx                  # Double-bezel modal enclosure
+│   │       └── SegmentedControl.tsx       # Sliding tab controls
 │   ├── lib/
-│   │   ├── gamification.ts            # Canonical progression math, ranks, coordinates
-│   │   ├── github.ts                  # Pure GitHub events parser & streak calculator
-│   │   ├── revenueWebhook.ts          # Universal payment webhook normalizer
-│   │   ├── badge.ts                   # Dynamic SVG README badge renderer
-│   │   ├── sound.ts                   # Procedural Web Audio synthesizer
-│   │   └── videoExport.ts             # 60fps MediaRecorder canvas video capture
+│   │   ├── badge.ts                       # Server-side SVG rendering logic
+│   │   ├── curatedBuilders.ts             # Famous indie builder showcase profiles
+│   │   ├── gamification.ts                # Pure domain math: XP, tiers, streak shields
+│   │   ├── github.ts                      # Zero-touch GitHub event parser & streak calculator
+│   │   ├── revenueWebhook.ts              # Universal webhook parser (Stripe/LS/Polar)
+│   │   └── sound.ts                       # Synthesized Web Audio API retro chimes
 │   ├── store/
-│   │   └── useForestStore.ts          # Zustand state store with persistence
+│   │   └── useForestStore.ts              # Zustand reactive state with local persistence
 │   └── types/
-│       └── game.ts                    # Canonical game domain types
+│       └── game.ts                        # Canonical domain entities and interfaces
 ```
 
 ---
 
-## ⚡ Getting Started
+## Domain Math & Gamification Mechanics
 
-### Prerequisites
-- **Node.js:** `v20.0.0` or higher
-- **npm:** `v10.0.0` or higher (or pnpm/yarn)
+All progression and consistency math is implemented as pure, side-effect-free TypeScript functions in `src/lib/gamification.ts`:
 
-### Installation & Setup
+### 1. Developer Rank Progression
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/kwakhare5/IndieForest.git
-   cd IndieForest
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment Variables:**
-   Create a `.env.local` file in the root directory:
-   ```bash
-   # Clerk Authentication
-   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-   CLERK_SECRET_KEY=sk_test_...
-
-   # Public App URL
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
-   ```
-
-4. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 🎮 Gamification Engine & Progression Math
-
-All gamification logic is encapsulated in pure, deterministic functions in [`src/lib/gamification.ts`](file:///d:/IndieForest/src/lib/gamification.ts).
-
-### Level & XP Curve
-
-| Level Range | Rank Title | Badge Tier | Unlocks |
+| Tier | Level Range | Rank Title | Badge |
 | :--- | :--- | :--- | :--- |
-| **1 – 3** | Sprout Planter | `Tier I` | Basic Emerald Shipping Grove |
-| **4 – 7** | Grove Cultivator | `Tier II` | Milestone Campfire & Daily Focus Station |
-| **8 – 12** | Timber Craftsman | `Tier III` | Canvas Tent & Streak Shield Vault |
-| **13 – 19** | Island Architect | `Tier IV` | Timber Log Cabin & War Room HQ |
-| **20+** | Forest Sovereign | `Tier V` | Golden Torus Halos & High-Roller Sparkles |
+| **Tier I** | Levels 1–3 | Sprout Planter | `I` |
+| **Tier II** | Levels 4–7 | Grove Cultivator | `II` |
+| **Tier III** | Levels 8–12 | Timber Craftsman | `III` |
+| **Tier IV** | Levels 13–19 | Island Architect | `IV` |
+| **Tier V** | Level 20+ | Forest Sovereign | `V` |
 
-### Tree Growth Tiers & Coordinates
-Trees are placed into non-overlapping radial sectors (`West Pasture` for code, `East Pasture` for MRR):
+### 2. Module Growth Tiers
 
-- **Stump (`stump`):** Churned customer ($0 MRR) or archived project.
-- **Sapling (`sapling`):** 1–7 commits or $1–$49/mo MRR.
-- **Young Pine (`young`):** 8–24 commits or $50–$499/mo MRR.
-- **Mature Pine (`mature`):** 25–59 commits or $500–$1,999/mo MRR.
-- **Majestic Pine (`majestic`):** 60+ commits or $2,000+/mo MRR (crowned with Torus halo).
+- **Shipping Track (Emerald):**
+  - **Sapling:** 1–7 commits / active days
+  - **Young:** 8–24 commits
+  - **Mature:** 25–59 commits
+  - **Majestic:** 60+ commits (with anti-bot spam protections requiring multi-day activity)
+- **Revenue Track (Golden):**
+  - **Sapling:** $1–$49 /mo MRR
+  - **Young:** $50–$499 /mo MRR
+  - **Mature:** $500–$1,999 /mo MRR
+  - **Majestic:** $2,000+ /mo MRR
+- **Stump (Dormant):** Churned subscriptions or archived repositories.
+
+### 3. Streak & Burnout Shield Rules
+
+- Each consecutive shipping day increments `streakDays` by 1.
+- Every 7-day milestone grants **+1 Streak Shield** (capped at 2 shields maximum).
+- Missing a calendar day automatically consumes 1 active shield to preserve the streak.
+- If zero shields are available upon missing a day, `drought` state triggers and streak resets to 0.
 
 ---
 
-## 🌐 API Reference & Webhook Integration
+## API Reference & Webhooks
 
-### 1. Dynamic SVG README Badges
-- **Endpoint:** `GET /api/badge/[username]`
-- **Query Params:**
-  - `style=card` (default): 600×200px porcelain diorama card with live streak, trees, and commits.
-  - `style=pill`: 340×32px compact badge for GitHub header badges.
-- **Markdown Usage:**
+### 1. Public GitHub Commit Ingestion (`/api/github`)
+
+- **Method:** `GET /api/github?username={github_handle}`
+- **Description:** Queries public GitHub push events, calculates current streak and active repositories, and triggers automatic ship rewards.
+- **Validation:** Enforces standard GitHub RFC username validation regex (`^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$`).
+
+### 2. Universal Revenue Webhook (`/api/webhooks/revenue`)
+
+- **Method:** `POST /api/webhooks/revenue?userId={user_id}`
+- **Supported Providers:**
+  - **Stripe:** `invoice.payment_succeeded`, `customer.subscription.created`, `customer.subscription.deleted`
+  - **Lemon Squeezy:** `subscription_created`, `subscription_cancelled`
+  - **Polar:** `order.created`, `subscription.canceled`
+- **Output:** Normalizes payloads into standardized `NormalizedCustomerTree` structures and updates growth tiers.
+
+### 3. Live README SVG Badges (`/api/badge/[username]`)
+
+- **Method:** `GET /api/badge/[username]?style=card|pill`
+- **Response:** Raw SVG image with `Cache-Control: public, max-age=1800` and CSP security headers.
+- **Markdown Embed:**
   ```markdown
   [![IndieForest](https://indieforest.dev/api/badge/kwakhare5)](https://indieforest.dev/u/kwakhare5)
   ```
 
-### 2. Universal Revenue Webhook
-- **Endpoint:** `POST /api/webhooks/revenue?token={USER_TOKEN}`
-- **Supported Providers:** Stripe (`customer.subscription.created`, `invoice.payment_succeeded`), Lemon Squeezy (`subscription_created`), Polar (`order.created`).
-- **Payload Normalization:** Automatically converts currencies, annual-to-monthly MRR, and churn events into 3D golden tree state.
+---
+
+## Available Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts the Next.js Turbopack development server on `http://localhost:3000` |
+| `npm run build` | Compiles optimized Next.js production build with Turbopack |
+| `npm test` | Runs the full Vitest unit test suite (43/43 domain tests) |
+| `npm run lint` | Runs ESLint and TypeScript checks across the entire codebase |
 
 ---
 
-## 🧪 Testing & Quality Assurance
+## Testing
 
-IndieForest uses **Vitest 4** with 100% test-driven coverage across all domain algorithms:
+IndieForest uses **Vitest** for fast unit and domain testing:
 
 ```bash
-# Run unit test suite
 npm test
-
-# Run ESLint + TypeScript typecheck
-npm run lint
-
-# Run production build verification with Turbopack
-npm run build
 ```
 
+Test coverage includes:
+- `src/lib/gamification.test.ts` — XP curves, level ups, streak decay, shield absorption, anti-spam tier scaling.
+- `src/lib/revenueWebhook.test.ts` — Stripe, Lemon Squeezy, and Polar webhook payload normalization.
+- `src/lib/github.test.ts` — GitHub push events parsing and streak calculations.
+- `src/lib/badge.test.ts` — Dynamic SVG badge generation and XSS sanitization.
+- `src/store/useForestStore.test.ts` — Zustand store mutations, shipping logs, and reset safety.
+
 ---
 
-## 🔒 Security & Trust Boundaries
+## Deployment (Vercel)
 
-1. **SVG XSS Sanitization:** All user-supplied strings in the dynamic SVG badge renderer are escaped against XML injection (`<>&"'`).
-2. **Deterministic Token Isolation:** Webhook ingestion tokens authenticate tenant write operations.
-3. **Clerk Trust Boundaries:** Protected routes and dashboard states verify authenticated session claims before accepting state mutations.
+IndieForest is optimized for 1-click deployment on **Vercel**:
+
+1. Push your code to a GitHub repository.
+2. Import the repository into the [Vercel Dashboard](https://vercel.com).
+3. Set the Environment Variables (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `NEXT_PUBLIC_APP_URL`).
+4. Deploy.
 
 ---
 
-## 📜 License
+## License
 
-MIT © [Karan Wakhare](https://github.com/kwakhare5)
+This project is open source and available under the [MIT License](LICENSE).

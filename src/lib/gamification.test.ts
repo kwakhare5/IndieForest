@@ -130,9 +130,20 @@ describe("getLocalDateString & getTreeSlotCoordinate", () => {
     expect(getLocalDateString(d)).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
-  it("calculates slot coordinates", () => {
-    const c0 = getTreeSlotCoordinate(0);
-    expect(typeof c0.gridX).toBe("number");
-    expect(typeof c0.gridZ).toBe("number");
+  it("calculates dual-grove slot coordinates for shipping and revenue", () => {
+    const ship0 = getTreeSlotCoordinate(0, "shipping");
+    expect(ship0.gridX).toBeLessThan(0); // West pasture
+    expect(typeof ship0.gridZ).toBe("number");
+
+    const rev0 = getTreeSlotCoordinate(0, "revenue");
+    expect(rev0.gridX).toBeGreaterThan(0); // East pasture
+    expect(typeof rev0.gridZ).toBe("number");
+
+    // Clear of campsite on South-West and pond on South-East
+    const ship3 = getTreeSlotCoordinate(3, "shipping");
+    expect(ship3.gridX).toBeLessThan(0);
+    const rev3 = getTreeSlotCoordinate(3, "revenue");
+    expect(rev3.gridX).toBeGreaterThan(0);
   });
 });
+

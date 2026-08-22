@@ -2,13 +2,13 @@
 
 import React, { Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrthographicCamera, ContactShadows, OrbitControls } from "@react-three/drei";
+import { OrbitControls, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 import { TerrainIsland } from "./TerrainIsland";
 import { BlockTree } from "./BlockTree";
 import { CampProps } from "./CampProps";
 import { WeatherSystem } from "./WeatherSystem";
-import type { TreeData } from "@/types/game";
+import type { TreeData, TimeOfDay } from "@/types/game";
 
 interface ForestCanvasProps {
   trees: TreeData[];
@@ -17,6 +17,7 @@ interface ForestCanvasProps {
   streakShields?: number;
   drought?: boolean;
   isRaining?: boolean;
+  timeOfDay?: TimeOfDay;
   selectedTreeId?: string | null;
   onSelectTree?: (tree: TreeData) => void;
   onClickCampfire?: () => void;
@@ -24,21 +25,34 @@ interface ForestCanvasProps {
   onClickCabin?: () => void;
   interactive?: boolean;
   className?: string;
-  autoRotate?: boolean;
-  orbitRef?: React.RefObject<any>;
+  zoomLevel?: 1 | 2;
 }
 
-// Hologram Mouse Parallax Rig
-function ParallaxRig({ enabled = true }: { enabled?: boolean }) {
+// Flattering Low-Pitch Isometric Parallax Rig & Smooth Zoom Animator
+function IsometricCameraRig({
+  enabled = true,
+  targetZoom = 42,
+}: {
+  enabled?: boolean;
+  targetZoom?: number;
+}) {
   useFrame((state) => {
-    if (!enabled) return;
     const { pointer, camera } = state;
-    // Subtle elastic tilt based on mouse pointer coordinates
-    const targetX = 12 + pointer.x * 1.5;
-    const targetZ = 12 - pointer.y * 1.5;
+
+    // Smoothly interpolate zoom between the 2 discrete levels (Level 1: 42, Level 2: 56)
+    if (camera.zoom !== targetZoom) {
+      camera.zoom = THREE.MathUtils.lerp(camera.zoom, targetZoom, 0.1);
+      camera.updateProjectionMatrix();
+    }
+
+    if (!enabled) return;
+
+    // Subtle elastic tilt on the flattering low-pitch isometric angle
+    const targetX = 14.5 + pointer.x * 1.0;
+    const targetZ = 14.5 - pointer.y * 1.0;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.05);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
-    camera.lookAt(0, 0.4, 0);
+    camera.lookAt(0, 0.35, 0);
   });
   return null;
 }
@@ -50,6 +64,7 @@ export function ForestCanvas({
   streakShields = 0,
   drought = false,
   isRaining = false,
+  timeOfDay = "day",
   selectedTreeId,
   onSelectTree,
   onClickCampfire,
@@ -57,74 +72,92 @@ export function ForestCanvas({
   onClickCabin,
   interactive = true,
   className = "w-full h-full min-h-[420px]",
-  autoRotate = false,
+  zoomLevel = 1,
 }: ForestCanvasProps) {
   const hasRevenueTrees = trees.some((t) => t.type === "revenue" || (t.mrr && t.mrr > 0));
 
+  // Dynamic Lighting Palette based on Time of Day
+  const isNight = timeOfDay === "night";
+  const isSunset = timeOfDay === "sunset";
+
+  const ambientColor = drought
+    ? "#a8a29e"
+    : isNight
+    ? "#312e81"
+    : isSunset
+    ? "#fed7aa"
+    : "#fffbeb";
+  const ambientIntensity = drought ? 0.45 : isNight ? 0.38 : isSunset ? 0.85 : 0.75;
+
+  const sunColor = drought
+    ? "#d6d3d1"
+    : isNight
+    ? "#818cf8"
+    : isSunset
+    ? "#f97316"
+    : "#ffffff";
+  const sunIntensity = drought ? 0.7 : isNight ? 0.45 : isSunset ? 1.4 : 1.3;
+
+  const rimColor = isNight ? "#38bdf8" : isSunset ? "#e879f9" : "#93c5fd";
+  const rimIntensity = isNight ? 0.25 : 0.35;
+
+  // 2 Discrete Zoom Levels (Level 1: 42 Overview, Level 2: 56 Inspect)
+  const targetZoom = zoomLevel === 2 ? 56 : 42;
+
   return (
-    <div className={`relative ${className} select-none overflow-hidden`}>
+    <div className={`relative ${className} select-none overflow-hidden transition-colors duration-700`}>
       <Canvas
+        orthographic
+        camera={{ position: [14.5, 9.0, 14.5], zoom: 42, near: -100, far: 200 }}
         gl={{
           antialias: true,
-          preserveDrawingBuffer: true, // Required for instant 1200x675 card snapshot and video capture
+          preserveDrawingBuffer: true,
           powerPreference: "high-performance",
         }}
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          {/* 1. True Orthographic Isometric Camera Setup */}
-          <OrthographicCamera
-            makeDefault
-            position={[12, 14, 12]}
-            zoom={42}
-            near={0.1}
-            far={100}
-          />
-
           {interactive && (
             <OrbitControls
+              target={[0, 0.35, 0]}
               enablePan={false}
-              enableRotate={interactive}
-              enableZoom={interactive}
-              minZoom={28}
-              maxZoom={75}
-              minPolarAngle={Math.PI / 4.5}
-              maxPolarAngle={Math.PI / 2.3}
-              autoRotate={autoRotate}
-              autoRotateSpeed={1.8}
+              enableRotate={false} /* 🔒 Locked to flattering low-pitch isometric farm angle */
+              enableZoom={true}
+              minZoom={38} /* 🔒 Tightly clamped zoom floor */
+              maxZoom={58} /* 🔒 Tightly clamped zoom ceiling */
             />
           )}
 
-          {!autoRotate && <ParallaxRig enabled={interactive} />}
+          <IsometricCameraRig enabled={interactive} targetZoom={targetZoom} />
 
-          {/* 2. Studio Lighting Environment */}
-          <ambientLight intensity={drought ? 0.45 : 0.75} color={drought ? "#a8a29e" : "#fffbeb"} />
+          {/* 2. Studio Lighting Environment with Organic Day/Night Cycle */}
+          <ambientLight intensity={ambientIntensity} color={ambientColor} />
 
           {/* Directional Key Sun Light */}
           <directionalLight
             position={[10, 16, 8]}
-            intensity={drought ? 0.7 : 1.3}
-            color={drought ? "#d6d3d1" : "#ffffff"}
+            intensity={sunIntensity}
+            color={sunColor}
             castShadow
           />
 
-          {/* Soft Sky Blue Rim Light */}
+          {/* Soft Sky Blue/Rose Rim Light */}
           <directionalLight
             position={[-10, 10, -10]}
-            intensity={0.35}
-            color="#93c5fd"
+            intensity={rimIntensity}
+            color={rimColor}
           />
 
-          {/* 3. Soft Studio Contact Shadows */}
+          {/* 3. Soft Studio Contact Shadows (Positioned below the floating island keel) */}
           <ContactShadows
-            position={[0, -0.24, 0]}
-            opacity={drought ? 0.25 : 0.45}
+            position={[0, -0.48, 0]}
+            opacity={drought ? 0.25 : isNight ? 0.6 : 0.45}
             scale={16}
             blur={2.4}
             far={4}
           />
 
-          {/* 4. Procedural 2-Layer Chamfered Terrain Slab */}
+          {/* 4. Unified Seamless Island Meadow Slab */}
           <TerrainIsland level={level} drought={drought} />
 
           {/* 5. 3D Trees (Dual-Grove Emerald Shipping & Golden Revenue) */}
@@ -138,11 +171,12 @@ export function ForestCanvas({
             />
           ))}
 
-          {/* 6. Milestone Campsite Props (Campfire, Tent, Cabin, Pier) */}
+          {/* 6. Milestone Campsite Props & Living Wildlife */}
           <CampProps
             streakDays={streakDays}
             level={level}
             streakShields={streakShields}
+            timeOfDay={timeOfDay}
             onClickCampfire={onClickCampfire}
             onClickTent={onClickTent}
             onClickCabin={onClickCabin}

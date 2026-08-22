@@ -139,3 +139,35 @@ export interface ForestHealth {
   label: string;
   badgeClass: string;
 }
+
+export type TimeOfDay = "day" | "sunset" | "night";
+
+export type QuestId =
+  | "atomic-commit"
+  | "build-in-public"
+  | "customer-touchpoint"
+  | "grove-stewardship";
+
+export interface DailyQuest {
+  id: QuestId;
+  title: string;
+  description: string;
+  category: "shipping" | "distribution" | "revenue" | "social";
+  xpReward: number;
+  pineconeReward: number;
+  progress: number;
+  target: number;
+  isCompleted: boolean;
+  isClaimed: boolean;
+}
+
+export interface CampShopItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: "decor" | "audio" | "biome" | "utility";
+  isUnlocked: boolean;
+  iconName?: string;
+}
+
