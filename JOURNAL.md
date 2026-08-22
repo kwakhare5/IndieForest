@@ -15,15 +15,39 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
-### [IndieForest — 3-Zone Tactical HUD, Dedicated 3D Botanical Species & UI Polish] 2026-08-22
-- **Commit**: `b49f81a` (Tactical Porcelain HUD, Anchored Popovers, Dedicated Conifer & Deciduous 3D Lineages)
-- **Vibe**: Razor-sharp, organic, tactile luxury instrument feel. Clean porcelain surfaces with dignified Scottish Highland emerald and burnished amber accents.
+### [IndieForest — Pure 1:1 Symmetrical Square Diorama, Standing Golden Mascot, Supabase Cloud & Full HUD Overhaul] 2026-08-22
+- **Commit**: `d08c190` (Symmetrical 1:1 Square Diorama, Standing Golden Companion Mascot, Supabase PostgreSQL Cloud Sync, Revenue Webhook DB Insertion, HUD UI Overhaul)
+- **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.
 - **Shipped**:
+  - **Pure 1:1 Symmetrical Square Modular Island Architecture (`ModularIsland.tsx`):**
+    - Symmetrical $1:1$ width-to-depth isometric square geometry across all progression tiers:
+      - **Level 1–4:** $9.0 \times 9.0$ Square (Cozy, dense starter homestead holding Cabin, Campfire, and Sprout seedlings).
+      - **Level 5–9:** $12.0 \times 12.0$ Square (Expands symmetrically to hold West Conifers and Sabbatical Tent).
+      - **Level 10–19:** $15.0 \times 15.0$ Square (Expands to hold East Stripe Revenue Oaks and Alpine Windmill).
+      - **Level 20+:** $18.0 \times 18.0$ Square (Massive diorama with North mountain terrace, Harbor Pier, and Coast Lighthouse).
+    - Calibrated dynamic orthographic camera zoom (`baseZoom: 28–42`) ensuring the island fills the screen perfectly at every tier without empty voids.
+  - **Option 3 Standing Golden Companion Mascot (`CampDog.tsx`):**
+    - Redesigned the companion into a lively 4-legged standing golden retriever/shiba mascot with geometric paws, warm amber coat, crimson leather collar, and polished gold medal.
+    - **Living Animation Physics:** Rhythmic arched tail wagging, curious head look-at shifts, subtle torso breathing weight shifts, and an interactive front-paw hop on click!
+  - **Supabase PostgreSQL Cloud Integration (`src/lib/supabase.ts` & `supabase/migrations/`):**
+    - Installed official `@supabase/supabase-js` client with type-safe schema definitions for `profiles`, `trees`, `ship_logs`, and `guestbook_entries`.
+    - **Zustand Cloud Sync (`useForestStore.ts`):** Automatically hydrates saved diorama state on Clerk login (`loadCloudIsland`) and asynchronously backs up state on every ship, tree plant, prune, or perk claim.
+    - **Universal Revenue Webhook DB Hook (`/api/webhooks/revenue`):** Directly inserts Stripe/Lemon Squeezy/Polar customer Money Oaks into Supabase `public.trees`.
+    - **Persistent Public Guestbook (`/u/[username]`):** Public visitor cheers and bulletin notes persist permanently to Supabase with instant UI feedback.
+  - **Canonical Bilateral Titan Farmstead Architecture (`ForestCanvas.tsx`, `CampProps.tsx`, `gallery/page.tsx`):**
+    - **West Half ($X < 0$):** Dedicated to 14 GitHub Shipping Conifers descending from high mountain pines to baby seedlings.
+    - **East Half ($X > 0$):** Dedicated to 14 Stripe Revenue Golden Oaks.
+    - **South Coastal Ranch Homestead:** Executive Log Cabin HQ (`[-0.6, 0.25, 1.8]`), front porch Campfire (`[1.8, 0.25, 2.8]`), Golden Companion (`[-1.8, 0.25, 3.0]`), and Canvas Tent (`[-3.8, 0.25, 2.8]`).
+  - **Elite High-Level Monuments:**
+    - **Alpine Windmill (`Windmill.tsx`):** Unlocks at Level 15 on the southeast bluff with smoothly rotating 4-blade canvas sails.
+    - **Harbor Shipping Pier & Boat (`HarborPier.tsx`):** Unlocks at Level 25 on the southern coastline with a moored wooden cargo dinghy gently bobbing on the water.
+    - **Coast Lighthouse (`Lighthouse.tsx`):** Unlocks at Level 35 on the northwest cape with a rotating night light beam.
+  - **Dynamic Territory Expansion & Fog-of-War Smoke Clouds (`TerritoryFog.tsx`):**
+    - Prototyped low-poly faceted cloud clusters and interactive wooden expansion stakes (`[ 🔒 LVL 5 ]`, `[ 🔒 LVL 10 ]`), then transitioned to pure 1:1 modular square slabs to eliminate visual voids.
   - **3-Zone Tactical Porcelain HUD Architecture (`src/components/hud/*`):** Refactored the dashboard HUD into a streamlined 3-zone layout with universal double-bezel porcelain styling matching the landing page (`glass-dock` outer bezel + `porcelain-surface` inner core):
     - **Top-Left Navigation & Quests (`DashboardTopLeftNav.tsx`):** Minimalist text link `[ ← Home ]` with subtle arrow hover dynamics, plus a porcelain Quests button with an anchored, floating porcelain Quests & Perk Shop popover.
     - **Top-Right Utilities (`DashboardGameControls.tsx`):** Lighting mode toggle (Day/Sunset/Night), Lo-Fi ambiance audio toggle, Settings trigger, and Modules Inventory popover with real-time repo search, grove filtering, and tree pruning.
     - **Bottom-Center Action Dock (`FloatingDock.tsx`):** Monolithic "Command Center" resting dock featuring Burnished Amber Streak pill, Highland Emerald `⚡ Ship Daily` button, `➕ Plant` trigger, `📸 Share` card trigger, and an integrated live summary metrics pill (`🌲 Active Trees · $MRR · LVL`).
-  - **Seamless Emerald Meadow Ground (`TerrainIsland.tsx`):** Clean, seamless, glitch-free top meadow grass slab (`#10b981` Emerald) resting on a warm terracotta foundation cliff (`#78350f`) with subtle shoreline riverstones and calibrated studio contact shadows.
   - **Eradication of Heavy Full-Screen Side Drawers:** Deleted obsolete `DailyQuestsDrawer.tsx` and `ModuleInventoryDrawer.tsx`, replacing them with lightweight, non-blocking anchored popovers that preserve complete visibility of the 3D diorama canvas.
   - **Dedicated 3D Tree Species Architecture:**
     - **GitHub Shipping Modules (`src/components/canvas/models/ConiferTree.tsx`):** Dedicated Alpine Evergreen Conifers featuring a delicate single-stick crop sprout (`Stage 1`), an organic branching sapling with faceted leaf clouds (`Stage 2`), a 3-tier cedar mountain pine (`Stage 3`), and a 4-tier majestic pine with golden torus halo (`Stage 4`).
@@ -44,7 +68,7 @@ During the Session End ritual (called automatically whenever significant changes
     - In-world 3D tree hover spring elevation (`+0.12` units with smooth lerp) with dynamic cursor pointer feedback.
   - **Live Production Deployment to Vercel (https://indieforest.vercel.app):** Successfully resolved Edge Middleware 500 error (`MIDDLEWARE_INVOCATION_FAILED`) by purging unused edge middleware interceptor and supplying resilient fallback publishable key for `<ClerkProvider>`. Promoted production build to Vercel live domain.
   - **Master Product Blueprint & Roadmap (`docs/PRODUCT_BLUEPRINT_AND_ROADMAP.md`):** Documented complete 12-section canonical specification covering vision, 3D farm layout, conifer micro-anatomy, camera & organic lighting, milestone campsite hubs, daily quest & pinecone shop economy, developer workflow hooks, and phased roadmap.
-  - **Dead Code & Obsolete Components Purged:** Deleted `src/components/dashboard/` entirely and purged obsolete `videoExport` scripts.
+  - **Dead Code & Obsolete Components Purged:** Deleted `src/components/dashboard/` entirely, purged obsolete `videoExport` scripts, and deleted legacy `TerrainIsland.tsx` and `TerritoryFog.tsx`.
   - **Universal Atomic Component Standardization & Reuse:** Standardized canonical UI primitives ([`Button.tsx`](file:///d:/IndieForest/src/components/ui/Button.tsx), [`Card.tsx`](file:///d:/IndieForest/src/components/ui/Card.tsx), [`Badge.tsx`](file:///d:/IndieForest/src/components/ui/Badge.tsx), [`Modal.tsx`](file:///d:/IndieForest/src/components/ui/Modal.tsx), [`SegmentedControl.tsx`](file:///d:/IndieForest/src/components/ui/SegmentedControl.tsx)) across all pages, modals, and HUD widgets.
   - **Progression Math & Core Single Source of Truth:** Unified all tree tier calculations under canonical `calculateTreeTier` in `src/lib/gamification.ts` with strict support for dormant stumps on churn and dual-gated shipping progression.
   - **Dynamic GitHub README SVG Badge Endpoint (`/api/badge/[username]`):** Built server-rendered SVG generator supporting both 600×200px porcelain diorama cards and compact shields.io pills with 100% test-driven Vitest coverage.

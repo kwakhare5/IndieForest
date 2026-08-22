@@ -4,7 +4,7 @@ import React, { Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
-import { TerrainIsland } from "./TerrainIsland";
+import { ModularIsland } from "./ModularIsland";
 import { BlockTree } from "./BlockTree";
 import { CampProps } from "./CampProps";
 import { WeatherSystem } from "./WeatherSystem";
@@ -31,7 +31,7 @@ interface ForestCanvasProps {
 // Flattering Low-Pitch Isometric Parallax Rig & Smooth Zoom Animator
 function IsometricCameraRig({
   enabled = true,
-  targetZoom = 42,
+  targetZoom = 28,
 }: {
   enabled?: boolean;
   targetZoom?: number;
@@ -39,7 +39,7 @@ function IsometricCameraRig({
   useFrame((state) => {
     const { pointer, camera } = state;
 
-    // Smoothly interpolate zoom between the 2 discrete levels (Level 1: 42, Level 2: 56)
+    // Smoothly interpolate zoom between the 2 discrete levels (Level 1: 28, Level 2: 38)
     if (camera.zoom !== targetZoom) {
       camera.zoom = THREE.MathUtils.lerp(camera.zoom, targetZoom, 0.1);
       camera.updateProjectionMatrix();
@@ -101,14 +101,15 @@ export function ForestCanvas({
   const rimColor = isNight ? "#38bdf8" : isSunset ? "#e879f9" : "#93c5fd";
   const rimIntensity = isNight ? 0.25 : 0.35;
 
-  // 2 Discrete Zoom Levels (Level 1: 42 Overview, Level 2: 56 Inspect)
-  const targetZoom = zoomLevel === 2 ? 56 : 42;
+  // Discrete Zoom Levels scaled proportionally with island expansion
+  const baseZoom = level >= 50 ? 28 : level >= 20 ? 34 : level >= 10 ? 38 : 42;
+  const targetZoom = zoomLevel === 2 ? baseZoom * 1.35 : baseZoom;
 
   return (
     <div className={`relative ${className} select-none overflow-hidden transition-colors duration-700`}>
       <Canvas
         orthographic
-        camera={{ position: [14.5, 9.0, 14.5], zoom: 42, near: -100, far: 200 }}
+        camera={{ position: [14.5, 9.0, 14.5], zoom: targetZoom, near: -100, far: 200 }}
         gl={{
           antialias: true,
           preserveDrawingBuffer: true,
@@ -123,8 +124,8 @@ export function ForestCanvas({
               enablePan={false}
               enableRotate={false} /* 🔒 Locked to flattering low-pitch isometric farm angle */
               enableZoom={true}
-              minZoom={38} /* 🔒 Tightly clamped zoom floor */
-              maxZoom={58} /* 🔒 Tightly clamped zoom ceiling */
+              minZoom={24}
+              maxZoom={60}
             />
           )}
 
@@ -152,13 +153,13 @@ export function ForestCanvas({
           <ContactShadows
             position={[0, -0.48, 0]}
             opacity={drought ? 0.25 : isNight ? 0.6 : 0.45}
-            scale={16}
+            scale={level >= 20 ? 32 : 18}
             blur={2.4}
-            far={4}
+            far={6}
           />
 
-          {/* 4. Unified Seamless Island Meadow Slab */}
-          <TerrainIsland level={level} drought={drought} />
+          {/* 4. Progressive Modular Land Slabs (Option A: Scales dynamically with level) */}
+          <ModularIsland level={level} drought={drought} />
 
           {/* 5. 3D Trees (Dual-Grove Emerald Shipping & Golden Revenue) */}
           {trees.map((tree) => (

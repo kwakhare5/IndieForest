@@ -23,6 +23,7 @@ import {
   DEFAULT_DAILY_QUESTS,
   CAMP_SHOP_CATALOG,
 } from "@/lib/gamification";
+import { syncProfileToSupabase, loadProfileFromSupabase } from "@/lib/supabase";
 
 export type { GrowthTier, TreeType, TreeData, ShipLog, TimeOfDay, DailyQuest, QuestId, CampShopItem };
 export { getRankTitle, getXpForLevel, getLocalDateString };
@@ -77,6 +78,8 @@ export interface ForestState {
   resetIsland: () => void;
   syncGitHubIsland: (username: string) => Promise<void>;
   autoCheckTodayCommits: () => Promise<boolean>;
+  syncCloudIsland: () => Promise<void>;
+  loadCloudIsland: (userId: string) => Promise<boolean>;
   mergeCloudData: (data: {
     level?: number;
     xp?: number;
@@ -285,6 +288,7 @@ export const useForestStore = create<ForestState>()(
         }));
 
         sound.playShipSuccess();
+        get().syncCloudIsland();
       },
 
       addTree: (name, mrr = 0, customTier, customType) => {
@@ -315,11 +319,13 @@ export const useForestStore = create<ForestState>()(
 
         set((s) => ({ trees: [...s.trees, newTree] }));
         sound.playPlantTree();
+        get().syncCloudIsland();
       },
 
-
-      removeTree: (id) =>
-        set((s) => ({ trees: s.trees.filter((t) => t.id !== id) })),
+      removeTree: (id) => {
+        set((s) => ({ trees: s.trees.filter((t) => t.id !== id) }));
+        get().syncCloudIsland();
+      },
 
       updateTreeTier: (id, tier) =>
         set((s) => ({
@@ -403,6 +409,59 @@ export const useForestStore = create<ForestState>()(
               data.latestCommit?.diffUrl,
               data.latestCommit?.repo
             );
+            return true;
+          }
+          return false;
+        } catch {
+          return false;
+        }
+      },
+
+      syncCloudIsland: async () => {
+        const state = get();
+        const userId = state.user.id || state.user.username;
+        if (!userId || userId === "guest") return;
+
+        set({ isAutoSyncing: true });
+        try {
+          await syncProfileToSupabase({
+            userId,
+            username: state.user.username,
+            level: state.level,
+            xp: state.xp,
+            streakDays: state.streakDays,
+            streakShields: state.streakShields,
+            pinecones: state.pinecones,
+            lastShipDate: state.lastShipDate,
+            drought: state.drought,
+            trees: state.trees,
+            shipHistory: state.shipHistory,
+          });
+          set({ lastSyncTime: new Date().toISOString() });
+        } catch {
+          // Graceful silent fallback
+        } finally {
+          set({ isAutoSyncing: false });
+        }
+      },
+
+      loadCloudIsland: async (userId: string) => {
+        if (!userId || userId === "guest") return false;
+        try {
+          const cloudData = await loadProfileFromSupabase(userId);
+          if (cloudData && cloudData.profile) {
+            set((s) => ({
+              level: cloudData.profile.level || s.level,
+              xp: cloudData.profile.xp || s.xp,
+              streakDays: cloudData.profile.streak_days || s.streakDays,
+              streakShields: cloudData.profile.streak_shields || s.streakShields,
+              pinecones: cloudData.profile.pinecones || s.pinecones,
+              drought: Boolean(cloudData.profile.drought),
+              lastShipDate: cloudData.profile.last_ship_date || s.lastShipDate,
+              trees: cloudData.trees.length > 0 ? cloudData.trees : s.trees,
+              shipHistory: cloudData.shipHistory.length > 0 ? cloudData.shipHistory : s.shipHistory,
+              lastSyncTime: new Date().toISOString(),
+            }));
             return true;
           }
           return false;

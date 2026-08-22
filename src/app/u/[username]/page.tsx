@@ -21,6 +21,7 @@ import { ForestCanvas } from "@/components/canvas/ForestCanvas";
 import { GitHubIslandProfile } from "@/lib/github";
 import { GuestbookEntry } from "@/types/game";
 import { sound } from "@/lib/sound";
+import { loadProfileFromSupabase, fetchGuestbookEntries, saveGuestbookEntry } from "@/lib/supabase";
 
 interface PublicProfileProps {
   params: Promise<{ username: string }>;
@@ -33,32 +34,49 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
   const [isCheering, setIsCheering] = useState(false);
   const [cheerCount, setCheerCount] = useState(12);
-
-  const [guestbookEntries, setGuestbookEntries] = useState<GuestbookEntry[]>([
-    {
-      id: "entry-1",
-      author: "MarcLou",
-      message: "Huge fan of this shipping momentum! Keep crushing it.",
-      timestamp: new Date(Date.now() - 86400000 * 2).toISOString(),
-    },
-    {
-      id: "entry-2",
-      author: "Tibo",
-      message: "Your profile looks incredible. Love the clean aesthetic!",
-      timestamp: new Date(Date.now() - 86400000 * 5).toISOString(),
-    },
-  ]);
+  const [guestbookEntries, setGuestbookEntries] = useState<GuestbookEntry[]>([]);
 
   useEffect(() => {
     async function loadProfile() {
+      // 1. Try loading registered builder profile from Supabase
       try {
-        const res = await fetch(
-          `/api/github/preview?username=${encodeURIComponent(username)}`
-        );
-        if (res.ok) {
-          const data: GitHubIslandProfile = await res.json();
-          setProfile(data);
+        const cloudData = await loadProfileFromSupabase(username);
+        if (cloudData && cloudData.profile) {
+          setProfile({
+            username: cloudData.profile.username,
+            avatarUrl: cloudData.profile.avatar_url || `https://github.com/${username}.png`,
+            streakDays: cloudData.profile.streak_days,
+            totalCommits: cloudData.shipHistory.length * 10 || 25,
+            level: cloudData.profile.level,
+            xp: cloudData.profile.xp,
+            activeReposCount: cloudData.trees.length || 1,
+            lastActiveDate: cloudData.profile.last_ship_date || new Date().toISOString(),
+            recentCommits: cloudData.shipHistory.map((s, idx) => ({
+              id: s.id || `commit-${idx}`,
+              repo: "main",
+              message: s.message,
+              date: s.date,
+              author: cloudData.profile.username,
+              diffUrl: s.proofUrl,
+            })),
+            trees: cloudData.trees,
+          });
+        } else {
+          // 2. Fallback to live GitHub public stats generator
+          const res = await fetch(`/api/github/preview?username=${encodeURIComponent(username)}`);
+          if (res.ok) {
+            const data: GitHubIslandProfile = await res.json();
+            setProfile(data);
+          }
         }
+      } catch {
+        // Silent fallback
+      }
+
+      // 3. Load persistent guestbook entries
+      try {
+        const gb = await fetchGuestbookEntries(username);
+        setGuestbookEntries(gb);
       } catch {
         // Fallback
       }
@@ -66,14 +84,16 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
     loadProfile();
   }, [username]);
 
-  const handleAddGuestbookNote = (message: string, author: string) => {
+  const handleAddGuestbookNote = async (message: string, author: string) => {
+    const cleanAuthor = author.trim() || "Anonymous Builder";
+    const saved = await saveGuestbookEntry(username, cleanAuthor, message);
     const newEntry: GuestbookEntry = {
-      id: `gb-${Date.now()}`,
-      author,
+      id: saved?.id || `gb-${Date.now()}`,
+      author: cleanAuthor,
       message,
       timestamp: new Date().toISOString(),
     };
-    setGuestbookEntries([newEntry, ...guestbookEntries]);
+    setGuestbookEntries((prev) => [newEntry, ...prev]);
   };
 
   const handleCheerWater = () => {

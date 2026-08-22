@@ -7,7 +7,8 @@
 
 | Term | What it means in THIS app | Never call it |
 | :--- | :--- | :--- |
-| **Diorama / Island** | The visual workspace representing a founder's active projects & revenue streams | Map, Board, World, Farm |
+| **Diorama / Island** | The visual 1:1 symmetrical square workspace representing a founder's active projects & revenue streams | Map, Board, World, Farm |
+| **Modular Slabs** | Expanding 1:1 square isometric terrain blocks ($9\times 9, 12\times 12, 15\times 15, 18\times 18$) | Void, Rectangle, Floor |
 | **Daily Ship** | A verified unit of daily progress logged via GitHub commit sync or manual log | Check-in, Task completion, Tick |
 | **Alpine Conifer Pine** | Shipping module tree grown through code commits & daily active shipping | Green tree, Pine pin |
 | **Golden Money Oak** | Revenue module tree sprouted and grown through customer subscriptions & MRR | Gold tree, Cash pin |
@@ -18,6 +19,7 @@
 | **Anchored Popover** | Lightweight floating porcelain cards anchored directly to HUD capsules | Full-screen drawer, Side panel |
 | **README Badge** | Server-rendered dynamic SVG at `/api/badge/[username]` for GitHub profile READMEs | Widget, Banner, Sticker |
 | **Visitor Cheer** | 1-click "Water Tree" action by public visitors giving cheer XP to the builder | Like, Upvote, Claps |
+| **Golden Companion** | Standing 4-legged mascot dog with animated tail wagging, curious head tilts, and jump physics | Blob, Sleeping lump |
 
 ---
 
@@ -29,6 +31,7 @@
 4. **Streak Safety:** If a calendar day is missed and `streakShields > 0`, 1 shield is consumed and the streak is preserved. If `streakShields === 0`, drought mode triggers and the streak resets to 0.
 5. **Universal Revenue Ingestion:** Universal webhook route `/api/webhooks/revenue` parses Stripe, Lemon Squeezy, and Polar payloads into verified modules.
 6. **Zero Slop:** No decorative emojis in UI text. Use geometric Lucide icons and clean Roman numerals for tier badges.
+7. **Cloud Resilience:** Zustand store auto-syncs with Supabase PostgreSQL (`public.profiles`, `public.trees`, `public.ship_logs`, `public.guestbook_entries`) while retaining instant offline localStorage capability.
 
 ---
 

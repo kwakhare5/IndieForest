@@ -122,27 +122,27 @@ export const CAMP_SHOP_CATALOG: CampShopItem[] = [
   },
 ];
 
-// Dedicated Non-Clipping Dual-Grove Slot Positions
+// Dedicated Non-Clipping Dual-Grove Slot Positions (Option 2: Bilateral Farmstead)
 const WEST_SHIPPING_SLOTS = [
-  { gridX: -1.35, gridZ: -2.8 },
-  { gridX: -1.35, gridZ: -1.5 },
-  { gridX: -1.35, gridZ: -0.2 },
-  { gridX: -1.35, gridZ: 1.1 },
-  { gridX: -2.4, gridZ: -0.6 },
-  { gridX: -2.4, gridZ: 0.4 },
-  { gridX: -3.2, gridZ: -0.6 },
-  { gridX: -1.2, gridZ: 2.5 },
+  { gridX: -3.8, gridZ: -3.4 },
+  { gridX: -2.0, gridZ: -3.4 },
+  { gridX: -4.2, gridZ: -1.6 },
+  { gridX: -2.4, gridZ: -1.6 },
+  { gridX: -3.6, gridZ: 0.2 },
+  { gridX: -1.8, gridZ: 0.2 },
+  { gridX: -4.0, gridZ: 1.8 },
+  { gridX: -1.2, gridZ: -0.8 },
 ];
 
 const EAST_REVENUE_SLOTS = [
-  { gridX: 1.35, gridZ: -2.8 },
-  { gridX: 1.35, gridZ: -1.5 },
-  { gridX: 1.35, gridZ: -0.2 },
-  { gridX: 1.35, gridZ: 1.1 },
-  { gridX: 2.65, gridZ: -2.8 },
-  { gridX: 2.65, gridZ: -1.5 },
-  { gridX: 2.65, gridZ: -0.2 },
-  { gridX: 2.65, gridZ: 0.8 },
+  { gridX: 3.8, gridZ: -3.4 },
+  { gridX: 2.0, gridZ: -3.4 },
+  { gridX: 4.2, gridZ: -1.6 },
+  { gridX: 2.4, gridZ: -1.6 },
+  { gridX: 3.6, gridZ: 0.2 },
+  { gridX: 1.8, gridZ: 0.2 },
+  { gridX: 4.0, gridZ: 1.8 },
+  { gridX: 1.2, gridZ: -0.8 },
 ];
 
 export function getTreeSlotCoordinate(
@@ -159,8 +159,8 @@ export function getTreeSlotCoordinate(
   const col = (offset % 3) + 1;
   const row = Math.floor(offset / 3);
   return {
-    gridX: sign * (1.2 + col * 1.1),
-    gridZ: -3.0 + row * 1.2,
+    gridX: sign * (1.6 + col * 1.4),
+    gridZ: -5.0 + row * 1.5,
   };
 }
 
