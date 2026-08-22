@@ -79,7 +79,7 @@ body {
 }
 
 code, kbd, samp, pre, .font-mono {
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* Canonical Double-Bezel Porcelain Architecture (Solid White Minimalist) */
