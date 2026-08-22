@@ -144,6 +144,28 @@ describe("getLocalDateString & getTreeSlotCoordinate", () => {
     expect(ship3.gridX).toBeLessThan(0);
     const rev3 = getTreeSlotCoordinate(3, "revenue");
     expect(rev3.gridX).toBeGreaterThan(0);
+
+    // Algorithmic expansion for large forests (level 20+)
+    const ship10 = getTreeSlotCoordinate(10, "shipping");
+    expect(ship10.gridX).toBeLessThan(0);
+    expect(typeof ship10.gridZ).toBe("number");
+
+    const rev10 = getTreeSlotCoordinate(10, "revenue");
+    expect(rev10.gridX).toBeGreaterThan(0);
+    expect(typeof rev10.gridZ).toBe("number");
+  });
+
+  it("handles multi-level leap calculations properly in evaluateLevelProgress", () => {
+    // Level 1 -> Level 3 (needs 100 XP for L1 + 150 XP for L2 = 250 XP total)
+    const res = evaluateLevelProgress({
+      currentLevel: 1,
+      currentXp: 0,
+      earnedXp: 300,
+    });
+    expect(res.level).toBe(3);
+    expect(res.xp).toBe(50);
+    expect(res.didLevelUp).toBe(true);
   });
 });
+
 
