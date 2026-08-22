@@ -113,10 +113,10 @@ describe("GitHub Ingestion & Gamification Stress-Testing", () => {
 
   describe("Edge Case 7: Anti-Gaming Tier Formula Under Spam", () => {
     it("prevents automated bot spam (10,000 commits in 1 day) from creating a Majestic tree", () => {
-      const botSpam = calculateTreeTier("shipping", 10000, 0, 1);
+      const botSpamTier = calculateTreeTier("shipping", 10000, { activeDays: 1 });
       // Even with 10,000 commits, activeDays = 1 caps the tree at Young or below!
-      expect(botSpam.tier).not.toBe("majestic");
-      expect(botSpam.tier).not.toBe("mature");
+      expect(botSpamTier).not.toBe("majestic");
+      expect(botSpamTier).not.toBe("mature");
     });
   });
 });

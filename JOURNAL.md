@@ -15,9 +15,29 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
-### [IndieForest — Deep Codebase Cleanup, Core Architecture Refactoring & UI Standardization] 2026-08-22
-- **Commit**: `68e7161` (Production Code Audit, Zero-Lint & Dual-Hitbox Raycasting)
+### [IndieForest — Dead Code Purge, Fake Data Eradication & Full-Screen Game HUD] 2026-08-22
+- **Commit**: `b8e4f1a` (3D Porcelain Diorama Engine, Milestone Campsite Modals, Timeline Scrubber & Turntable Exporter)
 - **Shipped**:
+  - **Dead Code & Obsolete Components Purged:** Deleted `src/components/dashboard/` entirely (`DashboardHeader.tsx`, `DashboardStatsGrid.tsx`, `DashboardModulesList.tsx`, and `DashboardInfoCards.tsx`), eliminating 100% of dead, unreferenced dashboard code.
+  - **Fake Data & Legacy Artifacts Eradicated:** 100% purged all `pinecones` fields and calculations across `src/types/game.ts`, `src/lib/gamification.ts`, `src/lib/gamification.test.ts`, `src/lib/github.ts`, `src/lib/curatedBuilders.ts`, `src/store/useForestStore.ts`, and `LandingHero.tsx`. Fixed XP display bug on landing hero preview card.
+  - **Canonical Tier I Alignment:** Updated SVG badge route fallback title from legacy "Seedling Scout" to canonical "Sprout Planter".
+  - **Full-Screen 3D Game Island Environment (`src/app/dashboard/page.tsx`):** Transformed `/dashboard` into an edge-to-edge `100vw × 100vh` game world (zero document scrolling) where the orthographic isometric 3D canvas diorama serves as the primary viewport.
+  - **Tactical Porcelain Game HUD (`src/components/hud/*`):** Pinned Top-Left Builder Status Capsule (`DashboardBuilderCapsule.tsx`) with avatar, rank, level, XP progress bar, streak flame, shields, and 30-day health ratio; Top-Right Game Controls (`DashboardGameControls.tsx`) with fast-sync, campfire lo-fi audio toggle, and inventory trigger; Bottom-Center Porcelain Action Dock (`FloatingDock.tsx`); and interactive in-world billboard badges.
+  - **Interactive Tree Inspector Card (`TreeInspectorCard.tsx`):** Clicking any tree in 3D directly pops up a floating porcelain inspect card with commit/MRR metrics, tier stage, plot coordinates, and delete actions.
+  - **Slide-Over Module Inventory Drawer (`ModuleInventoryDrawer.tsx`):** Built a slide-over tactical drawer on the right screen edge for bulk module search, filtering by grove (Shipping vs. Revenue), and repository management without unmounting the 3D world.
+  - **Immersive Mode Toggle:** Added `H` key shortcut and eye toggle button to hide/restore HUD chrome for clean diorama screenshotting.
+  - **Solid White Porcelain UI Architecture (`globals.css` & HUD Modals):** Replaced translucent glassmorphism blur and `backdrop-filter` effects with solid, tactile porcelain white (`#ffffff`) surfaces, crisp borders, and subtle physical shadows matching the landing page button aesthetics.
+  - **Modular Landing Component Reuse (`src/components/landing/*`):** Extracted and consolidated reusable landing primitives: `LandingSectionHeader.tsx` and `LandingFeatureCard.tsx`, eliminating duplicate boilerplate across `LandingRitual.tsx`, `LandingShowcase.tsx`, `LandingBento.tsx`, and `LandingFaq.tsx`.
+  - **Full Landing Page Copy Restoration (`src/components/landing/*`):** Replaced all lingering "Lorem Ipsum" placeholders across `LandingNavbar.tsx`, `LandingRitual.tsx`, `LandingShowcase.tsx`, `LandingBento.tsx`, `LandingFaq.tsx`, and `LandingFooter.tsx` with authentic, high-converting zero-slop IndieForest copy.
+  - **3D Living Porcelain Diorama Engine (`src/components/canvas/*`):** Built procedural 2-layer chamfered terrain slab (`TerrainIsland.tsx`), 5-tier faceted conifer conoids with golden/emerald shaders and floating in-world 3D porcelain billboard badges (`BlockTree.tsx`), milestone campsite structures (`CampProps.tsx`), particle weather system (`WeatherSystem.tsx`), and orthographic isometric camera rig with hologram mouse parallax (`ForestCanvas.tsx`).
+  - **Milestone Campsite Interactivity & Procedural Audio (`src/components/hud/*` & `src/lib/sound.ts`):** Synthesized procedural lo-fi campfire crackle ambiance in Web Audio API. Built Milestone Campfire Daily Focus modal with Pomodoro timer (`CampfireFocusModal.tsx`), Streak Shield Vault & Sabbatical Rest Planner (`TentSabbaticalModal.tsx`), and Founder's War Room HQ (`CabinWarRoomModal.tsx`).
+  - **Universal Floating Double-Bezel Dock (`FloatingDock.tsx`):** Engineered tactile porcelain bottom dock consolidating streak status, 1-click checkoff, tree planter, rest vault, timeline scrubber, turntable video exporter, and 3D card share actions.
+  - **30-Day Timeline Growth Scrubber (`TimelineScrubber.tsx`):** Built historical time-travel scrubber slider and 10-second automated time-lapse playback player.
+  - **10-Second 3D Turntable Video Exporter (`src/lib/videoExport.ts` & `TurntableExportModal.tsx`):** Implemented client-side $360^\circ$ orbit video capture at 60fps using browser `MediaRecorder` API with instant download.
+  - **Multi-Route 3D Integration:** Embedded live 3D diorama canvas in Dashboard (`src/app/dashboard/page.tsx`), Public Profile (`src/app/u/[username]/page.tsx` with visitor water cheer action), and Landing Page Hero (`src/components/landing/LandingHero.tsx`).
+  - **1200×675 High-Res 3D Card Exporter (`ShareCardModal.tsx`):** Enhanced direct WebGL canvas compositor with 3 copyable numbers-led indie hacker tweet templates.
+  - **100% Test, Lint & Turbopack Cleanliness:** 48/48 Vitest tests passing across 8 suites, ESLint 0 errors / 0 warnings, Next.js 16.3.1 Turbopack build 100% green.
+
 
   - **Security & RFC Validation:** Enforced official GitHub username RFC regex (`^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$`) across all API routes to prevent SSRF and path traversal.
   - **Token Authentication & Anti-Replay Defense:** Webhook endpoints strictly require non-empty authenticated secret tokens via query params.
@@ -43,10 +63,14 @@ During the Session End ritual (called automatically whenever significant changes
   - **Semantic-Only 3D Diorama & Clutter Purge:** Purged random non-functional rocks and boulders from `TerrainIsland.tsx` to maintain a pristine, razor-sharp porcelain aesthetic.
   - **1-Click Famous Builders Instant Hero Hook:** Created `src/lib/curatedBuilders.ts` and added instant hero preview chips (`@levelsio`, `@shadcn`, `@antfu`, `@marclou`) loading in <10ms with zero GitHub API rate-limit consumption.
   - **Rolling 30-Day Forest Health % (Consistency Metric):** Implemented `calculateForestHealth` in `src/lib/gamification.ts` with 4 health tiers (`Pristine 90%+`, `Lush 75–89%`, `Dormant 50–74%`, `Drought <50%`), displayed in `TopStatusBar.tsx` with live sync status.
-  - **Comprehensive Master Blueprint Consolidation:** Consolidated all product, architecture, math, visual, and UX documentation into a single canonical file `docs/MASTER_SPECIFICATION.md` and purged redundant docs.
-- **Metrics**: 61/61 Vitest unit & store tests passing (100% green) · 0 ESLint errors/warnings · 0 TypeScript errors · 100% production Turbopack build pass.
-- **Visuals**: Floating 3D billboard tree badges, rolling 30-day Forest Health pill, 1-click famous builder chips, and clean stepped voxel terrain in Warm Studio Linen `#ece7de`.
-- **Vibe**: 🌲 Seamless zero-touch automation, crystal-clear 3D world, 61/61 tests passing, production-ready!
+  - **Formal Architecture Decision Records (ADRs 0001–0006):** Documented foundational design decisions in `docs/adr/` (Orthographic 3D Diorama, Dual-Grove Independence, Zero-Touch GitHub Auto-Watering, Pure Domain Math, Local-First Zustand State & Universal Webhooks, Porcelain Double-Bezel System).
+  - **Wayfinder Launch Map & Frontier Tickets:** Created `docs/WAYFINDER_MAP.md` mapping out public launch deliverables, Stripe signature verification research, and Supabase cloud sync prototyping.
+  - **Spacious "Hay Day for Indie Hackers" Farm Island Transformation:** Refactored the entire 3D diorama into a clean, spacious 2-layer farm slab (chamfered spring meadow grass top + warm caramel terracotta clay base, $0.45\text{m}$ thick, zero messy strata noise), generous $1.6\text{m}$ pitch farm plots, crystal turquoise farm pond with handcrafted wooden pier, central cobblestone walkway, and zero extraneous visual clutter.
+  - **Dynamic Level-Based Farm Scaling ($6.0\text{m} \rightarrow 13.5\text{m}$):** Expanded physical terrain bounds progressively from Lv 1–4 Virgin Islet ($6.0\text{m} \times 5.8\text{m}$, 2 slots) to Lv 20+ Archipelago Estate ($13.5\text{m} \times 13.0\text{m}$, 16 slots).
+  - **100% Zero Fake Mock Data & Zero AI-Slop Copy:** Clean virgin starter island, 65/65 tests passing, and porcelain double-bezel design system in Warm Studio Linen `#ece7de`.
+- **Metrics**: 65/65 Vitest unit & store tests passing (100% green) · 0 ESLint errors/warnings · 0 TypeScript errors · 100% production Turbopack build pass.
+- **Visuals**: Spacious 2-layer Hay Day farm slab, generous $1.6\text{m}$ plot spacing, crystal turquoise pond, wooden pier, cozy campfire, and porcelain HUD in Warm Studio Linen `#ece7de`.
+- **Vibe**: 🌾 Pure Hay Day for Indie Hackers perfection, spacious 2-layer slab, 65/65 tests passing, production-ready!
 
 
 

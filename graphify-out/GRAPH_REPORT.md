@@ -1,128 +1,188 @@
-# Graph Report - IndieForest  (2026-08-21)
+# Graph Report - IndieForest  (2026-08-22)
 
 ## Corpus Check
-- Corpus is ~24,232 words - fits in a single context window. You may not need a graph.
+- 216 files · ~109,811 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 263 nodes · 499 edges · 19 communities (14 shown, 5 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
+- 578 nodes · 800 edges · 57 communities (38 shown, 19 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- Public Profiles & Brand Logos
-- Linting & Config Toolchain
-- 3D Game Dashboard & Diorama Canvas
-- TypeScript Runtime & Compiler Config
-- NPM Dependencies & Visual Icons
-- Gamification Logic & 3D Terrain
-- Landing Page & Marketing Bento
-- Web Audio Sound Synthesis Engine
-- Universal Revenue Webhook API
-- Code Formatting & Prettier
-- Typography & Root Layout
-- Supabase Session Middleware
-- Supabase SSR OAuth Callback
-- React Three Fiber Declarations
-- GitHub Commit Verification API
-- Next.js Turbopack Build Config
-- Tailwind CSS Configuration
+- Landing Page UI Modules
+- Dashboard Views & Analytics
+- Architecture Subsystem 2
+- Architecture Subsystem 3
+- Architecture Subsystem 4
+- Architecture Subsystem 5
+- Architecture Subsystem 6
+- Architecture Subsystem 7
+- Architecture Subsystem 8
+- Architecture Subsystem 9
+- Architecture Subsystem 10
+- Architecture Subsystem 11
+- Architecture Subsystem 12
+- Architecture Subsystem 13
+- Architecture Subsystem 14
+- Architecture Subsystem 15
+- GitHub & Revenue Ingestion
+- Architecture Subsystem 17
+- Architecture Subsystem 18
+- Architecture Subsystem 19
+- Architecture Subsystem 20
+- Domain State & Gamification Engine
+- Architecture Subsystem 22
+- Architecture Subsystem 23
+- Architecture Subsystem 24
+- Architecture Subsystem 26
+- Architecture Subsystem 27
+- Architecture Subsystem 28
+- Architecture Subsystem 29
+- Architecture Subsystem 30
+- Architecture Subsystem 31
+- Architecture Subsystem 32
+- Architecture Subsystem 33
+- Architecture Subsystem 34
+- Architecture Subsystem 35
+- Architecture Subsystem 38
+- Architecture Subsystem 40
+- Architecture Subsystem 41
+- Architecture Subsystem 42
+- Architecture Subsystem 44
 
 ## God Nodes (most connected - your core abstractions)
-1. `useForestStore` - 38 edges
+1. `useForestStore` - 18 edges
 2. `compilerOptions` - 16 edges
-3. `Badge()` - 13 edges
-4. `Button()` - 13 edges
-5. `Card()` - 11 edges
-6. `sound` - 10 edges
-7. `TreeData` - 9 edges
-8. `getRankTitle()` - 9 edges
-9. `SoundEngine` - 9 edges
-10. `GrowthTier` - 8 edges
+3. `compilerOptions` - 16 edges
+4. `Button()` - 16 edges
+5. `compilerOptions` - 16 edges
+6. `Card()` - 15 edges
+7. `Badge()` - 14 edges
+8. `getRankTitle()` - 13 edges
+9. `sound` - 12 edges
+10. `SoundEngine` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `GET()` --calls--> `isValidGitHubUsername()`  [EXTRACTED]
+  src/app/api/github/route.ts → src/lib/github.ts
 - `POST()` --calls--> `parseUniversalRevenueEvent()`  [EXTRACTED]
   src/app/api/webhooks/revenue/route.ts → src/lib/revenueWebhook.ts
-- `DashboardPage()` --calls--> `useForestStore`  [EXTRACTED]
-  src/app/dashboard/page.tsx → src/store/useForestStore.ts
-- `LandingPage()` --calls--> `useForestStore`  [EXTRACTED]
-  src/app/page.tsx → src/store/useForestStore.ts
-- `BlockTreeProps` --references--> `TreeData`  [EXTRACTED]
-  src/components/canvas/BlockTree.tsx → src/lib/gamification.ts
-- `ForestCanvasProps` --references--> `TreeData`  [EXTRACTED]
-  src/components/canvas/ForestCanvas.tsx → src/lib/gamification.ts
+- `PublicProfilePage()` --calls--> `getRankTitle()`  [EXTRACTED]
+  src/app/u/[username]/page.tsx → src/lib/gamification.ts
+- `DashboardModulesListProps` --references--> `TreeData`  [EXTRACTED]
+  src/components/dashboard/DashboardModulesList.tsx → src/types/game.ts
+- `LandingHero()` --calls--> `useForestStore`  [EXTRACTED]
+  src/components/landing/LandingHero.tsx → src/store/useForestStore.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (19 total, 5 thin omitted)
+## Communities (57 total, 19 thin omitted)
 
-### Community 0 - "Public Profiles & Brand Logos"
-Cohesion: 0.10
-Nodes (32): PublicProfileProps, AddTreeModalProps, TAB_OPTIONS, TIER_OPTIONS, TYPE_OPTIONS, AuthModalProps, CampShopModal(), CampShopModalProps (+24 more)
+### Community 0 - "Landing Page UI Modules"
+Cohesion: 0.07
+Nodes (40): PublicProfileProps, DashboardHeaderProps, DashboardStatsGridProps, AddTreeModalProps, TAB_OPTIONS, GuestbookModal(), GuestbookModalProps, SettingsModalProps (+32 more)
 
-### Community 1 - "Linting & Config Toolchain"
+### Community 1 - "Dashboard Views & Analytics"
+Cohesion: 0.08
+Nodes (51): GET(), GET(), GET(), GitHubRawCommit, DashboardPage(), PublicProfilePage(), DashboardHeader(), DashboardInfoCards() (+43 more)
+
+### Community 2 - "Architecture Subsystem 2"
 Cohesion: 0.06
 Nodes (33): eslint, eslint-config-next, @eslint/eslintrc, devDependencies, eslint, eslint-config-next, @eslint/eslintrc, postcss (+25 more)
 
-### Community 2 - "3D Game Dashboard & Diorama Canvas"
-Cohesion: 0.13
-Nodes (22): DashboardPage(), ForestCanvas, ForestCanvas, PublicProfilePage(), BlockTree(), CampProps(), ForestCanvas(), TIER_OPTIONS (+14 more)
-
-### Community 3 - "TypeScript Runtime & Compiler Config"
+### Community 3 - "Architecture Subsystem 3"
 Cohesion: 0.07
-Nodes (27): dom, dom.iterable, esnext, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts, node_modules, **/*.ts (+19 more)
+Nodes (28): dependencies, @clerk/tanstack-react-start, react, react-dom, @tanstack/react-router, @tanstack/react-router-devtools, @tanstack/react-start, devDependencies (+20 more)
 
-### Community 4 - "NPM Dependencies & Visual Icons"
+### Community 4 - "Architecture Subsystem 4"
 Cohesion: 0.07
-Nodes (27): canvas-confetti, lucide-react, next, dependencies, canvas-confetti, lucide-react, next, react (+19 more)
+Nodes (27): .next/dev/types/**/*.ts, compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib (+19 more)
 
-### Community 5 - "Gamification Logic & 3D Terrain"
+### Community 5 - "Architecture Subsystem 5"
+Cohesion: 0.07
+Nodes (26): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+18 more)
+
+### Community 6 - "Architecture Subsystem 6"
+Cohesion: 0.08
+Nodes (24): dependencies, @clerk/react, react, react-dom, devDependencies, @types/react, @types/react-dom, typescript (+16 more)
+
+### Community 7 - "Architecture Subsystem 7"
+Cohesion: 0.08
+Nodes (25): canvas-confetti, lucide-react, dependencies, canvas-confetti, @clerk/nextjs, lucide-react, next, react (+17 more)
+
+### Community 8 - "Architecture Subsystem 8"
+Cohesion: 0.08
+Nodes (23): compilerOptions, allowJs, baseUrl, esModuleInterop, forceConsistentCasingInFileNames, isolatedModules, jsx, lib (+15 more)
+
+### Community 9 - "Architecture Subsystem 9"
+Cohesion: 0.09
+Nodes (22): dependencies, @clerk/chrome-extension, plasmo, react, react-dom, displayName, react, react-dom (+14 more)
+
+### Community 10 - "Architecture Subsystem 10"
+Cohesion: 0.09
+Nodes (22): dependencies, @clerk/react-router, react, react-dom, react-router, devDependencies, @react-router/dev, @react-router/node (+14 more)
+
+### Community 11 - "Architecture Subsystem 11"
+Cohesion: 0.09
+Nodes (21): dependencies, @clerk/nextjs, next, react, react-dom, devDependencies, @types/react, @types/react-dom (+13 more)
+
+### Community 12 - "Architecture Subsystem 12"
+Cohesion: 0.10
+Nodes (19): dependencies, @clerk/vue, vue, devDependencies, typescript, vite, @vitejs/plugin-vue, vue-tsc (+11 more)
+
+### Community 13 - "Architecture Subsystem 13"
 Cohesion: 0.15
-Nodes (23): BlockTreeProps, ForestCanvasProps, calculateShipRewards(), CampDecorItem, completeDailyQuest(), DailyQuest, DEFAULT_CAMP_DECOR_CATALOG, evaluateLevelProgress() (+15 more)
+Nodes (12): dependencies, astro, @astrojs/node, @clerk/astro, name, scripts, build, dev (+4 more)
 
-### Community 6 - "Landing Page & Marketing Bento"
-Cohesion: 0.27
-Nodes (10): ForestCanvas, LandingPage(), MILESTONE_OPTIONS, PREVIEW_TREES, SHIELD_OPTIONS, AuthModal(), signInWithGithub(), signInWithGoogle() (+2 more)
+### Community 14 - "Architecture Subsystem 14"
+Cohesion: 0.18
+Nodes (10): dependencies, @clerk/nuxt, nuxt, name, private, scripts, build, dev (+2 more)
 
-### Community 8 - "Universal Revenue Webhook API"
-Cohesion: 0.46
-Nodes (5): POST(), GrowthTier, calculateTreeTierFromMrr(), NormalizedCustomerTree, parseUniversalRevenueEvent()
+### Community 15 - "Architecture Subsystem 15"
+Cohesion: 0.18
+Nodes (10): compilerOptions, esModuleInterop, jsx, module, moduleResolution, skipLibCheck, strict, target (+2 more)
 
-### Community 9 - "Code Formatting & Prettier"
+### Community 16 - "GitHub & Revenue Ingestion"
+Cohesion: 0.25
+Nodes (8): POST(), LemonSqueezyWebhookPayload, parseUniversalRevenueEvent(), PolarWebhookPayload, StripeEventObject, StripeWebhookPayload, ZERO_DECIMAL_CURRENCIES, NormalizedCustomerTree
+
+### Community 18 - "Architecture Subsystem 18"
+Cohesion: 0.22
+Nodes (8): compilerOptions, jsx, lib, moduleResolution, strict, target, DOM, ES2022
+
+### Community 19 - "Architecture Subsystem 19"
+Cohesion: 0.32
+Nodes (6): auth.users, public.handle_new_user, on_auth_user_created, public.profiles, public.ship_logs, public.trees
+
+### Community 21 - "Domain State & Gamification Engine"
 Cohesion: 0.29
 Nodes (6): printWidth, semi, singleQuote, tabWidth, trailingComma, useTabs
 
-### Community 10 - "Typography & Root Layout"
+### Community 22 - "Architecture Subsystem 22"
 Cohesion: 0.29
 Nodes (5): geistMono, instrumentSerif, jakartaSans, metadata, vt323
 
-### Community 11 - "Supabase Session Middleware"
-Cohesion: 0.60
-Nodes (3): config, middleware(), updateSession()
-
-### Community 13 - "React Three Fiber Declarations"
-Cohesion: 0.50
-Nodes (3): IntrinsicElements, JSX, React
-
 ## Knowledge Gaps
-- **111 isolated node(s):** `semi`, `trailingComma`, `singleQuote`, `tabWidth`, `useTabs` (+106 more)
+- **260 isolated node(s):** `name`, `type`, `dev`, `build`, `astro` (+255 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `useForestStore` connect `3D Game Dashboard & Diorama Canvas` to `Public Profiles & Brand Logos`, `Gamification Logic & 3D Terrain`, `Landing Page & Marketing Bento`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `NPM Dependencies & Visual Icons` to `Linting & Config Toolchain`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **What connects `semi`, `trailingComma`, `singleQuote` to the rest of the system?**
-  _111 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Public Profiles & Brand Logos` be split into smaller, more focused modules?**
-  _Cohesion score 0.09693877551020408 - nodes in this community are weakly interconnected._
-- **Should `Linting & Config Toolchain` be split into smaller, more focused modules?**
+- **Why does `SoundEngine` connect `Architecture Subsystem 17` to `Landing Page UI Modules`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `Architecture Subsystem 7` to `Architecture Subsystem 2`?**
+  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **What connects `name`, `type`, `dev` to the rest of the system?**
+  _260 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Landing Page UI Modules` be split into smaller, more focused modules?**
+  _Cohesion score 0.07191780821917808 - nodes in this community are weakly interconnected._
+- **Should `Dashboard Views & Analytics` be split into smaller, more focused modules?**
+  _Cohesion score 0.07884615384615384 - nodes in this community are weakly interconnected._
+- **Should `Architecture Subsystem 2` be split into smaller, more focused modules?**
   _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
-- **Should `3D Game Dashboard & Diorama Canvas` be split into smaller, more focused modules?**
-  _Cohesion score 0.12903225806451613 - nodes in this community are weakly interconnected._
-- **Should `TypeScript Runtime & Compiler Config` be split into smaller, more focused modules?**
-  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._
+- **Should `Architecture Subsystem 3` be split into smaller, more focused modules?**
+  _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._

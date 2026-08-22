@@ -47,7 +47,7 @@ export async function GET(
       {
         username,
         level: 1,
-        rankTitle: "Seedling Scout",
+        rankTitle: "Sprout Planter",
         rankBadge: "I",
         streakDays: 1,
         totalCommits: 5,
