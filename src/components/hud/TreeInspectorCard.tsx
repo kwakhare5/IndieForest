@@ -49,7 +49,7 @@ export function TreeInspectorCard({ tree, onClose, onDelete }: TreeInspectorCard
             {isRevenue ? <TrendingUp className="w-5 h-5" /> : <Trees className="w-5 h-5" />}
           </div>
           <div>
-            <span className="font-pixel text-[10px] uppercase tracking-wider font-bold text-stone-500 block">
+            <span className="font-pixel text-xs uppercase tracking-wider font-bold text-stone-500 block">
               {isRevenue ? "EAST REVENUE GROVE" : "WEST SHIPPING GROVE"}
             </span>
             <h3 className="text-base font-bold text-stone-950 font-satoshi truncate max-w-[180px]">

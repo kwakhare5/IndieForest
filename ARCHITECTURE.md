@@ -1,116 +1,106 @@
-# ARCHITECTURE.md — Technical Blueprint
+# ARCHITECTURE.md — Technical Architecture & Blueprint
 
 ---
 
-## System Overview
+## 1. System Overview
+
+IndieForest is engineered as a high-performance Next.js 16 web application with clear separation between marketing landing surfaces, authenticated builder dashboards, public diorama profiles, domain logic, and serverless webhook pipelines.
 
 ```
-[Next.js 16 App Router (Turbopack)]
-   ├── Pages: /, /dashboard (Full-screen Game), /logos, /u/[username], /sign-in, /sign-up
-   ├── API Routes: /api/github, /api/github/preview, /api/badge/[username], /api/webhooks/revenue, /api/og
-   └── UI System: Solid Porcelain Double-Bezel Components & Floating Game HUD
-        │
-   [React Three Fiber v9 Canvas Engine]
-   ├── ForestCanvas (Fixed Orthographic Camera, Elastic Mouse Parallax Tilt)
-   ├── TerrainIsland (2-Layer Chamfered Slab, Central Riverstone Path, Oasis Pond)
-   ├── BlockTree (5-Tier Pyramid Conifers, Torus Halos, 3D Floating Billboard Badges)
-   ├── CampProps (Milestone Campfire, Day 7 Tent, Day 14 Cabin, Shoreline Pier, Lanterns)
-   └── WeatherSystem (Instanced Rain Showers, Golden Sparkles, Dormancy Fog)
-        │
-   [Domain Core (Pure TypeScript / Vitest)]
-   ├── gamification.ts (XP curves, streak evaluation, shield rules, tier progression)
-   ├── revenueWebhook.ts (Universal Stripe, Lemon Squeezy, Polar normalizer)
-   ├── sound.ts (Procedural Web Audio lo-fi campfire synthesizer & chimes)
-   └── videoExport.ts (Client-side 60fps MediaRecorder orbit video generator)
+[ Next.js 16 App Router (Turbopack) ]
+   ├── Pages:
+   │    ├── / (Landing Page: 7 Modular Surfaces in src/components/landing/)
+   │    ├── /dashboard (Edge-to-Edge 3D Living Diorama + 3-Zone Tactical HUD)
+   │    ├── /gallery (3D Component Showroom: Conifers, Oaks, Campsite, Fauna)
+   │    ├── /u/[username] (Public Builder Showcase & Guestbook)
+   │    └── /sign-in, /sign-up (Clerk Managed Authentication)
+   │
+   ├── API Routes (Vercel Serverless):
+   │    ├── /api/github (Zero-Touch GitHub Event Polling & Streak Calculation)
+   │    ├── /api/github/preview (Zero-Latency Famous Builder Previews)
+   │    ├── /api/webhooks/revenue (Stripe, Lemon Squeezy, Polar Webhook Normalizer)
+   │    ├── /api/badge/[username] (Dynamic SVG Vector README Badges)
+   │    └── /api/og (Dynamic OpenGraph Social Image Generator)
+   │
+   ├── Universal UI System (src/components/ui/):
+   │    └── Double-Bezel Porcelain Primitives (Card, Button, Badge, Modal, SegmentedControl)
+   │
+   ├── 3D Canvas Engine (src/components/canvas/):
+   │    ├── ForestCanvas.tsx (Isometric orthographic camera rig & lighting)
+   │    ├── TerrainIsland.tsx (Chamfered procedural diorama island slab)
+   │    ├── BlockTree.tsx (Interactive tree with spring hover lerp & billboard)
+   │    └── models/
+   │         ├── ConiferTree.tsx (Alpine Evergreen Pine lineage for GitHub Shipping)
+   │         ├── DeciduousTree.tsx (Golden Broadleaf Money Oak lineage for Stripe MRR)
+   │         ├── Campfire.tsx, CanvasTent.tsx, LogCabin.tsx (Campsite Hubs)
+   │         └── RobinBird.tsx, CampDog.tsx, LanternPost.tsx, Flagpole.tsx (Fauna/Props)
+   │
+   ├── Domain Core (src/lib/):
+   │    ├── gamification.ts (Side-effect free XP, Streak, Shield, and Tier algorithms)
+   │    ├── github.ts (GitHub push parsing, RFC username validation, streak calculation)
+   │    ├── revenueWebhook.ts (Multi-gateway payload normalization)
+   │    ├── badge.ts (Server-side SVG card & pill generator)
+   │    └── sound.ts (Synthesized Web Audio API lo-fi ambiance & tactile chimes)
+   │
+   └── State Management (src/store/):
+        └── useForestStore.ts (Zustand 5.0 store with SSR-safe LocalStorage persistence)
 ```
 
 ---
 
-## Services & Responsibilities
+## 2. Services & Responsibilities
 
-| Service | Where it runs | What it owns |
-|---|---|---|
-| **Next.js App Router** | Vercel (Edge / Node) | Full-screen game layout, SSR hydration guards, static landing page, public profile |
-| **React Three Fiber Canvas** | Client Browser (WebGL) | 3D living diorama, conifer meshes, particle weather, cursor parallax (`zoom: 29` default) |
-| **Clerk Authentication** | Cloud / Client | 1-click Google OAuth with zero dev friction |
-| **`/api/github` & `/api/github/preview`** | Vercel Serverless Function | Public GitHub event stream ingestion & 60s commit polling |
-| **`/api/webhooks/revenue`** | Vercel Serverless Function | Ingestion and normalization for Stripe, Lemon Squeezy, and Polar |
-| **`/api/badge/[username]`** | Vercel Edge Function | Real-time vector SVG diorama and pill badges for GitHub READMEs |
-| **Zustand Gamification Store** | Client Browser (LocalStorage) | XP progression, streak states, tree entities, offline persistence |
-| **Web Audio API Synth Engine** | Client Browser (Web Audio) | Procedural lo-fi campfire crackle ambiance, retro click sounds, fanfare |
-| **MediaRecorder Video Capture** | Client Browser (MediaStream) | 60fps $360^\circ$ orbit video capture with instant download |
+| Service / Layer | Runtime / Location | Core Responsibility |
+| :--- | :--- | :--- |
+| **Landing Surface** | Client / Server (Next.js SSR) | Modular landing sections, feature bento, interactive hero preview, FAQ |
+| **Builder Dashboard** | Client (Authenticated) | Edge-to-edge 3D living diorama with 3-Zone Tactical Porcelain HUD |
+| **Showroom Catalog** | Client (`/gallery`) | Interactive 3D asset showroom for conifer & deciduous lineages |
+| **Public Showcase** | Client / Server (Next.js SSR) | Shareable builder profile (`/u/[username]`), guestbook, verified badges |
+| **Domain Logic** | Pure TypeScript (`src/lib/`) | 100% deterministic algorithms for XP, streaks, levels, and tier scaling |
+| **Authentication** | Clerk (`@clerk/nextjs`) | Fast Google OAuth & session management |
+| **Universal Webhooks** | Serverless Edge / Node.js | Multi-provider event parsing for Stripe, Lemon Squeezy, and Polar |
+| **State Store** | Client (Zustand) | Reactive local state, streak expiry checks, zero-touch sync coordination |
 
 ---
 
-## File Tree
+## 3. Directory Layout
 
 ```
-D:\IndieForest\
-├── public/
-│   ├── logos/
-│   │   ├── indieforest_logo.svg       — Official Master Squircle Logo
-│   │   └── indieforest_logo_mark.svg  — Transparent Official Logo Mark
-│   └── icon.svg                       — Browser Favicon asset
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── badge/[username]/      — Dynamic SVG README Badge Endpoint
-│   │   │   ├── github/                — GitHub commit check endpoint
-│   │   │   ├── github/preview/        — Live GitHub profile island preview
-│   │   │   ├── og/                    — OpenGraph social preview generator
-│   │   │   └── webhooks/revenue/      — Universal Stripe/LemonSqueezy/Polar webhook
-│   │   ├── dashboard/page.tsx         — Full-screen 3D game island with overlay HUD
-│   │   ├── logos/page.tsx             — Official Brand Identity showcase
-│   │   ├── u/[username]/page.tsx      — Public shareable 3D diorama profile
-│   │   ├── layout.tsx                 — Root layout & ClerkProvider
-│   │   └── globals.css                — Tailwind CSS v4 & Porcelain tokens
-│   ├── components/
-│   │   ├── canvas/
-│   │   │   ├── BlockTree.tsx          — 5-tier conifer mesh & 3D billboard tags
-│   │   │   ├── CampProps.tsx          — Campfire, tent, cabin, pier, lanterns
-│   │   │   ├── ForestCanvas.tsx       — Fixed orthographic canvas with parallax rig
-│   │   │   ├── TerrainIsland.tsx      — 2-layer chamfered meadow slab & pond
-│   │   │   └── WeatherSystem.tsx      — Particle rain, gold bursts, and fog
-│   │   ├── hud/
-│   │   │   ├── DashboardBuilderCapsule.tsx — Top-left status capsule
-│   │   │   ├── DashboardGameControls.tsx   — Top-right game controls pod
-│   │   │   ├── FloatingDock.tsx            — Bottom porcelain action dock
-│   │   │   ├── TreeInspectorCard.tsx       — In-world 3D tree inspector card
-│   │   │   ├── ModuleInventoryDrawer.tsx   — Right slide-over module inventory
-│   │   │   ├── TimelineScrubber.tsx        — 30-day time-travel growth scrubber
-│   │   │   ├── TurntableExportModal.tsx    — 10s 60fps turntable video exporter
-│   │   │   ├── CampfireFocusModal.tsx      — Milestone Campfire daily focus modal
-│   │   │   ├── TentSabbaticalModal.tsx     — Streak Shield Vault & rest planner
-│   │   │   ├── CabinWarRoomModal.tsx       — Multi-repo command HQ modal
-│   │   │   ├── ShareCardModal.tsx          — 1200×675 3D card compositor
-│   │   │   ├── AddTreeModal.tsx            — Project tree planter & webhook simulator
-│   │   │   ├── SettingsModal.tsx           — Settings & webhook copy console
-│   │   │   └── GuestbookModal.tsx          — Campsite visitor guestbook
-│   │   ├── landing/
-│   │   │   ├── LandingNavbar.tsx           — Floating porcelain navbar
-│   │   │   ├── LandingHero.tsx             — Live 3D interactive hero diorama
-│   │   │   ├── LandingSectionHeader.tsx    — Standardized section header
-│   │   │   ├── LandingFeatureCard.tsx      — Standardized porcelain feature card
-│   │   │   ├── LandingRitual.tsx           — 3-step zero-touch loop
-│   │   │   ├── LandingShowcase.tsx         — Dual-grove breakdown
-│   │   │   ├── LandingBento.tsx            — Anti-burnout & distribution bento
-│   │   │   ├── LandingFaq.tsx              — Transparent FAQ
-│   │   │   └── LandingFooter.tsx           — Final CTA card & links
-│   │   └── ui/
-│   │       ├── Badge.tsx              — Ergonomic status chips & pill badges
-│   │       ├── Button.tsx             — Tactile specular porcelain buttons
-│   │       ├── Card.tsx               — Solid porcelain double-bezel containers
-│   │       ├── Modal.tsx              — Universal double-bezel modal wrapper
-│   │       └── SegmentedControl.tsx   — Tactile sliding pill tab switcher
-│   ├── lib/
-│   │   ├── gamification.ts            — Pure domain gamification math
-│   │   ├── github.ts                  — Edge-cached GitHub Events API parser
-│   │   ├── revenueWebhook.ts          — Universal payment webhook normalizer
-│   │   ├── badge.ts                   — Dynamic SVG README badge renderer
-│   │   ├── sound.ts                   — Procedural Web Audio synthesizer
-│   │   └── videoExport.ts             — Client-side 60fps MediaRecorder video generator
-│   ├── store/
-│   │   └── useForestStore.ts          — Zustand state store with persistence
-│   └── types/
-│       └── game.ts                    — Canonical domain entities
+src/
+├── app/
+│   ├── api/
+│   │   ├── badge/[username]/route.ts  — Dynamic SVG README generator
+│   │   ├── github/route.ts            — GitHub push sync endpoint
+│   │   ├── github/preview/route.ts    — Curated famous builders preview
+│   │   ├── og/route.tsx               — Social card OpenGraph generator
+│   │   └── webhooks/revenue/route.ts  — Universal revenue webhook handler
+│   ├── dashboard/page.tsx             — Edge-to-edge 3D island dashboard
+│   ├── gallery/page.tsx               — 3D asset showroom catalog
+│   ├── u/[username]/page.tsx          — Public builder diorama & guestbook
+│   ├── layout.tsx                     — Root layout with ClerkProvider
+│   └── page.tsx                       — Composed modular landing page
+├── components/
+│   ├── canvas/                        — 3D diorama canvas & procedural models
+│   │   ├── ForestCanvas.tsx
+│   │   ├── TerrainIsland.tsx
+│   │   ├── BlockTree.tsx
+│   │   └── models/
+│   │       ├── ConiferTree.tsx        — GitHub Evergreen Pine lineage
+│   │       ├── DeciduousTree.tsx      — Stripe Golden Money Oak lineage
+│   │       ├── ZenStump.tsx           — Sabbatical Rest Stump
+│   │       ├── Campfire.tsx           — Daily Focus station
+│   │       ├── CanvasTent.tsx         — Sabbatical Rest vault
+│   │       ├── LogCabin.tsx           — Founder War Room HQ
+│   │       └── CampDog.tsx, RobinBird.tsx, Flagpole.tsx, LanternPost.tsx
+│   ├── hud/                           — 3-Zone Tactical Porcelain HUD & Overlays
+│   │   ├── DashboardTopLeftNav.tsx    — [← Home] link + Quests & Perk Shop popover
+│   │   ├── DashboardGameControls.tsx  — Lighting, Audio & Modules Inventory popover
+│   │   ├── FloatingDock.tsx           — Streak, Ship Daily, Share & Stats popover tray
+│   │   ├── TreeInspectorCard.tsx      — In-world 3D tree click inspector
+│   │   └── modals/                    — CampfireFocus, TentSabbatical, CabinWarRoom, ShareCard, AddTree, Settings
+│   ├── landing/                       — Modular landing page sections
+│   └── ui/                            — Atomic double-bezel porcelain design system
+├── lib/                               — Pure domain math, webhook parsers, and Web Audio API
+├── store/                             — Zustand 5.0 store with local persistence
+└── types/                             — Strict TypeScript domain types
 ```

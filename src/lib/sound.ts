@@ -169,6 +169,33 @@ class SoundEngine {
     });
   }
 
+  public playChime() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const notes = [659.25, 880.0, 1046.5];
+    notes.forEach((freq, idx) => {
+      const now = ctx.currentTime + idx * 0.08;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.5);
+    });
+  }
+
+
+
   // Procedural Lo-Fi Campfire Crackle Synthesizer
   public startCampfireAmbiance(): boolean {
     if (this.isMuted || this.isCampfirePlaying) return false;

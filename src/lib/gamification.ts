@@ -2,6 +2,7 @@
 
 import type {
   GrowthTier,
+  TreeType,
   ShipRewardInput,
   ShipRewards,
   LevelProgressInput,
@@ -10,6 +11,8 @@ import type {
   StreakEvaluationOutput,
   ForestHealth,
   Rank,
+  DailyQuest,
+  CampShopItem,
 } from "@/types/game";
 
 export const RANK_TIERS: Rank[] = [
@@ -19,6 +22,148 @@ export const RANK_TIERS: Rank[] = [
   { title: "Island Architect", badge: "IV" },
   { title: "Forest Sovereign", badge: "V" },
 ];
+
+export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
+  {
+    id: "atomic-commit",
+    title: "The Atomic Commit",
+    description: "Push ≥1 verified commit or log a daily ship to grow your Emerald Pine.",
+    category: "shipping",
+    xpReward: 100,
+    pineconeReward: 10,
+    progress: 0,
+    target: 1,
+    isCompleted: false,
+    isClaimed: false,
+  },
+  {
+    id: "build-in-public",
+    title: "Build-in-Public Slice",
+    description: "Open the 3D Share Card modal and export your 1200×675 proof-of-work card.",
+    category: "distribution",
+    xpReward: 50,
+    pineconeReward: 15,
+    progress: 0,
+    target: 1,
+    isCompleted: false,
+    isClaimed: false,
+  },
+  {
+    id: "customer-touchpoint",
+    title: "Customer Touchpoint",
+    description: "Plant or update a Golden Revenue module, or simulate a customer webhook.",
+    category: "revenue",
+    xpReward: 75,
+    pineconeReward: 20,
+    progress: 0,
+    target: 1,
+    isCompleted: false,
+    isClaimed: false,
+  },
+  {
+    id: "grove-stewardship",
+    title: "Grove Stewardship",
+    description: "Visit a peer builder's island or toggle Lo-Fi campfire deep work audio.",
+    category: "social",
+    xpReward: 30,
+    pineconeReward: 5,
+    progress: 0,
+    target: 1,
+    isCompleted: false,
+    isClaimed: false,
+  },
+];
+
+export const CAMP_SHOP_CATALOG: CampShopItem[] = [
+  {
+    id: "night-lanterns",
+    name: "Ambient Night Lanterns",
+    description: "Low-poly amber lanterns that softly illuminate the central stone walkway at dusk and night.",
+    price: 50,
+    category: "decor",
+    isUnlocked: true,
+    iconName: "Lamp",
+  },
+  {
+    id: "startup-flagpole",
+    name: "Founder Startup Flagpole",
+    description: "A gleaming silver mast with an emerald silk flag hoisted proudly on the North-West bluff.",
+    price: 100,
+    category: "decor",
+    isUnlocked: true,
+    iconName: "Flag",
+  },
+  {
+    id: "lofi-synth",
+    name: "Procedural Lo-Fi Synthesizer",
+    description: "Unlocks procedural Web Audio deep-work soundscapes (Campfire crackle & pink noise).",
+    price: 150,
+    category: "audio",
+    isUnlocked: true,
+    iconName: "Volume2",
+  },
+  {
+    id: "autumn-biome",
+    name: "Autumn Amber Biome",
+    description: "Transforms your diorama into warm amber, pumpkin orange, and golden maple foliage.",
+    price: 250,
+    category: "biome",
+    isUnlocked: false,
+    iconName: "Sparkles",
+  },
+  {
+    id: "emergency-shield",
+    name: "Emergency Streak Shield",
+    description: "Burnout protection item defending against rest days (Max 2 banked shields).",
+    price: 300,
+    category: "utility",
+    isUnlocked: false,
+    iconName: "Shield",
+  },
+];
+
+// Dedicated Non-Clipping Dual-Grove Slot Positions
+const WEST_SHIPPING_SLOTS = [
+  { gridX: -1.35, gridZ: -2.8 },
+  { gridX: -1.35, gridZ: -1.5 },
+  { gridX: -1.35, gridZ: -0.2 },
+  { gridX: -1.35, gridZ: 1.1 },
+  { gridX: -2.4, gridZ: -0.6 },
+  { gridX: -2.4, gridZ: 0.4 },
+  { gridX: -3.2, gridZ: -0.6 },
+  { gridX: -1.2, gridZ: 2.5 },
+];
+
+const EAST_REVENUE_SLOTS = [
+  { gridX: 1.35, gridZ: -2.8 },
+  { gridX: 1.35, gridZ: -1.5 },
+  { gridX: 1.35, gridZ: -0.2 },
+  { gridX: 1.35, gridZ: 1.1 },
+  { gridX: 2.65, gridZ: -2.8 },
+  { gridX: 2.65, gridZ: -1.5 },
+  { gridX: 2.65, gridZ: -0.2 },
+  { gridX: 2.65, gridZ: 0.8 },
+];
+
+export function getTreeSlotCoordinate(
+  index: number,
+  type: TreeType = "shipping"
+): { gridX: number; gridZ: number } {
+  const slots = type === "revenue" ? EAST_REVENUE_SLOTS : WEST_SHIPPING_SLOTS;
+  if (index < slots.length) {
+    return slots[index];
+  }
+  // Algorithmic expansion for large forests (level 20+)
+  const offset = index - slots.length;
+  const sign = type === "revenue" ? 1 : -1;
+  const col = (offset % 3) + 1;
+  const row = Math.floor(offset / 3);
+  return {
+    gridX: sign * (1.2 + col * 1.1),
+    gridZ: -3.0 + row * 1.2,
+  };
+}
+
 
 export function getRankTitle(level: number): Rank {
   if (level <= 3) return RANK_TIERS[0];
@@ -201,11 +346,3 @@ export function getLocalDateString(d: Date = new Date()): string {
   return `${year}-${month}-${day}`;
 }
 
-export function getTreeSlotCoordinate(index: number): { gridX: number; gridZ: number } {
-  const row = Math.floor(index / 4);
-  const col = index % 4;
-  return {
-    gridX: (col - 1.5) * 2,
-    gridZ: (row - 1.5) * 2,
-  };
-}

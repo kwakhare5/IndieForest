@@ -31,5 +31,31 @@ describe("useForestStore", () => {
     expect(state.level).toBe(2);
     expect(state.totalXp).toBe(100);
     expect(state.shipHistory.length).toBe(1);
+
+    // Verify quest progress auto-triggers
+    const quest = useForestStore.getState().dailyQuests.find((q) => q.id === "atomic-commit");
+    expect(quest?.isCompleted).toBe(true);
+  });
+
+  it("handles quest claim and pinecone rewards", () => {
+    useForestStore.getState().shipToday("Initial commit", "github");
+    const initialPinecones = useForestStore.getState().pinecones;
+    useForestStore.getState().claimQuestReward("atomic-commit");
+    const state = useForestStore.getState();
+    expect(state.pinecones).toBe(initialPinecones + 10);
+    const quest = state.dailyQuests.find((q) => q.id === "atomic-commit");
+    expect(quest?.isClaimed).toBe(true);
+  });
+
+  it("handles camp shop purchases", () => {
+    useForestStore.setState({ pinecones: 200 });
+    const success = useForestStore.getState().buyShopItem("autumn-biome");
+    expect(success).toBe(false); // requires 250 pinecones
+    
+    useForestStore.setState({ pinecones: 300 });
+    const bought = useForestStore.getState().buyShopItem("autumn-biome");
+    expect(bought).toBe(true);
+    expect(useForestStore.getState().pinecones).toBe(50);
   });
 });
+

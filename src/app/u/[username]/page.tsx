@@ -16,7 +16,7 @@ import { getRankTitle } from "@/lib/gamification";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { GuestbookModal } from "@/components/hud/GuestbookModal";
+import { GuestbookModal } from "@/components/hud/modals/GuestbookModal";
 import { ForestCanvas } from "@/components/canvas/ForestCanvas";
 import { GitHubIslandProfile } from "@/lib/github";
 import { GuestbookEntry } from "@/types/game";
