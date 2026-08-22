@@ -57,7 +57,8 @@ npm run lint       # ESLint + TypeScript check
 - `src/components/ui/SegmentedControl.tsx` — Sliding pill toggle controls.
 - `src/components/landing/*` — Dedicated modular landing page components.
 - `src/components/dashboard/*` — Dedicated modular dashboard components.
-- `src/components/hud/*` — Overlay modals (Settings, ShareCard, AddTree, Guestbook).
+- `src/components/canvas/*` — 3D WebGL diorama (`IslandCanvas`, `Island`, `IslandTree`, `Campsite`, `Weather`).
+- `src/components/hud/*` — Overlay HUD & modals (`DashboardNav`, `DashboardControls`, `DashboardDock`, `TreeCard`, `AddProjectModal`, `OverviewModal`, `FocusModal`, `RestShieldModal`, `ShareModal`, `SettingsModal`, `GuestbookModal`).
 
 ---
 
@@ -74,23 +75,20 @@ npm run lint       # ESLint + TypeScript check
 
 ## 7. SESSION RESUME
 
-- **Pure 1:1 Symmetrical Square Modular Island (`ModularIsland.tsx`):**
-  - Enforced balanced $1:1$ width-to-depth isometric square geometry across all progression tiers ($9\times 9, 12\times 12, 15\times 15, 18\times 18$) with dynamic orthographic camera zoom (`baseZoom: 28–42`), terracotta foundation keel, and North mountain terrace.
-- **Option 3 Standing Golden Companion Mascot (`CampDog.tsx`):**
-  - Lively 4-legged standing mascot with geometric cream paws, amber coat, crimson collar, gold medal, rhythmic arched tail wagging, curious head turns, breathing weight shift, and interactive hop on click.
-- **Supabase PostgreSQL Cloud Integration (`src/lib/supabase.ts` & `supabase/migrations/`):**
-  - Type-safe PostgreSQL client covering `profiles`, bilateral `trees` (`shipping` conifers & `revenue` oaks), `ship_logs`, and persistent `guestbook_entries`.
-  - Zustand store auto-sync on ship/plant/prune actions with instant offline localStorage fallback.
-  - Universal revenue webhook (`/api/webhooks/revenue`) direct insertion to Supabase.
-- **HUD UI Overhaul & Dead Code Purged:**
-  - Deleted redundant legacy files (`TerrainIsland.tsx`, `TerritoryFog.tsx`).
-  - Standardized double-bezel porcelain aesthetic across all HUD popovers and dialog modals.
-- **100% Quality & Build Cleanliness:**
-  - 48/48 Vitest tests passing, 0 ESLint warnings, Next.js 16.3.1 Turbopack build 100% green.
+- **Codebase Reorganization & Human-Centric Renaming (Zero AI Slop):**
+  - Standardized all file names across 3D canvas, HUD overlays, and dialog modals to developer-friendly English (`IslandCanvas`, `Island`, `IslandTree`, `Campsite`, `Weather`, `DashboardNav`, `DashboardControls`, `DashboardDock`, `TreeCard`, `AddProjectModal`, `OverviewModal`, `FocusModal`, `RestShieldModal`, `ShareModal`).
+  - Purged 14 obsolete/redundant files with zero broken references.
+- **Top-Right HUD Profile & Symmetrical Double-Bezel Capsule:**
+  - Wrapped user avatar in dedicated `w-6 h-6 rounded-full` container with vertical hairline dividers.
+- **SegmentedControl Fixed Multi-Line Overflow:**
+  - Standardized tab height and text truncation across all dialogs.
+- **100% Test, Lint & Production Build Cleanliness:**
+  - 53/53 Vitest tests passing, 0 ESLint warnings, Next.js 16.3.1 Turbopack build 100% green.
+  - Safe guarded local commits on `main` (remote push awaiting user directive).
 
 **Immediate next task:**
 
-- Commit and push clean codebase state to GitHub repository.
+- Awaiting user review and next instructions.
 
 **Open blockers:**
 
