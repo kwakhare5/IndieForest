@@ -24,28 +24,28 @@ import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
 import type { TimeOfDay, TreeData } from "@/types/game";
 
-interface DashboardGameControlsProps {
+interface DashboardControlsProps {
   trees: TreeData[];
   timeOfDay?: TimeOfDay;
   onOpenSettings: () => void;
-  onOpenAddTree: () => void;
+  onOpenAddProject: () => void;
   onDeleteTree: (id: string, name: string) => void;
   onToggleTimeOfDay?: () => void;
 }
 
-export function DashboardGameControls({
+export function DashboardControls({
   trees = [],
   timeOfDay = "day",
   onOpenSettings,
-  onOpenAddTree,
+  onOpenAddProject,
   onDeleteTree,
   onToggleTimeOfDay,
-}: DashboardGameControlsProps) {
+}: DashboardControlsProps) {
   const { isLoaded, isSignedIn } = useUser();
   const user = useForestStore((s) => s.user);
 
   const [isAudioMuted, setIsAudioMuted] = useState(false);
-  const [isModulesPopoverOpen, setIsModulesPopoverOpen] = useState(false);
+  const [isProjectsPopoverOpen, setIsProjectsPopoverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "shipping" | "revenue">("all");
 
@@ -103,20 +103,20 @@ export function DashboardGameControls({
 
           <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
 
-          {/* Connected Modules Trigger */}
+          {/* Connected Projects Trigger */}
           <Button
-            variant={isModulesPopoverOpen ? "dark" : "outline"}
+            variant={isProjectsPopoverOpen ? "dark" : "outline"}
             size="sm"
             onClick={() => {
               sound.playClick();
-              setIsModulesPopoverOpen((prev) => !prev);
+              setIsProjectsPopoverOpen((prev) => !prev);
             }}
             icon={LayoutGrid}
             className="shadow-xs active:scale-95 transition-transform text-xs"
-            title="Connected Repos & Modules Popover (Press M / I)"
+            title="Connected Projects Popover"
           >
-            <span>Modules</span>
-            <span className={`text-xs font-pixel ml-0.5 px-1.5 py-0.2 rounded-full ${isModulesPopoverOpen ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
+            <span>Projects</span>
+            <span className={`text-xs font-pixel ml-0.5 px-1.5 py-0.2 rounded-full ${isProjectsPopoverOpen ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
               {trees.length}
             </span>
           </Button>
@@ -135,7 +135,7 @@ export function DashboardGameControls({
             <Settings className="w-3.5 h-3.5" />
           </button>
 
-          {/* Profile Avatar / UserButton Container (Guaranteed Fixed Dimensions & Alignment) */}
+          {/* Profile Avatar / UserButton Container */}
           <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden shrink-0 border border-stone-200/80 bg-stone-100">
             {isLoaded && isSignedIn ? (
               <UserButton />
@@ -153,8 +153,8 @@ export function DashboardGameControls({
         </div>
       </div>
 
-      {/* 2. Floating Tactile Porcelain Modules Popover (Flat, Breathable, Zero Box-Soup) */}
-      {isModulesPopoverOpen && (
+      {/* 2. Floating Tactile Porcelain Projects Popover */}
+      {isProjectsPopoverOpen && (
         <div className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm p-1.5 rounded-[2rem] glass-dock shadow-2xl origin-top-right animate-in fade-in zoom-in-95 duration-150 z-50">
           <div className="p-4 sm:p-5 rounded-[calc(2rem-0.375rem)] porcelain-surface flex flex-col max-h-[75vh] overflow-hidden">
             
@@ -176,8 +176,8 @@ export function DashboardGameControls({
                   size="sm"
                   onClick={() => {
                     sound.playClick();
-                    setIsModulesPopoverOpen(false);
-                    onOpenAddTree();
+                    setIsProjectsPopoverOpen(false);
+                    onOpenAddProject();
                   }}
                   icon={Plus}
                   className="text-[10px] py-1 px-2.5 shadow-xs"
@@ -188,10 +188,10 @@ export function DashboardGameControls({
                 <button
                   onClick={() => {
                     sound.playClick();
-                    setIsModulesPopoverOpen(false);
+                    setIsProjectsPopoverOpen(false);
                   }}
                   className="p-1 rounded-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition cursor-pointer"
-                  title="Close Modules"
+                  title="Close Projects"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -246,7 +246,7 @@ export function DashboardGameControls({
                     <button
                       onClick={() => onDeleteTree(tree.id, tree.name)}
                       className="p-1 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
-                      title="Prune / Delete Tree"
+                      title="Prune / Delete Project"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -254,7 +254,7 @@ export function DashboardGameControls({
                 ))
               ) : (
                 <div className="text-center py-6 text-xs text-stone-400 font-sans">
-                  No matching modules found.
+                  No matching projects found.
                 </div>
               )}
             </div>

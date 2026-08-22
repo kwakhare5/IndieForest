@@ -6,20 +6,21 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Trees, TrendingUp, Sparkles, Building2 } from "lucide-react";
 import { useForestStore, getRankTitle } from "@/store/useForestStore";
+import type { TreeData } from "@/types/game";
 
-interface CabinWarRoomModalProps {
+interface OverviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenShare?: () => void;
-  onOpenAddTree?: () => void;
+  onOpenAddProject?: () => void;
 }
 
-export function CabinWarRoomModal({
+export function OverviewModal({
   isOpen,
   onClose,
   onOpenShare,
-  onOpenAddTree,
-}: CabinWarRoomModalProps) {
+  onOpenAddProject,
+}: OverviewModalProps) {
   const user = useForestStore((s) => s.user);
   const level = useForestStore((s) => s.level);
   const xp = useForestStore((s) => s.xp);
@@ -27,17 +28,17 @@ export function CabinWarRoomModal({
   const trees = useForestStore((s) => s.trees);
 
   const { title, badge } = getRankTitle(level);
-  const shippingTrees = trees.filter((t) => t.type === "shipping");
-  const revenueTrees = trees.filter((t) => t.type === "revenue");
-  const totalMrr = revenueTrees.reduce((acc, t) => acc + (t.mrr || 0), 0);
-  const totalCommits = shippingTrees.reduce((acc, t) => acc + (t.commits || 0), 0);
+  const shippingTrees = trees.filter((t: TreeData) => t.type === "shipping");
+  const revenueTrees = trees.filter((t: TreeData) => t.type === "revenue");
+  const totalMrr = revenueTrees.reduce((acc: number, t: TreeData) => acc + (t.mrr || 0), 0);
+  const totalCommits = shippingTrees.reduce((acc: number, t: TreeData) => acc + (t.commits || 0), 0);
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Builder War Room & Analytics"
-      badgeText="Homestead Command"
+      title="Island Overview & Projects"
+      badgeText="Dashboard Summary"
       icon={Building2}
       maxWidth="lg"
     >
@@ -80,7 +81,7 @@ export function CabinWarRoomModal({
         {/* Dual-Grove Aggregate Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
-            <span className="text-[10px] text-stone-400 font-medium block">Emerald Grove</span>
+            <span className="text-[10px] text-stone-400 font-medium block">Code Grove</span>
             <div className="text-base font-bold text-emerald-800 font-pixel flex items-center gap-1">
               <Trees className="w-3.5 h-3.5 text-emerald-600" />
               {shippingTrees.length} REPOS
@@ -89,7 +90,7 @@ export function CabinWarRoomModal({
           </div>
 
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
-            <span className="text-[10px] text-stone-400 font-medium block">Golden Grove</span>
+            <span className="text-[10px] text-stone-400 font-medium block">Revenue Grove</span>
             <div className="text-base font-bold text-amber-700 font-pixel flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
               ${totalMrr}/MO
@@ -106,7 +107,7 @@ export function CabinWarRoomModal({
           </div>
 
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
-            <span className="text-[10px] text-stone-400 font-medium block">Island Rank</span>
+            <span className="text-[10px] text-stone-400 font-medium block">Rank Tier</span>
             <div className="text-base font-bold text-stone-900 font-pixel">
               LVL {level}
             </div>
@@ -114,52 +115,41 @@ export function CabinWarRoomModal({
           </div>
         </div>
 
-        {/* Active Modules Breakdown */}
+        {/* Active Projects Breakdown */}
         <div className="space-y-2.5 pt-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-stone-900 font-sans uppercase tracking-wider">
-              Connected Modules ({trees.length})
+              Connected Projects ({trees.length})
             </span>
             <Button
               variant="outline"
               size="sm"
               onClick={() => {
                 onClose();
-                onOpenAddTree?.();
+                onOpenAddProject?.();
               }}
               className="text-xs"
             >
-              + Add Module
+              + Add Project
             </Button>
           </div>
 
           <div className="max-h-44 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-            {trees.map((t) => (
+            {trees.map((t: TreeData) => (
               <div
                 key={t.id}
                 className="flex items-center justify-between pb-2 border-b border-stone-100 last:border-0 last:pb-0 text-xs font-sans"
               >
-                <div className="flex items-center gap-2.5 truncate">
-                  <div
-                    className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
-                      t.type === "revenue"
-                        ? "bg-amber-100 text-amber-800"
-                        : "bg-emerald-100 text-emerald-800"
-                    }`}
-                  >
-                    {t.type === "revenue" ? <TrendingUp className="w-3 h-3" /> : <Trees className="w-3 h-3" />}
-                  </div>
-                  <div className="truncate">
-                    <span className="font-bold text-stone-900 truncate block">{t.name}</span>
-                    <span className="text-[10px] text-stone-400 block uppercase font-sans font-medium tracking-wider">
-                      {t.tier} Tier
-                    </span>
-                  </div>
+                <div className="flex items-center gap-2 truncate">
+                  <span className={`w-2 h-2 rounded-full ${t.type === "revenue" ? "bg-amber-500" : "bg-emerald-500"}`} />
+                  <span className="font-semibold text-stone-900 truncate">{t.name}</span>
                 </div>
-
-                <Badge variant={t.type === "revenue" ? "amber" : "emerald"} size="sm">
-                  {t.type === "revenue" ? `$${t.mrr || 0}/mo` : `${t.commits || 1} commits`}
-                </Badge>
+                <div className="flex items-center gap-3 shrink-0 text-[11px] text-stone-500">
+                  <span>{t.type === "revenue" ? `$${t.mrr || 0}/mo` : `${t.commits || 0} commits`}</span>
+                  <Badge variant={t.type === "revenue" ? "amber" : "emerald"} size="sm">
+                    {t.tier}
+                  </Badge>
+                </div>
               </div>
             ))}
           </div>

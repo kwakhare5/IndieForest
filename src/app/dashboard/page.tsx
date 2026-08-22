@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ForestCanvas } from "@/components/canvas/ForestCanvas";
-import { DashboardTopLeftNav } from "@/components/hud/DashboardTopLeftNav";
-import { DashboardGameControls } from "@/components/hud/DashboardGameControls";
-import { FloatingDock } from "@/components/hud/FloatingDock";
-import { TreeInspectorCard } from "@/components/hud/TreeInspectorCard";
+import { IslandCanvas } from "@/components/canvas/IslandCanvas";
+import { DashboardNav } from "@/components/hud/DashboardNav";
+import { DashboardControls } from "@/components/hud/DashboardControls";
+import { DashboardDock } from "@/components/hud/DashboardDock";
+import { TreeCard } from "@/components/hud/TreeCard";
 import { Button } from "@/components/ui/Button";
 import { Github } from "lucide-react";
 
-// On-Demand Dialog Modals
-import { CampfireFocusModal } from "@/components/hud/modals/CampfireFocusModal";
-import { TentSabbaticalModal } from "@/components/hud/modals/TentSabbaticalModal";
-import { CabinWarRoomModal } from "@/components/hud/modals/CabinWarRoomModal";
-import { ShareCardModal } from "@/components/hud/modals/ShareCardModal";
-import { AddTreeModal } from "@/components/hud/modals/AddTreeModal";
+// Modals
+import { FocusModal } from "@/components/hud/modals/FocusModal";
+import { RestShieldModal } from "@/components/hud/modals/RestShieldModal";
+import { OverviewModal } from "@/components/hud/modals/OverviewModal";
+import { ShareModal } from "@/components/hud/modals/ShareModal";
+import { AddProjectModal } from "@/components/hud/modals/AddProjectModal";
 import { SettingsModal } from "@/components/hud/modals/SettingsModal";
 import { useForestStore } from "@/store/useForestStore";
 import { useUser } from "@clerk/nextjs";
@@ -44,11 +44,11 @@ export default function DashboardPage() {
   // Modals, HUD Overlays & 2-Step Isometric Zoom State
   const [zoomLevel, setZoomLevel] = useState<1 | 2>(1);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isAddTreeModalOpen, setIsAddTreeModalOpen] = useState(false);
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [isCampfireModalOpen, setIsCampfireModalOpen] = useState(false);
-  const [isTentModalOpen, setIsTentModalOpen] = useState(false);
-  const [isCabinModalOpen, setIsCabinModalOpen] = useState(false);
+  const [isFocusModalOpen, setIsFocusModalOpen] = useState(false);
+  const [isRestShieldModalOpen, setIsRestShieldModalOpen] = useState(false);
+  const [isOverviewModalOpen, setIsOverviewModalOpen] = useState(false);
   const [selectedTree, setSelectedTree] = useState<TreeData | null>(null);
   const [isHudHidden, setIsHudHidden] = useState(false);
 
@@ -58,35 +58,31 @@ export default function DashboardPage() {
 
     async function initDashboard() {
       if (isLoaded && isSignedIn && clerkUser) {
-        const username =
+        const ghAccount = clerkUser.externalAccounts?.find(
+          (a) => (a.provider as string).includes("github")
+        );
+        const resolvedUsername =
+          ghAccount?.username ||
           clerkUser.username ||
-          clerkUser.firstName ||
-          clerkUser.primaryEmailAddress?.emailAddress?.split("@")[0] ||
-          "";
+          clerkUser.firstName?.toLowerCase() ||
+          "builder";
 
         setUser({
           id: clerkUser.id,
-          email: clerkUser.primaryEmailAddress?.emailAddress,
-          username,
-          fullName: clerkUser.fullName || "Indie Builder",
-          avatarUrl: clerkUser.imageUrl,
+          username: resolvedUsername,
+          avatarUrl: clerkUser.imageUrl || `https://github.com/${resolvedUsername}.png`,
           isAuthenticated: true,
         });
 
-        // Try loading from Supabase first
-        const hasCloudData = await loadCloudIsland(clerkUser.id);
-        if (!hasCloudData && username) {
-          if (trees.length === 0) {
-            await syncGitHubIsland(username);
-          } else {
-            await autoCheckTodayCommits();
-          }
+        // Hydrate from Supabase PostgreSQL first
+        const cloudLoaded = await loadCloudIsland(clerkUser.id);
+        if (!cloudLoaded && resolvedUsername && resolvedUsername !== "builder") {
+          // If no cloud profile exists, sync real public repos from GitHub
+          await syncGitHubIsland(resolvedUsername);
         }
-      } else {
-        const currentUser = useForestStore.getState().user;
-        if (currentUser.username && currentUser.username !== "guest" && currentUser.username !== "") {
-          await autoCheckTodayCommits();
-        }
+
+        // Auto-check commits for today (zero manual tracking)
+        await autoCheckTodayCommits();
       }
     }
 
@@ -97,93 +93,83 @@ export default function DashboardPage() {
     clerkUser,
     setUser,
     syncGitHubIsland,
-    autoCheckTodayCommits,
-    trees.length,
     checkStreakExpiry,
+    autoCheckTodayCommits,
     loadCloudIsland,
   ]);
 
-  // Global Tactical Keyboard Shortcuts
+  // Global Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
 
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-
-      const key = e.key.toLowerCase();
-
-      if (key === "h") {
-        e.preventDefault();
-        setIsHudHidden((prev) => !prev);
-      } else if (key === "z") {
-        e.preventDefault();
-        sound.playClick();
-        setZoomLevel((prev) => (prev === 1 ? 2 : 1));
-      } else if (key === "s") {
-        e.preventDefault();
-        triggerQuestProgress("build-in-public", 1);
-        setIsShareModalOpen((prev) => !prev);
-      } else if (key === "escape") {
-        setIsShareModalOpen(false);
-        setIsAddTreeModalOpen(false);
-        setIsSettingsModalOpen(false);
-        setIsCampfireModalOpen(false);
-        setIsTentModalOpen(false);
-        setIsCabinModalOpen(false);
-        setSelectedTree(null);
+      switch (e.key.toLowerCase()) {
+        case "s":
+          sound.playClick();
+          setIsShareModalOpen((prev) => !prev);
+          break;
+        case "h":
+          sound.playClick();
+          setIsHudHidden((prev) => !prev);
+          break;
+        case "t":
+        case "l":
+          sound.playClick();
+          toggleTimeOfDay();
+          break;
+        case "z":
+          sound.playClick();
+          setZoomLevel((prev) => (prev === 1 ? 2 : 1));
+          break;
+        case "escape":
+          setSelectedTree(null);
+          setIsShareModalOpen(false);
+          setIsAddProjectModalOpen(false);
+          setIsSettingsModalOpen(false);
+          setIsFocusModalOpen(false);
+          setIsRestShieldModalOpen(false);
+          setIsOverviewModalOpen(false);
+          break;
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [triggerQuestProgress]);
+  }, [toggleTimeOfDay]);
 
   const handleDeleteTree = (id: string, name: string) => {
-    if (confirm(`Are you sure you want to remove "${name}" from your island?`)) {
-      sound.playClick();
+    if (confirm(`Are you sure you want to prune "${name}"?`)) {
       removeTree(id);
-      if (selectedTree?.id === id) {
-        setSelectedTree(null);
-      }
+      setSelectedTree(null);
     }
   };
 
+  const totalMrr = trees
+    .filter((t: TreeData) => t.type === "revenue")
+    .reduce((acc: number, t: TreeData) => acc + (t.mrr || 0), 0);
+
+  const completedQuestsCount = dailyQuests.filter((q) => q.isCompleted).length;
+  const unclaimedQuestsCount = dailyQuests.filter((q) => q.isCompleted && !q.isClaimed).length;
+
   if (!mounted) {
     return (
-      <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#ece7de] text-stone-600 font-mono text-xs">
-        <div className="w-10 h-10 border-3 border-emerald-600/20 border-t-emerald-700 rounded-full animate-spin mb-3" />
-        <span className="tracking-[0.2em] uppercase font-bold font-sans text-xs text-stone-700">
-          Loading 3D Living Diorama...
-        </span>
+      <div className="w-screen h-screen bg-[#ece7de] flex items-center justify-center font-sans text-stone-600">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
+          <span className="text-xs font-bold tracking-wider uppercase text-stone-500 font-pixel">
+            Loading Island Diorama...
+          </span>
+        </div>
       </div>
     );
   }
 
-
-  const unclaimedQuestsCount = dailyQuests.filter(
-    (q) => q.isCompleted && !q.isClaimed
-  ).length;
-  const completedQuestsCount = dailyQuests.filter((q) => q.isCompleted).length;
-
-  const totalMrr = trees.reduce((acc, t) => acc + (t.mrr || 0), 0);
-
   return (
-    <div
-      className={`fixed inset-0 w-screen h-screen overflow-hidden ${
-        timeOfDay === "night"
-          ? "bg-[#0b0f19]"
-          : timeOfDay === "sunset"
-          ? "bg-[#fef2f2]"
-          : "bg-[#ece7de]"
-      } text-stone-900 font-sans selection:bg-emerald-600 selection:text-white select-none transition-colors duration-700`}
-    >
-      {/* 1. Full-Screen Edge-to-Edge 3D Diorama Game Canvas (Locked to Isometric View) */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <ForestCanvas
+    <div className="relative w-screen h-screen overflow-hidden bg-[#ece7de] select-none font-sans">
+      {/* 1. Fullscreen Living 3D Diorama Canvas */}
+      <div className="absolute inset-0 z-0">
+        <IslandCanvas
           trees={trees}
           level={level}
           streakDays={streakDays}
@@ -192,13 +178,13 @@ export default function DashboardPage() {
           timeOfDay={timeOfDay}
           zoomLevel={zoomLevel}
           selectedTreeId={selectedTree?.id}
-          onSelectTree={(t) => {
+          onSelectTree={(tree) => {
             sound.playClick();
-            setSelectedTree(t);
+            setSelectedTree(tree);
           }}
-          onClickCampfire={() => setIsCampfireModalOpen(true)}
-          onClickTent={() => setIsTentModalOpen(true)}
-          onClickCabin={() => setIsCabinModalOpen(true)}
+          onClickCampfire={() => setIsFocusModalOpen(true)}
+          onClickTent={() => setIsRestShieldModalOpen(true)}
+          onClickCabin={() => setIsOverviewModalOpen(true)}
           className="w-full h-full"
         />
       </div>
@@ -207,7 +193,7 @@ export default function DashboardPage() {
       {!isHudHidden && (
         <>
           {/* Top-Left: Navigation & Quests Capsule */}
-          <DashboardTopLeftNav
+          <DashboardNav
             backHref="/"
             backLabel="Home"
             unclaimedQuestsCount={unclaimedQuestsCount}
@@ -215,12 +201,12 @@ export default function DashboardPage() {
             totalQuestsCount={dailyQuests.length}
           />
 
-          {/* Top-Right: World Ambience & Utilities */}
-          <DashboardGameControls
+          {/* Top-Right: World Ambience & Controls */}
+          <DashboardControls
             trees={trees}
             timeOfDay={timeOfDay}
             onOpenSettings={() => setIsSettingsModalOpen(true)}
-            onOpenAddTree={() => setIsAddTreeModalOpen(true)}
+            onOpenAddProject={() => setIsAddProjectModalOpen(true)}
             onDeleteTree={handleDeleteTree}
             onToggleTimeOfDay={toggleTimeOfDay}
           />
@@ -255,8 +241,8 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Bottom-Center: Command Center Resting Action Dock */}
-          <FloatingDock
+          {/* Bottom-Center: Command Dock */}
+          <DashboardDock
             level={level}
             streakDays={streakDays}
             totalMrr={totalMrr}
@@ -280,42 +266,42 @@ export default function DashboardPage() {
         </button>
       )}
 
-      {/* 3. In-World Tree Inspector Popup */}
-      <TreeInspectorCard
+      {/* 3. In-World Tree Card */}
+      <TreeCard
         tree={selectedTree}
         onClose={() => setSelectedTree(null)}
         onDelete={handleDeleteTree}
       />
 
       {/* 4. Campsite & Tool Modals */}
-      <CampfireFocusModal
-        isOpen={isCampfireModalOpen}
-        onClose={() => setIsCampfireModalOpen(false)}
+      <FocusModal
+        isOpen={isFocusModalOpen}
+        onClose={() => setIsFocusModalOpen(false)}
       />
 
-      <TentSabbaticalModal
-        isOpen={isTentModalOpen}
-        onClose={() => setIsTentModalOpen(false)}
+      <RestShieldModal
+        isOpen={isRestShieldModalOpen}
+        onClose={() => setIsRestShieldModalOpen(false)}
       />
 
-      <CabinWarRoomModal
-        isOpen={isCabinModalOpen}
-        onClose={() => setIsCabinModalOpen(false)}
+      <OverviewModal
+        isOpen={isOverviewModalOpen}
+        onClose={() => setIsOverviewModalOpen(false)}
         onOpenShare={() => {
           triggerQuestProgress("build-in-public", 1);
           setIsShareModalOpen(true);
         }}
-        onOpenAddTree={() => setIsAddTreeModalOpen(true)}
+        onOpenAddProject={() => setIsAddProjectModalOpen(true)}
       />
 
-      <ShareCardModal
+      <ShareModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
       />
 
-      <AddTreeModal
-        isOpen={isAddTreeModalOpen}
-        onClose={() => setIsAddTreeModalOpen(false)}
+      <AddProjectModal
+        isOpen={isAddProjectModalOpen}
+        onClose={() => setIsAddProjectModalOpen(false)}
       />
 
       <SettingsModal

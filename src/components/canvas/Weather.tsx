@@ -4,17 +4,17 @@ import React, { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-interface WeatherSystemProps {
+interface WeatherProps {
   drought?: boolean;
   isRaining?: boolean;
   hasRevenue?: boolean;
 }
 
-export function WeatherSystem({
+export function Weather({
   drought = false,
   isRaining = false,
   hasRevenue = false,
-}: WeatherSystemProps) {
+}: WeatherProps) {
   const rainRef = useRef<THREE.Points>(null);
   const sparklesRef = useRef<THREE.Points>(null);
   const fogRef = useRef<THREE.Points>(null);

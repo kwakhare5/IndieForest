@@ -8,19 +8,19 @@ import { ConiferTree } from "./models/ConiferTree";
 import { DeciduousTree } from "./models/DeciduousTree";
 import { ZenStump } from "./models/ZenStump";
 
-interface BlockTreeProps {
+interface IslandTreeProps {
   tree: TreeData;
   isSelected?: boolean;
   onSelect?: (tree: TreeData) => void;
   drought?: boolean;
 }
 
-export function BlockTree({
+export function IslandTree({
   tree,
   isSelected = false,
   onSelect,
   drought = false,
-}: BlockTreeProps) {
+}: IslandTreeProps) {
   const visualGroupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 

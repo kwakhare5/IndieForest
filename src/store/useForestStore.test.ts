@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useForestStore } from "./useForestStore";
+import type { DailyQuest } from "@/types/game";
 
 describe("useForestStore", () => {
   beforeEach(() => {
@@ -33,29 +34,17 @@ describe("useForestStore", () => {
     expect(state.shipHistory.length).toBe(1);
 
     // Verify quest progress auto-triggers
-    const quest = useForestStore.getState().dailyQuests.find((q) => q.id === "atomic-commit");
+    const quest = useForestStore.getState().dailyQuests.find((q: DailyQuest) => q.id === "atomic-commit");
     expect(quest?.isCompleted).toBe(true);
   });
 
-  it("handles quest claim and pinecone rewards", () => {
+  it("handles quest claim and level progress rewards", () => {
     useForestStore.getState().shipToday("Initial commit", "github");
-    const initialPinecones = useForestStore.getState().pinecones;
+    const initialTotalXp = useForestStore.getState().totalXp;
     useForestStore.getState().claimQuestReward("atomic-commit");
     const state = useForestStore.getState();
-    expect(state.pinecones).toBe(initialPinecones + 10);
-    const quest = state.dailyQuests.find((q) => q.id === "atomic-commit");
+    expect(state.totalXp).toBe(initialTotalXp + 100);
+    const quest = state.dailyQuests.find((q: DailyQuest) => q.id === "atomic-commit");
     expect(quest?.isClaimed).toBe(true);
   });
-
-  it("handles camp shop purchases", () => {
-    useForestStore.setState({ pinecones: 200 });
-    const success = useForestStore.getState().buyShopItem("autumn-biome");
-    expect(success).toBe(false); // requires 250 pinecones
-    
-    useForestStore.setState({ pinecones: 300 });
-    const bought = useForestStore.getState().buyShopItem("autumn-biome");
-    expect(bought).toBe(true);
-    expect(useForestStore.getState().pinecones).toBe(50);
-  });
 });
-

@@ -1,49 +1,50 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForestStore, getRankTitle } from "@/store/useForestStore";
-import { Share2, Check, Flame, Download, ImageIcon } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
+import { Share2, Download, Copy, Check, Twitter, Flame } from "lucide-react";
+import { useForestStore, getRankTitle } from "@/store/useForestStore";
 import { sound } from "@/lib/sound";
+import type { TreeData } from "@/types/game";
 
-interface ShareCardModalProps {
+interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function ShareCardModal({ isOpen, onClose }: ShareCardModalProps) {
+export function ShareModal({ isOpen, onClose }: ShareModalProps) {
   const user = useForestStore((s) => s.user);
-  const level = useForestStore((s) => s.level);
   const streakDays = useForestStore((s) => s.streakDays);
+  const level = useForestStore((s) => s.level);
   const trees = useForestStore((s) => s.trees);
   const shipHistory = useForestStore((s) => s.shipHistory);
 
+  const [selectedTemplateIndex, setSelectedTemplateIndex] = useState(0);
   const [copiedText, setCopiedText] = useState(false);
   const [copiedImage, setCopiedImage] = useState(false);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [selectedTemplateIndex, setSelectedTemplateIndex] = useState(0);
 
   const { title, badge } = getRankTitle(level);
   const latestShip = shipHistory[0]?.message || "Building my indie hacker living diorama";
-  const totalMrr = trees.reduce((acc, t) => acc + (t.mrr || 0), 0);
-  const totalCommits = trees.reduce((acc, t) => acc + (t.commits || 0), 0);
+  const totalMrr = trees.reduce((acc: number, t: TreeData) => acc + (t.mrr || 0), 0);
+  const totalCommits = trees.reduce((acc: number, t: TreeData) => acc + (t.commits || 0), 0);
   const profileUrl = `indieforest.dev/u/${user.username || "builder"}`;
 
-  // 3 Human Indie Hacker Tweet Templates (Anti-AI Slop)
+  // 3 Human Tweet Templates (Zero AI Slop)
   const tweetTemplates = [
     // Template 1: Numbers-Led Milestone
     `Day ${streakDays} of shipping daily on IndieForest.
 
 • Tier ${badge} (${title} · Lvl ${level})
-• ${trees.length} Active Modules | ${totalCommits} Commits | $${totalMrr}/mo MRR
+• ${trees.length} Active Projects | ${totalCommits} Commits | $${totalMrr}/mo MRR
 • Today's Ship: "${latestShip}"
 
 Living diorama: ${profileUrl}`,
 
-    // Template 2: Short & Punchy Proof-of-Work
+    // Template 2: Short & Punchy
     `Zero manual trackers. Just pure shipping.
 
 Day ${streakDays} streak on @IndieForest.
@@ -74,77 +75,60 @@ Living 3D world: ${profileUrl}`,
     window.open(url, "_blank");
   };
 
-  /**
-   * Generates a 1200x675 composited PNG image containing the 3D Canvas
-   * and a porcelain stats overlay box.
-   */
   const generateCompositeImage = async (): Promise<Blob | null> => {
-    const canvasElement = document.querySelector("canvas") as HTMLCanvasElement | null;
-    if (!canvasElement) {
-      return null;
-    }
+    const canvas = document.querySelector("canvas") as HTMLCanvasElement | null;
+    if (!canvas) return null;
 
-    const outputWidth = 1200;
-    const outputHeight = 675;
+    const targetWidth = 1200;
+    const targetHeight = 675;
     const offscreen = document.createElement("canvas");
-    offscreen.width = outputWidth;
-    offscreen.height = outputHeight;
+    offscreen.width = targetWidth;
+    offscreen.height = targetHeight;
     const ctx = offscreen.getContext("2d");
     if (!ctx) return null;
 
-    // Background Studio Linen
+    // Background Warm Linen
     ctx.fillStyle = "#ece7de";
-    ctx.fillRect(0, 0, outputWidth, outputHeight);
+    ctx.fillRect(0, 0, targetWidth, targetHeight);
 
-    // Draw the 3D Canvas centered
-    const canvasAspect = canvasElement.width / canvasElement.height;
-    let drawW = outputWidth;
-    let drawH = outputWidth / canvasAspect;
-    let drawX = 0;
-    let drawY = (outputHeight - drawH) / 2;
+    // Subtle border
+    ctx.strokeStyle = "rgba(120, 113, 108, 0.25)";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(16, 16, targetWidth - 32, targetHeight - 32);
 
-    if (drawH < outputHeight) {
-      drawH = outputHeight;
-      drawW = outputHeight * canvasAspect;
-      drawX = (outputWidth - drawW) / 2;
-      drawY = 0;
-    }
+    // Draw Three.js WebGL canvas onto 2D canvas
+    ctx.drawImage(canvas, 60, 60, targetWidth - 120, targetHeight - 170);
 
-    ctx.drawImage(canvasElement, drawX, drawY, drawW, drawH);
+    // Header Title
+    ctx.fillStyle = "#0c0a09";
+    ctx.font = "bold 32px sans-serif";
+    ctx.fillText("IndieForest", 60, 64);
 
-    // Bottom Stats Double-Bezel Overlay Card
-    const cardX = 40;
-    const cardY = outputHeight - 140;
-    const cardW = outputWidth - 80;
-    const cardH = 105;
+    ctx.fillStyle = "#78716c";
+    ctx.font = "18px sans-serif";
+    ctx.fillText(`@${user.username || "builder"} · Day ${streakDays} Streak`, 260, 64);
 
-    // Outer Bezel
-    ctx.fillStyle = "rgba(236, 231, 222, 0.85)";
+    // Bottom Stats Porcelain Bezel Card
+    const cardX = 60;
+    const cardY = targetHeight - 110;
+    const cardW = targetWidth - 120;
+    const cardH = 75;
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
     ctx.beginPath();
     ctx.roundRect(cardX, cardY, cardW, cardH, 20);
     ctx.fill();
-    ctx.strokeStyle = "rgba(168, 162, 158, 0.7)";
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "rgba(228, 228, 231, 0.9)";
+    ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Inner Porcelain Surface
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.roundRect(cardX + 6, cardY + 6, cardW - 12, cardH - 12, 16);
-    ctx.fill();
-
-    // Text & Stats
-    ctx.fillStyle = "#047857";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText("IndieForest • Living Proof-of-Work Diorama", cardX + 24, cardY + 36);
-
     ctx.fillStyle = "#1c1917";
-    ctx.font = "bold 26px sans-serif";
-    ctx.fillText(`Day ${streakDays} Streak • Tier ${badge}: ${title}`, cardX + 24, cardY + 74);
+    ctx.font = "bold 24px sans-serif";
+    ctx.fillText(`Day ${streakDays} Streak • Tier ${badge}: ${title}`, cardX + 24, cardY + 46);
 
     ctx.fillStyle = "#57534e";
     ctx.font = "bold 16px monospace";
-    ctx.fillText(`${trees.length} Trees • $${totalMrr}/mo MRR`, cardX + cardW - 320, cardY + 74);
+    ctx.fillText(`${trees.length} Projects • $${totalMrr}/mo MRR`, cardX + cardW - 280, cardY + 46);
 
     return new Promise((resolve) => {
       offscreen.toBlob((blob) => resolve(blob), "image/png");
@@ -242,49 +226,51 @@ Living 3D world: ${profileUrl}`,
           </pre>
         </div>
 
-        {/* Action Buttons Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-sans">
+        {/* Action Controls */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
           <Button
-            onClick={handleCopyImage}
+            onClick={handleCopyText}
             variant="outline"
             size="md"
-            icon={copiedImage ? Check : ImageIcon}
-            className="justify-center text-xs"
-            disabled={isGeneratingImage}
+            icon={copiedText ? Check : Copy}
+            className="w-full justify-center text-xs font-bold"
           >
-            {copiedImage ? "Copied Image!" : "Copy 3D Card"}
-          </Button>
-
-          <Button
-            onClick={handleDownloadPNG}
-            variant="outline"
-            size="md"
-            icon={Download}
-            className="justify-center text-xs"
-            disabled={isGeneratingImage}
-          >
-            Download PNG
+            {copiedText ? "Text Copied!" : "Copy Post Text"}
           </Button>
 
           <Button
             onClick={handleOpenTwitter}
             variant="dark"
             size="md"
-            showArrow
-            arrowType="up-right"
-            className="justify-between text-xs"
+            icon={Twitter}
+            className="w-full justify-center text-xs font-bold"
           >
-            POST TO X
+            Open in X / Twitter
           </Button>
         </div>
 
-        <div className="text-center">
-          <button
-            onClick={handleCopyText}
-            className="text-[11px] font-sans font-medium text-stone-400 hover:text-stone-700 underline transition-colors cursor-pointer"
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-stone-100">
+          <Button
+            onClick={handleCopyImage}
+            disabled={isGeneratingImage}
+            variant="emerald"
+            size="md"
+            icon={copiedImage ? Check : Copy}
+            className="w-full justify-center text-xs font-bold"
           >
-            {copiedText ? "✓ Text copied to clipboard" : "or copy plain tweet text"}
-          </button>
+            {copiedImage ? "Image Copied!" : "Copy 3D Card Image"}
+          </Button>
+
+          <Button
+            onClick={handleDownloadPNG}
+            disabled={isGeneratingImage}
+            variant="outline"
+            size="md"
+            icon={Download}
+            className="w-full justify-center text-xs font-bold"
+          >
+            Download HD PNG
+          </Button>
         </div>
       </div>
     </Modal>

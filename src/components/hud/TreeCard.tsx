@@ -7,13 +7,13 @@ import { Trees, TrendingUp, X, Calendar, GitCommit, DollarSign } from "lucide-re
 import { TreeData } from "@/types/game";
 import { sound } from "@/lib/sound";
 
-interface TreeInspectorCardProps {
+interface TreeCardProps {
   tree: TreeData | null;
   onClose: () => void;
   onDelete: (id: string, name: string) => void;
 }
 
-export function TreeInspectorCard({ tree, onClose }: TreeInspectorCardProps) {
+export function TreeCard({ tree, onClose }: TreeCardProps) {
   if (!tree) return null;
 
   const isRevenue = tree.type === "revenue";
@@ -31,7 +31,7 @@ export function TreeInspectorCard({ tree, onClose }: TreeInspectorCardProps) {
             onClose();
           }}
           className="absolute top-4 right-4 p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition cursor-pointer"
-          title="Close Inspector"
+          title="Close Card"
         >
           <X className="w-4 h-4" />
         </button>
@@ -49,7 +49,7 @@ export function TreeInspectorCard({ tree, onClose }: TreeInspectorCardProps) {
           </div>
           <div>
             <span className="font-sans text-[10px] uppercase tracking-wider font-bold text-stone-400 block mb-0.5">
-              {isRevenue ? "East Revenue Grove" : "West Shipping Grove"}
+              {isRevenue ? "Revenue Grove" : "Code Grove"}
             </span>
             <h3 className="text-sm font-bold text-stone-950 font-sans truncate max-w-[200px]">
               {tree.name}
@@ -57,7 +57,7 @@ export function TreeInspectorCard({ tree, onClose }: TreeInspectorCardProps) {
           </div>
         </div>
 
-        {/* Flat Stat Metrics Row */}
+        {/* Stat Metrics Row */}
         <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-stone-50 border border-stone-100">
           <div>
             <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
