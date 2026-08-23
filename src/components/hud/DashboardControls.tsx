@@ -226,8 +226,8 @@ export function DashboardControls({
               />
             </div>
 
-            {/* Flat Module Items List */}
-            <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 custom-scrollbar">
+            {/* Flat Module Items List (Stable Fixed Height) */}
+            <div className="h-56 min-h-[14rem] overflow-y-auto space-y-2.5 pr-1 custom-scrollbar">
               {filteredTrees.length > 0 ? (
                 filteredTrees.map((tree) => (
                   <div key={tree.id} className="pb-2.5 border-b border-stone-100 last:border-0 last:pb-0 flex items-center justify-between gap-2">
