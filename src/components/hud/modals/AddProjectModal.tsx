@@ -54,7 +54,7 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
       badgeText="Manual Fallback"
       icon={Trees}
       maxWidth="sm"
-      position="bottom-center"
+      position="center"
     >
       <form onSubmit={handleSubmit} className="space-y-3.5 font-sans">
         {/* Project Type Switcher */}
@@ -111,9 +111,10 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
         {/* Submit Button */}
         <Button
           type="submit"
-          variant={projectType === "shipping" ? "emerald" : "dark"}
+          variant={projectType === "shipping" ? "emerald" : "amber"}
           size="md"
-          className="w-full mt-2 justify-center font-bold text-xs"
+          icon={projectType === "shipping" ? GitBranch : TrendingUp}
+          className="w-full mt-2 justify-center font-bold text-xs shadow-md"
         >
           {projectType === "shipping" ? "Add Code Project" : "Add Revenue Project"}
         </Button>

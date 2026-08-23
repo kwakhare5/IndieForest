@@ -4,7 +4,7 @@ import React from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Trees, TrendingUp, Sparkles, Building2 } from "lucide-react";
+import { Trees, TrendingUp, Sparkles, Building2, Plus } from "lucide-react";
 import { useForestStore, getRankTitle } from "@/store/useForestStore";
 import type { TreeData } from "@/types/game";
 
@@ -124,13 +124,14 @@ export function OverviewModal({
             <Button
               variant="outline"
               size="sm"
+              icon={Plus}
               onClick={() => {
                 onClose();
                 onOpenAddProject?.();
               }}
-              className="text-xs"
+              className="text-xs shadow-xs"
             >
-              + Add Project
+              Add Project
             </Button>
           </div>
 

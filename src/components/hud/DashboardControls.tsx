@@ -182,7 +182,7 @@ export function DashboardControls({
                   icon={Plus}
                   className="text-[10px] py-1 px-2.5 shadow-xs"
                 >
-                  + Add Project
+                  Add Project
                 </Button>
 
                 <button

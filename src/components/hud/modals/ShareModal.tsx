@@ -184,7 +184,7 @@ Living 3D world: ${profileUrl}`,
       badgeText="Build in Public"
       icon={Share2}
       maxWidth="md"
-      position="bottom-center"
+      position="center"
     >
       <div className="space-y-3.5 font-sans">
         {/* Template Selector */}
