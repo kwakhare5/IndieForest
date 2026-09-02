@@ -28,10 +28,10 @@ const IslandCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] rounded-2xl gap-2">
+      <div className="w-full h-full flex flex-col items-center justify-center bg-[#e9f2ea] rounded-2xl gap-2">
         <div className="w-6 h-6 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
         <span className="text-[11px] font-bold text-stone-500 font-sans">
-          Loading 3D Diorama...
+          Loading Island...
         </span>
       </div>
     ),
@@ -127,9 +127,9 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
   const totalCommits = profile ? profile.totalCommits : 5;
 
   return (
-    <div className="min-h-screen bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white relative pb-16">
+    <div className="min-h-screen bg-[#e9f2ea] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white relative pb-16">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-40 w-full bg-[#ece7de] border-b border-stone-300/80 px-4 sm:px-8 py-3">
+      <header className="sticky top-0 z-40 w-full bg-[#e9f2ea] border-b border-stone-300/80 px-4 sm:px-8 py-3">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <Link
             href="/"

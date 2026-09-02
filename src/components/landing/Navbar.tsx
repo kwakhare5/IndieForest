@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 
-export function LandingNavbar() {
+export function Navbar() {
   const { isLoaded, isSignedIn } = useUser();
 
   return (
@@ -86,3 +86,5 @@ export function LandingNavbar() {
     </header>
   );
 }
+
+export { Navbar as LandingNavbar };

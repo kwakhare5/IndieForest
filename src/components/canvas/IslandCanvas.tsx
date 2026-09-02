@@ -1,13 +1,18 @@
 "use client";
 
-import React, { Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { ContactShadows } from "@react-three/drei";
+import React, { Suspense, useMemo } from "react";
+import { Canvas } from "@react-three/fiber";
+import { ContactShadows, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { Island } from "./Island";
 import { IslandTree } from "./IslandTree";
 import { Campsite } from "./Campsite";
 import { Weather } from "./Weather";
+import {
+  calculateIslandSize,
+  getTreeSlotCoordinate,
+  sortTreesByGrowthTier,
+} from "@/lib/gamification";
 import type { TreeData, TimeOfDay } from "@/types/game";
 
 interface IslandCanvasProps {
@@ -23,74 +28,54 @@ interface IslandCanvasProps {
   onClickCampfire?: () => void;
   onClickTent?: () => void;
   onClickCabin?: () => void;
+  onPlantNewTree?: () => void;
   interactive?: boolean;
   className?: string;
   zoomLevel?: 1 | 2;
+  showGrid?: boolean;
+  showBoundaries?: boolean;
 }
 
 // -----------------------------------------------------------------------------
 // Low-Pitch Isometric Parallax Rig & Smooth Lerp Zoom Engine
 // -----------------------------------------------------------------------------
-function IsometricCameraRig({
-  enabled = true,
-  targetZoom = 38,
-}: {
-  enabled?: boolean;
-  targetZoom?: number;
-}) {
-  useFrame((state) => {
-    const { pointer, camera } = state;
-
-    // Smoothly interpolate orthographic zoom
-    if (Math.abs(camera.zoom - targetZoom) > 0.01) {
-      camera.zoom = THREE.MathUtils.lerp(camera.zoom, targetZoom, 0.12);
-      camera.updateProjectionMatrix();
-    }
-
-    if (!enabled) return;
-
-    // Subtle isometric tilt
-    const targetX = 14.5 + pointer.x * 0.15;
-    const targetZ = 14.5 - pointer.y * 0.15;
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.05);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
-    camera.lookAt(0, 0.35, 0);
-  });
-
-  return null;
-}
-
 export function IslandCanvas({
   trees = [],
   level = 1,
-  streakDays = 1,
+  streakDays = 0,
   streakShields = 0,
   drought = false,
   isRaining = false,
   timeOfDay = "day",
-  selectedTreeId,
+  showGrid = false,
+  showBoundaries = false,
+  interactive = true,
+  selectedTreeId = null,
+  className = "w-full h-full min-h-[480px]",
+  zoomLevel = 1,
   onSelectTree,
   onClickCampfire,
-  onClickTent,
   onClickCabin,
-  interactive = true,
-  className = "w-full h-full min-h-[420px]",
-  zoomLevel = 1,
+  onClickTent,
+  onPlantNewTree,
 }: IslandCanvasProps) {
-  const hasRevenueTrees = trees.some((t) => t.type === "revenue" || (t.mrr && t.mrr > 0));
 
-  // Dynamic Lighting Palette based on Time of Day
   const isNight = timeOfDay === "night";
   const isSunset = timeOfDay === "sunset";
 
+  // 3D Performance & Clarity Cap (Top 24 active repositories / MRR streams in full 3D)
+  const visibleTrees = useMemo(() => (trees || []).slice(0, 24), [trees]);
+  const hasRevenue = visibleTrees.some((t) => t.type === "revenue" || (t.mrr && t.mrr > 0));
+
+  // Natural Soft Studio Lighting Palette
   const ambientColor = drought
     ? "#a8a29e"
     : isNight
-    ? "#312e81"
+    ? "#4338ca"
     : isSunset
     ? "#fed7aa"
-    : "#fffbeb";
-  const ambientIntensity = drought ? 0.45 : isNight ? 0.38 : isSunset ? 0.85 : 0.75;
+    : "#ffffff";
+  const ambientIntensity = drought ? 0.9 : isNight ? 0.45 : isSunset ? 1.05 : 1.15;
 
   const sunColor = drought
     ? "#d6d3d1"
@@ -104,86 +89,147 @@ export function IslandCanvas({
   const rimColor = isNight ? "#38bdf8" : isSunset ? "#e879f9" : "#93c5fd";
   const rimIntensity = isNight ? 0.25 : 0.35;
 
-  // Calibrated Discrete Zoom Levels scaled with pure 1:1 square island dimensions
-  const baseZoom = level >= 50 ? 28 : level >= 20 ? 34 : level >= 10 ? 38 : 42;
+  // Adaptive Dimensions across 5 tiers: 12x12, 15x15, 18.5x18.5, 21.5x21.5, 25x25
+  const islandSize = calculateIslandSize(level, visibleTrees.length);
+  const halfSize = islandSize / 2;
+
+  // Calibrated Discrete Zoom Levels scaled with adaptive island size
+  const baseZoom = islandSize >= 25 ? 26 : islandSize >= 21.5 ? 29 : islandSize >= 18.5 ? 32 : islandSize >= 15 ? 36 : 40;
   const targetZoom = zoomLevel === 2 ? baseZoom * 1.45 : baseZoom;
 
-  // Calibrated Contact Shadow Scale for 1:1 square foundations
-  const shadowScale = level >= 20 ? 34 : level >= 10 ? 28 : level >= 5 ? 22 : 18;
+  const shadowScale = islandSize * 1.35;
+  const shadowFrustum = halfSize + 3.0;
+
+  // Discrete 1-to-1 Grid Mapping with Camera-Z Depth Sorting (Amphitheater Alignment)
+  const { safeTrees, treeCoords } = useMemo(() => {
+    const isRev = (t: TreeData) => t.type === "revenue" || Boolean(t.mrr && t.mrr > 0);
+    const rawShip = visibleTrees.filter((t) => !isRev(t));
+    const rawRev = visibleTrees.filter((t) => isRev(t));
+
+    // Discrete 1-to-1 Grid Mapping: Ascending Order (Small to Large, Front to Back)
+    const sortedShip = sortTreesByGrowthTier(rawShip);
+    const sortedRev = sortTreesByGrowthTier(rawRev);
+
+    const placedTrees: TreeData[] = [];
+    const coords: Array<{ gridX: number; gridZ: number }> = [];
+
+    sortedShip.forEach((tree, idx) => {
+      const coord = getTreeSlotCoordinate(idx, "shipping", level);
+      placedTrees.push({ ...tree, gridX: coord.gridX, gridZ: coord.gridZ });
+      coords.push(coord);
+    });
+
+    sortedRev.forEach((tree, idx) => {
+      const coord = getTreeSlotCoordinate(idx, "revenue", level);
+      placedTrees.push({ ...tree, gridX: coord.gridX, gridZ: coord.gridZ });
+      coords.push(coord);
+    });
+
+    return { safeTrees: placedTrees, treeCoords: coords };
+  }, [visibleTrees, level]);
 
   return (
-    <div className={`relative ${className} select-none overflow-hidden transition-colors duration-700`}>
+    <div className={`relative ${className}`}>
       <Canvas
         orthographic
-        camera={{ position: [14.5, 9.0, 14.5], zoom: targetZoom, near: -100, far: 200 }}
+        camera={{
+          position: [18, 14, 18],
+          zoom: targetZoom,
+          near: -100,
+          far: 1000,
+        }}
         gl={{
           antialias: true,
-          preserveDrawingBuffer: true,
           powerPreference: "high-performance",
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.1,
         }}
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          <IsometricCameraRig enabled={interactive} targetZoom={targetZoom} />
+          <OrbitControls
+            enableRotate={interactive}
+            enablePan={interactive}
+            enableZoom={interactive}
+            maxPolarAngle={Math.PI / 2.05}
+            minPolarAngle={Math.PI / 4}
+          />
 
-          {/* 1. Studio Lighting Environment with Organic Day/Night Cycle */}
-          <ambientLight intensity={ambientIntensity} color={ambientColor} />
+          {/* 1. Dynamic Natural Lighting (Matched to Grid View) */}
+          <ambientLight intensity={1.15} color="#ffffff" />
 
-          {/* Directional Key Sun Light */}
+          {/* Directional Sunlight with Soft Shadows */}
           <directionalLight
-            position={[10, 16, 8]}
-            intensity={sunIntensity}
-            color={sunColor}
+            position={[14, 22, 10]}
+            intensity={1.35}
+            color="#ffffff"
             castShadow
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
+            shadow-camera-near={0.5}
+            shadow-camera-far={45}
+            shadow-camera-left={-shadowFrustum}
+            shadow-camera-right={shadowFrustum}
+            shadow-camera-top={shadowFrustum}
+            shadow-camera-bottom={-shadowFrustum}
+            shadow-bias={-0.0005}
           />
 
-          {/* Soft Rim Light */}
+          {/* Soft Secondary Mint Fill Light */}
           <directionalLight
-            position={[-10, 10, -10]}
-            intensity={rimIntensity}
-            color={rimColor}
+            position={[-12, 12, -10]}
+            intensity={0.4}
+            color="#a7f3d0"
           />
 
-          {/* 2. Soft Studio Contact Shadows */}
+          {/* 2. Soft Studio Contact Shadows (Zero Jitter, Baked frames={1}) */}
           <ContactShadows
+            frames={1}
             position={[0, -0.48, 0]}
-            opacity={drought ? 0.25 : isNight ? 0.6 : 0.45}
+            opacity={0.35}
             scale={shadowScale}
-            blur={2.4}
+            blur={2.2}
             far={6}
           />
 
-          {/* 3. 1:1 Symmetrical Square Island Base */}
-          <Island level={level} drought={drought} />
+          {/* 3. 1:1 Symmetrical Square Island Base (With Aligned Grid Lines) */}
+          <Island
+            level={level}
+            treeCount={visibleTrees.length}
+            treeCoords={treeCoords}
+            drought={drought}
+            showGrid={showGrid}
+            showBoundaries={showBoundaries}
+          />
 
-          {/* 4. 3D Trees (Shipping & Revenue) */}
-          {trees.map((tree) => (
+          {/* 4. 3D Trees (Shipping & Revenue with Camera-Z Depth Sorting) */}
+          {safeTrees.map((tree) => (
             <IslandTree
               key={tree.id}
               tree={tree}
               isSelected={selectedTreeId === tree.id}
-              onSelect={onSelectTree}
               drought={drought}
+              onSelect={onSelectTree}
             />
           ))}
 
-          {/* 5. Milestone Campsite Props & Wildlife */}
+          {/* 5. Living Campsite & Milestones */}
           <Campsite
-            streakDays={streakDays}
             level={level}
-            streakShields={streakShields}
+            treeCount={visibleTrees.length}
+            streakDays={streakDays}
             timeOfDay={timeOfDay}
-            onClickCampfire={onClickCampfire}
-            onClickTent={onClickTent}
-            onClickCabin={onClickCabin}
             drought={drought}
+            onClickCampfire={onClickCampfire}
+            onClickCabin={onClickCabin}
+            onClickTent={onClickTent}
           />
 
-          {/* 6. Dynamic Weather & Particles */}
+          {/* 6. Dynamic Atmospheric Weather Systems */}
           <Weather
             drought={drought}
             isRaining={isRaining}
-            hasRevenue={hasRevenueTrees}
+            hasRevenue={hasRevenue}
           />
         </Suspense>
       </Canvas>

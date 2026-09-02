@@ -1,37 +1,37 @@
 "use client";
 
 import React from "react";
-import { LandingNavbar } from "@/components/landing/LandingNavbar";
-import { LandingHero } from "@/components/landing/LandingHero";
-import { LandingRitual } from "@/components/landing/LandingRitual";
-import { LandingShowcase } from "@/components/landing/LandingShowcase";
-import { LandingBento } from "@/components/landing/LandingBento";
-import { LandingFaq } from "@/components/landing/LandingFaq";
-import { LandingFooter } from "@/components/landing/LandingFooter";
+import { Navbar } from "@/components/landing/Navbar";
+import { Hero } from "@/components/landing/Hero";
+import { HowItWorks } from "@/components/landing/HowItWorks";
+import { Groves } from "@/components/landing/Groves";
+import { Features } from "@/components/landing/Features";
+import { Faq } from "@/components/landing/Faq";
+import { Footer } from "@/components/landing/Footer";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white relative overflow-y-auto overflow-x-hidden">
       {/* 1. Universal Double-Bezel Navbar */}
-      <LandingNavbar />
+      <Navbar />
 
       {/* 2. Hero Section & Instant Preview */}
-      <LandingHero />
+      <Hero />
 
-      {/* 3. The 3-Step Feature Ritual */}
-      <LandingRitual />
+      {/* 3. The 3-Step How It Works Guide */}
+      <HowItWorks />
 
-      {/* 4. Dual Module Showcase */}
-      <LandingShowcase />
+      {/* 4. Code & Cash Groves Showcase */}
+      <Groves />
 
-      {/* 5. Interactive Bento Showcase */}
-      <LandingBento />
+      {/* 5. Interactive Features Grid */}
+      <Features />
 
       {/* 6. Frequently Asked Questions */}
-      <LandingFaq />
+      <Faq />
 
       {/* 7. Bottom CTA & Footer */}
-      <LandingFooter />
+      <Footer />
     </div>
   );
 }

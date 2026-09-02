@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/Card";
-import { LandingSectionHeader } from "./LandingSectionHeader";
+import { SectionHeader } from "./SectionHeader";
 
 const FAQ_ITEMS = [
   {
@@ -18,7 +18,7 @@ const FAQ_ITEMS = [
   {
     question: "How does Stripe or Lemon Squeezy integration work?",
     answer:
-      "Paste your unique webhook URL into Stripe, Lemon Squeezy, or Polar. When someone buys a subscription, a golden revenue oak sprouts automatically on your island.",
+      "Paste your unique webhook URL into Stripe, Lemon Squeezy, or Polar. When someone buys a subscription, a golden cash pine sprouts automatically on your island.",
   },
   {
     question: "What happens if I take a weekend or rest day off?",
@@ -27,14 +27,14 @@ const FAQ_ITEMS = [
   },
 ];
 
-export function LandingFaq() {
+export function Faq() {
   return (
     <section id="faq" className="py-20 bg-[#e6e1d7] border-t border-stone-300/80 font-sans">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <LandingSectionHeader
+        <SectionHeader
           badge="FAQ"
           title="Frequently Asked Questions"
-          description="Everything you need to know about automated diorama tracking, privacy, and rest shields."
+          description="Everything you need to know about automated island tracking, privacy, and rest shields."
           className="mb-12"
         />
 
@@ -54,3 +54,5 @@ export function LandingFaq() {
     </section>
   );
 }
+
+export { Faq as LandingFaq };

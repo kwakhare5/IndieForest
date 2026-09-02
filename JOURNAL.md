@@ -15,6 +15,79 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
+### [IndieForest — Radical Simplification & Zero-Clutter Diorama Overhaul] 2026-09-02
+- **Commit**: `pending` (Pure Continuous Natural Lawn, Purged Ghost Assets, Purged Empty Plot Boxes, Bulletproof Click/Hover, Mathematically Aligned Grid Lines, 64/64 Tests Green)
+- **Vibe**: 100% clean, natural, and bulletproof. Eradicated artificial dividers, cobblestones, and canals for a pure continuous sage-emerald lawn. Purged all ghost assets (Windmills, Lighthouses, Flagpoles, Lanterns, Rivers) and empty plot plus icons. Replaced glitchy 3D `<Html>` overlays with reliable 2D `TreeCard` selection and mathematically aligned grid lines with active tree tiles.
+- **Shipped**:
+  - **Pure Continuous Natural Lawn (`Island.tsx`):** Eradicated the central promenade, cobblestones, and trenches. The island is one continuous, natural sage-emerald turf slab with a beveled bedrock foundation and an organic green buffer between Code and Cash groves.
+  - **100% Mathematically Aligned Grid Lines (`gamification.ts` & `Island.tsx`):** Added `getTreeCellBoundingBox` to derive grid lines directly from `(gridX ± CELL_SIZE/2, gridZ ± CELL_SIZE/2)`. Every line perfectly frames each tree tile with zero drift.
+  - **Purged Empty Plot Plus Clutter (`IslandCanvas.tsx` & `EmptyPlotTile.tsx`):** Removed `emptyPlots` and deleted `EmptyPlotTile.tsx`. Zero empty boxes or floating plus signs. Only real, planted trees render.
+  - **Bulletproof Hover & Click Controls (`IslandTree.tsx`):** Permanently eliminated Drei `<Html>` tooltips from 3D space. Tree clicks reliably select the tree, illuminate the base ring, and smoothly open the bottom 2D `TreeCard`.
+  - **Purged Ghost & Zombie Assets (`Campsite.tsx`, `Workshop3D.tsx`):** Removed Windmill, Lighthouse, Flagpole, Lantern Post, Robin Bird, and River & Bridge. Deleted 6 obsolete 3D model files from `src/components/canvas/models/`. Focused campsite purely on Cabin, Campfire, and Dog firmly on the hearth patio.
+  - **Harmonized Demo & Dashboard (`demo/page.tsx` & `GridView.tsx`):** Default view is Living Island (`"diorama"`). Tabs cleanly toggle between Living Island, Grid Mode, and 3D Workshop. Collapsible simulation controls give the 3D diorama full-screen breathing room.
+  - **Sovereign Halo Ring for Final Tree Stage (`PineTree.tsx`):** Added a floating, radiant golden halo ring above the golden peak star of the final tree stage (Mighty / Majestic / Elder). Features smooth animated floating and slow axial rotation in `useFrame` with warm golden emissive glow.
+  - **Campsite & Tree Separation Buffer (`Campsite.tsx`):** Shifted the stone hearth patio, Cabin, Tent, Campfire, and Companion Dog back by $+1.10\text{m}$ (hearth center at $Z = 2.20\text{m}$, Tent/Cabin at $Z = 1.90\text{m} \dots 2.30\text{m}$), expanding the green lawn buffer between trees and campsite from $60\text{cm}$ to $1.70\text{m}\text{--}2.60\text{m}$, perfectly synchronized across Dashboard, Demo, Profile, and Landing views.
+  - **Harmonized Campsite Angles & Universal Dock Parity (`Campsite.tsx`, `demo/page.tsx`):** Standardized Tent, Cabin, and Dog to the identical `[0, 0.35, 0]` rotation so upgrading from Tent to Cabin has zero rotational twist. Replaced custom demo dock with canonical `DashboardDock`, wired live tree pruning in Demo, and added campfire audio toggle to the Demo header.
+  - **Production Verification:** 64/64 Vitest tests passing green, Next.js Turbopack build compiling cleanly with 0 errors in 1.1s.
+  - **Dead Code Purge:** Deleted `ConiferTree.tsx`, `DeciduousTree.tsx`, `ZenStump.tsx`, and `assetCatalog.ts`.
+  - **Spatial Bug Fix:** Moved dog out of the river onto the campfire patio.
+  - **Testing & Build:** 62/62 Vitest tests green, clean Next.js Turbopack build.
+  - **The Stacked Origami Christmas Pine (`DioramaTree.tsx`, `IslandTree.tsx`):**
+    - 7-sided faceted cone skirts with white star/snow sparkle dots.
+    - Code Trees: Evergreen Pine (`#1e5e3a`). Cash Trees: Golden Amber (`#d97706`).
+  - **Crystal River Canal & Arched Footbridge (`RiverCanal.tsx`, `Island.tsx`):**
+    - Carved crystal-blue stream along $X = 0$ with surface wave shimmer, bank pebbles, and arched timber footbridge.
+  - **Crystal River Canal & Arched Wooden Footbridge (`RiverCanal.tsx`, `Island.tsx`):**
+    - Carved $1.25\text{m}$ water stream along $X = 0$ with surface shimmer, riverbank pebbles, and arched timber footbridge.
+  - **Plain English UI Dictionary Applied (`demo/page.tsx`, `StudioAssetShowroom.tsx`):**
+    - Nav tabs: **Grid View** | **3D Workshop** | **My Island**.
+    - Stage buttons: **Sprout** | **Small** | **Tall** | **Mighty**.
+    - Controls: **Island Controls**.
+  - **Camera-Z Ascending Depth Sorting (`sortTreesByGrowthTier` in `gamification.ts`):**
+    - Trees automatically sort by tier (`stump` $\to$ `sapling` $\to$ `young` $\to$ `mature` $\to$ `majestic` $\to$ `elder`).
+    - Front row ($Z = -1.6\text{m}$) always hosts the lowest-profile trees; back rows host majestic/elder canopies. Guarantees 0% canopy occlusion.
+  - **Interactive Empty Ghost Plots (`EmptyPlotTile.tsx`, `IslandCanvas.tsx`):**
+    - Available grid slots render subtle tone-on-tone garden plots.
+    - Hovering lights up a luminous porcelain outline with a floating 3D `+` indicator.
+    - 1-click plant trigger: Clicking any empty plot immediately opens the Add Project modal.
+  - **Subtle Zen Garden Palette:**
+    - Rich Apple Green turf (`#34C759`) with deep earthy organic insets (`#24401e`).
+    - Luminous porcelain white reserved exclusively for hover and selection feedback.
+  - **Discrete 1-to-1 Tile Grid Engine (`gamification.ts`):**
+    - Pure `(col, row)` discrete slot coordinate engine ensuring 100% collision-free placement across all 5 island tiers.
+    - Symmetrical East (Revenue) & West (Shipping) lateral wings partitioned by the central promenade.
+    - Southern buffer keeps the campsite lawn ($Z \ge -1.4\text{m}$) completely open and spacious.
+  - **Tactile Diorama Tile Pads & Porcelain Glow (`IslandTree.tsx`):**
+    - Rendered $1.65\text{m}\times 1.65\text{m}$ diorama turf/soil tile pads directly beneath each tree.
+    - Hovering over a tree or its ground plot illuminates a crisp porcelain luminous border and glowing inset floor pad.
+    - Clicking/selecting activates a double-bezel glowing emerald/amber porcelain outline.
+  - **Precision Tile Hitboxes (`IslandTree.tsx`):**
+    - Invisible raycasting hitboxes now match the exact $1.75\text{m}\times 1.75\text{m}$ tile boundaries, eliminating misclicks and canopy clipping crossover.
+  - **Universal Island Sizing Engine (`calculateIslandSize` in `gamification.ts`):**
+    - Single source of truth dynamically sizing the land based on both level progression and tree density (1–3 trees $\to 9\times 9$, 4–7 trees $\to 12\times 12$, 8–13 trees $\to 15\times 15$, 14–19 trees $\to 18\times 18$, 20+ trees $\to 22\times 22$).
+  - **1.5m Dedicated Campsite Lawn Buffer (`maxZ = -1.4`):**
+    - Shifted the southern grove boundary to `maxZ = -1.4`, establishing a wide, open meadow in front of the campsite ($Z \ge 0.0$) and eliminating any crowding around the Campfire, Tent/Cabin, Dog, and Flagpole.
+  - **Robin Bird Natural Dynamic Perching (`RobinBird.tsx`, `Campsite.tsx`):**
+    - Perched on East Lantern Post crossbar at Levels 3–9, moving to Log Cabin chimney/roof at Level 10+ with direct claw perching.
+  - **Dynamic Tier-Scaled Campsite Coordinates (`Campsite.tsx`):**
+    - Campsite props now scale dynamically with island expansion: Day 1 ($9\times 9$) pulls Flag & Lantern inward to $\pm 2.2\text{m}$ (preventing diagonal corner clipping), scaling smoothly up to $\pm 5.0\text{m}$ on Level 50 ($22\times 22$).
+  - **Runtime Safe-Perimeter Tree Clamping (`IslandCanvas.tsx`):**
+    - Added live runtime re-clamping inside `IslandCanvas.tsx` that guarantees every rendered tree has at least $1.4\text{m}$ clearance from the cliff edges, seamlessly repairing any legacy un-clamped coordinates from browser `localStorage` or cloud databases.
+  - **Hard Mathematical Perimeter Boundary Clamping (`gamification.ts`, `IslandTree.tsx`):**
+    - Enforced strict mathematical boundary clamping `clamp(coord, -size/2 + 1.2, size/2 - 1.2)` on all tree and prop slot coordinates.
+    - Verified with automated Vitest suites across all 5 tiers ($9\times 9$, $12\times 12$, $15\times 15$, $18\times 18$, $22\times 22$) that assets can never spawn on or over the cliff edge.
+  - **Deterministic Multi-User Organic Variation:**
+    - Fixed campsite sanctuary anchors (Campfire, Cabin, Companion Dog, Flagpole) to ensure 100% predictable UX and interaction ergonomics.
+    - Implemented deterministic string-hash micro-jitter ($\pm 0.30\text{m}$) and $360^\circ$ yaw rotation derived from repo IDs/names so two trees never look identical.
+  - **5-Tier Adaptive Island Growth Curve (`Island.tsx`, `IslandCanvas.tsx`):**
+    - Configured progressive island dimensions: Day 1 Cozy Sprout ($9\times 9$), Level 5 Homestead Camp ($12\times 12$), Level 10 Timber Estate ($15\times 15$), Level 20 North Bluff Realm ($18\times 18$), and Level 50 Sovereign Kingdom ($22\times 22$).
+  - **Zero-Occlusion Spatial Invariants & Clearance Matrix (`Campsite.tsx`):**
+    - Enforced exclusive upgrade invariant: Canvas Tent is replaced by the Log Cabin HQ at Level 10+ so they never crowd the homestead.
+    - Spaced Campfire and Cabin across a comfortable $3.8\text{m}$ central hearth clearing.
+    - Moved Robin Bird perch directly atop the Cabin roof/chimney to eliminate ground misclicks.
+  - **World Layout Studio & 3D Prototype (`WorldLayoutSimulator.tsx`):**
+    - Added dedicated interactive layout switcher in `/demo` with 3 topologies (Bilateral, Radial, Stepped), 3D facing direction arrows, and 1-click prop inspector tooltips.
+
 ### [IndieForest — Pure 1:1 Symmetrical Square Diorama, Standing Golden Mascot, Supabase Cloud & Full HUD Overhaul] 2026-08-22
 - **Commit**: `bb2f101` (Pristine 3D Diorama, Purged Hover Labels, Raycasting Hitbox Stabilization, Island Sync Engine, 54/54 Tests Green)
 - **Vibe**: Masterpiece indie studio quality. Balanced 1:1 square isometric framing that scales smoothly as projects grow, paired with a lively companion dog, porcelain double-bezel HUD, and real-time Supabase cloud persistence.

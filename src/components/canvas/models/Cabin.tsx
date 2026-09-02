@@ -4,17 +4,17 @@ import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-interface LogCabinProps {
+export interface CabinProps {
   isNight?: boolean;
   drought?: boolean;
   wireframe?: boolean;
 }
 
-export function LogCabin({
+export function Cabin({
   isNight = false,
   drought = false,
   wireframe = false,
-}: LogCabinProps) {
+}: CabinProps) {
   const smokeRef = useRef<THREE.Group>(null);
   const cabinWood = drought ? "#57534e" : "#78350f";
   const trimWood = drought ? "#44403c" : "#92400e";
@@ -126,3 +126,5 @@ export function LogCabin({
     </group>
   );
 }
+
+export { Cabin as LogCabin };

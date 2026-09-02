@@ -75,23 +75,26 @@ npm run lint       # ESLint + TypeScript check
 
 ## 7. SESSION RESUME
 
-- **Maximum Performance & Runtime Optimization:**
-  - Dynamic SSR-free 3D WebGL bundle chunking (`next/dynamic`) across landing, dashboard, and public profile.
-  - Zero-GC vector lerp (`scale.set`) and rest-state animation short-circuiting.
-  - Web Audio memory disconnection on sound end (`osc.onended`).
-  - Compiler package tree-shaking for Three.js and Lucide in `next.config.ts`.
-- **Button Polish, Fake Data Purge & Zero-Jump Height Locking:**
-  - Resolved `[+] + Add Project` duplicate icon bug and styled adaptive submit buttons.
-  - Deleted all fabricated demo trees and fake metrics, replacing with authentic starter trees.
-  - Fixed-height slot containers in `AddProjectModal`, `SettingsModal`, `DashboardControls`, `DashboardNav`, and `ShareModal` so popups never bounce or jump during tab switches.
-- **Production Deployment & GitHub Sync:**
-  - 100% test-driven domain core (53/53 Vitest passing), 0 ESLint warnings, Turbopack build green.
-  - Live deployed and synced to Vercel production: https://indieforest.vercel.app.
-  - All commits synced to GitHub `main` (`ee105ac`).
+- **Current State & Accomplishments:**
+  - **Pure Continuous Natural Lawn (`Island.tsx`):** Eradicated the central promenade, cobblestones, and trenches. The island is now one continuous, seamless sage-emerald lawn on an elevated beveled bedrock foundation, with a natural open green buffer between Code and Cash groves.
+  - **100% Mathematically Aligned Grid Lines (`gamification.ts` & `Island.tsx`):** Added `getTreeCellBoundingBox` to derive grid lines directly from `(gridX ± CELL_SIZE/2, gridZ ± CELL_SIZE/2)`. In Grid Mode, every visible line perfectly frames its tree tile with zero offset drift.
+  - **Purged Empty Plot Plus Clutter (`IslandCanvas.tsx` & `EmptyPlotTile.tsx`):** Deleted `emptyPlots` generation and purged `EmptyPlotTile.tsx`. Zero empty boxes and zero floating plus signs appear. Only real, active trees render.
+  - **Bulletproof Hover & Click Controls (`IslandTree.tsx`):** Removed 3D Drei `<Html>` floating badges from canvas space. Tree hover and clicking are ultra-responsive with dedicated cylindrical raycast hitboxes, illuminating the base ring and opening the bottom 2D `TreeCard`.
+  - **Purged Ghost & Zombie Assets (`Campsite.tsx`, `Workshop3D.tsx`):** Removed Windmill, Lighthouse, Flagpole, Lantern Post, Robin Bird, and River & Bridge. Deleted all 6 dead 3D model files from `src/components/canvas/models/`. Focused campsite purely on Cabin, Campfire, and Dog firmly on the hearth patio (0% floating).
+  - **Sovereign Halo Ring for Final Tree Stage (`PineTree.tsx`):** Added a floating, radiant golden halo ring above the golden peak star of the final tree stage (Mighty / Majestic / Elder). Features smooth animated floating and slow axial rotation in `useFrame` with warm golden emissive glow.
+  - **Harmonized Campsite Angles & Universal Dock Parity (`Campsite.tsx`, `demo/page.tsx`):** Standardized Tent, Cabin, and Dog to the identical `[0, 0.35, 0]` rotation so upgrading from Tent to Cabin has zero rotational twist. Replaced custom demo dock with canonical `DashboardDock`, wired live tree pruning in Demo, and added campfire audio toggle to the Demo header.
+  - **Campsite & Tree Separation Buffer (`Campsite.tsx`):** Shifted the stone hearth patio, Cabin, Tent, Campfire, and Companion Dog back by $+1.10\text{m}$ (hearth center at $Z = 2.20\text{m}$, Tent/Cabin at $Z = 1.90\text{m} \dots 2.30\text{m}$), expanding the green lawn buffer between trees and campsite from $60\text{cm}$ to $1.70\text{m}\text{--}2.60\text{m}$, perfectly synchronized across Dashboard, Demo, Profile, and Landing views.
+  - **Generous 1.55m Perimeter Lawn Margin Calibration (`gamification.ts`, `Island.tsx`, `Campsite.tsx`):** Upgraded Demo island size to $18.5\text{m}$, expanding the side lawn buffer from $0.80\text{m}$ to a generous $1.55\text{m}$ ($+75\text{cm}$) and the front buffer to $3.60\text{m}$, giving trees comfortable breathing room from the cliff drops without creating an empty wasteland.
+  - **100% Demo & Dashboard UI Parity (`DashboardNav.tsx`, `dashboard/page.tsx`):** Added the unified `[ Living Island | Grid Mode ]` switcher directly into the Personal Dashboard header, standardized the background to Warm Studio Linen (`#ece7de`), and enabled modular `GridView` switching with live user trees.
+  - **Subtle Flush Grass Tile Patches (`IslandTree.tsx`):** Purged all 3D raised curbs, corner pegs, and boxy borders. Installed clean flat grass patches ($1.55\text{m} \times 1.55\text{m}$) resting flush on the lawn with a whisper of 10–15% green tone shift (subtle deeper sage-emerald `#529968` for Code, warm sunlit olive-emerald `#689e57` for Cash) that merges seamlessly into the continuous island turf.
+  - **Ascending Tree Arrangement (`IslandCanvas.tsx`, `gamification.ts`, `demo/page.tsx`):** Arranged all trees strictly from small to large (Stump $\to$ Sprout $\to$ Young $\to$ Mature $\to$ Majestic/Elder). Small trees occupy the front row closest to the camera, stepping up to majestic pines in the back rows, eliminating visual occlusion and creating an amphitheater layout where all trees are visible.
+  - **Harmonized Demo & Dashboard UI (`demo/page.tsx` & `GridView.tsx`):** Default view is Living Island (`"diorama"`). Top tabs cleanly switch between Living Island, Grid Mode, and 3D Workshop. Collapsible simulation controls give the 3D diorama full-screen breathing room.
+  - **3D Workshop Showroom Overhaul (`Workshop3D.tsx`):** Added all 5 tree growth stages (**0. Stump**, **I. Sprout**, **II. Young**, **III. Mature**, **IV. Mighty**), integrated all 6 canonical assets (**Code Pine**, **Cash Pine**, **Canvas Tent**, **Log Cabin**, **Campfire**, **Companion Dog**), added Drought Soil toggle alongside Lighting & 360° Turntable rotation, and built live interactive spec callouts with Roman numeral tiers.
+  - **Production Verification:** 64/64 Vitest tests passing green, Next.js Turbopack build compiling cleanly with 0 errors in 1.3s.
 
 **Immediate next task:**
 
-- Ready for user's next product feature or milestone.
+- Review the clean natural lawn, aligned grid mode, and responsive tree clicking with the user in the browser.
 
 **Open blockers:**
 

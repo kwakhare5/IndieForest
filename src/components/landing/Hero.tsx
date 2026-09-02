@@ -27,7 +27,7 @@ const IslandCanvas = dynamic(
       <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] rounded-[2rem] gap-2">
         <div className="w-6 h-6 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
         <span className="text-[11px] font-bold text-stone-500 font-sans">
-          Loading 3D Diorama...
+          Loading 3D Island...
         </span>
       </div>
     ),
@@ -49,7 +49,7 @@ const INITIAL_STARTER_TREES: TreeData[] = [
   },
 ];
 
-export function LandingHero() {
+export function Hero() {
   const { isLoaded, isSignedIn } = useUser();
   const mergeCloudData = useForestStore((s) => s.mergeCloudData);
 
@@ -118,7 +118,7 @@ export function LandingHero() {
         {/* Left Hero Copy */}
         <div className="lg:col-span-6 space-y-6 text-left">
           <Badge variant="emerald" dot size="md" className="mb-2 shadow-2xs">
-            Automated 3D Shipping Diorama
+            Living 3D Builder Island
           </Badge>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-stone-950 leading-[1.06] tracking-tight font-editorial">
@@ -303,3 +303,5 @@ export function LandingHero() {
     </section>
   );
 }
+
+export { Hero as LandingHero };

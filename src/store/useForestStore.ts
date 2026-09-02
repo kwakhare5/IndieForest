@@ -205,7 +205,7 @@ export const useForestStore = create<ForestState>()(
             (t.type || (t.mrr && t.mrr > 0 ? "revenue" : "shipping")) ===
             treeType
         ).length;
-        const coord = getTreeSlotCoordinate(countInGrove, treeType);
+        const coord = getTreeSlotCoordinate(countInGrove, treeType, state.level);
 
         const newTree: TreeData = {
           id: `tree-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,

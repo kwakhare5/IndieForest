@@ -84,18 +84,18 @@ export function OverviewModal({
             <span className="text-[10px] text-stone-400 font-medium block">Code Grove</span>
             <div className="text-base font-bold text-emerald-800 font-pixel flex items-center gap-1">
               <Trees className="w-3.5 h-3.5 text-emerald-600" />
-              {shippingTrees.length} REPOS
+              {shippingTrees.length} PINES
             </div>
             <span className="text-[10px] text-stone-400">{totalCommits} commits</span>
           </div>
 
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
-            <span className="text-[10px] text-stone-400 font-medium block">Revenue Grove</span>
+            <span className="text-[10px] text-stone-400 font-medium block">Cash Grove</span>
             <div className="text-base font-bold text-amber-700 font-pixel flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
               ${totalMrr}/MO
             </div>
-            <span className="text-[10px] text-stone-400">{revenueTrees.length} oaks</span>
+            <span className="text-[10px] text-stone-400">{revenueTrees.length} cash trees</span>
           </div>
 
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">

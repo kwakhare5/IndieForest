@@ -8,7 +8,7 @@ import { Trees } from "lucide-react";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 
-export function LandingFooter() {
+export function Footer() {
   const { isLoaded, isSignedIn } = useUser();
 
   return (
@@ -79,3 +79,5 @@ export function LandingFooter() {
     </section>
   );
 }
+
+export { Footer as LandingFooter };

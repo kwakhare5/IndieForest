@@ -9,6 +9,12 @@ import {
   calculateForestHealth,
   getLocalDateString,
   getTreeSlotCoordinate,
+  calculateIslandSize,
+  getTreeYawRotation,
+  sortTreesByGrowthTier,
+  getGroveCapacity,
+  getGroveTileBounds,
+  CELL_SIZE,
 } from "./gamification";
 
 describe("calculateTreeTier", () => {
@@ -130,29 +136,105 @@ describe("getLocalDateString & getTreeSlotCoordinate", () => {
     expect(getLocalDateString(d)).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
-  it("calculates dual-grove slot coordinates for shipping and revenue", () => {
-    const ship0 = getTreeSlotCoordinate(0, "shipping");
-    expect(ship0.gridX).toBeLessThan(0); // West pasture
-    expect(typeof ship0.gridZ).toBe("number");
+  it("calculates discrete 1-to-1 tile grid slot coordinates without collision or clipping", () => {
+    const tiers = [
+      { level: 1, size: 12.0 },
+      { level: 5, size: 15.0 },
+      { level: 10, size: 18.5 },
+      { level: 30, size: 21.5 },
+      { level: 50, size: 25.0 },
+    ];
 
-    const rev0 = getTreeSlotCoordinate(0, "revenue");
-    expect(rev0.gridX).toBeGreaterThan(0); // East pasture
-    expect(typeof rev0.gridZ).toBe("number");
+    for (const { level } of tiers) {
+      const treeCount = level >= 50 ? 24 : level >= 20 ? 16 : level >= 10 ? 10 : level >= 5 ? 6 : 4;
+      const actualIslandSize = calculateIslandSize(level, treeCount);
+      const maxSafeRadius = actualIslandSize / 2 - 0.4;
+      const shippingCoords: Array<{ gridX: number; gridZ: number }> = [];
+      const revenueCoords: Array<{ gridX: number; gridZ: number }> = [];
 
-    // Clear of campsite on South-West and pond on South-East
-    const ship3 = getTreeSlotCoordinate(3, "shipping");
-    expect(ship3.gridX).toBeLessThan(0);
-    const rev3 = getTreeSlotCoordinate(3, "revenue");
-    expect(rev3.gridX).toBeGreaterThan(0);
+      for (let i = 0; i < treeCount; i++) {
+        const ship = getTreeSlotCoordinate(i, "shipping", level, undefined, treeCount);
+        const rev = getTreeSlotCoordinate(i, "revenue", level, undefined, treeCount);
 
-    // Algorithmic expansion for large forests (level 20+)
-    const ship10 = getTreeSlotCoordinate(10, "shipping");
-    expect(ship10.gridX).toBeLessThan(0);
-    expect(typeof ship10.gridZ).toBe("number");
+        // West half is negative X, East half is positive X
+        expect(ship.gridX).toBeLessThan(-1.0);
+        expect(rev.gridX).toBeGreaterThan(1.0);
 
-    const rev10 = getTreeSlotCoordinate(10, "revenue");
-    expect(rev10.gridX).toBeGreaterThan(0);
-    expect(typeof rev10.gridZ).toBe("number");
+        // Guarantees open lawn for campsite in front (Z >= 0)
+        expect(ship.gridZ).toBeLessThanOrEqual(-1.4);
+        expect(rev.gridZ).toBeLessThanOrEqual(-1.4);
+
+        // Crucial: Must NEVER exceed safe radius
+        expect(Math.abs(ship.gridX)).toBeLessThanOrEqual(maxSafeRadius + 0.1);
+        expect(Math.abs(ship.gridZ)).toBeLessThanOrEqual(maxSafeRadius + 0.1);
+        expect(Math.abs(rev.gridX)).toBeLessThanOrEqual(maxSafeRadius + 0.1);
+        expect(Math.abs(rev.gridZ)).toBeLessThanOrEqual(maxSafeRadius + 0.1);
+
+        shippingCoords.push(ship);
+        revenueCoords.push(rev);
+      }
+
+      // Discrete Zero-Collision Guarantee: All pairs within a grove have >= 1.8m distance
+      for (let a = 0; a < shippingCoords.length; a++) {
+        for (let b = a + 1; b < shippingCoords.length; b++) {
+          const distShip = Math.hypot(
+            shippingCoords[a].gridX - shippingCoords[b].gridX,
+            shippingCoords[a].gridZ - shippingCoords[b].gridZ
+          );
+          expect(distShip).toBeGreaterThanOrEqual(1.5);
+
+          const distRev = Math.hypot(
+            revenueCoords[a].gridX - revenueCoords[b].gridX,
+            revenueCoords[a].gridZ - revenueCoords[b].gridZ
+          );
+          expect(distRev).toBeGreaterThanOrEqual(1.5);
+        }
+      }
+    }
+  });
+
+  it("guarantees immutable slot coordinates regardless of total tree count", () => {
+    // Slot 0 coordinates when player has 1 tree vs 20 trees must be 100% identical!
+    const slot0_with1Tree = getTreeSlotCoordinate(0, "shipping", 1, undefined, 1);
+    const slot0_with20Trees = getTreeSlotCoordinate(0, "shipping", 1, undefined, 20);
+
+    expect(slot0_with1Tree.gridX).toBe(slot0_with20Trees.gridX);
+    expect(slot0_with1Tree.gridZ).toBe(slot0_with20Trees.gridZ);
+
+    // Exact expected coordinates based on CELL_SIZE = 1.65
+    // West Slot 0: -(1.10 + 0.5 * 1.65) = -1.925
+    // Z: -0.70 - 0.5 * 1.65 = -1.525
+    expect(slot0_with1Tree.gridX).toBe(-1.925);
+    expect(slot0_with1Tree.gridZ).toBe(-1.525);
+
+    // East Slot 0: +(1.10 + 0.5 * 1.65) = +1.925
+    const slot0_revenue = getTreeSlotCoordinate(0, "revenue", 1);
+    expect(slot0_revenue.gridX).toBe(1.925);
+    expect(slot0_revenue.gridZ).toBe(-1.525);
+  });
+
+  it("computes precision grove tile bounds matching CELL_SIZE = 1.65", () => {
+    const bounds = getGroveTileBounds(1, 0);
+    expect(bounds.cellSize).toBe(CELL_SIZE);
+    expect(bounds.cols).toBe(2);
+    expect(bounds.rows).toBe(2);
+    expect(bounds.west.maxX).toBe(-1.10);
+    expect(bounds.west.minX).toBeCloseTo(-1.10 - 2 * 1.65);
+    expect(bounds.east.minX).toBe(1.10);
+    expect(bounds.east.maxX).toBeCloseTo(1.10 + 2 * 1.65);
+    expect(bounds.west.maxZ).toBe(-0.70);
+    expect(bounds.west.minZ).toBeCloseTo(-0.70 - 2 * 1.65);
+  });
+
+  it("produces deterministic yaw angles for natural organic rotation", () => {
+    const yawA1 = getTreeYawRotation("repo-alpha");
+    const yawA2 = getTreeYawRotation("repo-alpha");
+    const yawB = getTreeYawRotation("repo-beta");
+
+    expect(yawA1).toEqual(yawA2);
+    expect(yawA1).not.toEqual(yawB);
+    expect(yawA1).toBeGreaterThanOrEqual(0);
+    expect(yawA1).toBeLessThanOrEqual(Math.PI * 2);
   });
 
   it("handles multi-level leap calculations properly in evaluateLevelProgress", () => {
@@ -167,5 +249,91 @@ describe("getLocalDateString & getTreeSlotCoordinate", () => {
     expect(res.didLevelUp).toBe(true);
   });
 });
+
+describe("calculateTreeTier (5-Tier Progression + Stump)", () => {
+  it("determines shipping tree tiers accurately", () => {
+    expect(calculateTreeTier("shipping", 3)).toBe("sapling");
+    expect(calculateTreeTier("shipping", 12)).toBe("young");
+    expect(calculateTreeTier("shipping", 35)).toBe("mature");
+    expect(calculateTreeTier("shipping", 80)).toBe("majestic");
+    expect(calculateTreeTier("shipping", 200)).toBe("elder");
+  });
+
+  it("determines revenue tree tiers accurately", () => {
+    expect(calculateTreeTier("revenue", 20)).toBe("sapling");
+    expect(calculateTreeTier("revenue", 150)).toBe("young");
+    expect(calculateTreeTier("revenue", 800)).toBe("mature");
+    expect(calculateTreeTier("revenue", 2500)).toBe("majestic");
+    expect(calculateTreeTier("revenue", 6000)).toBe("elder");
+  });
+
+  it("handles archived and churned states as zen stumps", () => {
+    expect(calculateTreeTier("shipping", 200, { isArchived: true })).toBe("stump");
+    expect(calculateTreeTier("revenue", 6000, { isChurn: true })).toBe("stump");
+  });
+});
+
+describe("calculateIslandSize (Universal Adaptive Land Scaling)", () => {
+  it("scales land based on level when tree count is low", () => {
+    expect(calculateIslandSize(1, 2)).toBe(12.0);
+    expect(calculateIslandSize(5, 2)).toBe(15.0);
+    expect(calculateIslandSize(10, 2)).toBe(18.5);
+    expect(calculateIslandSize(30, 2)).toBe(21.5);
+    expect(calculateIslandSize(50, 2)).toBe(25.0);
+  });
+
+  it("dynamically expands land when a player has many trees across bilateral groves", () => {
+    expect(calculateIslandSize(1, 40)).toBe(25.0);
+    expect(calculateIslandSize(1, 28)).toBe(21.5);
+    expect(calculateIslandSize(1, 24)).toBe(18.5);
+    expect(calculateIslandSize(1, 8)).toBe(15.0);
+  });
+
+  it("takes the maximum of level size and tree count footprint", () => {
+    // Level 50 player with 2 trees still gets 25x25 realm
+    expect(calculateIslandSize(50, 2)).toBe(25.0);
+    // Level 10 player with 40 trees gets 25x25 realm
+    expect(calculateIslandSize(10, 40)).toBe(25.0);
+  });
+});
+
+describe("sortTreesByGrowthTier (Camera-Z Amphitheater Ordering)", () => {
+  it("sorts trees in ascending height order so small trees sit in front rows", () => {
+    const mockTrees = [
+      { id: "1", name: "Elder Project", tier: "elder" as const, gridX: 0, gridZ: 0, plantedAt: "" },
+      { id: "2", name: "Sapling Project", tier: "sapling" as const, gridX: 0, gridZ: 0, plantedAt: "" },
+      { id: "3", name: "Mature Project", tier: "mature" as const, gridX: 0, gridZ: 0, plantedAt: "" },
+      { id: "4", name: "Stump Project", tier: "stump" as const, gridX: 0, gridZ: 0, plantedAt: "" },
+      { id: "5", name: "Young Project", tier: "young" as const, gridX: 0, gridZ: 0, plantedAt: "" },
+      { id: "6", name: "Majestic Project", tier: "majestic" as const, gridX: 0, gridZ: 0, plantedAt: "" },
+    ];
+
+    const sorted = sortTreesByGrowthTier(mockTrees);
+    expect(sorted.map((t) => t.tier)).toEqual([
+      "stump",
+      "sapling",
+      "young",
+      "mature",
+      "majestic",
+      "elder",
+    ]);
+  });
+});
+
+describe("getGroveCapacity", () => {
+  it("computes accurate column, row, and total slot capacities per grove tier", () => {
+    // Level 1 starter (9x9)
+    const cap1 = getGroveCapacity(1, 2);
+    expect(cap1.cols).toBe(2);
+    expect(cap1.rows).toBeGreaterThanOrEqual(2);
+    expect(cap1.totalPerGrove).toBeGreaterThanOrEqual(4);
+
+    // Level 20 realm (18x18)
+    const cap20 = getGroveCapacity(20, 10);
+    expect(cap20.cols).toBe(4);
+    expect(cap20.totalPerGrove).toBeGreaterThanOrEqual(12);
+  });
+});
+
 
 

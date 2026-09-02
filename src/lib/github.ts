@@ -165,7 +165,7 @@ export function parseGitHubEventsToIsland(
   const trees: TreeData[] = topRepos.map(([repoFullName, data], index) => {
     const repoShortName = repoFullName.includes("/") ? repoFullName.split("/")[1] : repoFullName;
     const tier = calculateTreeTier("shipping", data.count, { activeDays: data.dates.size });
-    const coords = getTreeSlotCoordinate(index);
+    const coords = getTreeSlotCoordinate(index, "shipping", levelProgress.level, repoShortName, topRepos.length);
 
     return {
       id: `gh-${username}-${repoShortName}`,

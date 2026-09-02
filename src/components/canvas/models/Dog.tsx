@@ -5,15 +5,15 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { sound } from "@/lib/sound";
 
-interface CampDogProps {
+export interface DogProps {
   wireframe?: boolean;
   interactive?: boolean;
 }
 
-export function CampDog({
+export function Dog({
   wireframe = false,
   interactive = true,
-}: CampDogProps) {
+}: DogProps) {
   const jumpGroupRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
@@ -227,3 +227,5 @@ export function CampDog({
     </group>
   );
 }
+
+export { Dog as CampDog };
