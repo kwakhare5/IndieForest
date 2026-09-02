@@ -3,7 +3,7 @@
 import React from "react";
 import { Badge, BadgeVariant } from "@/components/ui/Badge";
 
-interface LandingSectionHeaderProps {
+export interface SectionHeaderProps {
   badge: string;
   badgeVariant?: BadgeVariant;
   badgeDot?: boolean;
@@ -13,7 +13,7 @@ interface LandingSectionHeaderProps {
   className?: string;
 }
 
-export function LandingSectionHeader({
+export function SectionHeader({
   badge,
   badgeVariant = "stone",
   badgeDot = false,
@@ -21,7 +21,7 @@ export function LandingSectionHeader({
   description,
   centered = true,
   className = "",
-}: LandingSectionHeaderProps) {
+}: SectionHeaderProps) {
   return (
     <div
       className={`space-y-3 ${
@@ -46,3 +46,5 @@ export function LandingSectionHeader({
     </div>
   );
 }
+
+export { SectionHeader as LandingSectionHeader };

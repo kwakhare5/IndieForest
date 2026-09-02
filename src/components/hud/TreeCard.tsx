@@ -4,7 +4,7 @@ import React from "react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Trees, TrendingUp, X, Calendar, GitCommit, DollarSign, Trash2 } from "lucide-react";
-import { TreeData } from "@/types/game";
+import { TreeData, toPlainEnglishTier } from "@/types/game";
 import { sound } from "@/lib/sound";
 
 interface TreeCardProps {
@@ -80,10 +80,10 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
 
           <div>
             <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
-              Growth Tier
+              Growth Stage
             </span>
-            <Badge variant={isRevenue ? "amber" : "emerald"} size="sm">
-              Tier {tree.tier}
+            <Badge variant={isRevenue ? "amber" : "emerald"} size="sm" className="uppercase font-bold">
+              {toPlainEnglishTier(tree.tier)}
             </Badge>
           </div>
         </div>

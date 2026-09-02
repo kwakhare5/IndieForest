@@ -1,7 +1,32 @@
 // Canonical Domain Entities & Types for IndieForest
 
-export type GrowthTier = "sapling" | "young" | "mature" | "majestic" | "stump";
+export type GrowthTier = "sapling" | "young" | "mature" | "majestic" | "elder" | "stump";
+export type PlainEnglishTier = "sprout" | "small" | "tall" | "mighty";
 export type TreeType = "shipping" | "revenue";
+
+export function toPlainEnglishTier(tier: GrowthTier | string): PlainEnglishTier {
+  switch (tier) {
+    case "stump":
+    case "sapling":
+    case "sprout":
+    case "starter":
+      return "sprout";
+    case "young":
+    case "small":
+    case "pro":
+      return "small";
+    case "mature":
+    case "tall":
+    case "scale":
+      return "tall";
+    case "majestic":
+    case "elder":
+    case "mighty":
+    case "enterprise":
+    default:
+      return "mighty";
+  }
+}
 
 export interface CommitProof {
   sha: string;

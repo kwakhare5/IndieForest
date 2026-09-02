@@ -3,6 +3,7 @@
 import type {
   GrowthTier,
   TreeType,
+  TreeData,
   ShipRewardInput,
   ShipRewards,
   LevelProgressInput,
@@ -69,46 +70,147 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   },
 ];
 
-// Dedicated Non-Clipping Dual-Grove Slot Positions (Option 2: Bilateral Farmstead)
-const WEST_SHIPPING_SLOTS = [
-  { gridX: -3.8, gridZ: -3.4 },
-  { gridX: -2.0, gridZ: -3.4 },
-  { gridX: -4.2, gridZ: -1.6 },
-  { gridX: -2.4, gridZ: -1.6 },
-  { gridX: -3.6, gridZ: 0.2 },
-  { gridX: -1.8, gridZ: 0.2 },
-  { gridX: -4.0, gridZ: 1.8 },
-  { gridX: -1.2, gridZ: -0.8 },
-];
+// Deterministic String Hash for Multi-User Jitter & Organic Yaw Variation
+export function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
 
-const EAST_REVENUE_SLOTS = [
-  { gridX: 3.8, gridZ: -3.4 },
-  { gridX: 2.0, gridZ: -3.4 },
-  { gridX: 4.2, gridZ: -1.6 },
-  { gridX: 2.4, gridZ: -1.6 },
-  { gridX: 3.6, gridZ: 0.2 },
-  { gridX: 1.8, gridZ: 0.2 },
-  { gridX: 4.0, gridZ: 1.8 },
-  { gridX: 1.2, gridZ: -0.8 },
-];
+// Compute Deterministic 360° Yaw Angle from Seed (Project ID or Name)
+export function getTreeYawRotation(seedId?: string): number {
+  if (!seedId) return 0;
+  const hash = hashString(seedId);
+  return ((hash % 360) * Math.PI) / 180;
+}
 
+// =============================================================================
+// Discrete 1-to-1 Isometric Tile Grid System (Single Source of Truth)
+// =============================================================================
+export const CELL_SIZE = 1.65;         // Fixed 1.65m x 1.65m square per tile
+export const RIVER_HALF_WIDTH = 0.75;   // 1.50m total river canal down X = 0
+export const RIVER_BANK_MARGIN = 0.35;  // 0.35m stone pebble bank on each side
+export const GROVE_FRONT_Z = -0.70;     // Front boundary of tree groves (campsite is Z >= 0.2)
+
+// Single Source of Truth for Island Dimensions across 5 tiers: 12x12, 15x15, 18.5x18.5, 21.5x21.5, 25x25
+// Calibrated for a generous 1.55m+ natural lawn perimeter buffer all around
+export function calculateIslandSize(level: number = 1, treeCount: number = 0): number {
+  const levelSize = level >= 50 ? 25.0 : level >= 30 ? 21.5 : level >= 10 ? 18.5 : level >= 5 ? 15.0 : 12.0;
+  // Bilateral groves: treeCount is split across West (Shipping) & East (Revenue) groves
+  const countSize = treeCount >= 40 ? 25.0 : treeCount >= 28 ? 21.5 : treeCount >= 16 ? 18.5 : treeCount >= 8 ? 15.0 : 12.0;
+  return Math.max(levelSize, countSize);
+}
+
+// Grid Capacity & Geometric Bounds per Island Level
+export function getGroveCapacity(
+  level: number = 1,
+  _treeCount: number = 0
+): { cols: number; rows: number; totalPerGrove: number } {
+  const islandSize = calculateIslandSize(level, _treeCount);
+  const cols = islandSize >= 25.0 ? 5 : islandSize >= 21.5 ? 4 : islandSize >= 18.5 ? 4 : islandSize >= 15.0 ? 3 : 2;
+  const rows = islandSize >= 25.0 ? 6 : islandSize >= 21.5 ? 5 : islandSize >= 18.5 ? 4 : islandSize >= 15.0 ? 3 : 2;
+
+  return {
+    cols,
+    rows,
+    totalPerGrove: cols * rows,
+  };
+}
+
+// Precision Grove Boundaries for rendering ground seams and tile beds
+export function getGroveTileBounds(level: number = 1, treeCount: number = 0) {
+  const { cols, rows } = getGroveCapacity(level, treeCount);
+  const bankX = RIVER_HALF_WIDTH + RIVER_BANK_MARGIN; // 1.10m
+  const groveWidth = cols * CELL_SIZE;
+  const groveLength = rows * CELL_SIZE;
+
+  return {
+    cols,
+    rows,
+    cellSize: CELL_SIZE,
+    west: {
+      minX: -bankX - groveWidth,
+      maxX: -bankX,
+      minZ: GROVE_FRONT_Z - groveLength,
+      maxZ: GROVE_FRONT_Z,
+    },
+    east: {
+      minX: bankX,
+      maxX: bankX + groveWidth,
+      minZ: GROVE_FRONT_Z - groveLength,
+      maxZ: GROVE_FRONT_Z,
+    },
+  };
+}
+
+// Discrete 1-to-1 Tile Grid Engine: Guaranteed Immutable Slot Coordinates
 export function getTreeSlotCoordinate(
   index: number,
-  type: TreeType = "shipping"
+  type: "shipping" | "revenue",
+  level: number = 1,
+  _seedId?: string,
+  _treeCount: number = 0
 ): { gridX: number; gridZ: number } {
-  const slots = type === "revenue" ? EAST_REVENUE_SLOTS : WEST_SHIPPING_SLOTS;
-  if (index < slots.length) {
-    return slots[index];
-  }
-  // Algorithmic expansion for large forests (level 20+)
-  const offset = index - slots.length;
+  const { cols } = getGroveCapacity(level, _treeCount);
+  const col = index % cols;
+  const row = Math.floor(index / cols);
+
+  const bankX = RIVER_HALF_WIDTH + RIVER_BANK_MARGIN; // 1.10m
   const sign = type === "revenue" ? 1 : -1;
-  const col = (offset % 3) + 1;
-  const row = Math.floor(offset / 3);
+
+  // Exact center of cell (row, col)
+  const cellCenterX = sign * (bankX + (col + 0.5) * CELL_SIZE);
+  const cellCenterZ = GROVE_FRONT_Z - (row + 0.5) * CELL_SIZE;
+
   return {
-    gridX: sign * (1.6 + col * 1.4),
-    gridZ: -5.0 + row * 1.5,
+    gridX: Number(cellCenterX.toFixed(3)),
+    gridZ: Number(cellCenterZ.toFixed(3)),
   };
+}
+
+// Precision Cell Bounding Box: Returns the 4 perimeter segments for a tree's tile
+export function getTreeCellBoundingBox(
+  gridX: number,
+  gridZ: number,
+  cellSize: number = CELL_SIZE
+): Array<{ x1: number; z1: number; x2: number; z2: number }> {
+  const half = cellSize / 2;
+  const minX = Number((gridX - half).toFixed(3));
+  const maxX = Number((gridX + half).toFixed(3));
+  const minZ = Number((gridZ - half).toFixed(3));
+  const maxZ = Number((gridZ + half).toFixed(3));
+
+  return [
+    { x1: minX, z1: minZ, x2: maxX, z2: minZ },
+    { x1: maxX, z1: minZ, x2: maxX, z2: maxZ },
+    { x1: maxX, z1: maxZ, x2: minX, z2: maxZ },
+    { x1: minX, z1: maxZ, x2: minX, z2: minZ },
+  ];
+}
+
+// Camera-Z Depth Sorting: Ascending order (small to large, front to back)
+export function sortTreesByGrowthTier(trees: TreeData[]): TreeData[] {
+  const TIER_ORDER: Record<GrowthTier, number> = {
+    stump: 0,
+    sapling: 1,
+    young: 2,
+    mature: 3,
+    majestic: 4,
+    elder: 5,
+  };
+
+  return [...trees].sort((a, b) => {
+    const tierA = a.tier || "sapling";
+    const tierB = b.tier || "sapling";
+    const tierDiff = (TIER_ORDER[tierA] ?? 1) - (TIER_ORDER[tierB] ?? 1);
+    if (tierDiff !== 0) return tierDiff;
+    const metricA = (a.commits || 0) + (a.mrr || 0);
+    const metricB = (b.commits || 0) + (b.mrr || 0);
+    return metricA - metricB;
+  });
 }
 
 
@@ -137,11 +239,13 @@ export function calculateTreeTier(
     if (options?.activeDays && options.activeDays < 3 && value >= 25) {
       return "young";
     }
+    if (value >= 150) return "elder";
     if (value >= 60) return "majestic";
     if (value >= 25) return "mature";
     if (value >= 8) return "young";
     return "sapling";
   } else {
+    if (value >= 5000) return "elder";
     if (value >= 2000) return "majestic";
     if (value >= 500) return "mature";
     if (value >= 50) return "young";

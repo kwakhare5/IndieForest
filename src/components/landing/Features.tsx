@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SegmentedControl, SegmentedOption } from "@/components/ui/SegmentedControl";
-import { LandingSectionHeader } from "./LandingSectionHeader";
+import { SectionHeader } from "./SectionHeader";
 import { Shield, TrendingUp, Check, Copy } from "lucide-react";
 
 const SHIELD_OPTIONS: SegmentedOption<"armed" | "rest">[] = [
@@ -13,7 +13,7 @@ const SHIELD_OPTIONS: SegmentedOption<"armed" | "rest">[] = [
   { value: "rest", label: "Rest Day" },
 ];
 
-export function LandingBento() {
+export function Features() {
   const [shieldState, setShieldState] = useState<"armed" | "rest">("armed");
   const [demoHealth, setDemoHealth] = useState<number>(85);
   const [copiedText, setCopiedText] = useState(false);
@@ -37,7 +37,7 @@ export function LandingBento() {
 
   return (
     <section id="bento" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 font-sans">
-      <LandingSectionHeader
+      <SectionHeader
         badge="Built for Real Builders"
         title="Sustainable shipping without burnout."
         description="Traditional streak trackers make you feel guilty when life happens. IndieForest protects your momentum with rest shields and rolling consistency."
@@ -198,3 +198,5 @@ export function LandingBento() {
     </section>
   );
 }
+
+export { Features as LandingBento };

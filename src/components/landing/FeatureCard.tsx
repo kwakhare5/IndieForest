@@ -4,14 +4,14 @@ import React from "react";
 import { Card } from "@/components/ui/Card";
 import { LucideIcon } from "lucide-react";
 
-interface LandingFeatureCardProps {
+export interface FeatureCardProps {
   stepTag?: string;
   stepTagColor?: string;
   icon?: LucideIcon;
   iconBg?: string;
   iconColor?: string;
-  title: string;
-  description: string;
+  title: string | React.ReactNode;
+  description: string | React.ReactNode;
   previewWidget?: React.ReactNode;
   footerIcon?: LucideIcon;
   footerText?: string;
@@ -20,7 +20,7 @@ interface LandingFeatureCardProps {
   className?: string;
 }
 
-export function LandingFeatureCard({
+export function FeatureCard({
   stepTag,
   stepTagColor = "text-emerald-700",
   icon: Icon,
@@ -34,7 +34,7 @@ export function LandingFeatureCard({
   footerColor = "text-stone-500",
   footerBadge,
   className = "",
-}: LandingFeatureCardProps) {
+}: FeatureCardProps) {
   return (
     <Card
       variant="porcelain"
@@ -83,3 +83,5 @@ export function LandingFeatureCard({
     </Card>
   );
 }
+
+export { FeatureCard as LandingFeatureCard };

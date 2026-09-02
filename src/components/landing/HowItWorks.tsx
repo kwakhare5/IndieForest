@@ -2,24 +2,24 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/Badge";
-import { LandingSectionHeader } from "./LandingSectionHeader";
-import { LandingFeatureCard } from "./LandingFeatureCard";
+import { SectionHeader } from "./SectionHeader";
+import { FeatureCard } from "./FeatureCard";
 import { Check, Github, Flame, CloudRain, Zap, TrendingUp } from "lucide-react";
 
-export function LandingRitual() {
+export function HowItWorks() {
   return (
     <section id="overview" className="py-20 bg-[#e6e1d7] border-y border-stone-300/80 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <LandingSectionHeader
+        <SectionHeader
           badge="How It Works"
           title="Zero manual tracking. Just code and ship."
-          description="You already write code and push to GitHub. IndieForest runs in the background and turns your daily shipping into a living 3D diorama."
+          description="You already write code and push to GitHub. IndieForest runs in the background and turns your daily shipping into a living 3D island."
           className="mb-12"
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {/* Step 1 */}
-          <LandingFeatureCard
+          <FeatureCard
             stepTag="01 / WRITE CODE"
             stepTagColor="text-emerald-700"
             title="Push to GitHub"
@@ -36,17 +36,17 @@ export function LandingRitual() {
           />
 
           {/* Step 2 */}
-          <LandingFeatureCard
+          <FeatureCard
             stepTag="02 / WATCH IT GROW"
             stepTagColor="text-amber-700"
             title="Pines Grow with Commits"
-            description="Every repository becomes an evergreen pine. More commits make it taller. Stripe sales sprout golden revenue oaks."
+            description="Every repository becomes an evergreen pine. More commits make it taller. Stripe sales sprout golden cash pines."
             previewWidget={
               <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between shadow-xs">
                 <span className="flex items-center gap-1.5 font-bold font-sans">
                   <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" /> +100 XP
                 </span>
-                <Badge variant="amber" size="sm">Tier II (Young)</Badge>
+                <Badge variant="amber" size="sm">Tier II (Small)</Badge>
               </div>
             }
             footerIcon={CloudRain}
@@ -55,7 +55,7 @@ export function LandingRitual() {
           />
 
           {/* Step 3 */}
-          <LandingFeatureCard
+          <FeatureCard
             stepTag="03 / PROOF OF WORK"
             stepTagColor="text-emerald-700"
             title="1-Click Social Proof"
@@ -77,3 +77,5 @@ export function LandingRitual() {
     </section>
   );
 }
+
+export { HowItWorks as LandingRitual };

@@ -9,6 +9,8 @@ import { TreeCard } from "@/components/hud/TreeCard";
 import { Button } from "@/components/ui/Button";
 import { Github } from "lucide-react";
 
+import { GridView } from "@/app/demo/components/GridView";
+
 const IslandCanvas = dynamic(
   () => import("@/components/canvas/IslandCanvas").then((mod) => mod.IslandCanvas),
   {
@@ -17,7 +19,7 @@ const IslandCanvas = dynamic(
       <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] gap-3">
         <div className="w-8 h-8 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
         <span className="text-xs font-bold uppercase tracking-wider text-stone-500 font-pixel">
-          Loading Island Diorama...
+          Loading Island...
         </span>
       </div>
     ),
@@ -57,6 +59,7 @@ export default function DashboardPage() {
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
 
   // Modals, HUD Overlays & 2-Step Isometric Zoom State
+  const [viewMode, setViewMode] = useState<"diorama" | "forest-grid">("diorama");
   const [zoomLevel, setZoomLevel] = useState<1 | 2>(1);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
@@ -182,26 +185,36 @@ export default function DashboardPage() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#ece7de] select-none font-sans">
-      {/* 1. Fullscreen Living 3D Diorama Canvas */}
+      {/* 1. Fullscreen Viewport: Living 3D Diorama or 1:1 Precision Grid Mode */}
       <div className="absolute inset-0 z-0">
-        <IslandCanvas
-          trees={trees}
-          level={level}
-          streakDays={streakDays}
-          streakShields={streakShields}
-          drought={drought}
-          timeOfDay={timeOfDay}
-          zoomLevel={zoomLevel}
-          selectedTreeId={selectedTree?.id}
-          onSelectTree={(tree) => {
-            sound.playClick();
-            setSelectedTree(tree);
-          }}
-          onClickCampfire={() => setIsFocusModalOpen(true)}
-          onClickTent={() => setIsRestShieldModalOpen(true)}
-          onClickCabin={() => setIsOverviewModalOpen(true)}
-          className="w-full h-full"
-        />
+        {viewMode === "diorama" ? (
+          <IslandCanvas
+            trees={trees}
+            level={level}
+            streakDays={streakDays}
+            streakShields={streakShields}
+            drought={drought}
+            timeOfDay={timeOfDay}
+            zoomLevel={zoomLevel}
+            selectedTreeId={selectedTree?.id}
+            onSelectTree={(tree) => {
+              sound.playClick();
+              setSelectedTree(tree);
+            }}
+            onClickCampfire={() => setIsFocusModalOpen(true)}
+            onClickTent={() => setIsRestShieldModalOpen(true)}
+            onClickCabin={() => setIsOverviewModalOpen(true)}
+            className="w-full h-full"
+          />
+        ) : (
+          <GridView
+            trees={trees}
+            level={level}
+            streakDays={streakDays}
+            streakShields={streakShields}
+            drought={drought}
+          />
+        )}
       </div>
 
       {/* 2. Floating Game HUD Chrome */}
@@ -214,6 +227,8 @@ export default function DashboardPage() {
             unclaimedQuestsCount={unclaimedQuestsCount}
             completedQuestsCount={completedQuestsCount}
             totalQuestsCount={dailyQuests.length}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
           />
 
           {/* Top-Right: World Ambience & Controls */}

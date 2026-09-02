@@ -8,6 +8,8 @@ import {
   X,
   CheckCircle2,
   Zap,
+  Home,
+  Grid,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -21,6 +23,8 @@ interface DashboardNavProps {
   unclaimedQuestsCount?: number;
   completedQuestsCount?: number;
   totalQuestsCount?: number;
+  viewMode?: "diorama" | "forest-grid";
+  onViewModeChange?: (mode: "diorama" | "forest-grid") => void;
 }
 
 export function DashboardNav({
@@ -29,6 +33,8 @@ export function DashboardNav({
   unclaimedQuestsCount = 0,
   completedQuestsCount = 0,
   totalQuestsCount = 4,
+  viewMode = "diorama",
+  onViewModeChange,
 }: DashboardNavProps) {
   const [isQuestsPopoverOpen, setIsQuestsPopoverOpen] = useState(false);
 
@@ -41,9 +47,9 @@ export function DashboardNav({
   };
 
   return (
-    <div className="fixed top-4 left-5 z-40 flex flex-col font-sans pointer-events-auto select-none">
+    <div className="fixed top-4 left-5 z-40 flex flex-col items-start font-sans pointer-events-auto select-none">
       {/* 1. Universal Double-Bezel Capsule */}
-      <div className="p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
+      <div className="p-1 rounded-full glass-dock shadow-lg">
         <div className="px-2.5 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
           
           {/* Subtle Clean Text Link */}
@@ -57,6 +63,55 @@ export function DashboardNav({
             <span>{backLabel}</span>
           </Link>
 
+          <Link
+            href="/demo"
+            onClick={() => sound.playClick()}
+            className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium text-emerald-800 hover:bg-emerald-50 transition"
+            title="Open Demo Sandbox & Showroom"
+          >
+            <span>Demo Sandbox</span>
+          </Link>
+
+          {/* Unified Living Island / Grid Mode Switcher */}
+          {onViewModeChange && (
+            <>
+              <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
+              <div className="flex items-center gap-1 bg-stone-200/80 p-0.5 rounded-full">
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    onViewModeChange("diorama");
+                  }}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                    viewMode === "diorama"
+                      ? "bg-white text-stone-950 shadow-xs"
+                      : "text-stone-600 hover:text-stone-950"
+                  }`}
+                  title="Switch to 3D Living Island"
+                >
+                  <Home className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="hidden sm:inline">Living Island</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    onViewModeChange("forest-grid");
+                  }}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                    viewMode === "forest-grid"
+                      ? "bg-white text-stone-950 shadow-xs"
+                      : "text-stone-600 hover:text-stone-950"
+                  }`}
+                  title="Switch to 1:1 Precision Grid Mode"
+                >
+                  <Grid className="w-3.5 h-3.5 text-stone-600" />
+                  <span className="hidden sm:inline">Grid Mode</span>
+                </button>
+              </div>
+            </>
+          )}
+
           <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
 
           {/* Quests Trigger Button */}
@@ -68,11 +123,11 @@ export function DashboardNav({
               setIsQuestsPopoverOpen((prev) => !prev);
             }}
             icon={Target}
-            className="relative shadow-xs active:scale-95 transition-transform text-xs"
+            className="relative shadow-xs active:scale-95 transition-transform text-xs font-semibold"
             title="Daily Proof-of-Work Quests (Press Q)"
           >
             <span>Quests</span>
-            <span className={`text-xs font-pixel ml-1 px-1.5 py-0.2 rounded-full ${isQuestsPopoverOpen || unclaimedQuestsCount > 0 ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
+            <span className={`text-xs font-pixel ml-1 px-1.5 py-0.5 rounded-full ${isQuestsPopoverOpen || unclaimedQuestsCount > 0 ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
               {completedQuestsCount}/{totalQuestsCount}
             </span>
             {unclaimedQuestsCount > 0 && (
