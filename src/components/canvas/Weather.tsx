@@ -8,12 +8,16 @@ interface WeatherProps {
   drought?: boolean;
   isRaining?: boolean;
   hasRevenue?: boolean;
+  isNight?: boolean;
+  isSunset?: boolean;
 }
 
 export function Weather({
   drought = false,
   isRaining = false,
   hasRevenue = false,
+  isNight: _isNight = false,
+  isSunset: _isSunset = false,
 }: WeatherProps) {
   const rainRef = useRef<THREE.Points>(null);
   const sparklesRef = useRef<THREE.Points>(null);

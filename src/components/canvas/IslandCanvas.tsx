@@ -43,7 +43,7 @@ export function IslandCanvas({
   trees = [],
   level = 1,
   streakDays = 0,
-  streakShields = 0,
+  streakShields: _streakShields = 0,
   drought = false,
   isRaining = false,
   timeOfDay = "day",
@@ -57,7 +57,7 @@ export function IslandCanvas({
   onClickCampfire,
   onClickCabin,
   onClickTent,
-  onPlantNewTree,
+  onPlantNewTree: _onPlantNewTree,
 }: IslandCanvasProps) {
 
   const isNight = timeOfDay === "night";
@@ -155,14 +155,14 @@ export function IslandCanvas({
             minPolarAngle={Math.PI / 4}
           />
 
-          {/* 1. Dynamic Natural Lighting (Matched to Grid View) */}
-          <ambientLight intensity={1.15} color="#ffffff" />
+          {/* 1. Dynamic Natural Lighting (Matched to Grid View & TimeOfDay) */}
+          <ambientLight intensity={ambientIntensity} color={ambientColor} />
 
           {/* Directional Sunlight with Soft Shadows */}
           <directionalLight
             position={[14, 22, 10]}
-            intensity={1.35}
-            color="#ffffff"
+            intensity={sunIntensity}
+            color={sunColor}
             castShadow
             shadow-mapSize-width={1024}
             shadow-mapSize-height={1024}
@@ -175,11 +175,11 @@ export function IslandCanvas({
             shadow-bias={-0.0005}
           />
 
-          {/* Soft Secondary Mint Fill Light */}
+          {/* Soft Secondary Mint / Rim Fill Light */}
           <directionalLight
             position={[-12, 12, -10]}
-            intensity={0.4}
-            color="#a7f3d0"
+            intensity={rimIntensity}
+            color={rimColor}
           />
 
           {/* 2. Soft Studio Contact Shadows (Zero Jitter, Baked frames={1}) */}

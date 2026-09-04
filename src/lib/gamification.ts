@@ -2,7 +2,6 @@
 
 import type {
   GrowthTier,
-  TreeType,
   TreeData,
   ShipRewardInput,
   ShipRewards,

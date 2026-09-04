@@ -10,6 +10,7 @@ import {
   Zap,
   Home,
   Grid,
+  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -23,8 +24,8 @@ interface DashboardNavProps {
   unclaimedQuestsCount?: number;
   completedQuestsCount?: number;
   totalQuestsCount?: number;
-  viewMode?: "diorama" | "forest-grid";
-  onViewModeChange?: (mode: "diorama" | "forest-grid") => void;
+  viewMode?: "diorama" | "forest-grid" | "showroom";
+  onViewModeChange?: (mode: "diorama" | "forest-grid" | "showroom") => void;
 }
 
 export function DashboardNav({
@@ -72,7 +73,7 @@ export function DashboardNav({
             <span>Demo Sandbox</span>
           </Link>
 
-          {/* Unified Living Island / Grid Mode Switcher */}
+          {/* Unified Living Island / Grid Mode / 3D Workshop Switcher */}
           {onViewModeChange && (
             <>
               <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
@@ -107,6 +108,22 @@ export function DashboardNav({
                 >
                   <Grid className="w-3.5 h-3.5 text-stone-600" />
                   <span className="hidden sm:inline">Grid Mode</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    onViewModeChange("showroom");
+                  }}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                    viewMode === "showroom"
+                      ? "bg-white text-stone-950 shadow-xs"
+                      : "text-stone-600 hover:text-stone-950"
+                  }`}
+                  title="Switch to 3D Workshop Showroom"
+                >
+                  <Layers className="w-3.5 h-3.5 text-stone-600" />
+                  <span className="hidden sm:inline">3D Workshop</span>
                 </button>
               </div>
             </>

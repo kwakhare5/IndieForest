@@ -51,7 +51,7 @@ export interface GuestbookRow {
 }
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://qvewyieyfhnxvvpwytzr.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_3SS_FOACKWPMHPQp4EcCpA_obCoBJjw";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2ZXd5aWV5ZmhueHZ2cHd5dHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDA3ODksImV4cCI6MjA5NzI3Njc4OX0.CfU-G766jLkZwMslubMIQaSmBL4pOsjcK1nF8CpsHtg";
 
 // Universal Supabase Client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -263,5 +263,51 @@ export async function fetchGuestbookEntries(targetUsername: string): Promise<Gue
   } catch (err) {
     console.warn("Guestbook fetch error:", err);
     return [];
+  }
+}
+
+/**
+ * Subscribes to real-time tree insertions for a user (e.g. from revenue webhooks).
+ */
+export function subscribeToUserTrees(userId: string, onTreeInserted: (tree: TreeData) => void) {
+  if (!userId || userId === "guest") return () => {};
+
+  try {
+    const channel = supabase
+      .channel(`user-trees-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "trees",
+          filter: `user_id=eq.${userId}`,
+        },
+        (payload) => {
+          const row = payload.new as TreeRow;
+          if (row) {
+            const newTree: TreeData = {
+              id: row.id,
+              name: row.name,
+              type: row.type,
+              commits: row.commits ?? undefined,
+              mrr: row.mrr ? Number(row.mrr) : undefined,
+              tier: row.tier,
+              gridX: Number(row.grid_x),
+              gridZ: Number(row.grid_z),
+              plantedAt: row.planted_at || new Date().toISOString(),
+            };
+            onTreeInserted(newTree);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  } catch (err) {
+    console.warn("Realtime subscription fallback:", err);
+    return () => {};
   }
 }

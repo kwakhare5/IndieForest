@@ -90,15 +90,20 @@ npm run lint       # ESLint + TypeScript check
   - **Ascending Tree Arrangement (`IslandCanvas.tsx`, `gamification.ts`, `demo/page.tsx`):** Arranged all trees strictly from small to large (Stump $\to$ Sprout $\to$ Young $\to$ Mature $\to$ Majestic/Elder). Small trees occupy the front row closest to the camera, stepping up to majestic pines in the back rows, eliminating visual occlusion and creating an amphitheater layout where all trees are visible.
   - **Harmonized Demo & Dashboard UI (`demo/page.tsx` & `GridView.tsx`):** Default view is Living Island (`"diorama"`). Top tabs cleanly switch between Living Island, Grid Mode, and 3D Workshop. Collapsible simulation controls give the 3D diorama full-screen breathing room.
   - **3D Workshop Showroom Overhaul (`Workshop3D.tsx`):** Added all 5 tree growth stages (**0. Stump**, **I. Sprout**, **II. Young**, **III. Mature**, **IV. Mighty**), integrated all 6 canonical assets (**Code Pine**, **Cash Pine**, **Canvas Tent**, **Log Cabin**, **Campfire**, **Companion Dog**), added Drought Soil toggle alongside Lighting & 360° Turntable rotation, and built live interactive spec callouts with Roman numeral tiers.
-  - **Production Verification:** 64/64 Vitest tests passing green, Next.js Turbopack build compiling cleanly with 0 errors in 1.3s.
+  - **Repaired GitHub Sync & Shipping Automation (`useForestStore.ts`):** Eradicated phantom `/api/island` route, connected to `/api/github/preview?username=...`, properly mapped repository and commit arrays, and fixed zero-touch automated daily shipping commit verification.
+  - **Account Identity & Handle Binding (`SettingsModal.tsx`, `dashboard/page.tsx`):** Handled Google OAuth sign-in gracefully, bound GitHub handle (`kwakhare5`) permanently in store on sync, added user-visible error handling, and pre-filled handle input.
+  - **Dynamic 3D Scene Lighting & Particle Binding (`IslandCanvas.tsx`, `Weather.tsx`):** Bound ambient, directional sun, and rim lighting directly to Day, Sunset, Night, and Drought states. Passed `hasRevenue` to activate golden floating particles over Money Oaks.
+  - **Supabase Realtime Tree Sprouting (`supabase.ts`, `dashboard/page.tsx`):** Added `subscribeToUserTrees` listener to auto-sprout Golden Oaks on the 3D diorama in real-time with sound chimes and confetti when payment webhooks arrive.
+  - **Canonical Brand Mark & Logo Deduplication (`layout.tsx`, `Navbar.tsx`):** Purged duplicate logo assets from `public/logos/`, deleted the obsolete directory, and standardized all application metadata and navbar icons strictly on canonical [`public/icon.svg`](file:///d:/IndieForest/public/icon.svg).
+  - **Production Verification:** 64/64 Vitest tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly in 1044ms.
 
 **Immediate next task:**
 
-- Review the clean natural lawn, aligned grid mode, and responsive tree clicking with the user in the browser.
+- Test live in browser at `http://localhost:3000/dashboard`, verify `kwakhare5` trees sprout, and run Supabase SQL migration in the dashboard.
 
 **Open blockers:**
 
-- [None]
+- Run `supabase/migrations/20260820000000_init_indieforest.sql` in Supabase SQL editor to create the 4 PostgreSQL tables.
 
 
 
