@@ -1,32 +1,20 @@
 "use client";
 
-import React, { useState, Suspense, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, ContactShadows } from "@react-three/drei";
-import * as THREE from "three";
 import {
   Sun,
   Sunset,
   Moon,
-  Layers,
   ArrowLeft,
   Home,
   Grid,
-  Square,
   Sliders,
   RotateCcw,
-  Sparkles,
-  Flame,
   Trees,
-  TrendingUp,
-  Share2,
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
 import { DashboardDock } from "@/components/hud/DashboardDock";
 import { TreeCard } from "@/components/hud/TreeCard";
 import { FocusModal } from "@/components/hud/modals/FocusModal";
@@ -81,7 +69,6 @@ export default function DemoPage() {
   const [streakDays, setStreakDays] = useState<number>(42);
   const [streakShields, setStreakShields] = useState<number>(2);
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>("day");
-  const [wireframe, setWireframe] = useState<boolean>(false);
   const [isRaining, setIsRaining] = useState<boolean>(false);
   const [drought, setDrought] = useState<boolean>(false);
   const [showGrid, setShowGrid] = useState<boolean>(false);
@@ -106,9 +93,6 @@ export default function DemoPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
 
-  const isNight = timeOfDay === "night";
-  const isSunset = timeOfDay === "sunset";
-
   const totalMrr = demoTrees.reduce((acc, t) => acc + (t.mrr || 0), 0);
   const activeTreesCount = demoTrees.filter((t) => t.tier !== "stump").length;
 
@@ -130,7 +114,6 @@ export default function DemoPage() {
     setStreakDays(42);
     setStreakShields(2);
     setTimeOfDay("day");
-    setWireframe(false);
     setIsRaining(false);
     setDrought(false);
     setShowGrid(false);

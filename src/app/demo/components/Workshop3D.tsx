@@ -22,8 +22,6 @@ import {
   RotateCw,
   Sparkles,
   Droplets,
-  Layers,
-  Volume2,
 } from "lucide-react";
 
 export type ShowroomAsset =

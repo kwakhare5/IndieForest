@@ -282,20 +282,29 @@ export const useForestStore = create<ForestState>()(
 
       syncGitHubIsland: async (username: string) => {
         if (!username || username === "builder" || username === "guest") return;
+        set({ isAutoSyncing: true });
         try {
-          const res = await fetch(`/api/island/${username}`);
-          if (!res.ok) return;
+          const res = await fetch(`/api/github/preview?username=${encodeURIComponent(username)}`);
+          if (!res.ok) {
+            const errBody = await res.json().catch(() => ({}));
+            throw new Error(errBody.error || `GitHub preview returned status ${res.status}`);
+          }
           const data = await res.json();
-          if (data.profile && data.profile.trees) {
-            set({
-              trees: data.profile.trees,
-              level: data.profile.level || 1,
-              streakDays: data.profile.streakDays || 1,
-            });
+          if (data && Array.isArray(data.trees)) {
+            set((s) => ({
+              trees: data.trees.length > 0 ? data.trees : s.trees,
+              level: data.level || s.level,
+              streakDays: data.streakDays !== undefined ? data.streakDays : s.streakDays,
+              bestStreak: Math.max(s.bestStreak, data.streakDays || 0),
+              lastSyncTime: new Date().toISOString(),
+            }));
             get().syncCloudIsland();
           }
         } catch (err) {
-          console.warn("GitHub sync non-blocking error:", err);
+          console.warn("GitHub sync error:", err);
+          throw err;
+        } finally {
+          set({ isAutoSyncing: false });
         }
       },
 
@@ -311,20 +320,25 @@ export const useForestStore = create<ForestState>()(
         }
 
         try {
-          const res = await fetch(`/api/island/${username}`);
+          const res = await fetch(`/api/github/preview?username=${encodeURIComponent(username)}`);
           if (!res.ok) return false;
           const data = await res.json();
 
-          const todayLog = data.profile?.shipHistory?.find((s: ShipLog) =>
-            s.date.startsWith(todayStr)
-          );
+          const hasCommitToday =
+            (data.lastActiveDate && data.lastActiveDate.startsWith(todayStr)) ||
+            (Array.isArray(data.recentCommits) &&
+              data.recentCommits.some((c: { date?: string }) => c.date?.startsWith(todayStr)));
 
-          if (todayLog) {
+          if (hasCommitToday) {
+            const todayCommit = Array.isArray(data.recentCommits)
+              ? data.recentCommits.find((c: { date?: string }) => c.date?.startsWith(todayStr))
+              : null;
+
             get().shipToday(
-              todayLog.message || "Shipped to GitHub",
+              todayCommit?.message || "Auto-detected GitHub shipping commit",
               "github",
-              todayLog.proofUrl,
-              todayLog.repo
+              undefined,
+              todayCommit?.repo
             );
             get().triggerQuestProgress("atomic-commit", 1);
             return true;

@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     "Turn daily coding momentum and SaaS customer growth into a living 3D low-poly island diorama. 1-click GitHub commit sync, streak shields, and MRR pine trees.",
   keywords: ["indie hacker", "github streak", "gamified coding", "3d diorama", "habit tracker", "build in public"],
   icons: {
-    icon: "/logos/indieforest_logo.svg",
-    apple: "/logos/indieforest_logo.svg",
+    icon: "/icon.svg",
+    apple: "/icon.svg",
   },
   openGraph: {
     title: "IndieForest — 3D Daily Shipping Dashboard",

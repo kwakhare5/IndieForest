@@ -8,7 +8,6 @@ import { TreeCard } from "@/components/hud/TreeCard";
 import type { TreeData } from "@/types/game";
 import {
   Grid,
-  Sparkles,
   GitCommit,
   DollarSign,
 } from "lucide-react";

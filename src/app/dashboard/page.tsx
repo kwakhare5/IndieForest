@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Github } from "lucide-react";
 
 import { GridView } from "@/app/demo/components/GridView";
+import { Workshop3D } from "@/app/demo/components/Workshop3D";
 
 const IslandCanvas = dynamic(
   () => import("@/components/canvas/IslandCanvas").then((mod) => mod.IslandCanvas),
@@ -36,6 +37,8 @@ import { SettingsModal } from "@/components/hud/modals/SettingsModal";
 import { useForestStore } from "@/store/useForestStore";
 import { useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
+import { subscribeToUserTrees } from "@/lib/supabase";
+import confetti from "canvas-confetti";
 import type { TreeData } from "@/types/game";
 
 export default function DashboardPage() {
@@ -59,7 +62,7 @@ export default function DashboardPage() {
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
 
   // Modals, HUD Overlays & 2-Step Isometric Zoom State
-  const [viewMode, setViewMode] = useState<"diorama" | "forest-grid">("diorama");
+  const [viewMode, setViewMode] = useState<"diorama" | "forest-grid" | "showroom">("diorama");
   const [zoomLevel, setZoomLevel] = useState<1 | 2>(1);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
@@ -76,14 +79,16 @@ export default function DashboardPage() {
 
     async function initDashboard() {
       if (isLoaded && isSignedIn && clerkUser) {
+        const existingUsername = useForestStore.getState().user.username;
         const ghAccount = clerkUser.externalAccounts?.find(
           (a) => (a.provider as string).includes("github")
         );
         const resolvedUsername =
           ghAccount?.username ||
           clerkUser.username ||
-          clerkUser.firstName?.toLowerCase() ||
-          "builder";
+          (existingUsername && existingUsername !== "builder" && existingUsername !== "guest"
+            ? existingUsername
+            : clerkUser.firstName?.toLowerCase() || "builder");
 
         setUser({
           id: clerkUser.id,
@@ -96,7 +101,7 @@ export default function DashboardPage() {
         const cloudLoaded = await loadCloudIsland(clerkUser.id);
         if (!cloudLoaded && resolvedUsername && resolvedUsername !== "builder") {
           // If no cloud profile exists, sync real public repos from GitHub
-          await syncGitHubIsland(resolvedUsername);
+          await syncGitHubIsland(resolvedUsername).catch(() => {});
         }
 
         // Auto-check commits for today (zero manual tracking)
@@ -115,6 +120,29 @@ export default function DashboardPage() {
     autoCheckTodayCommits,
     loadCloudIsland,
   ]);
+
+  // Realtime Supabase webhook tree subscriber
+  useEffect(() => {
+    if (!isSignedIn || !clerkUser?.id) return;
+
+    const unsubscribe = subscribeToUserTrees(clerkUser.id, (newTree) => {
+      const existing = useForestStore.getState().trees;
+      if (!existing.some((t) => t.id === newTree.id)) {
+        useForestStore.setState((s) => ({ trees: [...s.trees, newTree] }));
+        sound.playCoin();
+        confetti({
+          particleCount: 50,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#f59e0b", "#10b981", "#fbbf24"],
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [isSignedIn, clerkUser?.id]);
 
   // Global Keyboard Shortcuts
   useEffect(() => {
@@ -206,7 +234,7 @@ export default function DashboardPage() {
             onClickCabin={() => setIsOverviewModalOpen(true)}
             className="w-full h-full"
           />
-        ) : (
+        ) : viewMode === "forest-grid" ? (
           <GridView
             trees={trees}
             level={level}
@@ -214,6 +242,10 @@ export default function DashboardPage() {
             streakShields={streakShields}
             drought={drought}
           />
+        ) : (
+          <div className="w-full h-full pt-16">
+            <Workshop3D />
+          </div>
         )}
       </div>
 

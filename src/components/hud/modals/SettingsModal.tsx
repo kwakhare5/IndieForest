@@ -34,14 +34,20 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [copiedBadgeMd, setCopiedBadgeMd] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncSuccess, setSyncSuccess] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   const user = useForestStore((s) => s.user);
+  const setUser = useForestStore((s) => s.setUser);
   const level = useForestStore((s) => s.level);
   const syncGitHubIsland = useForestStore((s) => s.syncGitHubIsland);
   const resetIsland = useForestStore((s) => s.resetIsland);
   const { badge, title: rankTitle } = getRankTitle(level);
 
-  const [githubInput, setGithubInput] = useState(user.username || "");
+  const [githubInput, setGithubInput] = useState(
+    user.username && user.username !== "builder" && user.username !== "guest"
+      ? user.username
+      : "kwakhare5"
+  );
   const { isSignedIn, isLoaded, user: clerkUser } = useUser();
 
   const activeHandle = user.username || clerkUser?.username || "builder";
@@ -73,16 +79,24 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   };
 
   const handleSyncGitHub = async () => {
-    if (!githubInput.trim()) return;
+    const cleanHandle = githubInput.trim().replace(/^@/, "");
+    if (!cleanHandle) return;
     setIsSyncing(true);
     setSyncSuccess(false);
+    setSyncError(null);
     try {
-      await syncGitHubIsland(githubInput.trim());
+      await syncGitHubIsland(cleanHandle);
+      setUser({
+        username: cleanHandle,
+        avatarUrl: `https://github.com/${cleanHandle}.png`,
+      });
       sound.playLevelUp();
       setSyncSuccess(true);
       setTimeout(() => setSyncSuccess(false), 3000);
-    } catch {
+    } catch (err: unknown) {
       sound.playClick();
+      const msg = err instanceof Error ? err.message : "Failed to sync GitHub account";
+      setSyncError(msg);
     } finally {
       setIsSyncing(false);
     }
@@ -197,6 +211,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <p className="text-[11px] text-stone-500 mt-1.5 leading-relaxed">
                   Sprouts an Evergreen Pine for each repository. Commits pushed to your main branch level up tree tiers.
                 </p>
+                {syncError && (
+                  <p className="text-[11px] text-rose-600 font-semibold mt-2 animate-in fade-in">
+                    {syncError}
+                  </p>
+                )}
               </div>
             </div>
           )}

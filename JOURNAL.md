@@ -15,6 +15,18 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
+### [IndieForest — Full Audit Repair, GitHub Sync, 3D Lighting & Realtime Parity] 2026-09-04
+- **Commit**: `pending` (GitHub Sync Repaired, Google OAuth Identity Binding, Dynamic 3D Scene Lighting, Supabase Realtime Subscriptions, 3D Workshop Dashboard Parity, 64/64 Tests Green)
+- **Vibe**: Complete end-to-end alignment and repair. Eliminated the phantom `/api/island` route and rewired store syncing to the live `/api/github/preview` endpoint. Handled Google-OAuth identity gracefully by binding real handles (`kwakhare5`) permanently in state. Transformed 3D diorama lighting from stuck midday white to dynamic Day, Sunset, Night, and Drought palettes. Added Supabase Realtime listeners so revenue webhooks sprout Golden Oaks live with chimes and confetti.
+- **Shipped**:
+  - **Repaired GitHub Sync & Shipping Automation (`useForestStore.ts`):** Eradicated phantom `/api/island` route, connected to `/api/github/preview?username=...`, properly mapped repository and commit arrays, and fixed zero-touch automated daily shipping commit verification.
+  - **Account Identity & Handle Binding (`SettingsModal.tsx`, `dashboard/page.tsx`):** Handled Google OAuth sign-in gracefully, bound GitHub handle (`kwakhare5`) permanently in store on sync, added user-visible error handling, and pre-filled handle input.
+  - **Dynamic 3D Scene Lighting & Particle Binding (`IslandCanvas.tsx`, `Weather.tsx`):** Bound ambient, directional sun, and rim lighting directly to Day, Sunset, Night, and Drought states. Passed `hasRevenue` to activate golden floating particles over Money Oaks.
+  - **Supabase Realtime Tree Sprouting (`supabase.ts`, `dashboard/page.tsx`):** Added `subscribeToUserTrees` listener to auto-sprout Golden Oaks on the 3D diorama in real-time with sound chimes and confetti when payment webhooks arrive.
+  - **Full Navigation & Visual Parity (`DashboardNav.tsx`, `dashboard/page.tsx`, `u/[username]/page.tsx`):** Enabled 3-way `[ Living Island | Grid Mode | 3D Workshop ]` viewport switcher directly on Dashboard, and harmonized public profile background to Warm Studio Linen `#ece7de`.
+  - **Canonical Brand Mark & Logo Deduplication (`layout.tsx`, `Navbar.tsx`):** Purged duplicate logo assets from `public/logos/`, deleted the obsolete directory, and standardized all application metadata and navbar icons strictly on canonical [`public/icon.svg`](file:///d:/IndieForest/public/icon.svg).
+  - **Production Verification:** 64/64 Vitest tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly in 1044ms.
+
 ### [IndieForest — Radical Simplification & Zero-Clutter Diorama Overhaul] 2026-09-02
 - **Commit**: `pending` (Pure Continuous Natural Lawn, Purged Ghost Assets, Purged Empty Plot Boxes, Bulletproof Click/Hover, Mathematically Aligned Grid Lines, 64/64 Tests Green)
 - **Vibe**: 100% clean, natural, and bulletproof. Eradicated artificial dividers, cobblestones, and canals for a pure continuous sage-emerald lawn. Purged all ghost assets (Windmills, Lighthouses, Flagpoles, Lanterns, Rivers) and empty plot plus icons. Replaced glitchy 3D `<Html>` overlays with reliable 2D `TreeCard` selection and mathematically aligned grid lines with active tree tiles.

@@ -18,7 +18,7 @@ export function Navbar() {
             <div className="w-6 h-6 rounded-lg overflow-hidden shadow-xs border border-stone-200">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logos/indieforest_logo.svg"
+                src="/icon.svg"
                 alt="IndieForest Logo"
                 className="w-full h-full object-cover"
               />
