@@ -56,7 +56,7 @@ export function Footer() {
 
       <footer className="mt-16 pt-8 border-t border-stone-300/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-stone-500">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-stone-800 font-sans">IndieForest</span>
+          <span className="font-medium text-stone-800 font-sans">IndieForest</span>
           <span>© {new Date().getFullYear()}</span>
         </div>
         <div className="flex items-center gap-6 font-sans">

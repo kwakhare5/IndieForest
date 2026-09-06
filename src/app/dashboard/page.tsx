@@ -19,7 +19,7 @@ const IslandCanvas = dynamic(
     loading: () => (
       <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] gap-3">
         <div className="w-8 h-8 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
-        <span className="text-xs font-bold uppercase tracking-wider text-stone-500 font-pixel">
+        <span className="text-xs font-normal uppercase tracking-wider text-stone-500 font-pixel">
           Loading Island...
         </span>
       </div>
@@ -203,7 +203,7 @@ export default function DashboardPage() {
       <div className="w-screen h-screen bg-[#ece7de] flex items-center justify-center font-sans text-stone-600">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
-          <span className="text-xs font-bold tracking-wider uppercase text-stone-500 font-pixel">
+          <span className="text-xs font-normal tracking-wider uppercase text-stone-500 font-pixel">
             Loading Island Diorama...
           </span>
         </div>
@@ -280,7 +280,7 @@ export default function DashboardPage() {
                 <div className="p-3.5 rounded-xl porcelain-surface text-center space-y-2">
                   <div className="flex items-center justify-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-xs font-bold text-stone-900 font-sans">
+                    <span className="text-xs font-medium text-stone-900 font-sans">
                       Your Island is Ready to Sprout
                     </span>
                   </div>
@@ -293,7 +293,7 @@ export default function DashboardPage() {
                       size="sm"
                       onClick={() => setIsSettingsModalOpen(true)}
                       icon={Github}
-                      className="text-xs font-bold"
+                      className="text-xs"
                     >
                       Connect GitHub Handle
                     </Button>
@@ -324,7 +324,7 @@ export default function DashboardPage() {
           className="fixed top-5 right-5 z-40 p-2.5 rounded-full bg-white border border-stone-300 shadow-2xl text-stone-700 hover:text-stone-950 transition cursor-pointer font-sans text-xs flex items-center gap-2"
         >
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-bold">Show HUD (Press H)</span>
+          <span className="font-medium">Show HUD (Press H)</span>
         </button>
       )}
 

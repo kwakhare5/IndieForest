@@ -32,7 +32,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
               <Tent className="w-4.5 h-4.5" />
             </div>
             <div>
-              <span className="font-bold text-xs text-stone-900 font-sans block">
+              <span className="font-medium text-xs text-stone-900 font-sans block">
                 Rest Protection
               </span>
               <span className="text-[10px] text-stone-400 font-sans">
@@ -58,7 +58,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
             <div className="w-7 h-7 mx-auto rounded-full bg-white shadow-xs flex items-center justify-center text-emerald-700">
               <Shield className={`w-3.5 h-3.5 ${streakShields >= 1 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-bold text-stone-900 font-sans">Rest Shield I</div>
+            <div className="text-xs font-medium text-stone-900 font-sans">Rest Shield I</div>
             <span className="text-[10px] text-stone-500 block">
               {streakShields >= 1 ? "Active · Protects 1 Rest Day" : "Earned at 7-day streak"}
             </span>
@@ -74,7 +74,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
             <div className="w-7 h-7 mx-auto rounded-full bg-white shadow-xs flex items-center justify-center text-emerald-700">
               <Shield className={`w-3.5 h-3.5 ${streakShields >= 2 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-bold text-stone-900 font-sans">Rest Shield II</div>
+            <div className="text-xs font-medium text-stone-900 font-sans">Rest Shield II</div>
             <span className="text-[10px] text-stone-500 block">
               {streakShields >= 2 ? "Active · Protects 1 Rest Day" : "Earned at 14-day streak"}
             </span>
@@ -85,7 +85,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
         <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 flex items-start gap-2.5">
           <HeartHandshake className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
           <div className="space-y-1">
-            <span className="text-xs font-bold text-stone-900 font-sans block">
+            <span className="text-xs font-medium text-stone-900 font-sans block">
               Sustainable Shipping
             </span>
             <p className="text-[11px] text-stone-500 leading-relaxed font-sans">

@@ -48,10 +48,10 @@ export function Features() {
         {/* Bento 1: Rolling 30-Day Forest Health */}
         <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
           <div>
-            <span className="font-sans text-[11px] uppercase tracking-wider font-bold text-emerald-700 block mb-1">
+            <span className="font-sans text-[11px] uppercase tracking-wider font-medium text-emerald-700 block mb-1">
               ZERO-GUILT CONSISTENCY
             </span>
-            <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-sans">
+            <h3 className="text-lg sm:text-xl font-medium text-stone-900 mb-1.5 font-sans">
               Rolling 30-Day Island Health
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-sans">
@@ -63,7 +63,7 @@ export function Features() {
             <Card variant="subtle-inset" className="p-4 rounded-xl space-y-2">
               <div className="flex items-center justify-between text-xs sm:text-sm font-sans">
                 <span className="text-stone-600 font-medium">30-Day Activity Ratio:</span>
-                <span className={`font-bold font-pixel ${currentHealth.color}`}>
+                <span className={`font-normal font-pixel ${currentHealth.color}`}>
                   {demoHealth}% ({currentHealth.label})
                 </span>
               </div>
@@ -80,7 +80,7 @@ export function Features() {
 
           <div className="pt-4 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
             <span>Welcome-Back Rain revives dormant pines</span>
-            <span className="font-semibold text-emerald-800">Zero streak shaming</span>
+            <span className="font-medium text-emerald-800">Zero streak shaming</span>
           </div>
         </Card>
 
@@ -91,7 +91,7 @@ export function Features() {
               <Shield className="w-5 h-5 stroke-[1.75]" />
             </div>
 
-            <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-sans">
+            <h3 className="text-base sm:text-lg font-medium text-stone-900 mb-1.5 font-sans">
               Rest Shields
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
@@ -109,7 +109,7 @@ export function Features() {
 
             <Card variant="subtle-inset" className="p-3 rounded-xl text-xs text-stone-700 flex items-center justify-between font-sans">
               <span>Protection:</span>
-              <span className={`font-bold ${shieldState === "armed" ? "text-emerald-700" : "text-amber-700"}`}>
+              <span className={`font-medium ${shieldState === "armed" ? "text-emerald-700" : "text-amber-700"}`}>
                 {shieldState === "armed" ? "2 Shields Active (Auto-Deploy)" : "Rest Protected (Streak Safe)"}
               </span>
             </Card>
@@ -117,7 +117,7 @@ export function Features() {
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-600">
             <span>Rest Protection</span>
-            <span className="font-bold text-sky-800 font-sans text-xs">2 Max Banked</span>
+            <span className="font-medium text-sky-800 font-sans text-xs">2 Max Banked</span>
           </div>
         </Card>
 
@@ -127,7 +127,7 @@ export function Features() {
             <div className="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-3 shadow-xs">
               <TrendingUp className="w-5 h-5 stroke-[1.75]" />
             </div>
-            <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-1.5 font-sans">
+            <h3 className="text-base sm:text-lg font-medium text-stone-900 mb-1.5 font-sans">
               Stripe &amp; Payment Webhooks
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-3 font-sans">
@@ -138,17 +138,17 @@ export function Features() {
           <Card variant="subtle-inset" className="p-4 space-y-2.5 font-sans rounded-2xl">
             <div className="flex items-center justify-between text-xs sm:text-sm font-sans">
               <span className="text-stone-500">Live MRR:</span>
-              <span className="font-bold text-emerald-800 text-sm font-pixel">$2,450/mo</span>
+              <span className="font-normal text-emerald-800 text-sm font-pixel">$2,450/mo</span>
             </div>
             <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs font-sans shadow-xs flex items-center justify-between">
-              <span className="text-stone-900 font-bold">Pro Plan · Golden Oak</span>
+              <span className="text-stone-900 font-medium">Pro Plan · Golden Oak</span>
               <Badge variant="amber" size="sm">Verified Stripe</Badge>
             </div>
           </Card>
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-800">
             <span>Stripe · Lemon Squeezy · Polar</span>
-            <span className="font-bold">Direct Webhook</span>
+            <span className="font-medium">Direct Webhook</span>
           </div>
         </Card>
 
@@ -159,9 +159,9 @@ export function Features() {
               <Badge variant="stone" size="sm">
                 Build in Public
               </Badge>
-              <span className="text-xs font-sans text-emerald-700 font-bold">X &amp; LinkedIn Ready</span>
+              <span className="text-xs font-sans text-emerald-700 font-medium">X &amp; LinkedIn Ready</span>
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-1.5 font-sans">
+            <h3 className="text-lg sm:text-xl font-medium text-stone-900 mb-1.5 font-sans">
               1-Click 3D Share Cards &amp; Clean Tweets
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-sans">
@@ -185,13 +185,13 @@ export function Features() {
               >
                 {copiedText ? "Copied" : "Copy Formatted Post"}
               </Button>
-              <span className="text-[11px] text-stone-500 font-sans font-semibold uppercase tracking-wider">280 CHARACTERS</span>
+              <span className="text-[11px] text-stone-500 font-sans font-medium uppercase tracking-wider">280 CHARACTERS</span>
             </div>
           </Card>
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
             <span>Direct 1200×675 Render</span>
-            <span className="font-mono text-xs font-semibold text-emerald-800">indieforest.dev/u/builder</span>
+            <span className="font-mono text-xs font-medium text-emerald-800">indieforest.dev/u/builder</span>
           </div>
         </Card>
       </div>

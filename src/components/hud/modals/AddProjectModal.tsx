@@ -72,7 +72,7 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
         <div className="min-h-[148px] flex flex-col justify-start gap-3">
           {/* Project Name Input */}
           <div>
-            <label className="text-xs font-semibold text-stone-800 mb-1 block">
+            <label className="text-xs font-medium text-stone-800 mb-1 block">
               {projectType === "shipping" ? "Repository or Project Name" : "Customer or Product Name"}
             </label>
             <input
@@ -93,7 +93,7 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
           {/* MRR Input (Only for Revenue) or Code Info Slot */}
           {projectType === "revenue" ? (
             <div>
-              <label className="text-xs font-semibold text-stone-800 mb-1 block">
+              <label className="text-xs font-medium text-stone-800 mb-1 block">
                 Monthly Recurring Revenue ($/mo)
               </label>
               <div className="relative">
@@ -104,14 +104,14 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
                   value={mrr}
                   onChange={(e) => setMrr(e.target.value)}
                   placeholder="29"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs text-stone-900 font-mono font-bold outline-none focus:border-amber-600 focus:bg-white transition"
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs text-stone-900 font-mono font-medium outline-none focus:border-amber-600 focus:bg-white transition"
                 />
               </div>
             </div>
           ) : (
             <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
               <span>Automatic GitHub API Tracking</span>
-              <span className="font-semibold text-emerald-800">Zero-Touch</span>
+              <span className="font-medium text-emerald-800">Zero-Touch</span>
             </div>
           )}
         </div>
@@ -122,7 +122,7 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
           variant={projectType === "shipping" ? "emerald" : "amber"}
           size="md"
           icon={projectType === "shipping" ? GitBranch : TrendingUp}
-          className="w-full mt-1 justify-center font-bold text-xs shadow-md"
+          className="w-full mt-1 justify-center text-xs shadow-md"
         >
           {projectType === "shipping" ? "Add Code Project" : "Add Revenue Project"}
         </Button>

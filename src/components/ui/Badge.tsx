@@ -34,7 +34,7 @@ export function Badge({
     amber: "bg-amber-50 text-amber-900 border border-amber-200/90",
     sky: "bg-sky-50 text-sky-900 border border-sky-200/90",
     stone: "bg-white text-stone-700 border border-stone-300/80 shadow-xs",
-    pixel: "bg-emerald-50 text-emerald-800 border border-emerald-200/90 font-mono font-bold",
+    pixel: "bg-emerald-50 text-emerald-800 border border-emerald-200/90 font-pixel font-normal",
     danger: "bg-red-50 text-red-800 border border-red-200/90",
   }[variant];
 
@@ -49,7 +49,7 @@ export function Badge({
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-sans font-semibold tracking-tight ${sizeStyles} ${variantStyles} ${className}`}
+      className={`inline-flex items-center rounded-full font-sans font-medium tracking-tight ${sizeStyles} ${variantStyles} ${className}`}
     >
       {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />}
       {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}

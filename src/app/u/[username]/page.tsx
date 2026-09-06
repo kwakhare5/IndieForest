@@ -30,7 +30,7 @@ const IslandCanvas = dynamic(
     loading: () => (
       <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] rounded-2xl gap-2">
         <div className="w-6 h-6 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
-        <span className="text-[11px] font-bold text-stone-500 font-sans">
+        <span className="text-[11px] font-medium text-stone-500 font-sans">
           Loading Island...
         </span>
       </div>
@@ -133,7 +133,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-2 text-xs font-semibold text-stone-600 hover:text-stone-950 transition"
+            className="flex items-center gap-2 text-xs font-medium text-stone-600 hover:text-stone-950 transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Home</span>
@@ -195,7 +195,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
             />
 
             {/* Public Diorama Tag */}
-            <div className="absolute top-4 left-4 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-stone-200/70 text-[11px] font-semibold text-stone-700 shadow-sm">
+            <div className="absolute top-4 left-4 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-stone-200/70 text-[11px] font-medium text-stone-700 shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               <span>Live 3D Proof-of-Work Diorama · @{username}</span>
             </div>
@@ -214,13 +214,13 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                   className="w-16 h-16 rounded-2xl border-2 border-emerald-300 shadow-md"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-inner font-sans">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-medium text-xl shadow-inner font-sans">
                   {username.slice(0, 2).toUpperCase()}
                 </div>
               )}
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-stone-950 tracking-tight font-sans">
+                  <h1 className="text-xl sm:text-2xl font-medium text-stone-950 tracking-tight font-sans">
                     @{username}
                   </h1>
                   <Badge variant="emerald" size="sm">
@@ -244,7 +244,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
               <span className="text-[11px] text-stone-500 font-sans block">
                 Active Consistency
               </span>
-              <div className="text-xl font-bold text-amber-700 font-pixel flex items-center gap-1.5">
+              <div className="text-xl font-normal text-amber-700 font-pixel flex items-center gap-1.5">
                 <Flame className="w-4 h-4 fill-amber-500 text-amber-600" />
                 {streakDays} DAYS
               </div>
@@ -255,7 +255,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
               <span className="text-[11px] text-stone-500 font-sans block">
                 Active Modules
               </span>
-              <div className="text-xl font-bold text-emerald-800 font-pixel flex items-center gap-1.5">
+              <div className="text-xl font-normal text-emerald-800 font-pixel flex items-center gap-1.5">
                 <Trees className="w-4 h-4 text-emerald-700" />
                 {trees.length} MODULES
               </div>
@@ -269,7 +269,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
               <span className="text-[11px] text-stone-500 font-sans block">
                 Total Activity
               </span>
-              <div className="text-xl font-bold text-stone-900 font-pixel flex items-center gap-1.5">
+              <div className="text-xl font-normal text-stone-900 font-pixel flex items-center gap-1.5">
                 <TrendingUp className="w-4 h-4 text-emerald-700" />
                 {totalCommits} COMMITS
               </div>
@@ -280,7 +280,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
 
         {/* Modules Section */}
         <section className="space-y-4">
-          <h2 className="text-lg font-bold text-stone-950 font-sans">
+          <h2 className="text-lg font-medium text-stone-950 font-sans">
             Verified Project Modules
           </h2>
           {trees.length > 0 ? (
@@ -307,10 +307,10 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                         )}
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-stone-950 font-sans truncate max-w-[160px]">
+                        <h4 className="font-medium text-sm text-stone-950 font-sans truncate max-w-[160px]">
                           {tree.name}
                         </h4>
-                        <span className="text-[10px] text-stone-500 uppercase font-sans font-semibold tracking-wider">
+                        <span className="text-[10px] text-stone-500 uppercase font-sans font-medium tracking-wider">
                           {tree.tier} Tier
                         </span>
                       </div>
@@ -326,7 +326,7 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
                   </div>
                   <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 font-sans">
                     <span>Planted {new Date(tree.plantedAt).toLocaleDateString()}</span>
-                    <span className="text-emerald-800 font-semibold flex items-center gap-1">
+                    <span className="text-emerald-800 font-medium flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Verified
                     </span>
                   </div>

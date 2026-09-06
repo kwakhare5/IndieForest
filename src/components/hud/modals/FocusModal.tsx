@@ -43,7 +43,7 @@ export function FocusModal({ isOpen, onClose }: FocusModalProps) {
               <Flame className="w-4.5 h-4.5 fill-orange-500" />
             </div>
             <div>
-              <span className="font-bold text-xs text-stone-900 font-sans block">
+              <span className="font-medium text-xs text-stone-900 font-sans block">
                 Campfire Focus
               </span>
               <span className="text-[10px] text-stone-400 font-sans">
@@ -57,7 +57,7 @@ export function FocusModal({ isOpen, onClose }: FocusModalProps) {
             size="sm"
             onClick={toggleCampfireAudio}
             icon={isAudioPlaying ? Volume2 : VolumeX}
-            className={`text-xs ${isAudioPlaying ? "border-orange-300 bg-orange-50 text-orange-800 font-bold" : ""}`}
+            className={`text-xs ${isAudioPlaying ? "border-orange-300 bg-orange-50 text-orange-800 font-medium" : ""}`}
           >
             {isAudioPlaying ? "Lo-Fi Playing" : "Play Lo-Fi Ambiance"}
           </Button>
@@ -66,15 +66,15 @@ export function FocusModal({ isOpen, onClose }: FocusModalProps) {
         {/* Automated Daily Shipping Status Card */}
         <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="font-bold text-xs text-stone-900 font-sans">
+            <span className="font-medium text-xs text-stone-900 font-sans">
               Today&apos;s Shipping Status
             </span>
             {todayShip ? (
-              <span className="flex items-center gap-1 text-emerald-700 text-[11px] font-bold">
+              <span className="flex items-center gap-1 text-emerald-700 text-[11px] font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Shipped Today
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-amber-700 text-[11px] font-bold">
+              <span className="flex items-center gap-1 text-amber-700 text-[11px] font-medium">
                 <Sparkles className="w-3.5 h-3.5" /> Awaiting Git Push
               </span>
             )}

@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, JetBrains_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const geist = Geist({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -21,6 +22,53 @@ const instrumentSerif = Instrument_Serif({
   weight: ["400"],
   subsets: ["latin"],
   style: ["normal", "italic"],
+  display: "swap",
+});
+
+const thatThatNewPixel = localFont({
+  src: [
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-square.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-round.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-round.otf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-square.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicsquare.otf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicround.otf",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicround.otf",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicsquare.otf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-pixel",
   display: "swap",
 });
 
@@ -53,7 +101,7 @@ export default function RootLayout({
     <ClerkProvider publishableKey={clerkPubKey}>
       <html lang="en" className="scroll-smooth">
         <body
-          className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} antialiased bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white`}
+          className={`${geist.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} ${thatThatNewPixel.variable} antialiased bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white`}
         >
           {children}
         </body>

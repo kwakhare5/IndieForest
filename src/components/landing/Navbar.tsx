@@ -23,13 +23,13 @@ export function Navbar() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <span className="font-bold text-xs sm:text-sm text-stone-950 tracking-tight font-sans">
+            <span className="font-medium text-xs sm:text-sm text-stone-950 tracking-tight font-sans">
               IndieForest
             </span>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 text-xs font-semibold text-stone-600 font-sans">
+          <nav className="hidden md:flex items-center gap-1 text-xs font-medium text-stone-600 font-sans">
             <a
               href="#overview"
               className="px-2.5 py-1 rounded-full hover:bg-stone-100/90 hover:text-stone-950 transition"

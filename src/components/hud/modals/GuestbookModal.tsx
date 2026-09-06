@@ -64,7 +64,7 @@ export function GuestbookModal({
             entries.map((entry) => (
               <Card key={entry.id} variant="subtle-inset" className="p-3 rounded-xl space-y-1 text-xs font-sans">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-stone-900 font-sans">{entry.author}</span>
+                  <span className="font-medium text-stone-900 font-sans">{entry.author}</span>
                   <span className="text-[10px] text-stone-500 font-mono">
                     {new Date(entry.timestamp).toLocaleDateString()}
                   </span>
@@ -96,7 +96,7 @@ export function GuestbookModal({
           </div>
 
           <div className="flex items-center justify-between pt-1">
-            <span className="text-[10px] text-stone-500 font-sans font-semibold tracking-wider uppercase">MAX 120 CHARACTERS</span>
+            <span className="text-[10px] text-stone-500 font-sans font-medium tracking-wider uppercase">MAX 120 CHARACTERS</span>
             
             <Button
               type="submit"

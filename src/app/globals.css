@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 @import "tailwindcss";
 
 @layer base {
@@ -56,30 +55,35 @@ nextjs-portal,
 body {
   background: radial-gradient(circle at 50% 25%, #f4f0e8 0%, #ece7de 60%, #e2ded4 100%);
   color: var(--foreground);
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   min-height: 100vh;
 }
 
-/* Typography Classes */
+/* Typography Classes — Strictly Enforcing 4 Canonical Fonts:
+   1. Geist (font-sans)
+   2. That That New Pixel (font-pixel)
+   3. Instrument Serif (font-editorial)
+   4. JetBrains Mono (font-mono)
+*/
 .font-sans {
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans), sans-serif;
+  letter-spacing: -0.01em;
 }
 
 .font-editorial {
-  font-family: var(--font-editorial), "PP Editorial New", "Instrument Serif", Georgia, serif;
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 400; /* Preserve authentic editorial serif contrast without faux bold */
 }
 
-/* Retro pixel font strictly for numbers, scores and streak counters */
 .font-pixel {
-  font-family: 'Jersey 10', monospace;
-  font-weight: 400;
-  font-size: 1.1em;
-  letter-spacing: 0.04em;
-  line-height: 1.1;
+  font-family: var(--font-pixel), monospace;
+  letter-spacing: 0.02em;
 }
 
 code, kbd, samp, pre, .font-mono {
-  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono), monospace;
 }
 
 /* Canonical Double-Bezel Porcelain Architecture (Solid White Minimalist) */

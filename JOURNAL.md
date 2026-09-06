@@ -15,6 +15,16 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
+### [IndieForest — Canonical 4-Font Typography System & Weight Refactor] 2026-09-07
+- **Commit**: `1e28bed` (Canonical 4-Font System Enforced, Geist Boldness Fixed, 0 Instances of font-bold or font-semibold, 64/64 Tests Green, Turbopack Build Clean)
+- **Vibe**: Complete typographic elevation and architectural discipline. Diagnosed the root cause behind Geist's heavy visual weight on Windows subpixel rendering and systematically refactored the entire project to an exact 4-font hierarchy (Geist Sans, That That New Pixel, Instrument Serif, JetBrains Mono). Stepped down bloated 700/600 weights to clean 500/400 weights across every button, card, modal, view, and specimen dock. Zero bold clutter, pure modern minimalism.
+- **Shipped**:
+  - **The 4 Canonical Fonts Locked (`layout.tsx`, `globals.css`):** Formally established and locked the 4-font system: Geist Sans (`.font-sans`), That That New Pixel (`.font-pixel`), Instrument Serif (`.font-editorial`), and JetBrains Mono (`.font-mono`). Purged obsolete Google font imports, Jersey 10, Plus Jakarta Sans, and redundant font-family fallbacks.
+  - **Subpixel Antialiasing & Tracking Tuning (`globals.css`):** Enforced `font-weight: 400` and relaxed letter spacing (`-0.01em`) on `body` and `.font-sans` to resolve dark ink blocking under Windows DirectWrite antialiasing.
+  - **Universal Font Weight Refactor (25+ files across `src/`):** Refactored all UI primitives (`Button`, `Badge`, `Modal`, `SegmentedControl`), HUD overlays, modals, landing sections, `Workshop3D`, `u/[username]`, and `/prototype/unfair` to `font-medium` (500) and `font-normal` (400). Eradicated all `font-bold` and `font-semibold` across the entire `src/` directory.
+  - **High-Taste Social Specimen (`src/app/prototype/unfair/page.tsx`):** Built 3 high-taste proof-of-work card concepts inspired by unfair.so's spatial luxury (Diorama Shadowbox, Builder Passport, Compound Ledger) with seamless switching and font weight harmonization.
+  - **Production Verification:** 64/64 Vitest tests passing green, Next.js Turbopack build compiling cleanly in 2.4s with 0 TypeScript or ESLint errors.
+
 ### [IndieForest — Full Audit Repair, GitHub Sync, 3D Lighting & Realtime Parity] 2026-09-04
 - **Commit**: `pending` (GitHub Sync Repaired, Google OAuth Identity Binding, Dynamic 3D Scene Lighting, Supabase Realtime Subscriptions, 3D Workshop Dashboard Parity, 64/64 Tests Green)
 - **Vibe**: Complete end-to-end alignment and repair. Eliminated the phantom `/api/island` route and rewired store syncing to the live `/api/github/preview` endpoint. Handled Google-OAuth identity gracefully by binding real handles (`kwakhare5`) permanently in state. Transformed 3D diorama lighting from stuck midday white to dynamic Day, Sunset, Night, and Drought palettes. Added Supabase Realtime listeners so revenue webhooks sprout Golden Oaks live with chimes and confetti.

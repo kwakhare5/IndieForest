@@ -57,7 +57,7 @@ export function DashboardNav({
           <Link
             href={backHref}
             onClick={() => sound.playClick()}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition"
             title={`Return to ${backLabel}`}
           >
             <ArrowLeft className="w-3.5 h-3.5 text-stone-500" />
@@ -83,7 +83,7 @@ export function DashboardNav({
                     sound.playClick();
                     onViewModeChange("diorama");
                   }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                     viewMode === "diorama"
                       ? "bg-white text-stone-950 shadow-xs"
                       : "text-stone-600 hover:text-stone-950"
@@ -99,7 +99,7 @@ export function DashboardNav({
                     sound.playClick();
                     onViewModeChange("forest-grid");
                   }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                     viewMode === "forest-grid"
                       ? "bg-white text-stone-950 shadow-xs"
                       : "text-stone-600 hover:text-stone-950"
@@ -115,7 +115,7 @@ export function DashboardNav({
                     sound.playClick();
                     onViewModeChange("showroom");
                   }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                     viewMode === "showroom"
                       ? "bg-white text-stone-950 shadow-xs"
                       : "text-stone-600 hover:text-stone-950"
@@ -140,7 +140,7 @@ export function DashboardNav({
               setIsQuestsPopoverOpen((prev) => !prev);
             }}
             icon={Target}
-            className="relative shadow-xs active:scale-95 transition-transform text-xs font-semibold"
+            className="relative shadow-xs active:scale-95 transition-transform text-xs font-medium"
             title="Daily Proof-of-Work Quests (Press Q)"
           >
             <span>Quests</span>
@@ -169,7 +169,7 @@ export function DashboardNav({
                   <Target className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-stone-950 font-sans">Daily Builder Quests</h3>
+                  <h3 className="text-xs font-medium text-stone-950 font-sans">Daily Builder Quests</h3>
                   <span className="text-[10px] text-stone-500 font-sans block">Proof-of-Work Milestones</span>
                 </div>
               </div>
@@ -198,14 +198,14 @@ export function DashboardNav({
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-stone-900 text-xs font-sans">{quest.title}</span>
+                        <span className="font-medium text-stone-900 text-xs font-sans">{quest.title}</span>
                         <Badge variant={quest.category === "shipping" ? "emerald" : quest.category === "revenue" ? "amber" : "stone"} size="sm">
                           {quest.category}
                         </Badge>
                       </div>
                       <p className="text-[11px] text-stone-500 leading-relaxed mt-0.5 font-sans">{quest.description}</p>
                     </div>
-                    <span className="shrink-0 text-xs font-pixel font-bold text-emerald-800">
+                    <span className="shrink-0 text-xs font-pixel font-normal text-emerald-800">
                       +{quest.xpReward} XP
                     </span>
                   </div>
@@ -222,7 +222,7 @@ export function DashboardNav({
                     </div>
 
                     {quest.isClaimed ? (
-                      <span className="flex items-center gap-1 text-emerald-700 text-[10px] font-bold">
+                      <span className="flex items-center gap-1 text-emerald-700 text-[10px] font-medium">
                         <CheckCircle2 className="w-3 h-3" /> Claimed
                       </span>
                     ) : quest.isCompleted ? (

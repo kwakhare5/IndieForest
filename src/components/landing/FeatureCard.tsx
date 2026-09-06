@@ -43,7 +43,7 @@ export function FeatureCard({
       <div>
         {stepTag && (
           <span
-            className={`font-sans text-[11px] font-bold uppercase tracking-wider block mb-2 ${stepTagColor}`}
+            className={`font-sans text-[11px] font-medium uppercase tracking-wider block mb-2 ${stepTagColor}`}
           >
             {stepTag}
           </span>
@@ -57,7 +57,7 @@ export function FeatureCard({
           </div>
         )}
 
-        <h3 className="text-base sm:text-lg font-bold text-stone-900 mb-2 font-sans">
+        <h3 className="text-base sm:text-lg font-medium text-stone-900 mb-2 font-sans">
           {title}
         </h3>
 

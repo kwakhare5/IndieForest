@@ -203,11 +203,11 @@ Living 3D world: ${profileUrl}`,
         <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-left font-sans space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+              <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-medium text-xs">
                 {badge}
               </div>
               <div>
-                <span className="text-xs font-bold text-stone-900 font-sans block leading-none">
+                <span className="text-xs font-medium text-stone-900 font-sans block leading-none">
                   @{user.username || "builder"}
                 </span>
                 <span className="text-[10px] text-stone-400 font-sans font-medium">
@@ -233,7 +233,7 @@ Living 3D world: ${profileUrl}`,
             variant="outline"
             size="md"
             icon={copiedText ? Check : Copy}
-            className="w-full justify-center text-xs font-bold"
+            className="w-full justify-center text-xs"
           >
             {copiedText ? "Text Copied!" : "Copy Post Text"}
           </Button>
@@ -243,7 +243,7 @@ Living 3D world: ${profileUrl}`,
             variant="dark"
             size="md"
             icon={Twitter}
-            className="w-full justify-center text-xs font-bold"
+            className="w-full justify-center text-xs"
           >
             Open in X / Twitter
           </Button>
@@ -256,7 +256,7 @@ Living 3D world: ${profileUrl}`,
             variant="emerald"
             size="md"
             icon={copiedImage ? Check : Copy}
-            className="w-full justify-center text-xs font-bold"
+            className="w-full justify-center text-xs"
           >
             {copiedImage ? "Image Copied!" : "Copy 3D Card Image"}
           </Button>
@@ -267,7 +267,7 @@ Living 3D world: ${profileUrl}`,
             variant="outline"
             size="md"
             icon={Download}
-            className="w-full justify-center text-xs font-bold"
+            className="w-full justify-center text-xs"
           >
             Download HD PNG
           </Button>

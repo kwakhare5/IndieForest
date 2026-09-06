@@ -43,16 +43,16 @@ export function SegmentedControl<T extends string | number>({
             key={String(opt.value)}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 rounded-full font-semibold transition-all duration-150 flex items-center justify-center cursor-pointer select-none whitespace-nowrap overflow-hidden ${sizeStyles} ${
+            className={`flex-1 rounded-full font-medium transition-all duration-150 flex items-center justify-center cursor-pointer select-none whitespace-nowrap overflow-hidden ${sizeStyles} ${
               isSelected
-                ? "bg-white text-stone-950 shadow-[0_2px_8px_-2px_rgba(68,64,60,0.12),inset_0_1px_1px_rgba(255,255,255,1)] border border-stone-200/90 font-bold"
+                ? "bg-white text-stone-950 shadow-[0_2px_8px_-2px_rgba(68,64,60,0.12),inset_0_1px_1px_rgba(255,255,255,1)] border border-stone-200/90 font-medium"
                 : "text-stone-600 hover:text-stone-900 font-medium"
             }`}
           >
             {Icon && <Icon className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} />}
             <span className="truncate">{opt.label}</span>
             {opt.badge && (
-              <span className="ml-1 font-sans text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded-full border border-emerald-200 shrink-0">
+              <span className="ml-1 font-sans text-[10px] font-medium text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded-full border border-emerald-200 shrink-0">
                 {opt.badge}
               </span>
             )}

@@ -43,7 +43,7 @@ export function HowItWorks() {
             description="Every repository becomes an evergreen pine. More commits make it taller. Stripe sales sprout golden cash pines."
             previewWidget={
               <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between shadow-xs">
-                <span className="flex items-center gap-1.5 font-bold font-sans">
+                <span className="flex items-center gap-1.5 font-medium font-sans">
                   <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-600" /> +100 XP
                 </span>
                 <Badge variant="amber" size="sm">Tier II (Small)</Badge>
@@ -62,7 +62,7 @@ export function HowItWorks() {
             description="Export verified 1200×675 3D cards and human tweets to share on X, LinkedIn, or embed in your GitHub README."
             previewWidget={
               <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between shadow-xs">
-                <span className="flex items-center gap-1.5 font-bold font-sans">
+                <span className="flex items-center gap-1.5 font-medium font-sans">
                   <Zap className="w-3.5 h-3.5 text-emerald-700" /> 1200×675 Card
                 </span>
                 <Badge variant="emerald" size="sm">HD Export</Badge>

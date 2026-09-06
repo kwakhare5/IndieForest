@@ -41,7 +41,7 @@ export function Faq() {
         <div className="space-y-4">
           {FAQ_ITEMS.map((item, idx) => (
             <Card key={idx} variant="porcelain" className="p-6 rounded-2xl space-y-1.5">
-              <h3 className="font-bold text-stone-950 text-sm font-sans">
+              <h3 className="font-medium text-stone-950 text-sm font-sans">
                 {item.question}
               </h3>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
