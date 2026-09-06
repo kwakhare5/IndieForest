@@ -228,7 +228,7 @@ export function Workshop3D() {
                 setTimeOfDay("day");
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "day" ? "bg-amber-100 text-amber-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                timeOfDay === "day" ? "bg-amber-100 text-amber-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title="Day Sunlight"
             >
@@ -242,7 +242,7 @@ export function Workshop3D() {
                 setTimeOfDay("sunset");
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "sunset" ? "bg-orange-100 text-orange-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                timeOfDay === "sunset" ? "bg-orange-100 text-orange-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title="Sunset Golden Hour"
             >
@@ -256,7 +256,7 @@ export function Workshop3D() {
                 setTimeOfDay("night");
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "night" ? "bg-indigo-100 text-indigo-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                timeOfDay === "night" ? "bg-indigo-100 text-indigo-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title="Night Moonlit"
             >
@@ -272,7 +272,7 @@ export function Workshop3D() {
                 setDrought(!drought);
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                drought ? "bg-amber-100 text-amber-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                drought ? "bg-amber-100 text-amber-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title={drought ? "Drought Mode Active" : "Lush Season"}
             >
@@ -286,7 +286,7 @@ export function Workshop3D() {
                 setAutoRotate(!autoRotate);
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                autoRotate ? "bg-emerald-100 text-emerald-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                autoRotate ? "bg-emerald-100 text-emerald-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title="Toggle 360° Turntable Rotation"
             >
@@ -305,9 +305,9 @@ export function Workshop3D() {
             <div className="flex items-center justify-between border-b border-stone-100 pb-2">
               <div className="flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-emerald-600" />
-                <span className="font-bold text-xs text-stone-900">3D Workshop Spec</span>
+                <span className="font-medium text-xs text-stone-900">3D Workshop Spec</span>
               </div>
-              <span className="text-[10px] font-mono bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-full uppercase">
+              <span className="text-[10px] font-mono bg-emerald-50 text-emerald-800 font-medium px-2 py-0.5 rounded-full uppercase">
                 {activeAsset.replace("-", " ")}
               </span>
             </div>
@@ -317,7 +317,7 @@ export function Workshop3D() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-stone-600 font-medium">5-Stage Growth Lineage:</span>
-                  <span className="font-bold font-mono text-emerald-800">{currentStage.badge}</span>
+                  <span className="font-medium font-mono text-emerald-800">{currentStage.badge}</span>
                 </div>
 
                 {/* 5 Stage Buttons Grid */}
@@ -337,8 +337,8 @@ export function Workshop3D() {
                           : "bg-stone-50 text-stone-700 hover:bg-stone-100 border border-stone-200/80"
                       }`}
                     >
-                      <span className="text-[9px] font-black font-mono opacity-80">{s.roman}</span>
-                      <span className="text-[10px] font-bold tracking-tight">{s.label}</span>
+                      <span className="text-[9px] font-mono opacity-80">{s.roman}</span>
+                      <span className="text-[10px] font-medium tracking-tight">{s.label}</span>
                     </button>
                   ))}
                 </div>
@@ -346,8 +346,8 @@ export function Workshop3D() {
                 {/* Live Spec Callout Box */}
                 <div className="p-2.5 rounded-lg bg-stone-50 border border-stone-200/80 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-stone-900">{currentStage.label}</span>
-                    <span className="text-[9px] font-mono font-bold text-stone-500 bg-stone-200/80 px-1.5 py-0.5 rounded">
+                    <span className="text-xs font-medium text-stone-900">{currentStage.label}</span>
+                    <span className="text-[9px] font-mono font-medium text-stone-500 bg-stone-200/80 px-1.5 py-0.5 rounded">
                       {currentStage.requirement}
                     </span>
                   </div>
@@ -361,7 +361,7 @@ export function Workshop3D() {
               <div className="space-y-2">
                 <div className="p-2.5 rounded-lg bg-stone-50 border border-stone-200/80 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-stone-900">
+                    <span className="text-xs font-medium text-stone-900">
                       {activeAsset === "canvas-tent"
                         ? "Canvas Tent"
                         : activeAsset === "log-cabin"
@@ -370,7 +370,7 @@ export function Workshop3D() {
                         ? "Milestone Campfire"
                         : "Companion Dog"}
                     </span>
-                    <span className="text-[9px] font-mono font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">
+                    <span className="text-[9px] font-mono font-medium text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">
                       {activeAsset === "canvas-tent"
                         ? "Starter Shelter (Days 1–13)"
                         : activeAsset === "log-cabin"
@@ -413,7 +413,7 @@ export function Workshop3D() {
                 sound.playClick();
                 setActiveAsset("green-tree");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                 activeAsset === "green-tree"
                   ? "bg-emerald-600 text-white shadow-xs scale-105"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
@@ -429,7 +429,7 @@ export function Workshop3D() {
                 sound.playClick();
                 setActiveAsset("orange-tree");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                 activeAsset === "orange-tree"
                   ? "bg-amber-600 text-white shadow-xs scale-105"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
@@ -445,7 +445,7 @@ export function Workshop3D() {
                 sound.playClick();
                 setActiveAsset("canvas-tent");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                 activeAsset === "canvas-tent"
                   ? "bg-amber-700 text-white shadow-xs scale-105"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
@@ -461,7 +461,7 @@ export function Workshop3D() {
                 sound.playClick();
                 setActiveAsset("log-cabin");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                 activeAsset === "log-cabin"
                   ? "bg-stone-800 text-white shadow-xs scale-105"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
@@ -477,7 +477,7 @@ export function Workshop3D() {
                 sound.playClick();
                 setActiveAsset("campfire");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                 activeAsset === "campfire"
                   ? "bg-orange-600 text-white shadow-xs scale-105"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
@@ -493,7 +493,7 @@ export function Workshop3D() {
                 sound.playClick();
                 setActiveAsset("companion-dog");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                 activeAsset === "companion-dog"
                   ? "bg-amber-600 text-white shadow-xs scale-105"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"

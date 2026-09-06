@@ -92,11 +92,11 @@ export function Modal({
             )}
             <div>
               {badgeText && (
-                <span className="font-sans text-[10px] uppercase tracking-wider font-bold text-emerald-800 block mb-0.5">
+                <span className="font-sans text-[10px] uppercase tracking-wider font-medium text-emerald-800 block mb-0.5">
                   {badgeText}
                 </span>
               )}
-              <h2 className="text-base font-bold text-stone-950 tracking-tight font-sans">
+              <h2 className="text-base font-medium text-stone-950 tracking-tight font-sans">
                 {title}
               </h2>
             </div>

@@ -48,10 +48,10 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
             {isRevenue ? <TrendingUp className="w-4.5 h-4.5" /> : <Trees className="w-4.5 h-4.5" />}
           </div>
           <div>
-            <span className="font-sans text-[10px] uppercase tracking-wider font-bold text-stone-400 block mb-0.5">
+            <span className="font-sans text-[10px] uppercase tracking-wider font-medium text-stone-400 block mb-0.5">
               {isRevenue ? "Revenue Grove" : "Code Grove"}
             </span>
-            <h3 className="text-sm font-bold text-stone-950 font-sans truncate max-w-[200px]">
+            <h3 className="text-sm font-medium text-stone-950 font-sans truncate max-w-[200px]">
               {tree.name}
             </h3>
           </div>
@@ -63,7 +63,7 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
             <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
               {isRevenue ? "Tracked MRR" : "Commit Activity"}
             </span>
-            <div className="flex items-center gap-1 font-bold text-xs text-stone-900">
+            <div className="flex items-center gap-1 font-medium text-xs text-stone-900">
               {isRevenue ? (
                 <>
                   <DollarSign className="w-3.5 h-3.5 text-amber-600" />
@@ -82,7 +82,7 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
             <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
               Growth Stage
             </span>
-            <Badge variant={isRevenue ? "amber" : "emerald"} size="sm" className="uppercase font-bold">
+            <Badge variant={isRevenue ? "amber" : "emerald"} size="sm" className="uppercase font-medium">
               {toPlainEnglishTier(tree.tier)}
             </Badge>
           </div>

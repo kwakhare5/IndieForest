@@ -94,9 +94,9 @@ export function GridView({
             <div className="flex items-center justify-between border-b border-stone-100 pb-2">
               <div className="flex items-center gap-1.5">
                 <Grid className="w-4 h-4 text-emerald-700" />
-                <span className="font-bold text-xs text-stone-900">Discrete Grid System</span>
+                <span className="font-medium text-xs text-stone-900">Discrete Grid System</span>
               </div>
-              <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 font-medium px-2 py-0.5 rounded-full">
                 1.65m Tiles
               </span>
             </div>
@@ -110,15 +110,15 @@ export function GridView({
               <div className="p-2 rounded-lg bg-stone-50 border border-stone-100 flex items-center gap-2">
                 <GitCommit className="w-3.5 h-3.5 text-emerald-600" />
                 <div>
-                  <div className="text-[9px] font-bold text-stone-400 uppercase">Code Pines</div>
-                  <div className="text-xs font-black text-stone-800">12 Repos</div>
+                  <div className="text-[9px] font-medium text-stone-400 uppercase">Code Pines</div>
+                  <div className="text-xs font-medium text-stone-800">12 Repos</div>
                 </div>
               </div>
               <div className="p-2 rounded-lg bg-stone-50 border border-stone-100 flex items-center gap-2">
                 <DollarSign className="w-3.5 h-3.5 text-amber-600" />
                 <div>
-                  <div className="text-[9px] font-bold text-stone-400 uppercase">Cash Pines</div>
-                  <div className="text-xs font-black text-stone-800">12 Streams</div>
+                  <div className="text-[9px] font-medium text-stone-400 uppercase">Cash Pines</div>
+                  <div className="text-xs font-medium text-stone-800">12 Streams</div>
                 </div>
               </div>
             </div>
@@ -126,13 +126,13 @@ export function GridView({
             {/* Toggles */}
             <div className="space-y-2 pt-1">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-stone-700">3D Coordinate Grid</span>
+                <span className="text-xs font-medium text-stone-700">3D Coordinate Grid</span>
                 <button
                   onClick={() => {
                     sound.playClick();
                     setShowCoordinateGrid((prev) => !prev);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                     showCoordinateGrid ? "bg-emerald-600 text-white shadow-xs" : "bg-stone-200 text-stone-600 hover:bg-stone-300"
                   }`}
                 >
@@ -141,13 +141,13 @@ export function GridView({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-stone-700">Perimeter Wireframe</span>
+                <span className="text-xs font-medium text-stone-700">Perimeter Wireframe</span>
                 <button
                   onClick={() => {
                     sound.playClick();
                     setShowBoundingWireframe((prev) => !prev);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                     showBoundingWireframe ? "bg-indigo-600 text-white shadow-xs" : "bg-stone-200 text-stone-600 hover:bg-stone-300"
                   }`}
                 >
@@ -159,15 +159,15 @@ export function GridView({
             {/* Active Selection Inspector */}
             {selectedTree && (
               <div className="pt-2 border-t border-stone-100 space-y-1">
-                <span className="text-[10px] font-semibold text-stone-400 uppercase tracking-wider">Inspected Cell</span>
+                <span className="text-[10px] font-medium text-stone-400 uppercase tracking-wider">Inspected Cell</span>
                 <div className="p-2 rounded-lg bg-emerald-50/60 border border-emerald-200 flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-emerald-950 font-mono">{selectedTree.name}</span>
+                    <span className="text-xs font-medium text-emerald-950 font-mono">{selectedTree.name}</span>
                     <div className="text-[9px] text-stone-500 font-mono">
                       X: {selectedTree.gridX}m · Z: {selectedTree.gridZ}m
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md uppercase">
+                  <span className="text-[10px] font-medium text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md uppercase">
                     {selectedTree.tier}
                   </span>
                 </div>

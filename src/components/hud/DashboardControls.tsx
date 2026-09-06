@@ -165,7 +165,7 @@ export function DashboardControls({
                   <LayoutGrid className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-stone-950 font-sans">Active Projects</h3>
+                  <h3 className="text-xs font-medium text-stone-950 font-sans">Active Projects</h3>
                   <span className="text-[10px] text-stone-500 font-sans block">{trees.length} Connected Repos</span>
                 </div>
               </div>
@@ -236,7 +236,7 @@ export function DashboardControls({
                         {tree.type === "revenue" ? <TrendingUp className="w-3.5 h-3.5" /> : <GitCommit className="w-3.5 h-3.5" />}
                       </div>
                       <div className="flex flex-col truncate">
-                        <span className="font-bold text-xs text-stone-950 truncate font-sans">{tree.name}</span>
+                        <span className="font-medium text-xs text-stone-950 truncate font-sans">{tree.name}</span>
                         <span className="text-[10px] text-stone-500 uppercase font-sans font-medium tracking-wider">
                           {tree.type === "revenue" ? `$${tree.mrr || 0}/mo` : `${tree.commits || 0} commits`} · {tree.tier}
                         </span>

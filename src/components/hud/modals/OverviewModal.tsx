@@ -46,12 +46,12 @@ export function OverviewModal({
         {/* Profile Command Header */}
         <div className="flex items-center justify-between pb-3 border-b border-stone-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+            <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-medium text-xs">
               {badge}
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-stone-900 text-xs font-sans">
+                <span className="font-medium text-stone-900 text-xs font-sans">
                   @{user.username || "builder"}
                 </span>
                 <Badge variant="emerald" size="sm">
@@ -82,7 +82,7 @@ export function OverviewModal({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Code Grove</span>
-            <div className="text-base font-bold text-emerald-800 font-pixel flex items-center gap-1">
+            <div className="text-base font-normal text-emerald-800 font-pixel flex items-center gap-1">
               <Trees className="w-3.5 h-3.5 text-emerald-600" />
               {shippingTrees.length} PINES
             </div>
@@ -91,7 +91,7 @@ export function OverviewModal({
 
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Cash Grove</span>
-            <div className="text-base font-bold text-amber-700 font-pixel flex items-center gap-1">
+            <div className="text-base font-normal text-amber-700 font-pixel flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
               ${totalMrr}/MO
             </div>
@@ -100,7 +100,7 @@ export function OverviewModal({
 
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Consistency</span>
-            <div className="text-base font-bold text-stone-900 font-pixel">
+            <div className="text-base font-normal text-stone-900 font-pixel">
               {streakDays} DAYS
             </div>
             <span className="text-[10px] text-stone-400">Unbroken streak</span>
@@ -108,7 +108,7 @@ export function OverviewModal({
 
           <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Rank Tier</span>
-            <div className="text-base font-bold text-stone-900 font-pixel">
+            <div className="text-base font-normal text-stone-900 font-pixel">
               LVL {level}
             </div>
             <span className="text-[10px] text-stone-400">{xp} earned XP</span>
@@ -118,7 +118,7 @@ export function OverviewModal({
         {/* Active Projects Breakdown */}
         <div className="space-y-2.5 pt-1">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-stone-900 font-sans uppercase tracking-wider">
+            <span className="text-xs font-medium text-stone-900 font-sans uppercase tracking-wider">
               Connected Projects ({trees.length})
             </span>
             <Button
@@ -143,7 +143,7 @@ export function OverviewModal({
               >
                 <div className="flex items-center gap-2 truncate">
                   <span className={`w-2 h-2 rounded-full ${t.type === "revenue" ? "bg-amber-500" : "bg-emerald-500"}`} />
-                  <span className="font-semibold text-stone-900 truncate">{t.name}</span>
+                  <span className="font-medium text-stone-900 truncate">{t.name}</span>
                 </div>
                 <div className="flex items-center gap-3 shrink-0 text-[11px] text-stone-500">
                   <span>{t.type === "revenue" ? `$${t.mrr || 0}/mo` : `${t.commits || 0} commits`}</span>

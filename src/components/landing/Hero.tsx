@@ -26,7 +26,7 @@ const IslandCanvas = dynamic(
     loading: () => (
       <div className="w-full h-full flex flex-col items-center justify-center bg-[#ece7de] rounded-[2rem] gap-2">
         <div className="w-6 h-6 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
-        <span className="text-[11px] font-bold text-stone-500 font-sans">
+        <span className="text-[11px] font-medium text-stone-500 font-sans">
           Loading 3D Island...
         </span>
       </div>
@@ -256,7 +256,7 @@ export function Hero() {
               <div className="absolute top-4 left-4 pointer-events-none">
                 <Card variant="porcelain" className="px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-bold text-stone-900 font-sans">
+                  <span className="text-xs font-medium text-stone-900 font-sans">
                     {activeProfile ? `@${activeProfile.username}'s Island` : "Live 3D Diorama"}
                   </span>
                 </Card>
@@ -267,7 +267,7 @@ export function Hero() {
                 <div className="absolute bottom-4 inset-x-4 flex items-center justify-between p-2 rounded-2xl bg-white/90 backdrop-blur-md border border-stone-200 shadow-xl">
                   <div className="flex items-center gap-2 pl-2">
                     <Trees className="w-4 h-4 text-emerald-600" />
-                    <span className="text-xs font-bold text-stone-900 font-sans">
+                    <span className="text-xs font-medium text-stone-900 font-sans">
                       {activeProfile.trees.length} Repos Found
                     </span>
                   </div>

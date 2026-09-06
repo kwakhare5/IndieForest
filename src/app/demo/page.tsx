@@ -158,7 +158,7 @@ export default function DemoPage() {
             <Link
               href="/dashboard"
               onClick={() => sound.playClick()}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-stone-500" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -173,7 +173,7 @@ export default function DemoPage() {
                   sound.playClick();
                   setViewMode("diorama");
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                   viewMode === "diorama"
                     ? "bg-white text-stone-950 shadow-xs"
                     : "text-stone-600 hover:text-stone-950"
@@ -188,7 +188,7 @@ export default function DemoPage() {
                   sound.playClick();
                   setViewMode("forest-grid");
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                   viewMode === "forest-grid"
                     ? "bg-white text-stone-950 shadow-xs"
                     : "text-stone-600 hover:text-stone-950"
@@ -203,7 +203,7 @@ export default function DemoPage() {
                   sound.playClick();
                   setViewMode("showroom");
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                   viewMode === "showroom"
                     ? "bg-white text-stone-950 shadow-xs"
                     : "text-stone-600 hover:text-stone-950"
@@ -227,7 +227,7 @@ export default function DemoPage() {
                   sound.playClick();
                   setIsControlsOpen(!isControlsOpen);
                 }}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
                   isControlsOpen ? "bg-emerald-600 text-white shadow-xs" : "text-stone-600 hover:bg-stone-100"
                 }`}
                 title="Toggle Level Simulation Controls"
@@ -245,7 +245,7 @@ export default function DemoPage() {
                 setTimeOfDay("day");
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "day" ? "bg-amber-100 text-amber-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                timeOfDay === "day" ? "bg-amber-100 text-amber-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title="Day Sunlight"
             >
@@ -257,7 +257,7 @@ export default function DemoPage() {
                 setTimeOfDay("sunset");
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "sunset" ? "bg-orange-100 text-orange-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                timeOfDay === "sunset" ? "bg-orange-100 text-orange-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title="Sunset Golden Hour"
             >
@@ -269,7 +269,7 @@ export default function DemoPage() {
                 setTimeOfDay("night");
               }}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "night" ? "bg-indigo-100 text-indigo-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                timeOfDay === "night" ? "bg-indigo-100 text-indigo-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title="Night Moonlit"
             >
@@ -281,7 +281,7 @@ export default function DemoPage() {
             <button
               onClick={toggleSound}
               className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                !isAudioMuted ? "bg-amber-100 text-amber-900 font-bold" : "text-stone-500 hover:bg-stone-100"
+                !isAudioMuted ? "bg-amber-100 text-amber-900 font-medium" : "text-stone-500 hover:bg-stone-100"
               }`}
               title={isAudioMuted ? "Unmute Campfire Ambiance" : "Mute Campfire Ambiance"}
             >
@@ -350,11 +350,11 @@ export default function DemoPage() {
                   <div className="flex items-center justify-between border-b border-stone-100 pb-2">
                     <div className="flex items-center gap-1.5">
                       <Sliders className="w-4 h-4 text-emerald-700" />
-                      <span className="font-bold text-xs text-stone-950 font-sans">Island Controls</span>
+                      <span className="font-medium text-xs text-stone-950 font-sans">Island Controls</span>
                     </div>
                     <button
                       onClick={handleResetDefaults}
-                      className="text-[10px] font-bold text-stone-500 hover:text-stone-900 flex items-center gap-1 cursor-pointer"
+                      className="text-[10px] font-medium text-stone-500 hover:text-stone-900 flex items-center gap-1 cursor-pointer"
                       title="Reset Defaults"
                     >
                       <RotateCcw className="w-3 h-3" />
@@ -366,7 +366,7 @@ export default function DemoPage() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-stone-600 font-medium">Island Level:</span>
-                      <span className="font-bold font-mono text-emerald-800">Lvl {displayLevel} {displayLevel >= 20 ? "(Highland Estate)" : "(Starter)"}</span>
+                      <span className="font-medium font-mono text-emerald-800">Lvl {displayLevel} {displayLevel >= 20 ? "(Highland Estate)" : "(Starter)"}</span>
                     </div>
                     <input
                       type="range"
@@ -387,7 +387,7 @@ export default function DemoPage() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-stone-600 font-medium">Streak Milestone:</span>
-                      <span className="font-bold font-mono text-amber-800">{streakDays} Days</span>
+                      <span className="font-medium font-mono text-amber-800">{streakDays} Days</span>
                     </div>
                     <input
                       type="range"
@@ -408,7 +408,7 @@ export default function DemoPage() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-stone-600 font-medium">Streak Shields:</span>
-                      <span className="font-bold font-mono text-stone-800">{streakShields} / 2 Banked</span>
+                      <span className="font-medium font-mono text-stone-800">{streakShields} / 2 Banked</span>
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       {[0, 1, 2].map((count) => (
@@ -418,7 +418,7 @@ export default function DemoPage() {
                             sound.playClick();
                             setStreakShields(count);
                           }}
-                          className={`py-1 rounded-lg text-xs font-semibold border transition cursor-pointer ${streakShields === count ? "bg-emerald-600 text-white border-emerald-700 shadow-xs" : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"}`}
+                          className={`py-1 rounded-lg text-xs font-medium border transition cursor-pointer ${streakShields === count ? "bg-emerald-600 text-white border-emerald-700 shadow-xs" : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"}`}
                         >
                           {count} {count === 1 ? "Shield" : "Shields"}
                         </button>

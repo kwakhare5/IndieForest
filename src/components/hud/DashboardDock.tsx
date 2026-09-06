@@ -32,7 +32,7 @@ export function DashboardDock({
           
           {/* 1. Amber Streak Pill */}
           <div
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/90 text-amber-900 text-xs font-bold font-pixel shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/90 text-amber-900 text-xs font-normal font-pixel shadow-xs"
             title={`${streakDays} Consecutive Shipping Days`}
           >
             <Flame className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
@@ -47,7 +47,7 @@ export function DashboardDock({
             title={`${activeTreesCount} Active Connected Projects`}
           >
             <Trees className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="font-bold text-stone-900">{activeTreesCount}</span>
+            <span className="font-medium text-stone-900">{activeTreesCount}</span>
             <span className="text-[10px] text-stone-400 font-medium">REPOS</span>
           </div>
 
@@ -57,7 +57,7 @@ export function DashboardDock({
             title={`$${totalMrr.toLocaleString()} Monthly Recurring Revenue`}
           >
             <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
-            <span className="font-bold text-amber-900 font-mono">${totalMrr.toLocaleString()}</span>
+            <span className="font-medium text-amber-900 font-mono">${totalMrr.toLocaleString()}</span>
             <span className="text-[10px] text-stone-400 font-medium">MRR</span>
           </div>
 
@@ -67,7 +67,7 @@ export function DashboardDock({
             title={`Builder Level ${level}`}
           >
             <span>LVL</span>
-            <span className="font-bold text-stone-900">{level}</span>
+            <span className="font-normal text-stone-900">{level}</span>
           </div>
 
           <div className="w-[1px] h-4 bg-stone-200 my-auto" />
@@ -81,7 +81,7 @@ export function DashboardDock({
               onOpenShare?.();
             }}
             icon={Share2}
-            className="font-bold shadow-xs active:scale-95 transition-transform text-xs"
+            className="shadow-xs active:scale-95 transition-transform text-xs"
             title="Export 3D Share Card & Proof (Press S)"
           >
             Share Proof

@@ -133,7 +133,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <UserButton />
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-stone-900 text-xs font-sans">
+                  <span className="font-medium text-stone-900 text-xs font-sans">
                     {clerkUser?.fullName || `@${user.username}`}
                   </span>
                   <Badge variant="emerald" size="sm">
@@ -148,7 +148,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           ) : (
             <div className="flex items-center justify-between w-full">
               <div>
-                <span className="font-bold text-stone-900 text-xs block">
+                <span className="font-medium text-stone-900 text-xs block">
                   Guest Mode (@{user.username})
                 </span>
                 <span className="text-[10px] text-stone-500">
@@ -182,7 +182,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           {activeTab === "github" && (
             <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
               <div>
-                <label className="font-semibold text-stone-800 text-xs block mb-1">
+                <label className="font-medium text-stone-800 text-xs block mb-1">
                   GitHub Username / Handle
                 </label>
                 <div className="flex gap-2">
@@ -212,7 +212,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   Sprouts an Evergreen Pine for each repository. Commits pushed to your main branch level up tree tiers.
                 </p>
                 {syncError && (
-                  <p className="text-[11px] text-rose-600 font-semibold mt-2 animate-in fade-in">
+                  <p className="text-[11px] text-rose-600 font-medium mt-2 animate-in fade-in">
                     {syncError}
                   </p>
                 )}
@@ -224,7 +224,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           {activeTab === "revenue" && (
             <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
               <div>
-                <label className="font-semibold text-stone-800 text-xs block mb-1">
+                <label className="font-medium text-stone-800 text-xs block mb-1">
                   Universal Ingestion Endpoint
                 </label>
                 <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50 border border-stone-200">
@@ -236,7 +236,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   />
                   <button
                     onClick={handleCopyWebhook}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-semibold text-[11px] transition shrink-0 cursor-pointer shadow-xs"
+                    className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-medium text-[11px] transition shrink-0 cursor-pointer shadow-xs"
                   >
                     {copiedWebhook ? "Copied!" : "Copy"}
                   </button>
@@ -244,7 +244,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </div>
 
               <div className="space-y-1.5 text-[11px] text-stone-600 leading-relaxed">
-                <span className="font-bold text-stone-900 block text-xs">Setup in 30 seconds:</span>
+                <span className="font-medium text-stone-900 block text-xs">Setup in 30 seconds:</span>
                 <p>1. Open Stripe / Polar / Lemon Squeezy $\rightarrow$ <strong>Developers $\rightarrow$ Webhooks</strong>.</p>
                 <p>2. Paste this URL and listen for <code>payment_intent.succeeded</code> or <code>subscription.created</code>.</p>
                 <p>3. Every sale will sprout a Golden Revenue Oak on your East grove.</p>
@@ -256,7 +256,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           {activeTab === "badge" && (
             <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
               <div>
-                <label className="font-semibold text-stone-800 text-xs block mb-1">
+                <label className="font-medium text-stone-800 text-xs block mb-1">
                   GitHub Profile README Embed
                 </label>
                 <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50 border border-stone-200">
@@ -268,7 +268,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   />
                   <button
                     onClick={handleCopyBadgeMd}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-semibold text-[11px] transition shrink-0 cursor-pointer shadow-xs"
+                    className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-medium text-[11px] transition shrink-0 cursor-pointer shadow-xs"
                   >
                     {copiedBadgeMd ? "Copied!" : "Copy"}
                   </button>
@@ -276,7 +276,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </div>
 
               <div>
-                <label className="font-semibold text-stone-800 text-xs block mb-1">
+                <label className="font-medium text-stone-800 text-xs block mb-1">
                   Public Island Showcase Link
                 </label>
                 <div className="flex items-center justify-between p-2 rounded-xl bg-stone-50 border border-stone-200">
@@ -286,7 +286,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={handleCopyProfile}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-semibold text-[11px] transition cursor-pointer shadow-xs"
+                      className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-medium text-[11px] transition cursor-pointer shadow-xs"
                     >
                       {copiedProfile ? "Copied!" : "Copy"}
                     </button>
