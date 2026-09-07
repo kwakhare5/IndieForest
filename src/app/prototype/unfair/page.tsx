@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Twitter, Copy, Check, Sparkles, Layers, ShieldCheck, TrendingUp, Flame, TreePine } from "lucide-react";
+import { ArrowLeft, Twitter, Copy, Check, ShieldCheck, TrendingUp, TreePine } from "lucide-react";
 
 type DesignConcept = "diorama-shadowbox" | "builder-passport" | "compound-ledger";
 
@@ -12,10 +12,9 @@ export default function IndieForestTastePrototype() {
   const [copied, setCopied] = useState(false);
 
   // Builder data state
-  const [streakDays, setStreakDays] = useState(42);
-  const [mrr, setMrr] = useState(1420);
-  const [commits, setCommits] = useState(384);
-  const [treesCount, setTreesCount] = useState(14);
+  const streakDays = 42;
+  const mrr = 1420;
+  const treesCount = 14;
   const username = "kwakhare5";
   const displayName = "Karan Wakhare";
   const latestShip = "Added Supabase realtime tree sprouting engine";

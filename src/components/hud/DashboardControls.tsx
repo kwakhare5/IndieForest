@@ -116,7 +116,7 @@ export function DashboardControls({
             title="Connected Projects Popover"
           >
             <span>Projects</span>
-            <span className={`text-xs font-pixel ml-0.5 px-1.5 py-0.2 rounded-full ${isProjectsPopoverOpen ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
+            <span className={`text-xs font-pixel ml-0.5 px-1.5 py-0.5 rounded-full ${isProjectsPopoverOpen ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
               {trees.length}
             </span>
           </Button>

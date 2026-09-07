@@ -25,49 +25,10 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-const thatThatNewPixel = localFont({
-  src: [
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-square.otf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-round.otf",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-round.otf",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-square.otf",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicsquare.otf",
-      weight: "400",
-      style: "italic",
-    },
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicround.otf",
-      weight: "500",
-      style: "italic",
-    },
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicround.otf",
-      weight: "600",
-      style: "italic",
-    },
-    {
-      path: "../../public/that-that-new-pixel-font/thatthatnewpixelfamilytest-italicsquare.otf",
-      weight: "700",
-      style: "italic",
-    },
-  ],
+const jersey10 = localFont({
+  src: "../../public/fonts/jersey-10.woff2",
+  weight: "400",
+  style: "normal",
   variable: "--font-pixel",
   display: "swap",
 });
@@ -101,7 +62,7 @@ export default function RootLayout({
     <ClerkProvider publishableKey={clerkPubKey}>
       <html lang="en" className="scroll-smooth">
         <body
-          className={`${geist.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} ${thatThatNewPixel.variable} antialiased bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white`}
+          className={`${geist.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} ${jersey10.variable} antialiased bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white`}
         >
           {children}
         </body>

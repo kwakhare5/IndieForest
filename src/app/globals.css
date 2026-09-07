@@ -63,7 +63,7 @@ body {
 
 /* Typography Classes — Strictly Enforcing 4 Canonical Fonts:
    1. Geist (font-sans)
-   2. That That New Pixel (font-pixel)
+   2. Jersey 10 (font-pixel)
    3. Instrument Serif (font-editorial)
    4. JetBrains Mono (font-mono)
 */
@@ -78,8 +78,10 @@ body {
 }
 
 .font-pixel {
-  font-family: var(--font-pixel), monospace;
-  letter-spacing: 0.02em;
+  font-family: var(--font-pixel), "Jersey 10", monospace;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1;
 }
 
 code, kbd, samp, pre, .font-mono {
