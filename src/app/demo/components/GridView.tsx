@@ -5,6 +5,7 @@ import { sound } from "@/lib/sound";
 import { IslandCanvas } from "@/components/canvas/IslandCanvas";
 import { getTreeSlotCoordinate } from "@/lib/gamification";
 import { TreeCard } from "@/components/hud/TreeCard";
+import { DoubleBezel } from "@/components/ui/Card";
 import type { TreeData } from "@/types/game";
 import {
   Grid,
@@ -89,8 +90,7 @@ export function GridView({
 
       {/* Floating Grid Inspection HUD Overlay */}
       <div className="absolute top-20 right-6 z-40 max-w-xs pointer-events-auto">
-        <div className="p-1.5 rounded-2xl glass-dock shadow-xl">
-          <div className="p-4 rounded-xl porcelain-surface space-y-3.5">
+        <DoubleBezel rounded="2xl" className="shadow-xl" innerClassName="p-4 space-y-3.5">
             <div className="flex items-center justify-between border-b border-stone-100 pb-2">
               <div className="flex items-center gap-1.5">
                 <Grid className="w-4 h-4 text-emerald-700" />
@@ -107,18 +107,22 @@ export function GridView({
 
             {/* Quick Metrics Bar */}
             <div className="grid grid-cols-2 gap-2 pt-1">
-              <div className="p-2 rounded-lg bg-stone-50 border border-stone-100 flex items-center gap-2">
-                <GitCommit className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="p-2 rounded-xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.04),inset_0_-1px_0_rgba(255,255,255,0.85)] flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                  <GitCommit className="w-3.5 h-3.5 text-emerald-700" />
+                </div>
                 <div>
-                  <div className="text-[9px] font-medium text-stone-400 uppercase">Code Pines</div>
-                  <div className="text-xs font-medium text-stone-800">12 Repos</div>
+                  <div className="text-[9px] font-medium text-stone-400 uppercase tracking-wider">Code Pines</div>
+                  <div className="text-xs font-medium text-stone-900">12 Repos</div>
                 </div>
               </div>
-              <div className="p-2 rounded-lg bg-stone-50 border border-stone-100 flex items-center gap-2">
-                <DollarSign className="w-3.5 h-3.5 text-amber-600" />
+              <div className="p-2 rounded-xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.04),inset_0_-1px_0_rgba(255,255,255,0.85)] flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                  <DollarSign className="w-3.5 h-3.5 text-amber-700" />
+                </div>
                 <div>
-                  <div className="text-[9px] font-medium text-stone-400 uppercase">Cash Pines</div>
-                  <div className="text-xs font-medium text-stone-800">12 Streams</div>
+                  <div className="text-[9px] font-medium text-stone-400 uppercase tracking-wider">Cash Pines</div>
+                  <div className="text-xs font-medium text-stone-900">12 Streams</div>
                 </div>
               </div>
             </div>
@@ -132,8 +136,10 @@ export function GridView({
                     sound.playClick();
                     setShowCoordinateGrid((prev) => !prev);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
-                    showCoordinateGrid ? "bg-emerald-600 text-white shadow-xs" : "bg-stone-200 text-stone-600 hover:bg-stone-300"
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                    showCoordinateGrid
+                      ? "btn-specular-emerald text-white"
+                      : "btn-specular-porcelain text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   {showCoordinateGrid ? "Active" : "Off"}
@@ -147,8 +153,10 @@ export function GridView({
                     sound.playClick();
                     setShowBoundingWireframe((prev) => !prev);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
-                    showBoundingWireframe ? "bg-indigo-600 text-white shadow-xs" : "bg-stone-200 text-stone-600 hover:bg-stone-300"
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                    showBoundingWireframe
+                      ? "bg-indigo-600 text-white shadow-[0_1px_2px_rgba(79,70,229,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]"
+                      : "btn-specular-porcelain text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   {showBoundingWireframe ? "Active" : "Off"}
@@ -160,21 +168,20 @@ export function GridView({
             {selectedTree && (
               <div className="pt-2 border-t border-stone-100 space-y-1">
                 <span className="text-[10px] font-medium text-stone-400 uppercase tracking-wider">Inspected Cell</span>
-                <div className="p-2 rounded-lg bg-emerald-50/60 border border-emerald-200 flex items-center justify-between">
+                <div className="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200/90 shadow-[inset_0_1.5px_2px_rgba(5,150,105,0.08),inset_0_-1px_0_rgba(255,255,255,0.85)] flex items-center justify-between">
                   <div>
                     <span className="text-xs font-medium text-emerald-950 font-mono">{selectedTree.name}</span>
                     <div className="text-[9px] text-stone-500 font-mono">
                       X: {selectedTree.gridX}m · Z: {selectedTree.gridZ}m
                     </div>
                   </div>
-                  <span className="text-[10px] font-medium text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md uppercase">
+                  <span className="text-[10px] font-medium text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-md uppercase border border-emerald-200/60 font-mono">
                     {selectedTree.tier}
                   </span>
                 </div>
               </div>
             )}
-          </div>
-        </div>
+        </DoubleBezel>
       </div>
 
       {/* 2D Project Inspection Card */}
@@ -183,4 +190,3 @@ export function GridView({
   );
 }
 
-export { GridView as ForestMRRGridShowcase };

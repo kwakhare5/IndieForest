@@ -13,8 +13,8 @@ export function CanvasTent({
   drought = false,
   wireframe = false,
 }: CanvasTentProps) {
-  const canvasColor = drought ? "#d6d3d1" : "#fef3c7";
-  const timberColor = drought ? "#57534e" : "#78350f";
+  const canvasColor = "#fef3c7";
+  const timberColor = "#78350f";
 
   return (
     <group>
@@ -32,7 +32,7 @@ export function CanvasTent({
       <mesh position={[0, 0.06, -0.1]} rotation={[0, 0, Math.PI / 2]} castShadow>
         <cylinderGeometry args={[0.07, 0.07, 0.48, 8]} />
         <meshStandardMaterial
-          color={drought ? "#57534e" : "#991b1b"}
+          color={drought ? "#b45309" : "#991b1b"}
           roughness={0.8}
           wireframe={wireframe}
         />
@@ -119,13 +119,13 @@ export function CanvasTent({
           <octahedronGeometry args={[0.042, 0]} />
           <meshStandardMaterial
             color="#fef08a"
-            emissive={drought ? "#000000" : "#facc15"}
-            emissiveIntensity={drought ? 0 : isNight ? 2.4 : 1.0}
+            emissive={drought ? "#ca8a04" : "#facc15"}
+            emissiveIntensity={drought ? 0.8 : isNight ? 2.4 : 1.0}
             wireframe={wireframe}
           />
         </mesh>
-        {isNight && !drought && (
-          <pointLight position={[0, 0, 0]} color="#fde047" intensity={1.5} distance={2.5} decay={2} />
+        {isNight && (
+          <pointLight position={[0, 0, 0]} color="#fde047" intensity={drought ? 0.8 : 1.5} distance={2.5} decay={2} />
         )}
       </group>
 

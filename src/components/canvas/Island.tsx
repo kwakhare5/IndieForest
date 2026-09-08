@@ -3,12 +3,14 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
 import { calculateIslandSize, getTreeCellBoundingBox, CELL_SIZE } from "@/lib/gamification";
+import type { TimeOfDay } from "@/types/game";
 
 interface IslandProps {
   level?: number;
   treeCount?: number;
   treeCoords?: Array<{ gridX: number; gridZ: number }>;
   drought?: boolean;
+  timeOfDay?: TimeOfDay;
   showGrid?: boolean;
   showBoundaries?: boolean;
 }
@@ -17,14 +19,32 @@ export function Island({
   level = 1,
   treeCount = 0,
   treeCoords = [],
-  drought = false,
+  drought: _drought = false,
+  timeOfDay = "day",
   showGrid = false,
   showBoundaries = false,
 }: IslandProps) {
-  // Rich Sage-Emerald Turf (#5ea774, drought: #8c8479)
-  const grassColor = drought ? "#8c8479" : "#5ea774";
-  const baseColor = drought ? "#57534e" : "#422517";
-  const stoneColor = drought ? "#78716c" : "#64748b";
+  // Lively, fresh palettes across Day, Sunset, and Night (zero washed/muddy/yellow tones)
+  const grassColor =
+    timeOfDay === "night"
+      ? "#0f766e" // Luminous Nocturnal Teal (stays richly colored in moonlight)
+      : timeOfDay === "sunset"
+      ? "#84cc16" // Golden Chartreuse / Sun-drenched Lime
+      : "#22c55e"; // Fresh Spring Emerald Turf
+
+  const baseColor =
+    timeOfDay === "night"
+      ? "#1e293b" // Deep Midnight Slate
+      : timeOfDay === "sunset"
+      ? "#9a3412" // Copper Terracotta Ember
+      : "#c2410c"; // Warm Sunlit Terracotta
+
+  const stoneColor =
+    timeOfDay === "night"
+      ? "#475569"
+      : timeOfDay === "sunset"
+      ? "#78716c"
+      : "#64748b";
 
   // 5-Tier Adaptive 1:1 Symmetrical Square Dimensions
   const size = useMemo(() => {

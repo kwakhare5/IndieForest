@@ -31,7 +31,6 @@ interface IslandCanvasProps {
   onPlantNewTree?: () => void;
   interactive?: boolean;
   className?: string;
-  zoomLevel?: 1 | 2;
   showGrid?: boolean;
   showBoundaries?: boolean;
 }
@@ -52,7 +51,6 @@ export function IslandCanvas({
   interactive = true,
   selectedTreeId = null,
   className = "w-full h-full min-h-[480px]",
-  zoomLevel = 1,
   onSelectTree,
   onClickCampfire,
   onClickCabin,
@@ -67,27 +65,23 @@ export function IslandCanvas({
   const visibleTrees = useMemo(() => (trees || []).slice(0, 24), [trees]);
   const hasRevenue = visibleTrees.some((t) => t.type === "revenue" || (t.mrr && t.mrr > 0));
 
-  // Natural Soft Studio Lighting Palette
-  const ambientColor = drought
-    ? "#a8a29e"
-    : isNight
-    ? "#4338ca"
+  // Fresh, lively studio lighting palette across Day, Sunset, and Night (zero washed/muddy/yellow tones)
+  const ambientColor = isNight
+    ? "#3730a3" // Electric deep indigo ambient fill
     : isSunset
-    ? "#fed7aa"
-    : "#ffffff";
-  const ambientIntensity = drought ? 0.9 : isNight ? 0.45 : isSunset ? 1.05 : 1.15;
+    ? "#ffedd5" // Warm peach nectar bounce
+    : "#e0f2fe"; // Fresh sky blue ambient bounce
+  const ambientIntensity = isNight ? 0.70 : isSunset ? 1.15 : 1.20;
 
-  const sunColor = drought
-    ? "#d6d3d1"
-    : isNight
-    ? "#818cf8"
+  const sunColor = isNight
+    ? "#38bdf8" // Crisp cyan moonbeam (high clarity, zero dark swamp)
     : isSunset
-    ? "#f97316"
-    : "#ffffff";
-  const sunIntensity = drought ? 0.7 : isNight ? 0.45 : isSunset ? 1.4 : 1.3;
+    ? "#f59e0b" // Warm honey amber sunlight
+    : "#fffdf7"; // Crisp warm sunlight
+  const sunIntensity = isNight ? 0.90 : isSunset ? 1.45 : 1.35;
 
-  const rimColor = isNight ? "#38bdf8" : isSunset ? "#e879f9" : "#93c5fd";
-  const rimIntensity = isNight ? 0.25 : 0.35;
+  const rimColor = isNight ? "#67e8f9" : isSunset ? "#f472b6" : "#93c5fd";
+  const rimIntensity = isNight ? 0.45 : isSunset ? 0.40 : 0.35;
 
   // Adaptive Dimensions across 5 tiers: 12x12, 15x15, 18.5x18.5, 21.5x21.5, 25x25
   const islandSize = calculateIslandSize(level, visibleTrees.length);
@@ -95,10 +89,13 @@ export function IslandCanvas({
 
   // Calibrated Discrete Zoom Levels scaled with adaptive island size
   const baseZoom = islandSize >= 25 ? 26 : islandSize >= 21.5 ? 29 : islandSize >= 18.5 ? 32 : islandSize >= 15 ? 36 : 40;
-  const targetZoom = zoomLevel === 2 ? baseZoom * 1.45 : baseZoom;
+  const targetZoom = baseZoom;
 
   const shadowScale = islandSize * 1.35;
   const shadowFrustum = halfSize + 3.0;
+
+  // Exact polar angle of camera position [18, 14, 18] (~61.2° isometric tilt)
+  const isometricPolarAngle = Math.atan2(Math.SQRT2 * 18, 14);
 
   // Discrete 1-to-1 Grid Mapping with Camera-Z Depth Sorting (Amphitheater Alignment)
   const { safeTrees, treeCoords } = useMemo(() => {
@@ -149,10 +146,13 @@ export function IslandCanvas({
         <Suspense fallback={null}>
           <OrbitControls
             enableRotate={interactive}
-            enablePan={interactive}
-            enableZoom={interactive}
-            maxPolarAngle={Math.PI / 2.05}
-            minPolarAngle={Math.PI / 4}
+            enablePan={false}
+            enableZoom={false}
+            enableDamping={true}
+            dampingFactor={0.08}
+            rotateSpeed={0.5}
+            minPolarAngle={isometricPolarAngle}
+            maxPolarAngle={isometricPolarAngle}
           />
 
           {/* 1. Dynamic Natural Lighting (Matched to Grid View & TimeOfDay) */}
@@ -198,6 +198,7 @@ export function IslandCanvas({
             treeCount={visibleTrees.length}
             treeCoords={treeCoords}
             drought={drought}
+            timeOfDay={timeOfDay}
             showGrid={showGrid}
             showBoundaries={showBoundaries}
           />
@@ -209,6 +210,7 @@ export function IslandCanvas({
               tree={tree}
               isSelected={selectedTreeId === tree.id}
               drought={drought}
+              timeOfDay={timeOfDay}
               onSelect={onSelectTree}
             />
           ))}

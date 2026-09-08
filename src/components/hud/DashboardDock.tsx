@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/Button";
+import { DoubleBezel } from "@/components/ui/Card";
 import {
   Share2,
   Flame,
@@ -27,15 +28,20 @@ export function DashboardDock({
 }: DashboardDockProps) {
   return (
     <div className="fixed bottom-6 inset-x-0 z-40 flex flex-col items-center px-4 pointer-events-none font-sans select-none">
-      <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-xl transition-all duration-200">
-        <div className="px-3 py-1.5 rounded-full porcelain-surface flex items-center gap-2 sm:gap-3">
+      <DoubleBezel
+        rounded="full"
+        className="pointer-events-auto shadow-xl"
+        innerClassName="px-3 py-1.5 flex items-center gap-2 sm:gap-3"
+      >
           
           {/* 1. Amber Streak Pill */}
           <div
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/90 text-amber-900 text-xs font-normal font-pixel shadow-xs"
+            className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-gradient-to-b from-amber-50 to-amber-100/80 border border-amber-300/80 text-amber-900 text-xs font-normal font-pixel shadow-[0_1px_2px_rgba(217,119,6,0.12),inset_0_1px_0.5px_rgba(255,255,255,0.85)]"
             title={`${streakDays} Consecutive Shipping Days`}
           >
-            <Flame className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+            <span className="w-5 h-5 rounded-full bg-amber-200/70 shadow-inner flex items-center justify-center shrink-0">
+              <Flame className="w-3 h-3 text-amber-700 fill-amber-500" />
+            </span>
             <span>{streakDays}D STREAK</span>
           </div>
 
@@ -43,27 +49,31 @@ export function DashboardDock({
 
           {/* 2. Connected Repositories */}
           <div
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-700 font-sans"
+            className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full bg-white border border-stone-200/90 text-xs text-stone-700 font-sans shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,1)]"
             title={`${activeTreesCount} Active Connected Projects`}
           >
-            <Trees className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="w-5 h-5 rounded-full bg-stone-100 shadow-inner flex items-center justify-center shrink-0 border border-stone-200/60">
+              <Trees className="w-3 h-3 text-emerald-600" />
+            </span>
             <span className="font-medium text-stone-900">{activeTreesCount}</span>
             <span className="text-[10px] text-stone-400 font-medium">REPOS</span>
           </div>
 
           {/* 3. Verified Revenue / MRR Pill */}
           <div
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-700 font-sans"
+            className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full bg-white border border-stone-200/90 text-xs text-stone-700 font-sans shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,1)]"
             title={`$${totalMrr.toLocaleString()} Monthly Recurring Revenue`}
           >
-            <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
+            <span className="w-5 h-5 rounded-full bg-amber-50 shadow-inner flex items-center justify-center shrink-0 border border-amber-200/60">
+              <TrendingUp className="w-3 h-3 text-amber-600" />
+            </span>
             <span className="font-medium text-amber-900 font-mono">${totalMrr.toLocaleString()}</span>
             <span className="text-[10px] text-stone-400 font-medium">MRR</span>
           </div>
 
           {/* 4. Island Progression Level */}
           <div
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-600 font-pixel"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100/90 border border-stone-200/80 text-xs text-stone-600 font-pixel shadow-[inset_0_1px_2px_rgba(0,0,0,0.05),inset_0_-1px_0_rgba(255,255,255,0.8)]"
             title={`Builder Level ${level}`}
           >
             <span>LVL</span>
@@ -86,9 +96,7 @@ export function DashboardDock({
           >
             Share Proof
           </Button>
-
-        </div>
-      </div>
+      </DoubleBezel>
     </div>
   );
 }

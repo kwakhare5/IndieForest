@@ -64,15 +64,6 @@ export interface TreeData {
   stripeProof?: StripeProof;
 }
 
-export interface TimelineEvent {
-  id: string;
-  timestamp: string;
-  title: string;
-  type: "commit" | "revenue" | "milestone";
-  treeId?: string;
-  details?: string;
-  value?: number;
-}
 
 export interface GuestbookEntry {
   id: string;

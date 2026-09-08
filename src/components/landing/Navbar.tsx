@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { DoubleBezel } from "@/components/ui/Card";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 
@@ -11,9 +12,12 @@ export function Navbar() {
 
   return (
     <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-4xl px-3 pointer-events-none font-sans">
-      <div className="pointer-events-auto p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
-        <div className="px-4 py-1.5 rounded-full porcelain-surface flex items-center justify-between">
-          {/* Logo */}
+      <DoubleBezel
+        rounded="full"
+        className="pointer-events-auto"
+        innerClassName="px-4 py-1.5 flex items-center justify-between"
+      >
+        {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-6 h-6 rounded-lg overflow-hidden shadow-xs border border-stone-200">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -81,10 +85,8 @@ export function Navbar() {
               </SignInButton>
             )}
           </div>
-        </div>
-      </div>
+        </DoubleBezel>
     </header>
   );
 }
 
-export { Navbar as LandingNavbar };

@@ -15,17 +15,38 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
-### [IndieForest — Canonical 4-Font Typography System, Weight Refactor & Jersey 10 Restoration] 2026-09-07
-- **Commit**: `2774f72` (Jersey 10 Restored as Canonical Pixel Font, Baseline Shift Eliminated, 64/64 Tests Green, Turbopack Build Clean)
-- **Vibe**: Complete typographic elevation and architectural discipline. Diagnosed the root cause behind Geist's heavy visual weight on Windows subpixel rendering and systematically refactored the entire project to an exact 4-font hierarchy (Geist Sans, Jersey 10, Instrument Serif, JetBrains Mono). Stepped down bloated 700/600 weights to clean 500/400 weights across every button, card, modal, view, and specimen dock. Restored Jersey 10 as local WOFF2, permanently eliminating the floaty vertical baseline shift and micro-pixel washout.
+### [IndieForest — Permanent Spring Emerald Greenery, Camera Stabilization & HUD Streamlining] 2026-09-08
+- **Commit**: `a3cad4f` (feat(canvas): stabilize camera, enforce lush greenery, and streamline dashboard)
+- **Vibe**: Grounded, peaceful, and clean. Removed the disruptive golden-wheat/yellowish drought overrides across all models so the island remains permanently lush Spring Emerald (`#22c55e`). Purged all manual watering buttons to honor 100% automated zero-touch ingestion. Cleaned developer sandbox switchers from the player dashboard and anchored the 3D diorama camera firmly to screen center with smooth, subtle turntable rotation.
 - **Shipped**:
-  - **Jersey 10 Restored as Local WOFF2 (`public/fonts/jersey-10.woff2`, `layout.tsx`, `globals.css`):** Downloaded and bundled Jersey 10 locally via Next.js `localFont` with zero render-blocking CDN imports. Fixed vertical baseline centering and high-contrast block legibility for streaks, levels, and milestone numbers.
-  - **Purged Obsolete Test Fonts:** Deleted `public/that-that-new-pixel-font/`, freeing ~250KB of unused test OTF files.
-  - **The 4 Canonical Fonts Locked:** Formally established the 4-font system: Geist Sans (`.font-sans`), Jersey 10 (`.font-pixel`), Instrument Serif (`.font-editorial`), and JetBrains Mono (`.font-mono`).
-  - **Subpixel Antialiasing & Tracking Tuning (`globals.css`):** Enforced `font-weight: 400` and relaxed letter spacing (`-0.01em`) on `body` and `.font-sans` to resolve dark ink blocking under Windows DirectWrite antialiasing.
-  - **Universal Font Weight Refactor (25+ files across `src/`):** Refactored all UI primitives (`Button`, `Badge`, `Modal`, `SegmentedControl`), HUD overlays, modals, landing sections, `Workshop3D`, `u/[username]`, and `/prototype/unfair` to `font-medium` (500) and `font-normal` (400). Eradicated all `font-bold` and `font-semibold` across the entire `src/` directory.
-  - **High-Taste Social Specimen (`src/app/prototype/unfair/page.tsx`):** Built 3 high-taste proof-of-work card concepts inspired by unfair.so's spatial luxury (Diorama Shadowbox, Builder Passport, Compound Ledger) with seamless switching and font weight harmonization.
-  - **Production Verification:** 64/64 Vitest tests passing green, Next.js Turbopack build compiling cleanly in 4.3s with 0 TypeScript or ESLint errors.
+  - **Permanent Spring Emerald Greenery (`Island.tsx`, `PineTree.tsx`, `IslandTree.tsx`):**
+    - Eradicated all yellowish and straw drought overrides on island turf and pine foliage. Day grass is permanently Spring Emerald (`#22c55e`), Sunset is Golden Chartreuse (`#84cc16`), and Night is Luminous Nocturnal Teal (`#0f766e`).
+    - Lighting restored to crisp sunlight (`#fffdf7`) with sky-blue ambient fill (`#e0f2fe`).
+  - **Manual Water Island Feature Purged:**
+    - Purged manual "Water Island" button, handlers, and confetti bursts from `DashboardNav.tsx`, `SettingsModal.tsx`, and `u/[username]/page.tsx`.
+    - Removed `clearDrought()` / `setDrought()` actions from `useForestStore.ts`, keeping streak mechanics fully automated via GitHub and Stripe webhooks.
+  - **Dashboard Navigation & Flow Streamlined (`DashboardNav.tsx`, `dashboard/page.tsx`):**
+    - Removed developer demo toggles (`Living Island`, `Grid Mode`, `3D Workshop`) and unused icons (`Home`, `Grid`, `Layers`) from the main game dashboard.
+    - Viewport is dedicated 100% to the immersive 3D `IslandCanvas` diorama.
+  - **Camera Stabilization & Excessive Movement Removal (`IslandCanvas.tsx`, `dashboard/page.tsx`, `Hero.tsx`):**
+    - Disabled off-center panning (`enablePan={false}`) so the island cannot be dragged off-screen.
+    - Disabled wheel and pinch zooming (`enableZoom={false}`), removed obsolete `zoomLevel` state and `Z` key zoom shortcut.
+    - Locked vertical tilt strictly to the isometric polar angle (`~61.2°`), preventing awkward vertical pitches or underside views.
+    - Implemented smooth, subtle horizontal turntable rotation with momentum damping (`enableDamping={true}`, `dampingFactor={0.08}`, `rotateSpeed={0.5}`).
+  - **Production Verification:** 64/64 Vitest unit tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly with all 13 routes in 2.9s.
+
+### [IndieForest — Codebase Cleanup, User Flow Streamlining & Skeuomorphic Parity] 2026-09-07
+- **Commit**: `pending` (Comprehensive Codebase Cleanup, Dead Prototype & Task Purged, Dashboard vs Demo Routing Streamlined, Public Profile Skeuomorphic Parity, HUD & Modals Air & Glass Chamfer, 64/64 Tests Green, Turbopack Build Clean)
+- **Vibe**: Pure, tactile, intentional craft. Audited the entire codebase line-by-line. Purged obsolete prototypes and stale tasks. Streamlined user flow with clear separation between live authenticated Dashboard and public Demo sandbox. Elevated the public profile (`/u/[username]`), HUD elements, and demo workshop to 100% visual parity with the minimal Air & Glass Chamfer design system.
+- **Shipped**:
+  - **Dead Code & Obsolete Prototype Purge:** Deleted obsolete prototype `src/app/prototype/unfair/` (462 lines of unreferenced mock code) and stale root `task.md`. Purged unused `TimelineEvent` interface from `src/types/game.ts` and 14 dead alias re-exports across landing and 3D canvas models. Preserved required layout constants in `gamification.ts`.
+  - **User Flow & Routing Streamlining:** Removed confusing "Demo Sandbox" navigation tab from `/dashboard`, establishing `/demo` as the dedicated public sandbox. Upgraded hidden HUD restore button to `<DoubleBezel rounded="full">` with specular porcelain styling.
+  - **Public Profile (`/u/[username]`) Skeuomorphic Parity:** Replaced flat sticky header with floating `<DoubleBezel rounded="full">` navbar. Upgraded "Water Island" button to specular cyan styling. Wrapped 3D diorama canvas in `<Card doubleBezel rounded="3xl">`. Upgraded profile identity card and verified project modules to `<Card doubleBezel>` with debossed specular avatar and tree icon pods.
+  - **In-Game HUD & Modals Polish:** Upgraded `TreeCard.tsx` to `<Card doubleBezel rounded="2xl">` with tactile action buttons. Upgraded Projects popover icons to debossed specular pods and prune button to tactile action disc in `DashboardControls.tsx`. Upgraded Quests popover header icon and close button in `DashboardNav.tsx`. Converted `GuestbookModal.tsx` empty state to `<Card variant="subtle-inset">` and eradicated decorative emojis per Zero AI Slop standards. Upgraded rank tier avatar circle in `OverviewModal.tsx` to debossed specular pod.
+  - **Landing Page & 404 Refinements:** Upgraded GitHub handle search bar from obsolete `p-1.5 chassis-enclosure` to `<DoubleBezel rounded="full">` with flush porcelain surface; fixed "Preview Island" button so it is vibrant on load and defaults to previewing `@shadcn` if submitted while empty. Upgraded floating live diorama badge and claimed repository bar to `<DoubleBezel>` in `Hero.tsx`. Added specular debossed highlights to icon containers in `FeatureCard.tsx`. Upgraded Bento 3 plan card to specular porcelain slab in `Features.tsx`. Upgraded 404 tree icon container in `not-found.tsx` to debossed specular styling.
+  - **Demo Sandbox & Workshop Parity:** Upgraded lighting and audio toggles in `demo/page.tsx` and `Workshop3D.tsx` to specular circular pods. Upgraded streak shield count simulation selector to `<SegmentedControl>`. Upgraded metric wells and coordinate toggles in `GridView.tsx`.
+  - **Weather & Island Color Calibration:** Eradicated washed-out, dusty sage and muddy dark tones in favor of a vibrant, fresh triad: Day (Spring Emerald `#22c55e` + warm terracotta `#c2410c` + sky-blue ambient fill `#e0f2fe`), Sunset (Golden Chartreuse `#84cc16` + copper ember `#9a3412` + honey sun `#f59e0b` + peach bounce `#ffedd5`), and Night (Luminous Nocturnal Teal `#0f766e` + midnight slate `#1e293b` + icy cyan moonbeam `#38bdf8` + electric indigo fill `#3730a3`). Synchronized 3D Workshop pedestal and tree tile grass patches (`TreeGrassPatch`) across all three weathers.
+  - **Production Verification:** 64/64 Vitest tests passing green in 562ms, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly with all 13 static/dynamic routes in 2.8s.
 
 ### [IndieForest — Full Audit Repair, GitHub Sync, 3D Lighting & Realtime Parity] 2026-09-04
 - **Commit**: `pending` (GitHub Sync Repaired, Google OAuth Identity Binding, Dynamic 3D Scene Lighting, Supabase Realtime Subscriptions, 3D Workshop Dashboard Parity, 64/64 Tests Green)

@@ -27,19 +27,19 @@ interface PineVariantProps {
 // =============================================================================
 function PineSprout({
   isCash = false,
-  drought = false,
+  drought: _drought = false,
   hasMetricBorder = false,
 }: PineVariantProps) {
   const swayRef = useRef<THREE.Group>(null);
 
-  const trunkColor = drought ? "#57534e" : isCash ? "#78350f" : "#523219";
-  const pineGreenA = drought ? "#78716c" : isCash ? "#d97706" : "#1e5e3a";
-  const pineGreenB = drought ? "#57534e" : isCash ? "#b45309" : "#287a4d";
-  const sparkleColor = drought ? "#a8a29e" : isCash ? "#fef08a" : "#ffffff";
+  const trunkColor = isCash ? "#78350f" : "#523219";
+  const pineGreenA = isCash ? "#d97706" : "#1e5e3a";
+  const pineGreenB = isCash ? "#b45309" : "#287a4d";
+  const sparkleColor = isCash ? "#fef08a" : "#ffffff";
 
   // Gentle organic breeze idle sway
   useFrame(({ clock }) => {
-    if (swayRef.current && !drought) {
+    if (swayRef.current) {
       const t = clock.elapsedTime;
       swayRef.current.rotation.z = Math.sin(t * 2.2) * 0.04;
       swayRef.current.rotation.x = Math.cos(t * 1.7) * 0.03;
@@ -51,13 +51,13 @@ function PineSprout({
       {/* Earthy Pine Needle Soil Mound */}
       <mesh position={[0, 0.03, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.20, 0.26, 0.06, 7]} />
-        <meshStandardMaterial color={drought ? "#57534e" : "#452817"} roughness={0.9} flatShading />
+        <meshStandardMaterial color="#452817" roughness={0.9} flatShading />
       </mesh>
 
       {/* Ground Pinecone Hull / Seed Pebble */}
       <mesh position={[0.13, 0.025, 0.09]} castShadow receiveShadow>
         <dodecahedronGeometry args={[0.035, 0]} />
-        <meshStandardMaterial color={drought ? "#44403c" : "#382013"} roughness={0.85} flatShading />
+        <meshStandardMaterial color="#382013" roughness={0.85} flatShading />
       </mesh>
 
       {/* Central Pine Shoot (Swaying in Breeze) */}
@@ -122,19 +122,19 @@ function PineSprout({
 // =============================================================================
 function YoungPine({
   isCash = false,
-  drought = false,
+  drought: _drought = false,
   hasMetricBorder = false,
 }: PineVariantProps) {
   const swayRef = useRef<THREE.Group>(null);
 
-  const trunkColor = drought ? "#57534e" : isCash ? "#78350f" : "#523219";
-  const pineGreenA = drought ? "#78716c" : isCash ? "#d97706" : "#1e5e3a";
-  const pineGreenB = drought ? "#57534e" : isCash ? "#b45309" : "#287a4d";
-  const sparkleColor = drought ? "#a8a29e" : isCash ? "#fef08a" : "#ffffff";
+  const trunkColor = isCash ? "#78350f" : "#523219";
+  const pineGreenA = isCash ? "#d97706" : "#1e5e3a";
+  const pineGreenB = isCash ? "#b45309" : "#287a4d";
+  const sparkleColor = isCash ? "#fef08a" : "#ffffff";
 
   // Subtle natural breeze sway on upper boughs
   useFrame(({ clock }) => {
-    if (swayRef.current && !drought) {
+    if (swayRef.current) {
       const t = clock.elapsedTime;
       swayRef.current.rotation.z = Math.sin(t * 1.8) * 0.025;
       swayRef.current.rotation.x = Math.cos(t * 1.5) * 0.020;
@@ -263,14 +263,14 @@ function HaloRing({ scale }: { scale: number }) {
 export function PineTree({
   tier = "sprout",
   colorType = "green",
-  drought = false,
+  drought: _drought = false,
   hasMetricBorder = false,
 }: PineTreeProps) {
   const isCash = colorType === "orange";
-  const trunkColor = drought ? "#57534e" : isCash ? "#78350f" : "#523219";
-  const skirtGreenA = drought ? "#78716c" : isCash ? "#d97706" : "#1e5e3a";
-  const skirtGreenB = drought ? "#57534e" : isCash ? "#b45309" : "#287a4d";
-  const sparkleColor = drought ? "#a8a29e" : isCash ? "#fef08a" : "#ffffff";
+  const trunkColor = isCash ? "#78350f" : "#523219";
+  const skirtGreenA = isCash ? "#d97706" : "#1e5e3a";
+  const skirtGreenB = isCash ? "#b45309" : "#287a4d";
+  const sparkleColor = isCash ? "#fef08a" : "#ffffff";
 
   // 1. Stump stage
   if (tier === "stump") {
@@ -284,7 +284,7 @@ export function PineTree({
         </mesh>
         <mesh position={[0, trunkHeight + 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <circleGeometry args={[trunkRadius * 0.92, 8]} />
-          <meshBasicMaterial color={drought ? "#78716c" : "#b08968"} />
+          <meshBasicMaterial color="#b08968" />
         </mesh>
       </group>
     );
@@ -295,7 +295,7 @@ export function PineTree({
     return (
       <PineSprout
         isCash={isCash}
-        drought={drought}
+        drought={_drought}
         hasMetricBorder={hasMetricBorder}
       />
     );
@@ -306,7 +306,7 @@ export function PineTree({
     return (
       <YoungPine
         isCash={isCash}
-        drought={drought}
+        drought={_drought}
         hasMetricBorder={hasMetricBorder}
       />
     );
@@ -384,4 +384,3 @@ export function PineTree({
   );
 }
 
-export { PineTree as DioramaTree };

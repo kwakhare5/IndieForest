@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { X, LucideIcon } from "lucide-react";
+import { DoubleBezel } from "./Card";
 
 export interface ModalProps {
   isOpen: boolean;
@@ -67,13 +68,12 @@ export function Modal({
       }}
     >
       {/* Outer Tactile Chamfered Glass Bezel (Exact Navbar Match & Safe Max-Height) */}
-      <div
-        className={`w-full ${maxWidthClass} ${originClasses} max-h-[calc(100vh-5.5rem)] overflow-y-auto p-1.5 rounded-[2rem] glass-dock shadow-2xl relative animate-in zoom-in-95 duration-150 custom-scrollbar`}
+      <DoubleBezel
+        rounded="2xl"
+        className={`w-full ${maxWidthClass} ${originClasses} max-h-[calc(100vh-5.5rem)] overflow-y-auto shadow-2xl relative animate-in zoom-in-95 duration-150 custom-scrollbar`}
+        innerClassName="bg-white p-5 sm:p-6 text-stone-900 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Inner Porcelain Chamber */}
-        <div className="rounded-[calc(2rem-0.375rem)] porcelain-surface bg-white p-5 sm:p-6 text-stone-900 relative">
-          
           {/* Tactile Close Button-in-Button Pod */}
           <button
             onClick={onClose}
@@ -86,7 +86,7 @@ export function Modal({
           {/* Header */}
           <div className="flex items-center gap-3.5 mb-4 pr-8">
             {Icon && (
-              <div className="w-9 h-9 rounded-2xl bg-stone-100 border border-stone-200/80 flex items-center justify-center text-emerald-800 shrink-0 shadow-xs">
+              <div className="w-9 h-9 rounded-2xl bg-stone-100 border border-stone-200/90 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.85)] flex items-center justify-center text-emerald-800 shrink-0">
                 <Icon className="w-4.5 h-4.5 stroke-[1.75]" />
               </div>
             )}
@@ -106,8 +106,7 @@ export function Modal({
           <div className="space-y-3.5">
             {children}
           </div>
-        </div>
-      </div>
+      </DoubleBezel>
     </div>
   );
 }

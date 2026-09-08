@@ -10,13 +10,12 @@ import {
   MessageSquare,
   ArrowLeft,
   CheckCircle2,
-  Droplets,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { getRankTitle } from "@/lib/gamification";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+import { Card, DoubleBezel } from "@/components/ui/Card";
 import { GuestbookModal } from "@/components/hud/modals/GuestbookModal";
 import { GitHubIslandProfile } from "@/lib/github";
 import { GuestbookEntry } from "@/types/game";
@@ -47,8 +46,6 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
 
   const [profile, setProfile] = useState<GitHubIslandProfile | null>(null);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
-  const [isCheering, setIsCheering] = useState(false);
-  const [cheerCount, setCheerCount] = useState(12);
   const [guestbookEntries, setGuestbookEntries] = useState<GuestbookEntry[]>([]);
 
   useEffect(() => {
@@ -111,15 +108,6 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
     setGuestbookEntries((prev) => [newEntry, ...prev]);
   };
 
-  const handleCheerWater = () => {
-    sound.playShipSuccess();
-    setIsCheering(true);
-    setCheerCount((c) => c + 1);
-    setTimeout(() => {
-      setIsCheering(false);
-    }, 4000);
-  };
-
   const level = profile ? profile.level : 1;
   const streakDays = profile ? profile.streakDays : 1;
   const trees = profile ? profile.trees : [];
@@ -128,28 +116,23 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
 
   return (
     <div className="min-h-screen bg-[#ece7de] text-stone-900 font-sans selection:bg-emerald-600 selection:text-white relative pb-16">
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-40 w-full bg-[#ece7de] border-b border-stone-300/80 px-4 sm:px-8 py-3">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
+      {/* 1. Universal Double-Bezel Floating Header */}
+      <header className="fixed top-4 inset-x-4 sm:inset-x-8 z-40 flex justify-center pointer-events-none font-sans">
+        <DoubleBezel
+          rounded="full"
+          className="w-full max-w-5xl pointer-events-auto shadow-xl"
+          innerClassName="px-3.5 py-1.5 flex items-center justify-between"
+        >
           <Link
             href="/"
-            className="flex items-center gap-2 text-xs font-medium text-stone-600 hover:text-stone-950 transition"
+            onClick={() => sound.playClick()}
+            className="flex items-center gap-2 text-xs font-medium text-stone-600 hover:text-stone-950 px-2.5 py-1 rounded-full hover:bg-stone-100 transition"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
+            <ArrowLeft className="w-3.5 h-3.5 text-stone-500" />
+            <span>Home</span>
           </Link>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCheerWater}
-              icon={Droplets}
-              className="text-cyan-800 border-cyan-300 bg-cyan-50/50"
-            >
-              Water Island ({cheerCount})
-            </Button>
-
             <Button
               variant="outline"
               size="sm"
@@ -174,28 +157,29 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
               </Button>
             </Link>
           </div>
-        </div>
+        </DoubleBezel>
       </header>
 
       {/* Main Container */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-8 pt-6 space-y-6">
+      <main className="max-w-5xl mx-auto px-4 sm:px-8 pt-20 sm:pt-24 space-y-6">
         {/* 3D Living Diorama Enclosure */}
         <Card
-          variant="porcelain"
-          className="p-2 sm:p-4 rounded-3xl overflow-hidden border border-stone-300/80 shadow-xl bg-gradient-to-b from-[#f5f0ea] to-[#ece7de] relative"
+          doubleBezel
+          rounded="3xl"
+          className="shadow-2xl overflow-hidden"
+          innerClassName="p-2 sm:p-3 relative overflow-hidden"
         >
-          <div className="w-full h-[460px] rounded-2xl overflow-hidden relative">
+          <div className="w-full h-[460px] rounded-[calc(2.5rem-0.375rem)] overflow-hidden relative">
             <IslandCanvas
               trees={trees}
               level={level}
               streakDays={streakDays}
               streakShields={1}
-              isRaining={isCheering}
               className="w-full h-full"
             />
 
             {/* Public Diorama Tag */}
-            <div className="absolute top-4 left-4 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-stone-200/70 text-[11px] font-medium text-stone-700 shadow-sm">
+            <div className="absolute top-4 left-4 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 border border-stone-200/90 text-[11px] font-medium text-stone-700 shadow-[0_2px_6px_-1px_rgba(0,0,0,0.06),inset_0_1px_0_#fff]">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               <span>Live 3D Proof-of-Work Diorama · @{username}</span>
             </div>
@@ -203,18 +187,20 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
         </Card>
 
         {/* Profile Identity Card */}
-        <Card variant="porcelain" className="p-6 sm:p-8 rounded-3xl space-y-6">
+        <Card doubleBezel rounded="3xl" className="shadow-xl" innerClassName="p-6 sm:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               {profile?.avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={profile.avatarUrl}
-                  alt={username}
-                  className="w-16 h-16 rounded-2xl border-2 border-emerald-300 shadow-md"
-                />
+                <div className="p-1 rounded-2xl bg-white border border-stone-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.06),inset_0_1px_0_#fff] shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={profile.avatarUrl}
+                    alt={username}
+                    className="w-16 h-16 rounded-xl object-cover"
+                  />
+                </div>
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-medium text-xl shadow-inner font-sans">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-b from-emerald-600 to-emerald-700 text-white flex items-center justify-center font-medium text-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] font-sans border border-emerald-800 shrink-0">
                   {username.slice(0, 2).toUpperCase()}
                 </div>
               )}
@@ -288,16 +274,18 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
               {trees.map((tree) => (
                 <Card
                   key={tree.id}
-                  variant="porcelain"
-                  className="p-5 rounded-2xl space-y-3"
+                  doubleBezel
+                  rounded="2xl"
+                  className="shadow-xs"
+                  innerClassName="p-4 sm:p-5 space-y-3"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                       <div
-                        className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                        className={`w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 border ${
                           tree.type === "revenue"
-                            ? "bg-amber-50 text-amber-700 border border-amber-200"
-                            : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            ? "bg-amber-50 text-amber-800 border-amber-200/90 shadow-[inset_0_1.5px_2px_rgba(217,119,6,0.08),inset_0_-1px_0_rgba(255,255,255,0.85)]"
+                            : "bg-emerald-50 text-emerald-800 border-emerald-200/90 shadow-[inset_0_1.5px_2px_rgba(5,150,105,0.08),inset_0_-1px_0_rgba(255,255,255,0.85)]"
                         }`}
                       >
                         {tree.type === "revenue" ? (
@@ -335,8 +323,9 @@ export default function PublicProfilePage({ params }: PublicProfileProps) {
             </div>
           ) : (
             <Card
-              variant="porcelain"
-              className="p-8 text-center rounded-2xl text-stone-500 text-xs"
+              doubleBezel
+              rounded="2xl"
+              innerClassName="p-8 text-center text-stone-500 text-xs"
             >
               No active modules planted yet.
             </Card>

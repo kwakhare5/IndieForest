@@ -228,4 +228,3 @@ export function Dog({
   );
 }
 
-export { Dog as CampDog };

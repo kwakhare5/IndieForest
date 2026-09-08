@@ -47,4 +47,3 @@ export function SectionHeader({
   );
 }
 
-export { SectionHeader as LandingSectionHeader };

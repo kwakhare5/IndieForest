@@ -3,13 +3,14 @@
 import React, { useRef, useState, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import type { TreeData } from "@/types/game";
+import type { TreeData, TimeOfDay } from "@/types/game";
 import { getTreeYawRotation } from "@/lib/gamification";
 import { PineTree } from "./models/PineTree";
 
 interface TreeGrassPatchProps {
   isRevenue: boolean;
   drought: boolean;
+  timeOfDay?: TimeOfDay;
   hovered: boolean;
   isSelected: boolean;
 }
@@ -20,19 +21,26 @@ interface TreeGrassPatchProps {
 // =============================================================================
 function TreeGrassPatch({
   isRevenue,
-  drought,
+  drought: _drought,
+  timeOfDay = "day",
   hovered,
   isSelected,
 }: TreeGrassPatchProps) {
-  // Island grass is #5ea774
-  // Code: Subtle deeper sage-emerald (#529968)
-  // Cash: Subtle warmer sunlit olive-emerald (#689e57)
-  // Drought: Weathered dry sage (#6e6a62)
-  const patchColor = drought
-    ? "#6e6a62"
-    : isRevenue
-    ? "#689e57"
-    : "#529968";
+  // Day Turf is #22c55e (Spring Emerald)
+  // Sunset Turf is #84cc16 (Golden Chartreuse)
+  // Night Turf is #0f766e (Luminous Teal)
+  const patchColor =
+    timeOfDay === "night"
+      ? isRevenue
+        ? "#0d9488" // Luminous cyan-teal shift
+        : "#115e59" // Deep emerald-teal shift
+      : timeOfDay === "sunset"
+      ? isRevenue
+        ? "#a3e635" // Sunlit lime shift
+        : "#65a30d" // Rich olive-chartreuse shift
+      : isRevenue
+      ? "#4ade80" // Sunlit warm meadow shift
+      : "#16a34a"; // Rich spring emerald shift
 
   const isGlowing = hovered || isSelected;
   const glowColor = isSelected
@@ -64,6 +72,7 @@ interface IslandTreeProps {
   isSelected?: boolean;
   onSelect?: (tree: TreeData) => void;
   drought?: boolean;
+  timeOfDay?: TimeOfDay;
 }
 
 export function IslandTree({
@@ -71,6 +80,7 @@ export function IslandTree({
   isSelected = false,
   onSelect,
   drought = false,
+  timeOfDay = "day",
 }: IslandTreeProps) {
   const [hovered, setHovered] = useState(false);
   const visualGroupRef = useRef<THREE.Group>(null);
@@ -132,6 +142,7 @@ export function IslandTree({
       <TreeGrassPatch
         isRevenue={isRevenue}
         drought={drought}
+        timeOfDay={timeOfDay}
         hovered={hovered}
         isSelected={isSelected}
       />

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
+import { DoubleBezel } from "@/components/ui/Card";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
@@ -75,8 +76,11 @@ export function DashboardControls({
   return (
     <div className="fixed top-4 right-5 z-40 flex flex-col items-end font-sans pointer-events-auto select-none">
       {/* 1. Symmetrical Double-Bezel Capsule */}
-      <div className="p-1 rounded-full glass-dock shadow-lg transition-all duration-200">
-        <div className="px-2.5 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
+      <DoubleBezel
+        rounded="full"
+        className="shadow-lg"
+        innerClassName="px-2.5 py-1 flex items-center gap-1.5 sm:gap-2"
+      >
           
           {/* Lighting Mode Toggle */}
           {onToggleTimeOfDay && (
@@ -85,7 +89,7 @@ export function DashboardControls({
                 sound.playClick();
                 onToggleTimeOfDay();
               }}
-              className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
+              className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 btn-specular-porcelain transition cursor-pointer active:scale-95"
               title={`Lighting: ${timeOfDay.toUpperCase()}`}
             >
               {getTimeIcon()}
@@ -95,7 +99,7 @@ export function DashboardControls({
           {/* Lo-Fi Ambient Sound Toggle */}
           <button
             onClick={toggleSound}
-            className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
+            className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 btn-specular-porcelain transition cursor-pointer active:scale-95"
             title={isAudioMuted ? "Unmute Campfire Lo-Fi" : "Mute Campfire Lo-Fi"}
           >
             {isAudioMuted ? <VolumeX className="w-3.5 h-3.5 text-stone-400" /> : <Volume2 className="w-3.5 h-3.5 text-emerald-700" />}
@@ -116,7 +120,7 @@ export function DashboardControls({
             title="Connected Projects Popover"
           >
             <span>Projects</span>
-            <span className={`text-xs font-pixel ml-0.5 px-1.5 py-0.5 rounded-full ${isProjectsPopoverOpen ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
+            <span className={`text-xs font-pixel ml-0.5 px-1.5 py-0.5 rounded-full shadow-inner ${isProjectsPopoverOpen ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700 border border-stone-200/80"}`}>
               {trees.length}
             </span>
           </Button>
@@ -129,7 +133,7 @@ export function DashboardControls({
               sound.playClick();
               onOpenSettings();
             }}
-            className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition cursor-pointer active:scale-95"
+            className="p-1.5 rounded-full text-stone-600 hover:text-stone-950 btn-specular-porcelain transition cursor-pointer active:scale-95"
             title="Settings & Webhook Config"
           >
             <Settings className="w-3.5 h-3.5" />
@@ -150,13 +154,15 @@ export function DashboardControls({
               <User className="w-3.5 h-3.5 text-stone-500" />
             )}
           </div>
-        </div>
-      </div>
+      </DoubleBezel>
 
       {/* 2. Floating Tactile Porcelain Projects Popover */}
       {isProjectsPopoverOpen && (
-        <div className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm p-1.5 rounded-[2rem] glass-dock shadow-2xl origin-top-right animate-in fade-in zoom-in-95 duration-150 z-50">
-          <div className="p-4 sm:p-5 rounded-[calc(2rem-0.375rem)] porcelain-surface flex flex-col max-h-[75vh] overflow-hidden">
+        <DoubleBezel
+          rounded="2xl"
+          className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm shadow-2xl origin-top-right animate-in fade-in zoom-in-95 duration-150 z-50"
+          innerClassName="p-4 sm:p-5 flex flex-col max-h-[75vh] overflow-hidden"
+        >
             
             {/* Popover Header */}
             <div className="flex items-center justify-between pb-3 border-b border-stone-100">
@@ -190,10 +196,10 @@ export function DashboardControls({
                     sound.playClick();
                     setIsProjectsPopoverOpen(false);
                   }}
-                  className="p-1 rounded-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition cursor-pointer"
+                  className="p-1 rounded-full text-stone-400 hover:text-stone-900 btn-specular-porcelain transition cursor-pointer active:scale-95"
                   title="Close Projects"
                 >
-                  <X className="w-3.5 h-3.5" />
+                  <X className="w-3.5 h-3.5 stroke-[2]" />
                 </button>
               </div>
             </div>
@@ -207,7 +213,7 @@ export function DashboardControls({
                   placeholder="Search projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-950 placeholder-stone-400 outline-none focus:border-emerald-500 focus:bg-white transition font-sans"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] text-xs text-stone-950 placeholder-stone-400 outline-none focus:border-emerald-500 focus:bg-white transition font-sans"
                 />
               </div>
 
@@ -232,7 +238,7 @@ export function DashboardControls({
                 filteredTrees.map((tree) => (
                   <div key={tree.id} className="pb-2.5 border-b border-stone-100 last:border-0 last:pb-0 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2.5 truncate">
-                      <div className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center ${tree.type === "revenue" ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"}`}>
+                      <div className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center border shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.85)] ${tree.type === "revenue" ? "bg-amber-50 text-amber-800 border-amber-200/90" : "bg-emerald-50 text-emerald-800 border-emerald-200/90"}`}>
                         {tree.type === "revenue" ? <TrendingUp className="w-3.5 h-3.5" /> : <GitCommit className="w-3.5 h-3.5" />}
                       </div>
                       <div className="flex flex-col truncate">
@@ -245,7 +251,7 @@ export function DashboardControls({
 
                     <button
                       onClick={() => onDeleteTree(tree.id, tree.name)}
-                      className="p-1 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                      className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50/80 active:scale-95 transition-all cursor-pointer"
                       title="Prune / Delete Project"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -258,9 +264,7 @@ export function DashboardControls({
                 </div>
               )}
             </div>
-
-          </div>
-        </div>
+        </DoubleBezel>
       )}
     </div>
   );

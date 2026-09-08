@@ -79,7 +79,7 @@ export function Campsite({
       {/* 0. Campsite Hearth Patio Slab (Solid Stone Hearth Pad - Zero Floating) */}
       <mesh position={[0, 0.285, 2.2]} receiveShadow>
         <boxGeometry args={[isTier4 ? 5.6 : 4.6, 0.035, 2.4]} />
-        <meshStandardMaterial color={drought ? "#57534e" : "#7d6653"} roughness={0.88} flatShading />
+        <meshStandardMaterial color={drought ? "#a88c74" : "#7d6653"} roughness={0.88} flatShading />
       </mesh>
 
       {/* 1. Milestone Campfire (Daily Focus Station - INTERACTIVE) */}
