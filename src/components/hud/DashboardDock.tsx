@@ -63,7 +63,7 @@ export function DashboardDock({
 
           {/* 4. Island Progression Level */}
           <div
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-600 font-sans font-pixel"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-xs text-stone-600 font-pixel"
             title={`Builder Level ${level}`}
           >
             <span>LVL</span>
