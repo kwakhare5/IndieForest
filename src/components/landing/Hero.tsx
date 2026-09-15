@@ -12,7 +12,7 @@ import {
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import { Card, DoubleBezel } from "@/components/ui/Card";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import { GitHubIslandProfile } from "@/lib/github";
@@ -85,7 +85,11 @@ export function Hero() {
 
   const handleInstantSprout = async (e: React.FormEvent) => {
     e.preventDefault();
-    await handleFetchProfile(searchUsername);
+    const target = searchUsername.trim() || "shadcn";
+    if (!searchUsername.trim()) {
+      setSearchUsername("shadcn");
+    }
+    await handleFetchProfile(target);
   };
 
   const handleQuickSproutFamous = async (handle: string) => {
@@ -131,9 +135,13 @@ export function Hero() {
 
           {/* Instant Search Bar */}
           <div className="pt-1">
-            <form onSubmit={handleInstantSprout} className="p-1.5 rounded-2xl glass-dock shadow-sm max-w-lg">
-              <div className="p-1 rounded-xl porcelain-surface flex items-center gap-2">
-                <div className="pl-3 text-stone-400">
+            <form onSubmit={handleInstantSprout} className="max-w-lg">
+              <DoubleBezel
+                rounded="full"
+                className="shadow-[0_8px_24px_-4px_rgba(44,40,35,0.07),0_2px_4px_rgba(0,0,0,0.02)] transition-shadow duration-200 focus-within:shadow-[0_12px_28px_-6px_rgba(5,150,105,0.12),0_2px_6px_rgba(0,0,0,0.03)]"
+                innerClassName="p-1.5 pl-4 flex items-center gap-2.5"
+              >
+                <div className="text-stone-400 shrink-0">
                   <Github className="w-4 h-4 text-stone-600" />
                 </div>
                 <input
@@ -141,30 +149,30 @@ export function Hero() {
                   placeholder="Enter your GitHub handle"
                   value={searchUsername}
                   onChange={(e) => setSearchUsername(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans"
+                  className="w-full bg-transparent text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden font-sans font-medium tracking-tight"
                 />
                 <Button
                   type="submit"
                   variant="emerald"
                   size="sm"
-                  disabled={isSearching || !searchUsername.trim()}
+                  disabled={isSearching}
                   icon={isSearching ? Loader2 : Sparkles}
                   className="shrink-0"
                 >
                   {isSearching ? "Loading..." : "Preview Island"}
                 </Button>
-              </div>
+              </DoubleBezel>
             </form>
 
             {/* Quick Preview Chips */}
-            <div className="flex items-center gap-1.5 pt-2 text-[11px] text-stone-500 font-sans flex-wrap">
+            <div className="flex items-center gap-2 pt-2.5 text-[11px] text-stone-500 font-sans flex-wrap">
               <span className="text-stone-400">Try previewing:</span>
               {FAMOUS_BUILDER_HANDLES.map((handle) => (
                 <button
                   key={handle}
                   type="button"
                   onClick={() => handleQuickSproutFamous(handle)}
-                  className="px-2 py-0.5 rounded-md bg-stone-200/60 hover:bg-stone-200 text-stone-700 font-medium transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-full btn-specular-porcelain text-stone-700 hover:text-stone-950 font-medium text-[11px] transition cursor-pointer active:scale-95"
                 >
                   @{handle}
                 </button>
@@ -239,32 +247,35 @@ export function Hero() {
 
         {/* Right 3D Diorama Showcase */}
         <div className="lg:col-span-6 relative">
-          <div className="relative w-full aspect-square max-w-lg mx-auto p-2 rounded-[2.5rem] glass-dock shadow-2xl overflow-hidden">
-            <div className="w-full h-full rounded-[2rem] porcelain-surface overflow-hidden relative">
-              <IslandCanvas
-                trees={displayedTrees}
-                level={displayLevel}
-                streakDays={displayStreak}
-                streakShields={1}
-                drought={false}
-                timeOfDay="day"
-                zoomLevel={1}
-                className="w-full h-full"
-              />
+          <Card
+            doubleBezel
+            className="relative w-full aspect-square max-w-lg mx-auto shadow-2xl overflow-hidden"
+            innerClassName="overflow-hidden relative"
+          >
+            <IslandCanvas
+              trees={displayedTrees}
+              level={displayLevel}
+              streakDays={displayStreak}
+              streakShields={1}
+              drought={false}
+              timeOfDay="day"
+              className="w-full h-full"
+            />
 
-              {/* Floating Diorama Badge */}
-              <div className="absolute top-4 left-4 pointer-events-none">
-                <Card variant="porcelain" className="px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-medium text-stone-900 font-sans">
-                    {activeProfile ? `@${activeProfile.username}'s Island` : "Live 3D Diorama"}
-                  </span>
-                </Card>
-              </div>
+            {/* Floating Diorama Badge */}
+            <div className="absolute top-4 left-4 pointer-events-none">
+              <DoubleBezel rounded="full" className="shadow-md" innerClassName="px-3 py-1.5 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-medium text-stone-900 font-sans">
+                  {activeProfile ? `@${activeProfile.username}'s Island` : "Live 3D Diorama"}
+                </span>
+              </DoubleBezel>
+            </div>
 
-              {/* Instant Claim Button overlay if searched */}
-              {activeProfile && (
-                <div className="absolute bottom-4 inset-x-4 flex items-center justify-between p-2 rounded-2xl bg-white/90 backdrop-blur-md border border-stone-200 shadow-xl">
+            {/* Instant Claim Button overlay if searched */}
+            {activeProfile && (
+              <div className="absolute bottom-4 inset-x-4 pointer-events-auto">
+                <DoubleBezel rounded="2xl" className="shadow-xl" innerClassName="flex items-center justify-between p-2">
                   <div className="flex items-center gap-2 pl-2">
                     <Trees className="w-4 h-4 text-emerald-600" />
                     <span className="text-xs font-medium text-stone-900 font-sans">
@@ -294,14 +305,13 @@ export function Hero() {
                       </div>
                     </SignInButton>
                   )}
-                </div>
-              )}
-            </div>
-          </div>
+                </DoubleBezel>
+              </div>
+            )}
+          </Card>
         </div>
       </div>
     </section>
   );
 }
 
-export { Hero as LandingHero };

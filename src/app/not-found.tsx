@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Trees } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#ece7de] text-stone-900 font-sans p-4">
-      <div className="w-full max-w-md p-1.5 rounded-[2.5rem] glass-dock shadow-2xl animate-in zoom-in-95 duration-200">
-        <div className="p-8 rounded-[calc(2.5rem-0.375rem)] porcelain-surface text-center space-y-5">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mx-auto shadow-xs">
+      <Card doubleBezel className="w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200" innerClassName="p-8 text-center space-y-5">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200/90 flex items-center justify-center text-emerald-800 mx-auto shadow-[inset_0_1.5px_2px_rgba(5,150,105,0.12),inset_0_-1px_0_rgba(255,255,255,0.85)]">
             <Trees className="w-6 h-6 stroke-[1.75]" />
           </div>
 
@@ -32,8 +32,7 @@ export default function NotFound() {
               </Button>
             </Link>
           </div>
-        </div>
-      </div>
+      </Card>
     </div>
   );
 }

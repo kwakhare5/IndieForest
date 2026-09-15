@@ -57,9 +57,9 @@ export function GuestbookModal({
         {/* Existing Notes Feed */}
         <div className="max-h-48 overflow-y-auto space-y-2.5 pr-1">
           {entries.length === 0 ? (
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 text-center text-xs text-stone-500 font-sans">
-              No notes pinned yet. Be the first builder to leave encouragement! 🌲
-            </div>
+            <Card variant="subtle-inset" className="p-4 rounded-xl text-center text-xs text-stone-500 font-sans">
+              No notes pinned yet. Be the first builder to leave encouragement.
+            </Card>
           ) : (
             entries.map((entry) => (
               <Card key={entry.id} variant="subtle-inset" className="p-3 rounded-xl space-y-1 text-xs font-sans">
@@ -83,7 +83,7 @@ export function GuestbookModal({
               placeholder="Your Name / @handle"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
-              className="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:bg-white focus:border-emerald-500 transition font-sans"
+              className="p-2.5 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:bg-white focus:border-emerald-600 transition font-sans"
             />
             <input
               type="text"
@@ -91,7 +91,7 @@ export function GuestbookModal({
               value={noteMessage}
               onChange={(e) => setNoteMessage(e.target.value)}
               maxLength={120}
-              className="sm:col-span-2 p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:bg-white focus:border-emerald-500 transition font-sans"
+              className="sm:col-span-2 p-2.5 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] text-xs text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:bg-white focus:border-emerald-600 transition font-sans"
             />
           </div>
 

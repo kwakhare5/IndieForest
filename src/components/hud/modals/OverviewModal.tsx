@@ -46,7 +46,7 @@ export function OverviewModal({
         {/* Profile Command Header */}
         <div className="flex items-center justify-between pb-3 border-b border-stone-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-medium text-xs">
+            <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/90 shadow-[inset_0_1.5px_2px_rgba(5,150,105,0.12),inset_0_-1px_0_rgba(255,255,255,0.85)] flex items-center justify-center font-medium text-xs font-mono">
               {badge}
             </div>
             <div>
@@ -80,7 +80,7 @@ export function OverviewModal({
 
         {/* Dual-Grove Aggregate Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+          <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Code Grove</span>
             <div className="text-base font-normal text-emerald-800 font-pixel flex items-center gap-1">
               <Trees className="w-3.5 h-3.5 text-emerald-600" />
@@ -89,7 +89,7 @@ export function OverviewModal({
             <span className="text-[10px] text-stone-400">{totalCommits} commits</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+          <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Cash Grove</span>
             <div className="text-base font-normal text-amber-700 font-pixel flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
@@ -98,7 +98,7 @@ export function OverviewModal({
             <span className="text-[10px] text-stone-400">{revenueTrees.length} cash trees</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+          <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Consistency</span>
             <div className="text-base font-normal text-stone-900 font-pixel">
               {streakDays} DAYS
@@ -106,7 +106,7 @@ export function OverviewModal({
             <span className="text-[10px] text-stone-400">Unbroken streak</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5">
+          <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
             <span className="text-[10px] text-stone-400 font-medium block">Rank Tier</span>
             <div className="text-base font-normal text-stone-900 font-pixel">
               LVL {level}

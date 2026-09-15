@@ -40,13 +40,25 @@ export function Faq() {
 
         <div className="space-y-4">
           {FAQ_ITEMS.map((item, idx) => (
-            <Card key={idx} variant="porcelain" className="p-6 rounded-2xl space-y-1.5">
-              <h3 className="font-medium text-stone-950 text-sm font-sans">
-                {item.question}
-              </h3>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-                {item.answer}
-              </p>
+            <Card
+              key={idx}
+              doubleBezel
+              rounded="2xl"
+              innerClassName="p-5 sm:p-6 space-y-2"
+            >
+              <div className="flex items-start gap-3">
+                <span className="w-5 h-5 rounded-md bg-stone-100/90 text-stone-600 border border-stone-200/90 text-[10px] font-mono font-medium flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  0{idx + 1}
+                </span>
+                <div className="space-y-1">
+                  <h3 className="font-medium text-stone-950 text-sm font-sans">
+                    {item.question}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
+                    {item.answer}
+                  </p>
+                </div>
+              </div>
             </Card>
           ))}
         </div>
@@ -55,4 +67,3 @@ export function Faq() {
   );
 }
 
-export { Faq as LandingFaq };

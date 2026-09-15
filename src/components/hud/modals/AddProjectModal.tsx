@@ -81,7 +81,7 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={projectType === "shipping" ? "e.g. Auth Engine MVP" : "e.g. Acme Pro Plan"}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white transition"
+              className="w-full bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] rounded-xl px-3 py-2 text-xs text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white focus:shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] transition"
             />
             <p className="text-[11px] text-stone-500 mt-1">
               {projectType === "shipping"
@@ -104,12 +104,12 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
                   value={mrr}
                   onChange={(e) => setMrr(e.target.value)}
                   placeholder="29"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs text-stone-900 font-mono font-medium outline-none focus:border-amber-600 focus:bg-white transition"
+                  className="w-full bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] rounded-xl pl-8 pr-3 py-2 text-xs text-stone-900 font-mono font-medium outline-none focus:border-amber-600 focus:bg-white focus:shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] transition"
                 />
               </div>
             </div>
           ) : (
-            <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+            <div className="p-2.5 rounded-xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.04),inset_0_-1px_0_rgba(255,255,255,0.8)] flex items-center justify-between text-[11px] text-stone-600">
               <span>Automatic GitHub API Tracking</span>
               <span className="font-medium text-emerald-800">Zero-Touch</span>
             </div>

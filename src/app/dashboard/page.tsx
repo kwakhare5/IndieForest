@@ -7,10 +7,8 @@ import { DashboardControls } from "@/components/hud/DashboardControls";
 import { DashboardDock } from "@/components/hud/DashboardDock";
 import { TreeCard } from "@/components/hud/TreeCard";
 import { Button } from "@/components/ui/Button";
+import { DoubleBezel } from "@/components/ui/Card";
 import { Github } from "lucide-react";
-
-import { GridView } from "@/app/demo/components/GridView";
-import { Workshop3D } from "@/app/demo/components/Workshop3D";
 
 const IslandCanvas = dynamic(
   () => import("@/components/canvas/IslandCanvas").then((mod) => mod.IslandCanvas),
@@ -51,7 +49,6 @@ export default function DashboardPage() {
   const level = useForestStore((s) => s.level);
   const streakDays = useForestStore((s) => s.streakDays);
   const streakShields = useForestStore((s) => s.streakShields);
-  const drought = useForestStore((s) => s.drought);
   const removeTree = useForestStore((s) => s.removeTree);
   const timeOfDay = useForestStore((s) => s.timeOfDay);
   const toggleTimeOfDay = useForestStore((s) => s.toggleTimeOfDay);
@@ -61,9 +58,7 @@ export default function DashboardPage() {
 
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
 
-  // Modals, HUD Overlays & 2-Step Isometric Zoom State
-  const [viewMode, setViewMode] = useState<"diorama" | "forest-grid" | "showroom">("diorama");
-  const [zoomLevel, setZoomLevel] = useState<1 | 2>(1);
+  // Modals & HUD Overlays State
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -164,10 +159,6 @@ export default function DashboardPage() {
           sound.playClick();
           toggleTimeOfDay();
           break;
-        case "z":
-          sound.playClick();
-          setZoomLevel((prev) => (prev === 1 ? 2 : 1));
-          break;
         case "escape":
           setSelectedTree(null);
           setIsShareModalOpen(false);
@@ -213,40 +204,25 @@ export default function DashboardPage() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#ece7de] select-none font-sans">
-      {/* 1. Fullscreen Viewport: Living 3D Diorama or 1:1 Precision Grid Mode */}
+      {/* 1. Fullscreen Viewport: Living 3D Diorama */}
       <div className="absolute inset-0 z-0">
-        {viewMode === "diorama" ? (
-          <IslandCanvas
-            trees={trees}
-            level={level}
-            streakDays={streakDays}
-            streakShields={streakShields}
-            drought={drought}
-            timeOfDay={timeOfDay}
-            zoomLevel={zoomLevel}
-            selectedTreeId={selectedTree?.id}
-            onSelectTree={(tree) => {
-              sound.playClick();
-              setSelectedTree(tree);
-            }}
-            onClickCampfire={() => setIsFocusModalOpen(true)}
-            onClickTent={() => setIsRestShieldModalOpen(true)}
-            onClickCabin={() => setIsOverviewModalOpen(true)}
-            className="w-full h-full"
-          />
-        ) : viewMode === "forest-grid" ? (
-          <GridView
-            trees={trees}
-            level={level}
-            streakDays={streakDays}
-            streakShields={streakShields}
-            drought={drought}
-          />
-        ) : (
-          <div className="w-full h-full pt-16">
-            <Workshop3D />
-          </div>
-        )}
+        <IslandCanvas
+          trees={trees}
+          level={level}
+          streakDays={streakDays}
+          streakShields={streakShields}
+          drought={false}
+          timeOfDay={timeOfDay}
+          selectedTreeId={selectedTree?.id}
+          onSelectTree={(tree) => {
+            sound.playClick();
+            setSelectedTree(tree);
+          }}
+          onClickCampfire={() => setIsFocusModalOpen(true)}
+          onClickTent={() => setIsRestShieldModalOpen(true)}
+          onClickCabin={() => setIsOverviewModalOpen(true)}
+          className="w-full h-full"
+        />
       </div>
 
       {/* 2. Floating Game HUD Chrome */}
@@ -259,8 +235,6 @@ export default function DashboardPage() {
             unclaimedQuestsCount={unclaimedQuestsCount}
             completedQuestsCount={completedQuestsCount}
             totalQuestsCount={dailyQuests.length}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
           />
 
           {/* Top-Right: World Ambience & Controls */}
@@ -276,8 +250,11 @@ export default function DashboardPage() {
           {/* Empty State Call to Action (When zero trees exist) */}
           {trees.length === 0 && (
             <div className="fixed bottom-24 inset-x-0 z-40 flex justify-center pointer-events-none px-4">
-              <div className="pointer-events-auto p-1.5 rounded-2xl glass-dock shadow-xl max-w-sm w-full animate-in fade-in slide-in-from-bottom-3 duration-300">
-                <div className="p-3.5 rounded-xl porcelain-surface text-center space-y-2">
+              <DoubleBezel
+                rounded="2xl"
+                className="pointer-events-auto shadow-xl max-w-sm w-full animate-in fade-in slide-in-from-bottom-3 duration-300"
+                innerClassName="p-3.5 text-center space-y-2"
+              >
                   <div className="flex items-center justify-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-xs font-medium text-stone-900 font-sans">
@@ -298,8 +275,7 @@ export default function DashboardPage() {
                       Connect GitHub Handle
                     </Button>
                   </div>
-                </div>
-              </div>
+              </DoubleBezel>
             </div>
           )}
 
@@ -319,13 +295,19 @@ export default function DashboardPage() {
 
       {/* Immersive HUD Restore Button (Visible when HUD is hidden) */}
       {isHudHidden && (
-        <button
-          onClick={() => setIsHudHidden(false)}
-          className="fixed top-5 right-5 z-40 p-2.5 rounded-full bg-white border border-stone-300 shadow-2xl text-stone-700 hover:text-stone-950 transition cursor-pointer font-sans text-xs flex items-center gap-2"
+        <DoubleBezel
+          rounded="full"
+          className="fixed top-5 right-5 z-40 shadow-2xl pointer-events-auto"
+          innerClassName="px-3 py-1.5"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-medium">Show HUD (Press H)</span>
-        </button>
+          <button
+            onClick={() => setIsHudHidden(false)}
+            className="flex items-center gap-2 text-stone-700 hover:text-stone-950 transition cursor-pointer font-sans text-xs active:scale-95"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-medium">Show HUD (Press H)</span>
+          </button>
+        </DoubleBezel>
       )}
 
       {/* 3. In-World Tree Card */}

@@ -23,17 +23,17 @@ export function Campfire({
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    if (fireLightRef.current && !drought) {
-      const baseIntensity = isNight ? 2.6 : isSunset ? 1.9 : 1.3;
+    if (fireLightRef.current) {
+      const baseIntensity = drought ? 0.7 : isNight ? 2.6 : isSunset ? 1.9 : 1.3;
       fireLightRef.current.intensity =
-        baseIntensity + Math.sin(t * 12) * 0.4 + Math.cos(t * 19) * 0.2;
+        baseIntensity + Math.sin(t * 12) * 0.3 + Math.cos(t * 19) * 0.15;
     }
-    if (flameCoreRef.current && !drought) {
-      flameCoreRef.current.scale.y = 1 + Math.sin(t * 14) * 0.15;
+    if (flameCoreRef.current) {
+      flameCoreRef.current.scale.y = (drought ? 0.65 : 1) + Math.sin(t * 14) * 0.1;
       flameCoreRef.current.rotation.y = t * 2;
     }
-    if (emberRef.current && !drought) {
-      emberRef.current.emissiveIntensity = 1.3 + Math.sin(t * 6) * 0.3;
+    if (emberRef.current) {
+      emberRef.current.emissiveIntensity = (drought ? 0.7 : 1.3) + Math.sin(t * 6) * 0.2;
     }
   });
 
@@ -64,9 +64,9 @@ export function Campfire({
         <cylinderGeometry args={[0.38, 0.4, 0.04, 12]} />
         <meshStandardMaterial
           ref={emberRef}
-          color={drought ? "#292524" : "#451a03"}
-          emissive={drought ? "#000000" : "#dc2626"}
-          emissiveIntensity={drought ? 0 : 1.3}
+          color="#451a03"
+          emissive="#dc2626"
+          emissiveIntensity={drought ? 0.7 : 1.3}
           roughness={0.9}
           wireframe={wireframe}
         />
@@ -82,7 +82,7 @@ export function Campfire({
         >
           <cylinderGeometry args={[0.04, 0.055, 0.52, 6]} />
           <meshStandardMaterial
-            color={drought ? "#44403c" : "#78350f"}
+            color="#78350f"
             roughness={0.9}
             flatShading
             wireframe={wireframe}
@@ -91,39 +91,37 @@ export function Campfire({
       ))}
 
       {/* 4. Multi-Facet Pulsing Flame Core */}
-      {!drought && (
-        <>
-          <mesh ref={flameCoreRef} position={[0, 0.24, 0]}>
-            <coneGeometry args={[0.18, 0.45, 6]} />
-            <meshStandardMaterial
-              color="#f97316"
-              emissive="#ea580c"
-              emissiveIntensity={isNight ? 2.5 : 1.5}
-              roughness={0.2}
-              flatShading
-              wireframe={wireframe}
-            />
-          </mesh>
-          <mesh position={[0, 0.2, 0]}>
-            <coneGeometry args={[0.1, 0.3, 5]} />
-            <meshStandardMaterial
-              color="#fef08a"
-              emissive="#facc15"
-              emissiveIntensity={2.8}
-              wireframe={wireframe}
-            />
-          </mesh>
-
-          <pointLight
-            ref={fireLightRef}
-            position={[0, 0.38, 0]}
+      <group scale={drought ? 0.7 : 1.0}>
+        <mesh ref={flameCoreRef} position={[0, 0.24, 0]}>
+          <coneGeometry args={[0.18, 0.45, 6]} />
+          <meshStandardMaterial
             color="#f97316"
-            intensity={isNight ? 2.6 : 1.3}
-            distance={4.5}
-            decay={2}
+            emissive="#ea580c"
+            emissiveIntensity={drought ? 1.0 : isNight ? 2.5 : 1.5}
+            roughness={0.2}
+            flatShading
+            wireframe={wireframe}
           />
-        </>
-      )}
+        </mesh>
+        <mesh position={[0, 0.2, 0]}>
+          <coneGeometry args={[0.1, 0.3, 5]} />
+          <meshStandardMaterial
+            color="#fef08a"
+            emissive="#facc15"
+            emissiveIntensity={drought ? 1.6 : 2.8}
+            wireframe={wireframe}
+          />
+        </mesh>
+      </group>
+
+      <pointLight
+        ref={fireLightRef}
+        position={[0, 0.38, 0]}
+        color={drought ? "#f59e0b" : "#f97316"}
+        intensity={drought ? 0.7 : isNight ? 2.6 : 1.3}
+        distance={drought ? 2.5 : 4.5}
+        decay={2}
+      />
     </group>
   );
 }

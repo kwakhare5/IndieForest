@@ -253,12 +253,12 @@ export const useForestStore = create<ForestState>()(
         if (
           result.streakDays !== state.streakDays ||
           result.streakShields !== state.streakShields ||
-          result.drought !== state.drought
+          state.drought
         ) {
           set({
             streakDays: result.streakDays,
             streakShields: result.streakShields,
-            drought: result.drought,
+            drought: false,
           });
           get().syncCloudIsland();
         }

@@ -88,20 +88,89 @@ code, kbd, samp, pre, .font-mono {
   font-family: var(--font-mono), monospace;
 }
 
-/* Canonical Double-Bezel Porcelain Architecture (Solid White Minimalist) */
+/* Canonical Double-Bezel Porcelain Architecture (Air & Glass Chamfer Calibration) */
 .glass-dock {
-  background: #ffffff;
-  border: 1px solid rgba(214, 207, 197, 0.85);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 
-    0 10px 30px -8px rgba(68, 64, 60, 0.1),
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    inset 0 1px 1px rgba(255, 255, 255, 1);
+    0 8px 20px -4px rgba(44, 40, 35, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .porcelain-surface {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(228, 222, 212, 0.85);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+/* Tactile Skeuomorphic Foundations (Subtle, Minimal Air & Glass) */
+.porcelain-slab {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(228, 222, 212, 0.9);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease;
+}
+
+.porcelain-slab-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 3px 8px -2px rgba(44, 40, 35, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.chassis-enclosure {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 8px 20px -4px rgba(44, 40, 35, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.02),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.porcelain-bezel {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(228, 222, 212, 0.85);
+  box-shadow: 
+    0 6px 16px -4px rgba(44, 40, 35, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.tactile-groove {
+  background: rgba(248, 246, 242, 0.9);
+  border: 1px solid rgba(220, 214, 204, 0.8);
+  box-shadow: 
+    inset 0 1px 2px rgba(28, 25, 23, 0.03),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.tactile-pill {
   background: #ffffff;
-  border: 1px solid rgba(228, 221, 210, 0.85);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 1);
+  border: 1px solid rgba(214, 207, 197, 0.85);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 1px 1px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tactile-pill:active {
+  transform: scale(0.97);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.tactile-disc {
+  box-shadow: 
+    inset 0 1.5px 2px rgba(0, 0, 0, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Smooth popover spring entrance animation */
@@ -124,7 +193,7 @@ code, kbd, samp, pre, .font-mono {
 .btn-specular-emerald {
   background: linear-gradient(180deg, #059669 0%, #047857 100%);
   box-shadow: 
-    0 1px 2px rgba(4, 120, 87, 0.2),
+    0 2px 8px -2px rgba(5, 150, 105, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.25),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }
@@ -132,7 +201,7 @@ code, kbd, samp, pre, .font-mono {
 .btn-specular-amber {
   background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
   box-shadow: 
-    0 1px 2px rgba(180, 83, 9, 0.2),
+    0 2px 8px -2px rgba(217, 119, 6, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.25),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }
@@ -141,6 +210,7 @@ code, kbd, samp, pre, .font-mono {
   background: #ffffff;
   border: 1px solid rgba(214, 207, 197, 0.85);
   box-shadow: 
-    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 6px -1px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 1);
 }

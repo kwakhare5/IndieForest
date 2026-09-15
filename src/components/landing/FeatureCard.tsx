@@ -17,6 +17,7 @@ export interface FeatureCardProps {
   footerText?: string;
   footerColor?: string;
   footerBadge?: React.ReactNode;
+  doubleBezel?: boolean;
   className?: string;
 }
 
@@ -33,12 +34,15 @@ export function FeatureCard({
   footerText,
   footerColor = "text-stone-500",
   footerBadge,
+  doubleBezel = false,
   className = "",
 }: FeatureCardProps) {
   return (
     <Card
       variant="porcelain"
-      className={`p-7 sm:p-8 flex flex-col justify-between rounded-[2.5rem] ${className}`}
+      doubleBezel={doubleBezel}
+      className={`${doubleBezel ? "" : "p-7 sm:p-8"} flex flex-col justify-between rounded-[2.5rem] ${className}`}
+      innerClassName="p-7 sm:p-8 flex flex-col justify-between h-full"
     >
       <div>
         {stepTag && (
@@ -51,7 +55,7 @@ export function FeatureCard({
 
         {Icon && (
           <div
-            className={`w-10 h-10 rounded-2xl border flex items-center justify-center mb-3 shadow-xs ${iconBg} ${iconColor}`}
+            className={`w-10 h-10 rounded-2xl border flex items-center justify-center mb-3 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.85)] ${iconBg} ${iconColor}`}
           >
             <Icon className="w-5 h-5 stroke-[1.75]" />
           </div>
@@ -84,4 +88,3 @@ export function FeatureCard({
   );
 }
 
-export { FeatureCard as LandingFeatureCard };

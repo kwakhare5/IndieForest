@@ -23,6 +23,8 @@ import { OverviewModal } from "@/components/hud/modals/OverviewModal";
 import { ShareModal } from "@/components/hud/modals/ShareModal";
 import { SettingsModal } from "@/components/hud/modals/SettingsModal";
 import { AddProjectModal } from "@/components/hud/modals/AddProjectModal";
+import { DoubleBezel } from "@/components/ui/Card";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { IslandCanvas } from "@/components/canvas/IslandCanvas";
 import { GridView } from "./components/GridView";
 import { Workshop3D } from "./components/Workshop3D";
@@ -153,8 +155,11 @@ export default function DemoPage() {
       <header className="fixed top-4 inset-x-5 z-40 flex items-center justify-between pointer-events-none">
         
         {/* Left: Navigation & Mode Switcher */}
-        <div className="p-1 rounded-full glass-dock shadow-lg pointer-events-auto flex items-center gap-2">
-          <div className="px-3 py-1.5 rounded-full porcelain-surface flex items-center gap-2 sm:gap-3">
+        <DoubleBezel
+          rounded="full"
+          className="shadow-lg pointer-events-auto flex items-center gap-2"
+          innerClassName="px-3 py-1.5 flex items-center gap-2 sm:gap-3"
+        >
             <Link
               href="/dashboard"
               onClick={() => sound.playClick()}
@@ -213,13 +218,14 @@ export default function DemoPage() {
                 <span>3D Workshop</span>
               </button>
             </div>
-
-          </div>
-        </div>
+        </DoubleBezel>
 
         {/* Right: Lighting, Simulation Controls & Toggles */}
-        <div className="p-1 rounded-full glass-dock shadow-lg pointer-events-auto flex items-center gap-2">
-          <div className="px-2 py-1 rounded-full porcelain-surface flex items-center gap-1.5">
+        <DoubleBezel
+          rounded="full"
+          className="shadow-lg pointer-events-auto flex items-center gap-2"
+          innerClassName="px-2 py-1 flex items-center gap-1.5"
+        >
             {/* Simulation Controls Toggle */}
             {viewMode === "diorama" && (
               <button
@@ -244,8 +250,10 @@ export default function DemoPage() {
                 sound.playClick();
                 setTimeOfDay("day");
               }}
-              className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "day" ? "bg-amber-100 text-amber-900 font-medium" : "text-stone-500 hover:bg-stone-100"
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all cursor-pointer ${
+                timeOfDay === "day"
+                  ? "bg-amber-50 text-amber-900 border border-amber-200/90 shadow-[inset_0_1.5px_2px_rgba(217,119,6,0.12),inset_0_-1px_0_rgba(255,255,255,0.85)] font-medium"
+                  : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/80 active:scale-95"
               }`}
               title="Day Sunlight"
             >
@@ -256,8 +264,10 @@ export default function DemoPage() {
                 sound.playClick();
                 setTimeOfDay("sunset");
               }}
-              className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "sunset" ? "bg-orange-100 text-orange-900 font-medium" : "text-stone-500 hover:bg-stone-100"
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all cursor-pointer ${
+                timeOfDay === "sunset"
+                  ? "bg-orange-50 text-orange-900 border border-orange-200/90 shadow-[inset_0_1.5px_2px_rgba(234,88,12,0.12),inset_0_-1px_0_rgba(255,255,255,0.85)] font-medium"
+                  : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/80 active:scale-95"
               }`}
               title="Sunset Golden Hour"
             >
@@ -268,8 +278,10 @@ export default function DemoPage() {
                 sound.playClick();
                 setTimeOfDay("night");
               }}
-              className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                timeOfDay === "night" ? "bg-indigo-100 text-indigo-900 font-medium" : "text-stone-500 hover:bg-stone-100"
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all cursor-pointer ${
+                timeOfDay === "night"
+                  ? "bg-indigo-50 text-indigo-900 border border-indigo-200/90 shadow-[inset_0_1.5px_2px_rgba(79,70,229,0.12),inset_0_-1px_0_rgba(255,255,255,0.85)] font-medium"
+                  : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/80 active:scale-95"
               }`}
               title="Night Moonlit"
             >
@@ -280,8 +292,10 @@ export default function DemoPage() {
 
             <button
               onClick={toggleSound}
-              className={`p-1.5 rounded-full text-xs transition cursor-pointer ${
-                !isAudioMuted ? "bg-amber-100 text-amber-900 font-medium" : "text-stone-500 hover:bg-stone-100"
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all cursor-pointer ${
+                !isAudioMuted
+                  ? "bg-amber-50 text-amber-900 border border-amber-200/90 shadow-[inset_0_1.5px_2px_rgba(217,119,6,0.12),inset_0_-1px_0_rgba(255,255,255,0.85)] font-medium"
+                  : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/80 active:scale-95"
               }`}
               title={isAudioMuted ? "Unmute Campfire Ambiance" : "Mute Campfire Ambiance"}
             >
@@ -291,8 +305,7 @@ export default function DemoPage() {
                 <Volume2 className="w-3.5 h-3.5 text-amber-600" />
               )}
             </button>
-          </div>
-        </div>
+        </DoubleBezel>
       </header>
 
       {/* ========================================================================= */}
@@ -343,8 +356,7 @@ export default function DemoPage() {
           {/* Left Simulation Controller (Collapsible on Demand) */}
           {isControlsOpen && (
             <div className="fixed top-20 left-5 z-40 pointer-events-auto max-w-xs w-72">
-              <div className="p-1.5 rounded-2xl glass-dock shadow-xl">
-                <div className="p-4 rounded-xl porcelain-surface space-y-4">
+              <DoubleBezel rounded="2xl" className="shadow-xl" innerClassName="p-4 space-y-4">
                   
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-stone-100 pb-2">
@@ -410,24 +422,20 @@ export default function DemoPage() {
                       <span className="text-stone-600 font-medium">Streak Shields:</span>
                       <span className="font-medium font-mono text-stone-800">{streakShields} / 2 Banked</span>
                     </div>
-                    <div className="grid grid-cols-3 gap-1.5">
-                      {[0, 1, 2].map((count) => (
-                        <button
-                          key={count}
-                          onClick={() => {
-                            sound.playClick();
-                            setStreakShields(count);
-                          }}
-                          className={`py-1 rounded-lg text-xs font-medium border transition cursor-pointer ${streakShields === count ? "bg-emerald-600 text-white border-emerald-700 shadow-xs" : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"}`}
-                        >
-                          {count} {count === 1 ? "Shield" : "Shields"}
-                        </button>
-                      ))}
-                    </div>
+                    <SegmentedControl
+                      value={String(streakShields)}
+                      onChange={(val) => {
+                        sound.playClick();
+                        setStreakShields(Number(val));
+                      }}
+                      options={[
+                        { value: "0", label: "0 Shields" },
+                        { value: "1", label: "1 Shield" },
+                        { value: "2", label: "2 Shields" },
+                      ]}
+                    />
                   </div>
-
-                </div>
-              </div>
+              </DoubleBezel>
             </div>
           )}
 

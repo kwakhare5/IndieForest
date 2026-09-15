@@ -76,18 +76,15 @@ npm run lint       # ESLint + TypeScript check
 ## 7. SESSION RESUME
 
 - **Current State & Accomplishments:**
-  - **Canonical 4-Font Typography System (`layout.tsx`, `globals.css`):** Strictly enforced the 4 canonical fonts: **Geist Sans** (`.font-sans` for primary UI), **Jersey 10** (`.font-pixel` for streaks/milestones), **Instrument Serif** (`.font-editorial` for display), and **JetBrains Mono** (`.font-mono` for code/metrics). Bundled Jersey 10 as local WOFF2, permanently resolving the vertical baseline shift and micro-pixel washout. Purged obsolete `that-that-new-pixel` files.
-  - **Comprehensive Font Weight & Tracking Calibration:** Resolved heavy, ink-blocked appearance by diagnosing Geist's Neo-Grotesque anatomy and Windows DirectWrite antialiasing. Calibrated global tracking to `-0.01em` and default body weight to `400`. Systematically refactored 25+ files across all UI components ([`Button.tsx`](file:///d:/IndieForest/src/components/ui/Button.tsx), [`Badge.tsx`](file:///d:/IndieForest/src/components/ui/Badge.tsx), [`Modal.tsx`](file:///d:/IndieForest/src/components/ui/Modal.tsx), [`SegmentedControl.tsx`](file:///d:/IndieForest/src/components/ui/SegmentedControl.tsx)), HUD overlays/modals, landing page, [`Workshop3D.tsx`](file:///d:/IndieForest/src/app/demo/components/Workshop3D.tsx), public profile, and unfair prototype to `font-medium` (500) and `font-normal` (400), completely eliminating `font-bold` (700) and `font-semibold` (600) across `src/`.
-  - **High-Taste Social & Proof-of-Work Specimen (`/prototype/unfair`):** Designed 3 tangible high-status card concepts inspired by unfair.so's spatial luxury: Diorama Shadowbox, Sovereign Builder Passport, and Compound Ledger, pairing Instrument Serif display with retro pixel metrics.
-  - **Pure Continuous Natural Lawn (`Island.tsx`):** Eradicated the central promenade, cobblestones, and trenches. The island is now one continuous, seamless sage-emerald lawn on an elevated beveled bedrock foundation, with a natural open green buffer between Code and Cash groves.
-  - **100% Mathematically Aligned Grid Lines (`gamification.ts` & `Island.tsx`):** Added `getTreeCellBoundingBox` to derive grid lines directly from `(gridX ± CELL_SIZE/2, gridZ ± CELL_SIZE/2)`. In Grid Mode, every visible line perfectly frames its tree tile with zero offset drift.
-  - **Purged Ghost Assets & Empty Plot Clutter (`IslandCanvas.tsx`, `Campsite.tsx`):** Removed all ghost 3D models and empty plot plus signs. Focused campsite purely on Cabin, Campfire, and Dog firmly on the hearth patio.
-  - **Sovereign Halo Ring for Final Tree Stage (`PineTree.tsx`):** Added a floating, radiant golden halo ring above the golden peak star of the final tree stage with smooth animated floating and axial rotation.
-  - **Production Verification:** 64/64 Vitest tests passing green, Next.js Turbopack build compiling cleanly with 0 errors in 4.3s.
+  - **Permanent Lush Spring Emerald Greenery:** Eradicated all yellowish and straw drought overrides across all canvas models (`Island.tsx`, `PineTree.tsx`, `IslandTree.tsx`, `IslandCanvas.tsx`). Day turf is permanently vivid Spring Emerald (`#22c55e`), Sunset is Golden Chartreuse (`#84cc16`), and Night is Luminous Nocturnal Teal (`#0f766e`).
+  - **Manual Water Island Feature Purged:** Completely removed manual "Water Island" buttons, cheer triggers, confetti calls, and store actions across `DashboardNav.tsx`, `SettingsModal.tsx`, `u/[username]/page.tsx`, and `useForestStore.ts`, keeping the app 100% zero-touch automated via GitHub and Stripe webhooks.
+  - **Dashboard Navigation Streamlined:** Removed developer demo switchers (`Living Island`, `Grid Mode`, `3D Workshop`) and unused icons (`Home`, `Grid`, `Layers`) from the main game dashboard. Kept viewport 100% dedicated to the pure 3D diorama canvas.
+  - **Camera Stabilization & Movement Restrictions:** Fixed island in center by disabling panning (`enablePan={false}`). Locked zoom (`enableZoom={false}`) and purged obsolete `zoomLevel` state and `Z` key shortcut. Locked vertical tilt to isometric polar angle (`~61.2°`) and enabled smooth horizontal turntable rotation with subtle damping (`enableDamping={true}`, `dampingFactor={0.08}`, `rotateSpeed={0.5}`).
+  - **Production Verification:** 64/64 Vitest unit tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly with all 13 routes in 2.9s.
 
 **Immediate next task:**
 
-- Test live in browser at `http://localhost:3000/dashboard`, verify `kwakhare5` trees sprout, and run Supabase SQL migration in the dashboard.
+- Review live in browser at `http://localhost:3000/dashboard` to verify rock-solid camera positioning, turntable spin, and permanent lush emerald island.
 
 **Open blockers:**
 

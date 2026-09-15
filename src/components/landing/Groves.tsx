@@ -19,13 +19,14 @@ export function Groves() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Emerald Shipping Grove */}
         <FeatureCard
+          doubleBezel
           icon={Trees}
           iconBg="bg-emerald-50 border-emerald-200"
           iconColor="text-emerald-700"
           title="West Grove: Code & Shipping"
           description="Evergreen pines grown purely through daily git commits. Sprout at 1 commit, expand to Small Pine at 8 commits, Tall at 25, and crown with a golden star at 60+ commits."
           previewWidget={
-            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-sans">
+            <div className="p-3 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.04),inset_0_-1px_0_rgba(255,255,255,0.85)] text-xs text-stone-700 flex items-center justify-between font-sans">
               <span>Automatic GitHub API tracking</span>
               <Badge variant="emerald" size="sm">Code Momentum</Badge>
             </div>
@@ -36,13 +37,14 @@ export function Groves() {
 
         {/* Golden Revenue Grove */}
         <FeatureCard
+          doubleBezel
           icon={TrendingUp}
           iconBg="bg-amber-50 border-amber-200"
           iconColor="text-amber-700"
           title="East Grove: Customers & Revenue"
           description="Golden cash pines that sprout and grow from real customer payments ($10 → $50 → $500 → $2,000+ MRR). Verified directly via Stripe, Lemon Squeezy, or Polar webhooks."
           previewWidget={
-            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-center justify-between font-sans">
+            <div className="p-3 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.04),inset_0_-1px_0_rgba(255,255,255,0.85)] text-xs text-stone-700 flex items-center justify-between font-sans">
               <span>Direct webhook verification</span>
               <Badge variant="amber" size="sm">Verified MRR</Badge>
             </div>
@@ -55,4 +57,3 @@ export function Groves() {
   );
 }
 
-export { Groves as LandingShowcase };

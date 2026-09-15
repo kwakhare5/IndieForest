@@ -195,7 +195,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       value={githubInput}
                       onChange={(e) => setGithubInput(e.target.value)}
                       placeholder="octocat"
-                      className="w-full pl-24 pr-3 py-2 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs font-mono focus:outline-hidden focus:border-emerald-600 focus:bg-white transition"
+                      className="w-full pl-24 pr-3 py-2 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] text-stone-900 text-xs font-mono focus:outline-hidden focus:border-emerald-600 focus:bg-white transition"
                     />
                   </div>
                   <Button
@@ -227,7 +227,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <label className="font-medium text-stone-800 text-xs block mb-1">
                   Universal Ingestion Endpoint
                 </label>
-                <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50 border border-stone-200">
+                <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)]">
                   <input
                     type="text"
                     readOnly
@@ -236,7 +236,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   />
                   <button
                     onClick={handleCopyWebhook}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-medium text-[11px] transition shrink-0 cursor-pointer shadow-xs"
+                    className="px-2.5 py-1 rounded-lg btn-specular-porcelain text-stone-700 hover:text-stone-950 font-medium text-[11px] transition shrink-0 cursor-pointer active:scale-95"
                   >
                     {copiedWebhook ? "Copied!" : "Copy"}
                   </button>
@@ -259,7 +259,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <label className="font-medium text-stone-800 text-xs block mb-1">
                   GitHub Profile README Embed
                 </label>
-                <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50 border border-stone-200">
+                <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)]">
                   <input
                     type="text"
                     readOnly
@@ -268,7 +268,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   />
                   <button
                     onClick={handleCopyBadgeMd}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-medium text-[11px] transition shrink-0 cursor-pointer shadow-xs"
+                    className="px-2.5 py-1 rounded-lg btn-specular-porcelain text-stone-700 hover:text-stone-950 font-medium text-[11px] transition shrink-0 cursor-pointer active:scale-95"
                   >
                     {copiedBadgeMd ? "Copied!" : "Copy"}
                   </button>
@@ -279,14 +279,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <label className="font-medium text-stone-800 text-xs block mb-1">
                   Public Island Showcase Link
                 </label>
-                <div className="flex items-center justify-between p-2 rounded-xl bg-stone-50 border border-stone-200">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)]">
                   <span className="font-mono text-[11px] text-stone-800 truncate pr-2">
                     {profileUrl}
                   </span>
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={handleCopyProfile}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-stone-700 hover:text-stone-950 font-medium text-[11px] transition cursor-pointer shadow-xs"
+                      className="px-2.5 py-1 rounded-lg btn-specular-porcelain text-stone-700 hover:text-stone-950 font-medium text-[11px] transition cursor-pointer active:scale-95"
                     >
                       {copiedProfile ? "Copied!" : "Copy"}
                     </button>
@@ -294,7 +294,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       href={profileUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-1 rounded-lg text-stone-500 hover:text-stone-900 transition"
+                      className="p-1 rounded-lg btn-specular-porcelain text-stone-500 hover:text-stone-900 transition active:scale-95"
                       title="Open public island"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />

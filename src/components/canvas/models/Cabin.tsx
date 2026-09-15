@@ -127,4 +127,3 @@ export function Cabin({
   );
 }
 
-export { Cabin as LogCabin };

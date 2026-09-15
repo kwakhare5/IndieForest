@@ -61,13 +61,13 @@ export function Button({
     amber:
       "bg-amber-600 hover:bg-amber-700 text-white font-medium border border-amber-700/80 shadow-[0_2px_8px_-2px_rgba(217,119,6,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)]",
     dark:
-      "bg-stone-900 hover:bg-stone-950 text-white font-medium border border-stone-950 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)]",
+      "bg-stone-900 hover:bg-stone-950 text-white font-medium border border-stone-950 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.2)]",
     outline:
-      "bg-white hover:bg-stone-50 text-stone-800 font-medium border border-stone-200/90 shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,1)]",
+      "bg-white hover:bg-stone-50 text-stone-800 font-medium border border-stone-200/90 shadow-[0_2px_6px_-1px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,1)]",
     ghost:
-      "bg-transparent hover:bg-stone-100/90 text-stone-700 font-medium",
+      "bg-transparent hover:bg-stone-200/50 text-stone-700 font-medium active:bg-stone-200/70",
     danger:
-      "bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-medium shadow-xs",
+      "bg-red-600 hover:bg-red-700 text-white font-medium border border-red-700/80 shadow-[0_2px_8px_-2px_rgba(220,38,38,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)]",
   }[variant];
 
   // Recessed Action Disc Backgrounds
@@ -77,7 +77,7 @@ export function Button({
     dark: "bg-white/20 text-white shadow-inner",
     outline: "bg-stone-100 text-stone-700 shadow-inner border border-stone-200/80",
     ghost: "bg-stone-100 text-stone-700",
-    danger: "bg-red-200/60 text-red-700",
+    danger: "bg-white/20 text-white shadow-inner",
   }[variant];
 
   const renderDiscIcon = () => {

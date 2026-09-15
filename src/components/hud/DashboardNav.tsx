@@ -8,12 +8,10 @@ import {
   X,
   CheckCircle2,
   Zap,
-  Home,
-  Grid,
-  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { DoubleBezel } from "@/components/ui/Card";
 import { sound } from "@/lib/sound";
 import { useForestStore } from "@/store/useForestStore";
 import type { QuestId, DailyQuest } from "@/types/game";
@@ -24,8 +22,6 @@ interface DashboardNavProps {
   unclaimedQuestsCount?: number;
   completedQuestsCount?: number;
   totalQuestsCount?: number;
-  viewMode?: "diorama" | "forest-grid" | "showroom";
-  onViewModeChange?: (mode: "diorama" | "forest-grid" | "showroom") => void;
 }
 
 export function DashboardNav({
@@ -34,8 +30,6 @@ export function DashboardNav({
   unclaimedQuestsCount = 0,
   completedQuestsCount = 0,
   totalQuestsCount = 4,
-  viewMode = "diorama",
-  onViewModeChange,
 }: DashboardNavProps) {
   const [isQuestsPopoverOpen, setIsQuestsPopoverOpen] = useState(false);
 
@@ -50,10 +44,12 @@ export function DashboardNav({
   return (
     <div className="fixed top-4 left-5 z-40 flex flex-col items-start font-sans pointer-events-auto select-none">
       {/* 1. Universal Double-Bezel Capsule */}
-      <div className="p-1 rounded-full glass-dock shadow-lg">
-        <div className="px-2.5 py-1 rounded-full porcelain-surface flex items-center gap-1.5 sm:gap-2">
-          
-          {/* Subtle Clean Text Link */}
+      <DoubleBezel
+        rounded="full"
+        className="shadow-lg"
+        innerClassName="px-2.5 py-1 flex items-center gap-1.5 sm:gap-2"
+      >
+        {/* Subtle Clean Text Link */}
           <Link
             href={backHref}
             onClick={() => sound.playClick()}
@@ -63,71 +59,6 @@ export function DashboardNav({
             <ArrowLeft className="w-3.5 h-3.5 text-stone-500" />
             <span>{backLabel}</span>
           </Link>
-
-          <Link
-            href="/demo"
-            onClick={() => sound.playClick()}
-            className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium text-emerald-800 hover:bg-emerald-50 transition"
-            title="Open Demo Sandbox & Showroom"
-          >
-            <span>Demo Sandbox</span>
-          </Link>
-
-          {/* Unified Living Island / Grid Mode / 3D Workshop Switcher */}
-          {onViewModeChange && (
-            <>
-              <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
-              <div className="flex items-center gap-1 bg-stone-200/80 p-0.5 rounded-full">
-                <button
-                  onClick={() => {
-                    sound.playClick();
-                    onViewModeChange("diorama");
-                  }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
-                    viewMode === "diorama"
-                      ? "bg-white text-stone-950 shadow-xs"
-                      : "text-stone-600 hover:text-stone-950"
-                  }`}
-                  title="Switch to 3D Living Island"
-                >
-                  <Home className="w-3.5 h-3.5 text-emerald-600" />
-                  <span className="hidden sm:inline">Living Island</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    sound.playClick();
-                    onViewModeChange("forest-grid");
-                  }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
-                    viewMode === "forest-grid"
-                      ? "bg-white text-stone-950 shadow-xs"
-                      : "text-stone-600 hover:text-stone-950"
-                  }`}
-                  title="Switch to 1:1 Precision Grid Mode"
-                >
-                  <Grid className="w-3.5 h-3.5 text-stone-600" />
-                  <span className="hidden sm:inline">Grid Mode</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    sound.playClick();
-                    onViewModeChange("showroom");
-                  }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
-                    viewMode === "showroom"
-                      ? "bg-white text-stone-950 shadow-xs"
-                      : "text-stone-600 hover:text-stone-950"
-                  }`}
-                  title="Switch to 3D Workshop Showroom"
-                >
-                  <Layers className="w-3.5 h-3.5 text-stone-600" />
-                  <span className="hidden sm:inline">3D Workshop</span>
-                </button>
-              </div>
-            </>
-          )}
 
           <div className="w-[1px] h-4 bg-stone-200 my-auto mx-0.5" />
 
@@ -154,18 +85,20 @@ export function DashboardNav({
               <span className="w-2 h-2 rounded-full bg-emerald-500 absolute -top-0.5 -right-0.5" />
             )}
           </Button>
-        </div>
-      </div>
+      </DoubleBezel>
 
       {/* 2. Floating Tactile Porcelain Quests Popover */}
       {isQuestsPopoverOpen && (
-        <div className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm p-1.5 rounded-[2rem] glass-dock shadow-2xl origin-top-left animate-in fade-in zoom-in-95 duration-150 z-50">
-          <div className="p-4 sm:p-5 rounded-[calc(2rem-0.375rem)] porcelain-surface flex flex-col max-h-[75vh] overflow-hidden">
+        <DoubleBezel
+          rounded="2xl"
+          className="mt-3 w-[calc(100vw-2.5rem)] sm:w-96 max-w-sm shadow-2xl origin-top-left animate-in fade-in zoom-in-95 duration-150 z-50"
+          innerClassName="p-4 sm:p-5 flex flex-col max-h-[75vh] overflow-hidden"
+        >
             
             {/* Popover Header */}
             <div className="flex items-center justify-between pb-3 border-b border-stone-100">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-stone-100 text-stone-800 border border-stone-200/80 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200/90 shadow-[inset_0_1.5px_2px_rgba(5,150,105,0.12),inset_0_-1px_0_rgba(255,255,255,0.85)] flex items-center justify-center">
                   <Target className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
                 <div>
@@ -183,7 +116,7 @@ export function DashboardNav({
                     sound.playClick();
                     setIsQuestsPopoverOpen(false);
                   }}
-                  className="p-1 rounded-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition cursor-pointer"
+                  className="w-6 h-6 rounded-full btn-specular-porcelain flex items-center justify-center text-stone-500 hover:text-stone-900 transition-all cursor-pointer"
                   title="Close Quests"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -236,8 +169,7 @@ export function DashboardNav({
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+        </DoubleBezel>
       )}
     </div>
   );

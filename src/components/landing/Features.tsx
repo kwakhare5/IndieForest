@@ -46,7 +46,7 @@ export function Features() {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Bento 1: Rolling 30-Day Forest Health */}
-        <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
+        <Card doubleBezel className="md:col-span-7 flex flex-col justify-between" innerClassName="p-7 sm:p-8 flex flex-col justify-between h-full">
           <div>
             <span className="font-sans text-[11px] uppercase tracking-wider font-medium text-emerald-700 block mb-1">
               ZERO-GUILT CONSISTENCY
@@ -85,9 +85,9 @@ export function Features() {
         </Card>
 
         {/* Bento 2: Streak Shield Vault */}
-        <Card variant="porcelain" className="md:col-span-5 p-8 rounded-[2.5rem] flex flex-col justify-between">
+        <Card doubleBezel className="md:col-span-5 flex flex-col justify-between" innerClassName="p-7 sm:p-8 flex flex-col justify-between h-full">
           <div>
-            <div className="w-9 h-9 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 mb-3 shadow-xs">
+            <div className="w-9 h-9 rounded-2xl bg-sky-50 border border-sky-300/80 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.8)] flex items-center justify-center text-sky-700 mb-3">
               <Shield className="w-5 h-5 stroke-[1.75]" />
             </div>
 
@@ -122,9 +122,9 @@ export function Features() {
         </Card>
 
         {/* Bento 3: Revenue Webhook Pipeline */}
-        <Card variant="porcelain" className="md:col-span-5 p-8 rounded-[2.5rem] flex flex-col justify-between">
+        <Card doubleBezel className="md:col-span-5 flex flex-col justify-between" innerClassName="p-7 sm:p-8 flex flex-col justify-between h-full">
           <div>
-            <div className="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-3 shadow-xs">
+            <div className="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-300/80 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.8)] flex items-center justify-center text-emerald-700 mb-3">
               <TrendingUp className="w-5 h-5 stroke-[1.75]" />
             </div>
             <h3 className="text-base sm:text-lg font-medium text-stone-900 mb-1.5 font-sans">
@@ -140,7 +140,7 @@ export function Features() {
               <span className="text-stone-500">Live MRR:</span>
               <span className="font-normal text-emerald-800 text-sm font-pixel">$2,450/mo</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white border border-stone-200 text-xs font-sans shadow-xs flex items-center justify-between">
+            <div className="p-2.5 rounded-xl bg-white/98 border border-[#e5dfd5] shadow-[0_1px_2px_rgba(0,0,0,0.03),inset_0_1px_0_#fff] text-xs font-sans flex items-center justify-between">
               <span className="text-stone-900 font-medium">Pro Plan · Golden Oak</span>
               <Badge variant="amber" size="sm">Verified Stripe</Badge>
             </div>
@@ -153,7 +153,7 @@ export function Features() {
         </Card>
 
         {/* Bento 4: 1-Click Social Exporter */}
-        <Card variant="porcelain" className="md:col-span-7 p-8 rounded-[2.5rem] flex flex-col justify-between">
+        <Card doubleBezel className="md:col-span-7 flex flex-col justify-between" innerClassName="p-7 sm:p-8 flex flex-col justify-between h-full">
           <div>
             <div className="flex items-center justify-between mb-1">
               <Badge variant="stone" size="sm">
@@ -199,4 +199,3 @@ export function Features() {
   );
 }
 
-export { Features as LandingBento };

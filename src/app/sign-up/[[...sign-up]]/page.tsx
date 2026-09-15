@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { SignUp } from "@clerk/nextjs";
 import { Button } from "@/components/ui/Button";
+import { DoubleBezel } from "@/components/ui/Card";
 
 export default function SignUpPage() {
   return (
@@ -13,7 +14,7 @@ export default function SignUpPage() {
           </Button>
         </Link>
       </div>
-      <div className="p-1.5 rounded-[2rem] glass-dock shadow-2xl">
+      <DoubleBezel rounded="2xl" className="shadow-2xl">
         <SignUp
           appearance={{
             elements: {
@@ -21,7 +22,7 @@ export default function SignUpPage() {
             },
           }}
         />
-      </div>
+      </DoubleBezel>
     </div>
   );
 }

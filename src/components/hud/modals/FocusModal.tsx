@@ -39,7 +39,7 @@ export function FocusModal({ isOpen, onClose }: FocusModalProps) {
         {/* Campfire Header Row */}
         <div className="flex items-center justify-between pb-3 border-b border-stone-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 border border-orange-200/80 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 border border-orange-200/80 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.8)] flex items-center justify-center">
               <Flame className="w-4.5 h-4.5 fill-orange-500" />
             </div>
             <div>
@@ -64,7 +64,7 @@ export function FocusModal({ isOpen, onClose }: FocusModalProps) {
         </div>
 
         {/* Automated Daily Shipping Status Card */}
-        <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 space-y-2">
+        <div className="p-3.5 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-2">
           <div className="flex items-center justify-between">
             <span className="font-medium text-xs text-stone-900 font-sans">
               Today&apos;s Shipping Status

@@ -200,10 +200,10 @@ Living 3D world: ${profileUrl}`,
         />
 
         {/* Live Tweet Preview */}
-        <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-left font-sans space-y-2.5">
+        <div className="p-3.5 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] text-left font-sans space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-medium text-xs">
+              <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-medium text-xs shadow-xs border border-emerald-200/70">
                 {badge}
               </div>
               <div>
@@ -221,7 +221,7 @@ Living 3D world: ${profileUrl}`,
             </Badge>
           </div>
 
-          <pre className="h-32 min-h-[8rem] max-h-32 overflow-y-auto p-2.5 rounded-xl bg-white border border-stone-200 text-xs text-stone-800 font-sans whitespace-pre-wrap leading-relaxed custom-scrollbar">
+          <pre className="h-32 min-h-[8rem] max-h-32 overflow-y-auto p-2.5 rounded-xl bg-white border border-stone-200/90 shadow-[0_1px_2px_rgba(0,0,0,0.03),inset_0_1px_0_rgba(255,255,255,1)] text-xs text-stone-800 font-sans whitespace-pre-wrap leading-relaxed custom-scrollbar">
             {activeTweetText}
           </pre>
         </div>

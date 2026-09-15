@@ -13,8 +13,13 @@ export function Footer() {
 
   return (
     <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 font-sans">
-      <Card variant="elevated" className="p-8 sm:p-12 rounded-[3rem] text-center space-y-6 relative overflow-hidden">
-        <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mx-auto shadow-xs">
+      <Card
+        doubleBezel
+        rounded="3xl"
+        className="shadow-xl"
+        innerClassName="p-8 sm:p-12 text-center space-y-6 relative overflow-hidden"
+      >
+        <div className="w-12 h-12 rounded-2xl bg-emerald-50/90 border border-emerald-200/90 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.85)] flex items-center justify-center text-emerald-700 mx-auto">
           <Trees className="w-6 h-6 stroke-[1.75]" />
         </div>
 
@@ -49,9 +54,15 @@ export function Footer() {
           )}
         </div>
 
-        <p className="text-xs font-sans text-stone-500 pt-2">
-          Free forever • 100% automated • Instant 3D diorama
-        </p>
+        <div className="pt-2 flex justify-center">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-sans text-stone-500 bg-stone-100/80 border border-stone-200/80 shadow-2xs">
+            <span>Free forever</span>
+            <span className="text-stone-300">•</span>
+            <span>100% automated</span>
+            <span className="text-stone-300">•</span>
+            <span>Instant 3D diorama</span>
+          </span>
+        </div>
       </Card>
 
       <footer className="mt-16 pt-8 border-t border-stone-300/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-stone-500">
@@ -80,4 +91,3 @@ export function Footer() {
   );
 }
 
-export { Footer as LandingFooter };

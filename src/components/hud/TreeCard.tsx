@@ -21,8 +21,10 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
   return (
     <div className="fixed bottom-24 inset-x-4 sm:inset-x-auto sm:left-6 z-40 origin-bottom-left animate-in slide-in-from-bottom-3 fade-in duration-150 font-sans max-w-sm w-full mx-auto sm:mx-0">
       <Card
-        variant="porcelain"
-        className="p-4 sm:p-5 rounded-[2rem] shadow-2xl border border-stone-200/90 bg-white/98 backdrop-blur-md space-y-3.5 relative"
+        doubleBezel
+        rounded="2xl"
+        className="shadow-2xl"
+        innerClassName="p-4 sm:p-5 space-y-3.5 relative"
       >
         {/* Close button */}
         <button
@@ -30,19 +32,19 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
             sound.playClick();
             onClose();
           }}
-          className="absolute top-4 right-4 p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition cursor-pointer"
+          className="absolute top-4 right-4 p-1.5 rounded-full btn-specular-porcelain text-stone-400 hover:text-stone-800 transition active:scale-95 cursor-pointer"
           title="Close Card"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5 stroke-[2]" />
         </button>
 
         {/* Tree Header */}
         <div className="flex items-center gap-3 pr-8">
           <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+            className={`w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 shadow-[inset_0_1.5px_2px_rgba(0,0,0,0.06),inset_0_-1px_0_rgba(255,255,255,0.8)] border ${
               isRevenue
-                ? "bg-amber-50 text-amber-700 border border-amber-200/80"
-                : "bg-emerald-50 text-emerald-700 border border-emerald-200/80"
+                ? "bg-amber-100/80 text-amber-800 border-amber-300/80"
+                : "bg-emerald-100/80 text-emerald-800 border-emerald-300/80"
             }`}
           >
             {isRevenue ? <TrendingUp className="w-4.5 h-4.5" /> : <Trees className="w-4.5 h-4.5" />}
@@ -57,8 +59,8 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
           </div>
         </div>
 
-        {/* Stat Metrics Row */}
-        <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-stone-50 border border-stone-100">
+        {/* Stat Metrics Row — Debossed Tactile Groove */}
+        <div className="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)]">
           <div>
             <span className="text-[10px] text-stone-400 font-medium block mb-0.5">
               {isRevenue ? "Tracked MRR" : "Commit Activity"}
@@ -102,7 +104,7 @@ export function TreeCard({ tree, onClose, onDelete }: TreeCardProps) {
                 onClose();
               }
             }}
-            className="flex items-center gap-1 text-[11px] text-stone-400 hover:text-red-600 transition cursor-pointer"
+            className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] text-stone-500 hover:text-red-700 hover:bg-red-50/80 transition cursor-pointer active:scale-95"
             title="Remove Project"
           >
             <Trash2 className="w-3 h-3" />
