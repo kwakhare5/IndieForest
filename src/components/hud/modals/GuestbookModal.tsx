@@ -43,7 +43,7 @@ export function GuestbookModal({
       isOpen={isOpen}
       onClose={onClose}
       title={`@${targetUsername}'s Guestbook`}
-      badgeText="Campsite Bulletin"
+      badgeText="Guestbook"
       icon={Send}
       maxWidth="md"
     >
@@ -51,7 +51,7 @@ export function GuestbookModal({
         
         {/* Header Description */}
         <p className="text-xs text-stone-600 leading-relaxed font-sans">
-          Leave an encouraging 1-line note on @{targetUsername}&apos;s campsite bulletin board.
+          Leave a short note on @{targetUsername}&apos;s guestbook.
         </p>
 
         {/* Existing Notes Feed */}
@@ -105,7 +105,7 @@ export function GuestbookModal({
               disabled={!noteMessage.trim()}
               icon={hasPosted ? Check : Send}
             >
-              {hasPosted ? "Pinned to Campsite!" : "Pin Note to Campsite"}
+              {hasPosted ? "Pinned Note!" : "Pin Note"}
             </Button>
           </div>
         </form>

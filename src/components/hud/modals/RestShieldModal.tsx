@@ -19,8 +19,8 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Rest Shields & Streak Protection"
-      badgeText="Tent Milestone"
+      title="Rest Days"
+      badgeText="Rest"
       icon={Tent}
       maxWidth="md"
     >
@@ -33,16 +33,16 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
             </div>
             <div>
               <span className="font-medium text-xs text-stone-900 font-sans block">
-                Rest Protection
+                Rest Days
               </span>
               <span className="text-[10px] text-stone-400 font-sans">
-                Day {streakDays} Milestone
+                Day {streakDays} streak
               </span>
             </div>
           </div>
 
           <Badge variant={streakShields > 0 ? "emerald" : "stone"} size="md">
-            {streakShields} / 2 Shields Banked
+            {streakShields} / 2 Rest Days Banked
           </Badge>
         </div>
 
@@ -58,7 +58,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
             <div className="w-7 h-7 mx-auto rounded-full bg-white shadow-xs flex items-center justify-center text-emerald-700 border border-stone-200/80">
               <Shield className={`w-3.5 h-3.5 ${streakShields >= 1 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-medium text-stone-900 font-sans">Rest Shield I</div>
+            <div className="text-xs font-medium text-stone-900 font-sans">Rest Day 1</div>
             <span className="text-[10px] text-stone-500 block">
               {streakShields >= 1 ? "Active · Protects 1 Rest Day" : "Earned at 7-day streak"}
             </span>
@@ -74,7 +74,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
             <div className="w-7 h-7 mx-auto rounded-full bg-white shadow-xs flex items-center justify-center text-emerald-700 border border-stone-200/80">
               <Shield className={`w-3.5 h-3.5 ${streakShields >= 2 ? "fill-emerald-600" : "text-stone-400"}`} />
             </div>
-            <div className="text-xs font-medium text-stone-900 font-sans">Rest Shield II</div>
+            <div className="text-xs font-medium text-stone-900 font-sans">Rest Day 2</div>
             <span className="text-[10px] text-stone-500 block">
               {streakShields >= 2 ? "Active · Protects 1 Rest Day" : "Earned at 14-day streak"}
             </span>
@@ -89,7 +89,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
               Sustainable Shipping
             </span>
             <p className="text-[11px] text-stone-500 leading-relaxed font-sans">
-              IndieForest calculates consistency on a rolling 30-day health ratio. If you take a weekend off or take a break, your shields deploy automatically to protect your streak.
+              IndieForest calculates consistency on a rolling 30-day health ratio. When you take a weekend or break, your rest days protect your streak automatically.
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@ export function RestShieldModal({ isOpen, onClose }: RestShieldModalProps) {
         {/* Helper Note */}
         <div className="flex items-start gap-1.5 pt-1 text-[11px] text-stone-400 font-sans border-t border-stone-100">
           <Info className="w-3.5 h-3.5 text-stone-400 mt-0.5 shrink-0" />
-          <span>Rest shields replenish automatically as you maintain daily shipping momentum.</span>
+          <span>Rest days replenish automatically as you ship code each week.</span>
         </div>
       </div>
     </Modal>

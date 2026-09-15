@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import {
   calculateShipRewards,
+  calculateTreeTier,
   evaluateLevelProgress,
   evaluateStreakState,
   getLocalDateString,
@@ -24,6 +25,31 @@ import type {
 
 export type { QuestId, DailyQuest } from "@/types/game";
 export { getRankTitle, getXpForLevel } from "@/lib/gamification";
+
+export const DEFAULT_INITIAL_TREES: TreeData[] = [
+  {
+    id: "proj-indieforest",
+    name: "IndieForest",
+    type: "shipping",
+    commits: 42,
+    tier: "mature",
+    gridX: -1.92,
+    gridZ: -1.52,
+    plantedAt: new Date(Date.now() - 14 * 86400000).toISOString(),
+    isDemo: false,
+  },
+  {
+    id: "proj-grocer",
+    name: "Grocer",
+    type: "shipping",
+    commits: 18,
+    tier: "young",
+    gridX: -3.57,
+    gridZ: -1.52,
+    plantedAt: new Date(Date.now() - 7 * 86400000).toISOString(),
+    isDemo: false,
+  },
+];
 
 export const useForestStore = create<ForestState>()(
   persist(
@@ -48,7 +74,7 @@ export const useForestStore = create<ForestState>()(
       timeOfDay: "day",
       dailyQuests: DEFAULT_DAILY_QUESTS,
 
-      trees: [],
+      trees: DEFAULT_INITIAL_TREES,
       shipHistory: [],
 
       isAutoSyncing: false,
@@ -191,6 +217,31 @@ export const useForestStore = create<ForestState>()(
         get().syncCloudIsland();
       },
 
+      shipToProject: (treeId: string, message?: string) => {
+        const state = get();
+        const tree = state.trees.find((t) => t.id === treeId);
+        if (!tree) return;
+
+        const newCommits = (tree.commits || 0) + 1;
+        const newTier = calculateTreeTier(
+          tree.type || "shipping",
+          tree.type === "revenue" ? (tree.mrr || 0) : newCommits
+        );
+
+        set((s) => ({
+          trees: s.trees.map((t) =>
+            t.id === treeId ? { ...t, commits: newCommits, tier: newTier } : t
+          ),
+        }));
+
+        get().shipToday(
+          message || `Shipped update to ${tree.name}`,
+          "manual",
+          undefined,
+          tree.name
+        );
+      },
+
       addTree: (
         name: string,
         mrr = 0,
@@ -274,7 +325,7 @@ export const useForestStore = create<ForestState>()(
           streakShields: 0,
           lastShipDate: null,
           drought: false,
-          trees: [],
+          trees: DEFAULT_INITIAL_TREES,
           shipHistory: [],
           dailyQuests: DEFAULT_DAILY_QUESTS,
         });
@@ -291,8 +342,25 @@ export const useForestStore = create<ForestState>()(
           }
           const data = await res.json();
           if (data && Array.isArray(data.trees)) {
+            const currentTrees = get().trees;
+            const merged = [...currentTrees];
+
+            // Merge commits for matching projects without wiping the list
+            data.trees.forEach((incoming: TreeData) => {
+              const matchIdx = merged.findIndex(
+                (t) => t.name.toLowerCase() === incoming.name.toLowerCase()
+              );
+              if (matchIdx >= 0) {
+                merged[matchIdx] = {
+                  ...merged[matchIdx],
+                  commits: Math.max(merged[matchIdx].commits || 0, incoming.commits || 0),
+                  tier: incoming.tier || merged[matchIdx].tier,
+                };
+              }
+            });
+
             set((s) => ({
-              trees: data.trees.length > 0 ? data.trees : s.trees,
+              trees: merged.length > 0 ? merged : s.trees,
               level: data.level || s.level,
               streakDays: data.streakDays !== undefined ? data.streakDays : s.streakDays,
               bestStreak: Math.max(s.bestStreak, data.streakDays || 0),

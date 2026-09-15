@@ -7,15 +7,18 @@ describe("useForestStore", () => {
     useForestStore.getState().resetIsland();
   });
 
-  it("initializes with default values", () => {
+  it("initializes with default values and curated projects", () => {
     const state = useForestStore.getState();
     expect(state.level).toBe(1);
     expect(state.xp).toBe(0);
     expect(state.streakDays).toBe(0);
-    expect(state.trees).toEqual([]);
+    expect(state.trees.length).toBe(2);
+    expect(state.trees[0].name).toBe("IndieForest");
+    expect(state.trees[1].name).toBe("Grocer");
   });
 
   it("adds and removes trees properly", () => {
+    useForestStore.setState({ trees: [] });
     useForestStore.getState().addTree("IndieForest", 0, "sapling", "shipping");
     expect(useForestStore.getState().trees.length).toBe(1);
     expect(useForestStore.getState().trees[0].name).toBe("IndieForest");
@@ -23,6 +26,15 @@ describe("useForestStore", () => {
     const id = useForestStore.getState().trees[0].id;
     useForestStore.getState().removeTree(id);
     expect(useForestStore.getState().trees.length).toBe(0);
+  });
+
+  it("ships progress directly to a project and increments its commits", () => {
+    const initialCommits = useForestStore.getState().trees[0].commits || 0;
+    const treeId = useForestStore.getState().trees[0].id;
+    useForestStore.getState().shipToProject(treeId, "Shipped feature");
+    const updatedTree = useForestStore.getState().trees.find((t) => t.id === treeId);
+    expect(updatedTree?.commits).toBe(initialCommits + 1);
+    expect(useForestStore.getState().streakDays).toBe(1);
   });
 
   it("records daily ship and increments streak", () => {

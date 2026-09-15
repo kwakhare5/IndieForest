@@ -14,6 +14,7 @@ import {
   Trees,
   Volume2,
   VolumeX,
+  Palette,
 } from "lucide-react";
 import { DashboardDock } from "@/components/hud/DashboardDock";
 import { TreeCard } from "@/components/hud/TreeCard";
@@ -26,7 +27,6 @@ import { AddProjectModal } from "@/components/hud/modals/AddProjectModal";
 import { DoubleBezel } from "@/components/ui/Card";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { IslandCanvas } from "@/components/canvas/IslandCanvas";
-import { GridView } from "./components/GridView";
 import { Workshop3D } from "./components/Workshop3D";
 import { sound } from "@/lib/sound";
 import type { TimeOfDay, TreeData } from "@/types/game";
@@ -66,7 +66,7 @@ function getTitanDemoTrees(level: number): TreeData[] {
 }
 
 export default function DemoPage() {
-  const [viewMode, setViewMode] = useState<"forest-grid" | "showroom" | "diorama">("diorama");
+  const [viewMode, setViewMode] = useState<"showroom" | "diorama">("diorama");
   const [displayLevel, setDisplayLevel] = useState<number>(25);
   const [streakDays, setStreakDays] = useState<number>(42);
   const [streakShields, setStreakShields] = useState<number>(2);
@@ -79,6 +79,19 @@ export default function DemoPage() {
   const [isControlsOpen, setIsControlsOpen] = useState<boolean>(false);
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(true);
   const [deletedTreeIds, setDeletedTreeIds] = useState<string[]>([]);
+  const [islandShape, setIslandShape] = useState<"diamond" | "crag" | "octagon">("diamond");
+  const [colorPalette, setColorPalette] = useState<"canonical" | "sunnyside" | "tabletop">("tabletop");
+
+  // Read URL query parameters for direct deep-linking (e.g., ?mode=palette)
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const mode = params.get("mode") || params.get("tab");
+      if (mode === "showroom" || mode === "workshop") {
+        setViewMode("showroom");
+      }
+    }
+  }, []);
 
   // Dynamic tree computation synced with level slider and pruned trees
   const rawDemoTrees = useMemo(() => getTitanDemoTrees(displayLevel), [displayLevel]);
@@ -122,6 +135,7 @@ export default function DemoPage() {
     setShowBoundaries(false);
     setSelectedTree(null);
     setDeletedTreeIds([]);
+    setColorPalette("sunnyside");
   };
 
   const handleOpenModal = (name: "focus" | "shield" | "cabin" | "share" | "settings" | "addProject") => {
@@ -148,8 +162,12 @@ export default function DemoPage() {
     }
   };
 
+  const bgClass = colorPalette === "tabletop"
+    ? "bg-gradient-to-b from-[#e3c7db] via-[#f1d0d9] to-[#c6daef]"
+    : "bg-[#ece7de]";
+
   return (
-    <main className="relative w-screen h-screen overflow-hidden bg-[#ece7de] select-none font-sans flex flex-col">
+    <main className={`relative w-screen h-screen overflow-hidden ${bgClass} select-none font-sans flex flex-col`}>
       
       {/* 1. Universal Top Navigation Header (Synchronized Double-Bezel) */}
       <header className="fixed top-4 inset-x-5 z-40 flex items-center justify-between pointer-events-none">
@@ -191,21 +209,6 @@ export default function DemoPage() {
               <button
                 onClick={() => {
                   sound.playClick();
-                  setViewMode("forest-grid");
-                }}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
-                  viewMode === "forest-grid"
-                    ? "bg-white text-stone-950 shadow-xs"
-                    : "text-stone-600 hover:text-stone-950"
-                }`}
-              >
-                <Grid className="w-3.5 h-3.5 text-stone-600" />
-                <span>Grid Mode</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  sound.playClick();
                   setViewMode("showroom");
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
@@ -217,6 +220,7 @@ export default function DemoPage() {
                 <Trees className="w-3.5 h-3.5 text-amber-600" />
                 <span>3D Workshop</span>
               </button>
+
             </div>
         </DoubleBezel>
 
@@ -309,15 +313,6 @@ export default function DemoPage() {
       </header>
 
       {/* ========================================================================= */}
-      {/* MODE 0: GRID VIEW (INSPIRATION IMAGE RECREATION)                          */}
-      {/* ========================================================================= */}
-      {viewMode === "forest-grid" && (
-        <div className="w-full h-full relative animate-in fade-in duration-200">
-          <GridView />
-        </div>
-      )}
-
-      {/* ========================================================================= */}
       {/* MODE 1: 3D WORKSHOP (INDIVIDUAL ASSET INSPECTOR & TURNTABLE)              */}
       {/* ========================================================================= */}
       {viewMode === "showroom" && (
@@ -327,7 +322,7 @@ export default function DemoPage() {
       )}
 
       {/* ========================================================================= */}
-      {/* MODE 2: LIVING 3D DIORAMA (CANONICAL ORTHOGRAPHIC ISOMETRIC WORLD)        */}
+      {/* MODE 3: LIVING 3D DIORAMA (CANONICAL ORTHOGRAPHIC ISOMETRIC WORLD)        */}
       {/* ========================================================================= */}
       {viewMode === "diorama" && (
         <div className="w-full h-full relative animate-in fade-in duration-200">
@@ -351,6 +346,8 @@ export default function DemoPage() {
             interactive={true}
             showGrid={showGrid}
             showBoundaries={showBoundaries}
+            islandShape={islandShape}
+            palette={colorPalette}
           />
 
           {/* Left Simulation Controller (Collapsible on Demand) */}
@@ -432,6 +429,46 @@ export default function DemoPage() {
                         { value: "0", label: "0 Shields" },
                         { value: "1", label: "1 Shield" },
                         { value: "2", label: "2 Shields" },
+                      ]}
+                    />
+                  </div>
+
+                  {/* Island Shape Prototypes */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-stone-600 font-medium">Island Shape:</span>
+                      <span className="font-medium font-mono text-emerald-800 capitalize">{islandShape}</span>
+                    </div>
+                    <SegmentedControl
+                      value={islandShape}
+                      onChange={(val) => {
+                        sound.playClick();
+                        setIslandShape(val as "diamond" | "crag" | "octagon");
+                      }}
+                      options={[
+                        { value: "diamond", label: "Diamond" },
+                        { value: "crag", label: "Crag" },
+                        { value: "octagon", label: "Octagon" },
+                      ]}
+                    />
+                  </div>
+
+                  {/* Color Palette (Tabletop vs Sunnyside vs Canonical) */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-stone-600 font-medium">Color Palette:</span>
+                      <span className="font-medium font-mono text-emerald-800 capitalize">{colorPalette}</span>
+                    </div>
+                    <SegmentedControl
+                      value={colorPalette}
+                      onChange={(val) => {
+                        sound.playClick();
+                        setColorPalette(val as "canonical" | "sunnyside" | "tabletop");
+                      }}
+                      options={[
+                        { value: "tabletop", label: "Tabletop" },
+                        { value: "sunnyside", label: "Sunnyside" },
+                        { value: "canonical", label: "Canonical" },
                       ]}
                     />
                   </div>

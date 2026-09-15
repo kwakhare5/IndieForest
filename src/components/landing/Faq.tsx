@@ -13,17 +13,17 @@ const FAQ_ITEMS = [
   {
     question: "Can I use IndieForest if I have $0 MRR?",
     answer:
-      "Yes, absolutely. The code grove (West side) grows purely through git commits. You don't need paying customers or revenue to build a living island.",
+      "Yes, absolutely. Green code trees grow purely through your git commits. You do not need paying customers or revenue to build a living island.",
   },
   {
     question: "How does Stripe or Lemon Squeezy integration work?",
     answer:
-      "Paste your unique webhook URL into Stripe, Lemon Squeezy, or Polar. When someone buys a subscription, a golden cash pine sprouts automatically on your island.",
+      "Paste your webhook URL into Stripe, Lemon Squeezy, or Polar. When someone buys a plan or subscription, a golden revenue tree sprouts automatically on your island.",
   },
   {
-    question: "What happens if I take a weekend or rest day off?",
+    question: "What happens if I take a weekend or day off?",
     answer:
-      "You earn Rest Shields every 7 days of shipping (up to 2 banked). When you take a rest day, a shield is used automatically to keep your streak intact.",
+      "You earn Rest Days every 7 days of shipping (up to 2 stored). When you take a day off, a rest day is used automatically to keep your streak intact.",
   },
 ];
 
@@ -34,7 +34,7 @@ export function Faq() {
         <SectionHeader
           badge="FAQ"
           title="Frequently Asked Questions"
-          description="Everything you need to know about automated island tracking, privacy, and rest shields."
+          description="Everything you need to know about automated island tracking, privacy, and rest days."
           className="mb-12"
         />
 

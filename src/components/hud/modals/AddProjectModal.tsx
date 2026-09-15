@@ -51,7 +51,7 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
       isOpen={isOpen}
       onClose={onClose}
       title="Add Project"
-      badgeText="Manual Fallback"
+      badgeText="New Project"
       icon={Trees}
       maxWidth="sm"
       position="center"
@@ -63,8 +63,8 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
           onChange={(val) => setProjectType(val as "shipping" | "revenue")}
           size="sm"
           options={[
-            { value: "shipping", label: "Code Repo", icon: GitBranch },
-            { value: "revenue", label: "Revenue", icon: TrendingUp },
+            { value: "shipping", label: "Code Tree", icon: GitBranch },
+            { value: "revenue", label: "Revenue Tree", icon: TrendingUp },
           ]}
         />
 
@@ -85,8 +85,8 @@ export function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
             />
             <p className="text-[11px] text-stone-500 mt-1">
               {projectType === "shipping"
-                ? "Grows on the West grove as you ship commits."
-                : "Sprouts on the East grove representing monthly revenue."}
+                ? "Grows as you push commits to GitHub."
+                : "Grows to represent your monthly recurring revenue."}
             </p>
           </div>
 

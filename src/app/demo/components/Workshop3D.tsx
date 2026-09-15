@@ -6,10 +6,13 @@ import { OrbitControls, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 import { sound } from "@/lib/sound";
 import { PineTree } from "@/components/canvas/models/PineTree";
+import { DeciduousTree } from "@/components/canvas/models/DeciduousTree";
 import { Cabin } from "@/components/canvas/models/Cabin";
 import { CanvasTent } from "@/components/canvas/models/CanvasTent";
 import { Campfire } from "@/components/canvas/models/Campfire";
 import { Dog as CompanionDog } from "@/components/canvas/models/Dog";
+import { MountainPeak } from "@/components/canvas/models/MountainBackdrop";
+import { DecimatedRock, GrassTuft, WildflowerCluster } from "@/components/canvas/models/VegetationClutter";
 import { DoubleBezel } from "@/components/ui/Card";
 import {
   Trees,
@@ -23,6 +26,7 @@ import {
   RotateCw,
   Sparkles,
   Droplets,
+  Mountain,
 } from "lucide-react";
 
 export type ShowroomAsset =
@@ -31,6 +35,7 @@ export type ShowroomAsset =
   | "canvas-tent"
   | "log-cabin"
   | "campfire"
+  | "mountain-peak"
   | "companion-dog";
 
 export type TreeStage = "stump" | "sprout" | "small" | "tall" | "mighty";
@@ -94,6 +99,16 @@ export function Workshop3D() {
   const [drought, setDrought] = useState<boolean>(false);
   const [autoRotate, setAutoRotate] = useState<boolean>(false);
 
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const asset = params.get("asset") as ShowroomAsset;
+      if (asset) setActiveAsset(asset);
+      const stage = params.get("stage") as TreeStage;
+      if (stage) setTreeStage(stage);
+    }
+  }, []);
+
   const isNight = timeOfDay === "night";
   const isSunset = timeOfDay === "sunset";
 
@@ -114,14 +129,14 @@ export function Workshop3D() {
     : "#fffdf7";
   const sunIntensity = drought ? 0.8 : isNight ? 0.90 : isSunset ? 1.45 : 1.35;
 
-  // Calibrated Pedestal Foundation Palette
+  // Calibrated Pedestal Foundation Palette (Tabletop Reference)
   const pedestalBaseColor = drought
     ? "#57534e"
     : isNight
     ? "#1e293b"
     : isSunset
-    ? "#9a3412"
-    : "#c2410c";
+    ? "#7c2d12"
+    : "#604030"; // Underground Earth
 
   const pedestalGrassColor = drought
     ? "#8c8479"
@@ -129,7 +144,7 @@ export function Workshop3D() {
     ? "#0f766e"
     : isSunset
     ? "#84cc16"
-    : "#22c55e";
+    : "#95C558"; // Vibrant Yellow-Green Terrain Grass
 
   const pedestalRingColor = drought
     ? "#a8a29e"
@@ -137,7 +152,7 @@ export function Workshop3D() {
     ? "#38bdf8"
     : isSunset
     ? "#f59e0b"
-    : "#86efac";
+    : "#D4A86A"; // Dirt Path Trim
 
   const currentStage = TREE_STAGES.find((s) => s.id === treeStage) || TREE_STAGES[4];
 
@@ -187,19 +202,19 @@ export function Workshop3D() {
               {/* Stone Pedestal Cylinder */}
               <mesh position={[0, 0, 0]} receiveShadow>
                 <cylinderGeometry args={[2.5, 2.7, 0.42, 36]} />
-                <meshStandardMaterial color={pedestalBaseColor} roughness={0.9} flatShading />
+                <meshStandardMaterial color={pedestalBaseColor} roughness={1.0} metalness={0.0} flatShading />
               </mesh>
 
               {/* Top Fresh Turf Cap */}
               <mesh position={[0, 0.215, 0]} receiveShadow>
                 <cylinderGeometry args={[2.5, 2.5, 0.02, 36]} />
-                <meshStandardMaterial color={pedestalGrassColor} roughness={0.7} flatShading />
+                <meshStandardMaterial color={pedestalGrassColor} roughness={1.0} metalness={0.0} flatShading />
               </mesh>
 
               {/* Pedestal Border Seam Ring */}
               <mesh position={[0, 0.226, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                 <ringGeometry args={[2.42, 2.48, 36]} />
-                <meshBasicMaterial color={pedestalRingColor} transparent opacity={0.8} side={THREE.DoubleSide} />
+                <meshBasicMaterial color={pedestalRingColor} transparent opacity={0.85} side={THREE.DoubleSide} />
               </mesh>
             </group>
 
@@ -213,15 +228,15 @@ export function Workshop3D() {
                   colorType="green"
                   drought={drought}
                   hasMetricBorder={treeStage === "mighty"}
+                  palette="tabletop"
                 />
               )}
 
               {activeAsset === "orange-tree" && (
-                <PineTree
+                <DeciduousTree
                   tier={treeStage}
-                  colorType="orange"
                   drought={drought}
-                  hasMetricBorder={treeStage === "mighty"}
+                  palette="tabletop"
                 />
               )}
 
@@ -233,13 +248,23 @@ export function Workshop3D() {
 
               {activeAsset === "log-cabin" && (
                 <group position={[0, 0, 0]} scale={[1.35, 1.35, 1.35]}>
-                  <Cabin isNight={isNight} drought={drought} />
+                  <Cabin isNight={isNight} drought={drought} palette="tabletop" />
                 </group>
               )}
 
               {activeAsset === "campfire" && (
                 <group position={[0, 0, 0]} scale={[1.6, 1.6, 1.6]}>
-                  <Campfire isNight={isNight} isSunset={isSunset} drought={drought} />
+                  <Campfire isNight={isNight} isSunset={isSunset} drought={drought} palette="tabletop" />
+                </group>
+              )}
+
+              {activeAsset === "mountain-peak" && (
+                <group position={[0, 0, 0]}>
+                  <MountainPeak position={[0, 0, 0]} scale={0.7} />
+                  <DecimatedRock position={[-1.3, 0, 0.8]} scale={0.8} />
+                  <DecimatedRock position={[1.2, 0, 0.6]} scale={0.6} />
+                  <GrassTuft position={[-0.8, 0, -0.6]} scale={1.0} />
+                  <WildflowerCluster position={[0.7, 0, -0.8]} />
                 </group>
               )}
 
@@ -357,7 +382,13 @@ export function Workshop3D() {
                 <span className="font-medium text-xs text-stone-900">3D Workshop Spec</span>
               </div>
               <span className="text-[10px] font-mono bg-emerald-50 text-emerald-800 font-medium px-2 py-0.5 rounded-full uppercase">
-                {activeAsset.replace("-", " ")}
+                {activeAsset === "green-tree"
+                  ? "Conifer Pine"
+                  : activeAsset === "orange-tree"
+                  ? "Deciduous Oak"
+                  : activeAsset === "mountain-peak"
+                  ? "Alpine Mountain"
+                  : activeAsset.replace("-", " ")}
               </span>
             </div>
 
@@ -365,7 +396,9 @@ export function Workshop3D() {
             {(activeAsset === "green-tree" || activeAsset === "orange-tree") ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-stone-600 font-medium">5-Stage Growth Lineage:</span>
+                  <span className="text-stone-600 font-medium">
+                    {activeAsset === "orange-tree" ? "Oak Canopy Lineage:" : "5-Stage Growth Lineage:"}
+                  </span>
                   <span className="font-medium font-mono text-emerald-800">{currentStage.badge}</span>
                 </div>
 
@@ -381,7 +414,7 @@ export function Workshop3D() {
                       className={`py-1.5 px-1 rounded-xl text-center transition-all cursor-pointer flex flex-col items-center active:scale-95 ${
                         treeStage === s.id
                           ? activeAsset === "orange-tree"
-                            ? "btn-specular-amber text-white"
+                            ? "btn-specular-lime text-white"
                             : "btn-specular-emerald text-white"
                           : "btn-specular-porcelain text-stone-700 hover:bg-stone-50"
                       }`}
@@ -395,13 +428,25 @@ export function Workshop3D() {
                 {/* Live Spec Callout Box */}
                 <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.04),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-stone-900">{currentStage.label}</span>
+                    <span className="text-xs font-medium text-stone-900">
+                      {activeAsset === "orange-tree" ? `Deciduous Oak · ${currentStage.label}` : `Conifer Pine · ${currentStage.label}`}
+                    </span>
                     <span className="text-[9px] font-mono font-medium text-stone-600 bg-stone-200/80 shadow-xs px-1.5 py-0.5 rounded-full border border-stone-300/70">
                       {currentStage.requirement}
                     </span>
                   </div>
                   <p className="text-[11px] text-stone-600 leading-relaxed">
-                    {currentStage.desc}
+                    {activeAsset === "orange-tree"
+                      ? currentStage.id === "stump"
+                        ? "Dormant timber trunk disc. Cleared foundation ready for revenue or MRR metric linkage."
+                        : currentStage.id === "sprout"
+                        ? "Single low-poly icosphere canopy (#6DBE45) atop a slender crooked brown trunk (#8B5A2B)."
+                        : currentStage.id === "small"
+                        ? "Dual faceted icosphere canopy lobes with natural organic tilt and root flare footing."
+                        : currentStage.id === "tall"
+                        ? "3-lobed low-poly icosphere canopy with faceted triangle geometry catching sunlight independently."
+                        : "Grand 4-lobed sovereign oak diorama centerpiece with sprawling shade and root base."
+                      : currentStage.desc}
                   </p>
                 </div>
               </div>
@@ -414,9 +459,11 @@ export function Workshop3D() {
                       {activeAsset === "canvas-tent"
                         ? "Canvas Tent"
                         : activeAsset === "log-cabin"
-                        ? "Log Cabin HQ"
+                        ? "Tabletop Log Cabin"
                         : activeAsset === "campfire"
-                        ? "Milestone Campfire"
+                        ? "Tabletop Campfire"
+                        : activeAsset === "mountain-peak"
+                        ? "Alpine Mountain & Rocks"
                         : "Companion Dog"}
                     </span>
                     <span className="text-[9px] font-mono font-medium text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded border border-emerald-200/60">
@@ -426,6 +473,8 @@ export function Workshop3D() {
                         ? "Unlocked Level 10+ / Day 14+"
                         : activeAsset === "campfire"
                         ? "Daily Focus Station"
+                        : activeAsset === "mountain-peak"
+                        ? "Northern Horizon Clutter"
                         : "Faithful Island Friend (Day 5+)"}
                     </span>
                   </div>
@@ -433,9 +482,11 @@ export function Workshop3D() {
                     {activeAsset === "canvas-tent"
                       ? "Canvas A-frame shelter with wooden foundation deck and rolled plaid wool sleeping bedroll."
                       : activeAsset === "log-cabin"
-                      ? "Timber beam builder headquarters with chimney stack and glowing warm windows."
+                      ? "Stacked horizontal timber cylinders (#8B5A2B), front porch with vertical posts, pitched slate-grey roof (#555E6B), stone chimney, and harvest barrel."
                       : activeAsset === "campfire"
-                      ? "Interactive stone ring campfire hearth with animated flickering flames and smoke embers."
+                      ? "Hearth ring of 10 low-poly stones (#A0A09B), 3 triangular horizontal log benches (#8B5A2B), and jagged tetrahedron flame cluster (#F97316)."
+                      : activeAsset === "mountain-peak"
+                      ? "Steep hexagonal pyramids (#B5B5C0) with 20% snow cap (#FFFFFF), accompanied by sunken riverstone boulders and wild grass tufts."
                       : "Handcrafted golden companion dog. Click on the diorama to hear it bark and wag its tail!"}
                   </p>
                 </div>
@@ -450,7 +501,7 @@ export function Workshop3D() {
       </div>
 
       {/* =================================================================== */}
-      {/* BOTTOM ASSET SELECTOR DOCK (ALL 6 CANONICAL ASSETS)                 */}
+      {/* BOTTOM ASSET SELECTOR DOCK (ALL 7 ASSETS)                           */}
       {/* =================================================================== */}
       <div className="fixed bottom-6 inset-x-4 z-40 flex justify-center pointer-events-none">
         <DoubleBezel
@@ -471,10 +522,10 @@ export function Workshop3D() {
               }`}
             >
               <Trees className="w-3.5 h-3.5 text-emerald-300" />
-              <span>Code Pine</span>
+              <span>Conifer Pine</span>
             </button>
 
-            {/* 2. Orange Cash Pine */}
+            {/* 2. Deciduous Oak */}
             <button
               onClick={() => {
                 sound.playClick();
@@ -482,12 +533,12 @@ export function Workshop3D() {
               }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer active:scale-95 ${
                 activeAsset === "orange-tree"
-                  ? "btn-specular-amber text-white scale-105"
+                  ? "bg-lime-600 text-white shadow-[0_2px_8px_-2px_rgba(101,163,13,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)] border border-lime-700 scale-105"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-100/90"
               }`}
             >
-              <Trees className="w-3.5 h-3.5 text-amber-200" />
-              <span>Cash Pine</span>
+              <Trees className="w-3.5 h-3.5 text-lime-200" />
+              <span>Deciduous Oak</span>
             </button>
 
             {/* 3. Starter Canvas Tent */}
@@ -538,7 +589,23 @@ export function Workshop3D() {
               <span>Campfire</span>
             </button>
 
-            {/* 6. Companion Dog */}
+            {/* 6. Mountain Peak & Boulders */}
+            <button
+              onClick={() => {
+                sound.playClick();
+                setActiveAsset("mountain-peak");
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer active:scale-95 ${
+                activeAsset === "mountain-peak"
+                  ? "bg-slate-700 text-white shadow-[0_2px_8px_-2px_rgba(51,65,85,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)] border border-slate-800 scale-105"
+                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-100/90"
+              }`}
+            >
+              <Mountain className="w-3.5 h-3.5 text-slate-200" />
+              <span>Mountain</span>
+            </button>
+
+            {/* 7. Companion Dog */}
             <button
               onClick={() => {
                 sound.playClick();
@@ -551,7 +618,7 @@ export function Workshop3D() {
               }`}
             >
               <Dog className="w-3.5 h-3.5 text-amber-200" />
-              <span>Companion Dog</span>
+              <span>Dog</span>
             </button>
         </DoubleBezel>
       </div>

@@ -30,8 +30,8 @@ export function FocusModal({ isOpen, onClose }: FocusModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Focus Station & Ambiance"
-      badgeText="Campfire Milestone"
+      title="Focus Timer"
+      badgeText="Focus"
       icon={Flame}
       maxWidth="md"
     >
@@ -44,10 +44,10 @@ export function FocusModal({ isOpen, onClose }: FocusModalProps) {
             </div>
             <div>
               <span className="font-medium text-xs text-stone-900 font-sans block">
-                Campfire Focus
+                Campfire Focus Timer
               </span>
               <span className="text-[10px] text-stone-400 font-sans">
-                {streakDays > 0 ? `${streakDays}-day streak active` : "Deep work station"}
+                {streakDays > 0 ? `${streakDays}-day streak active` : "Focus audio"}
               </span>
             </div>
           </div>

@@ -6,6 +6,7 @@ import * as THREE from "three";
 import type { TreeData, TimeOfDay } from "@/types/game";
 import { getTreeYawRotation } from "@/lib/gamification";
 import { PineTree } from "./models/PineTree";
+import { DeciduousTree } from "./models/DeciduousTree";
 
 interface TreeGrassPatchProps {
   isRevenue: boolean;
@@ -13,34 +14,51 @@ interface TreeGrassPatchProps {
   timeOfDay?: TimeOfDay;
   hovered: boolean;
   isSelected: boolean;
+  palette?: "canonical" | "sunnyside" | "tabletop";
 }
 
-// =============================================================================
-// Subtle Flush Grass Tile Patch (1.55m x 1.55m - Zero Curbs, Zero Pegs)
-// Merges seamlessly into the island lawn with a gentle 10-15% tone shift
-// =============================================================================
+// Subtle Flush Grass Tile Patch (1.55m x 1.55m) — Seamlessly merged into the diorama turf
 function TreeGrassPatch({
   isRevenue,
-  drought: _drought,
+  drought = false,
   timeOfDay = "day",
   hovered,
   isSelected,
+  palette = "canonical",
 }: TreeGrassPatchProps) {
-  // Day Turf is #22c55e (Spring Emerald)
-  // Sunset Turf is #84cc16 (Golden Chartreuse)
-  // Night Turf is #0f766e (Luminous Teal)
-  const patchColor =
-    timeOfDay === "night"
+  const isSunnyside = palette === "sunnyside";
+  const isTabletop = palette === "tabletop";
+  const patchColor = drought
+    ? "#a8a29e"
+    : isTabletop
+    ? timeOfDay === "night"
+      ? "#1e3a1e"
+      : timeOfDay === "sunset"
+      ? "#84cc16"
+      : "#95C558" // Seamlessly blends with Tabletop Terrain Grass
+    : isSunnyside
+    ? timeOfDay === "night"
       ? isRevenue
-        ? "#0d9488" // Luminous cyan-teal shift
-        : "#115e59" // Deep emerald-teal shift
+        ? "#1b4d3e"
+        : "#143a2f"
       : timeOfDay === "sunset"
       ? isRevenue
-        ? "#a3e635" // Sunlit lime shift
-        : "#65a30d" // Rich olive-chartreuse shift
+        ? "#a3e635"
+        : "#84cc16"
       : isRevenue
-      ? "#4ade80" // Sunlit warm meadow shift
-      : "#16a34a"; // Rich spring emerald shift
+      ? "#72d35e"
+      : "#5fc14c" // Seamlessly blends with Sunnyside turf (Tiles 65, 66)
+    : timeOfDay === "night"
+    ? isRevenue
+      ? "#0d9488"
+      : "#115e59"
+    : timeOfDay === "sunset"
+    ? isRevenue
+      ? "#84cc16"
+      : "#65a30d"
+    : isRevenue
+    ? "#5a9e32"
+    : "#448824";
 
   const isGlowing = hovered || isSelected;
   const glowColor = isSelected
@@ -53,16 +71,25 @@ function TreeGrassPatch({
 
   return (
     <group position={[0, 0.003, 0]} raycast={() => null}>
-      {/* Flat Flush Grass Patch lying directly on the turf */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[1.55, 1.55]} />
         <meshStandardMaterial
           color={patchColor}
           roughness={0.82}
-          emissive={isGlowing ? glowColor : "#000000"}
-          emissiveIntensity={isGlowing ? (isSelected ? 0.28 : 0.15) : 0}
+          metalness={0.02}
+          flatShading
         />
       </mesh>
+      {isGlowing && (
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]}>
+          <planeGeometry args={[1.55, 1.55]} />
+          <meshBasicMaterial
+            color={glowColor}
+            transparent
+            opacity={isSelected ? 0.35 : 0.18}
+          />
+        </mesh>
+      )}
     </group>
   );
 }
@@ -73,6 +100,7 @@ interface IslandTreeProps {
   onSelect?: (tree: TreeData) => void;
   drought?: boolean;
   timeOfDay?: TimeOfDay;
+  palette?: "canonical" | "sunnyside" | "tabletop";
 }
 
 export function IslandTree({
@@ -81,6 +109,7 @@ export function IslandTree({
   onSelect,
   drought = false,
   timeOfDay = "day",
+  palette = "canonical",
 }: IslandTreeProps) {
   const [hovered, setHovered] = useState(false);
   const visualGroupRef = useRef<THREE.Group>(null);
@@ -124,30 +153,35 @@ export function IslandTree({
     }
   }, [tier]);
 
-  // Subtle tree hop physics on hover / selection
+  // Tactile tree hop & spring scale physics on hover / selection
   useFrame(() => {
     if (visualGroupRef.current) {
-      const targetY = hovered || isSelected ? 0.12 : 0;
+      const targetY = isSelected ? 0.14 : hovered ? 0.08 : 0;
+      const targetScale = isSelected ? 1.08 : hovered ? 1.04 : 1.0;
       visualGroupRef.current.position.y = THREE.MathUtils.lerp(
         visualGroupRef.current.position.y,
         targetY,
-        0.2
+        0.25
       );
+      const currentScale = visualGroupRef.current.scale.x;
+      const nextScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.25);
+      visualGroupRef.current.scale.set(nextScale, nextScale, nextScale);
     }
   });
 
   return (
     <group position={[tree.gridX, 0.28, tree.gridZ]}>
-      {/* 1. Flat Subtle Grass Patch (Zero Curbs, Zero Pegs, Merged into Lawn) */}
+      {/* 1. Flat Subtle Grass Patch Merged into Lawn */}
       <TreeGrassPatch
         isRevenue={isRevenue}
         drought={drought}
         timeOfDay={timeOfDay}
         hovered={hovered}
         isSelected={isSelected}
+        palette={palette}
       />
 
-      {/* 2. Discrete Circular Ground Target Ring (Grounded Flush over Grass) */}
+      {/* 2. Discrete Circular Ground Target Ring */}
       {(hovered || isSelected) && (
         <mesh position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[ringRadius * 0.82, ringRadius, 32]} />
@@ -160,7 +194,7 @@ export function IslandTree({
         </mesh>
       )}
 
-      {/* 3. Precision Raycast Hitbox (Spanning Tile Width & Tree Height) */}
+      {/* 3. Precision Raycast Hitbox */}
       <mesh
         position={[0, hitboxHeight / 2, 0]}
         onClick={(e) => {
@@ -172,8 +206,7 @@ export function IslandTree({
           document.body.style.cursor = "pointer";
           setHovered(true);
         }}
-        onPointerOut={(e) => {
-          e.stopPropagation();
+        onPointerOut={() => {
           document.body.style.cursor = "auto";
           setHovered(false);
         }}
@@ -182,13 +215,22 @@ export function IslandTree({
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
-      {/* 4. Visual Animated 3D Pine Mesh (Raycast Disabled to Prevent Jitter) */}
+      {/* 4. Visual Low-Poly Tree (Pine for shipping, Deciduous Oak for revenue in tabletop) */}
       <group ref={visualGroupRef} rotation={[0, yaw, 0]} raycast={() => null}>
-        <PineTree
-          tier={tree.tier}
-          colorType={isRevenue ? "orange" : "green"}
-          drought={drought}
-        />
+        {palette === "tabletop" && isRevenue ? (
+          <DeciduousTree
+            tier={tree.tier}
+            drought={drought}
+            palette="tabletop"
+          />
+        ) : (
+          <PineTree
+            tier={tree.tier}
+            colorType={isRevenue ? "orange" : "green"}
+            drought={drought}
+            palette={palette}
+          />
+        )}
       </group>
     </group>
   );

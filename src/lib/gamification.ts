@@ -26,7 +26,7 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   {
     id: "atomic-commit",
     title: "Daily Git Push",
-    description: "Push at least 1 verified commit to grow your shipping pines.",
+    description: "Push at least 1 commit to grow your code trees.",
     category: "shipping",
     xpReward: 100,
     progress: 0,
@@ -36,8 +36,8 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   },
   {
     id: "build-in-public",
-    title: "Share Proof of Work",
-    description: "Export your 1200×675 3D share card or copy your progress tweet.",
+    title: "Share Island Card",
+    description: "Export your 3D share card or copy your progress update.",
     category: "distribution",
     xpReward: 50,
     progress: 0,
@@ -47,8 +47,8 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   },
   {
     id: "customer-touchpoint",
-    title: "Revenue Milestone",
-    description: "Receive a Stripe/Lemon Squeezy sale or add a revenue project.",
+    title: "Record Revenue",
+    description: "Receive a Stripe payment or add a revenue project.",
     category: "revenue",
     xpReward: 75,
     progress: 0,
@@ -58,8 +58,8 @@ export const DEFAULT_DAILY_QUESTS: DailyQuest[] = [
   },
   {
     id: "grove-stewardship",
-    title: "Deep Work & Focus",
-    description: "Play campfire ambient audio or explore a peer builder's island.",
+    title: "Focus Session",
+    description: "Turn on the campfire timer or explore another builder's island.",
     category: "social",
     xpReward: 30,
     progress: 0,
@@ -394,5 +394,89 @@ export function getLocalDateString(d: Date = new Date()): string {
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+export function getNextTierProgress(
+  type: "shipping" | "revenue",
+  value: number
+): {
+  currentTier: GrowthTier;
+  nextTier: GrowthTier | "max";
+  currentValue: number;
+  targetValue: number;
+  progressPercent: number;
+} {
+  if (type === "revenue") {
+    if (value < 50) {
+      return {
+        currentTier: "sapling",
+        nextTier: "young",
+        currentValue: value,
+        targetValue: 50,
+        progressPercent: Math.min(100, Math.round((value / 50) * 100)),
+      };
+    }
+    if (value < 500) {
+      return {
+        currentTier: "young",
+        nextTier: "mature",
+        currentValue: value,
+        targetValue: 500,
+        progressPercent: Math.min(100, Math.round(((value - 50) / 450) * 100)),
+      };
+    }
+    if (value < 2000) {
+      return {
+        currentTier: "mature",
+        nextTier: "majestic",
+        currentValue: value,
+        targetValue: 2000,
+        progressPercent: Math.min(100, Math.round(((value - 500) / 1500) * 100)),
+      };
+    }
+    return {
+      currentTier: "majestic",
+      nextTier: "max",
+      currentValue: value,
+      targetValue: 2000,
+      progressPercent: 100,
+    };
+  }
+
+  // Shipping (commits)
+  if (value < 8) {
+    return {
+      currentTier: "sapling",
+      nextTier: "young",
+      currentValue: value,
+      targetValue: 8,
+      progressPercent: Math.min(100, Math.round((value / 8) * 100)),
+    };
+  }
+  if (value < 25) {
+    return {
+      currentTier: "young",
+      nextTier: "mature",
+      currentValue: value,
+      targetValue: 25,
+      progressPercent: Math.min(100, Math.round(((value - 8) / 17) * 100)),
+    };
+  }
+  if (value < 60) {
+    return {
+      currentTier: "mature",
+      nextTier: "majestic",
+      currentValue: value,
+      targetValue: 60,
+      progressPercent: Math.min(100, Math.round(((value - 25) / 35) * 100)),
+    };
+  }
+  return {
+    currentTier: "majestic",
+    nextTier: "max",
+    currentValue: value,
+    targetValue: 60,
+    progressPercent: 100,
+  };
 }
 
