@@ -72,9 +72,9 @@ export function DashboardNav({
             }}
             icon={Target}
             className="relative shadow-xs active:scale-95 transition-transform text-xs font-medium"
-            title="Daily Proof-of-Work Quests (Press Q)"
+            title="Daily Goals (Press Q)"
           >
-            <span>Quests</span>
+            <span>Goals</span>
             <span className={`text-xs font-pixel ml-1 px-1.5 py-0.5 rounded-full ${isQuestsPopoverOpen || unclaimedQuestsCount > 0 ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700"}`}>
               {completedQuestsCount}/{totalQuestsCount}
             </span>
@@ -102,8 +102,8 @@ export function DashboardNav({
                   <Target className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-medium text-stone-950 font-sans">Daily Builder Quests</h3>
-                  <span className="text-[10px] text-stone-500 font-sans block">Proof-of-Work Milestones</span>
+                  <h3 className="text-xs font-medium text-stone-950 font-sans">Daily Goals</h3>
+                  <span className="text-[10px] text-stone-500 font-sans block">Daily Shipping Milestones</span>
                 </div>
               </div>
 
@@ -117,7 +117,7 @@ export function DashboardNav({
                     setIsQuestsPopoverOpen(false);
                   }}
                   className="w-6 h-6 rounded-full btn-specular-porcelain flex items-center justify-center text-stone-500 hover:text-stone-900 transition-all cursor-pointer"
-                  title="Close Quests"
+                  title="Close Goals"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>

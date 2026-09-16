@@ -9,119 +9,218 @@ interface CampfireProps {
   isSunset?: boolean;
   drought?: boolean;
   wireframe?: boolean;
+  palette?: "canonical" | "sunnyside" | "tabletop";
 }
 
+function CampfireEmbers() {
+  const embersRef = useRef<THREE.Group>(null);
+  const emberPositions = React.useMemo(() => {
+    return Array.from({ length: 14 }).map((_, i) => ({
+      seed: i * 0.73,
+      speed: 0.32 + (i % 5) * 0.08,
+      radius: 0.06 + (i % 4) * 0.05,
+      angle: (i / 14) * Math.PI * 2,
+    }));
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!embersRef.current) return;
+    const t = clock.elapsedTime;
+    embersRef.current.children.forEach((child, i) => {
+      const p = emberPositions[i];
+      const cycle = (t * p.speed + p.seed) % 1;
+      child.position.y = 0.2 + cycle * 0.85;
+      const sway = Math.sin(t * 2.5 + p.seed) * 0.03;
+      child.position.x = Math.cos(p.angle) * p.radius * (1 + cycle * 1.4) + sway;
+      child.position.z = Math.sin(p.angle) * p.radius * (1 + cycle * 1.4) + sway;
+      const s = Math.sin(cycle * Math.PI) * 0.032;
+      child.scale.set(s, s, s);
+    });
+  });
+
+  return (
+    <group ref={embersRef}>
+      {emberPositions.map((_, i) => (
+        <mesh key={i}>
+          <octahedronGeometry args={[1, 0]} />
+          <meshBasicMaterial color={i % 2 === 0 ? "#f59e0b" : "#fef08a"} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// Low-Poly Tabletop Campfire — 10-Rock Hearth, Triangular Log Benches, Jagged Tetrahedron Flame Cluster
 export function Campfire({
   isNight = false,
   isSunset = false,
   drought = false,
   wireframe = false,
+  palette = "tabletop",
 }: CampfireProps) {
   const fireLightRef = useRef<THREE.PointLight>(null);
-  const flameCoreRef = useRef<THREE.Mesh>(null);
-  const emberRef = useRef<THREE.MeshStandardMaterial>(null);
+  const flameGroupRef = useRef<THREE.Group>(null);
+  const isTabletop = palette === "tabletop";
+
+  const rockColor = isTabletop ? "#A0A09B" : "#94a3b8";
+  const logColor = isTabletop ? "#8B5A2B" : "#6e3f1e";
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     if (fireLightRef.current) {
-      const baseIntensity = drought ? 0.7 : isNight ? 2.6 : isSunset ? 1.9 : 1.3;
+      const baseIntensity = drought ? 0.6 : isNight ? 2.8 : isSunset ? 1.9 : 1.4;
       fireLightRef.current.intensity =
         baseIntensity + Math.sin(t * 12) * 0.3 + Math.cos(t * 19) * 0.15;
     }
-    if (flameCoreRef.current) {
-      flameCoreRef.current.scale.y = (drought ? 0.65 : 1) + Math.sin(t * 14) * 0.1;
-      flameCoreRef.current.rotation.y = t * 2;
-    }
-    if (emberRef.current) {
-      emberRef.current.emissiveIntensity = (drought ? 0.7 : 1.3) + Math.sin(t * 6) * 0.2;
+    if (flameGroupRef.current && !drought) {
+      flameGroupRef.current.scale.y = 1 + Math.sin(t * 14) * 0.12;
+      flameGroupRef.current.rotation.y = Math.sin(t * 3) * 0.08;
     }
   });
 
+  // 3 Triangular Log Bench Positions (Equilateral triangle around hearth)
+  const triangleBenches = [
+    { x: 0, z: -0.82, rotY: 0, length: 0.95 },
+    { x: -0.72, z: 0.42, rotY: (2 * Math.PI) / 3, length: 0.95 },
+    { x: 0.72, z: 0.42, rotY: -(2 * Math.PI) / 3, length: 0.95 },
+  ];
+
   return (
     <group>
-      {/* 1. Surrounding 8-Stone Fieldstone Ring */}
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
-        const angle = (i / 8) * Math.PI * 2;
+      {/* 1. Hearth: Ring of 10 Decimated Low-Poly Stones */}
+      {Array.from({ length: 10 }).map((_, i) => {
+        const angle = (i / 10) * Math.PI * 2;
+        const dist = 0.42 + (i % 3) * 0.03;
         return (
           <mesh
-            key={i}
-            position={[Math.cos(angle) * 0.46, 0.06, Math.sin(angle) * 0.46]}
+            key={`stone-${i}`}
+            position={[Math.cos(angle) * dist, 0.055, Math.sin(angle) * dist]}
+            rotation={[i * 0.35, i * 0.55, i * 0.25]}
             castShadow
+            receiveShadow
           >
-            <dodecahedronGeometry args={[0.08, 0]} />
+            <dodecahedronGeometry args={[0.075, 0]} />
             <meshStandardMaterial
-              color="#94a3b8"
-              roughness={0.9}
-              flatShading
+              color={rockColor}
+              roughness={1.0}
+              metalness={0.0}
+              flatShading={true}
               wireframe={wireframe}
             />
           </mesh>
         );
       })}
 
-      {/* 2. Glowing Red/Amber Charcoal Ember Bed */}
+      {/* 2. Inner Charcoal Ash & Ember Bed */}
       <mesh position={[0, 0.03, 0]}>
-        <cylinderGeometry args={[0.38, 0.4, 0.04, 12]} />
+        <cylinderGeometry args={[0.34, 0.38, 0.04, 8]} />
         <meshStandardMaterial
-          ref={emberRef}
-          color="#451a03"
-          emissive="#dc2626"
-          emissiveIntensity={drought ? 0.7 : 1.3}
-          roughness={0.9}
+          color="#3A1D13"
+          emissive="#DC2626"
+          emissiveIntensity={drought ? 0.4 : 1.2}
+          roughness={1.0}
+          flatShading
           wireframe={wireframe}
         />
       </mesh>
 
-      {/* 3. 4 Crossed Charred Cedar Fire Logs */}
+      {/* 3. Crossed Kindling Logs */}
       {[0, Math.PI / 2, Math.PI / 4, (3 * Math.PI) / 4].map((angle, i) => (
         <mesh
-          key={i}
-          position={[Math.cos(angle) * 0.09, 0.08, Math.sin(angle) * 0.09]}
-          rotation={[0.25, angle, 0]}
+          key={`wood-${i}`}
+          position={[Math.cos(angle) * 0.06, 0.07, Math.sin(angle) * 0.06]}
+          rotation={[0.2, angle, 0]}
           castShadow
         >
-          <cylinderGeometry args={[0.04, 0.055, 0.52, 6]} />
-          <meshStandardMaterial
-            color="#78350f"
-            roughness={0.9}
-            flatShading
-            wireframe={wireframe}
-          />
+          <cylinderGeometry args={[0.035, 0.045, 0.44, 6]} />
+          <meshStandardMaterial color="#5C341B" roughness={1.0} flatShading />
         </mesh>
       ))}
 
-      {/* 4. Multi-Facet Pulsing Flame Core */}
-      <group scale={drought ? 0.7 : 1.0}>
-        <mesh ref={flameCoreRef} position={[0, 0.24, 0]}>
-          <coneGeometry args={[0.18, 0.45, 6]} />
-          <meshStandardMaterial
-            color="#f97316"
-            emissive="#ea580c"
-            emissiveIntensity={drought ? 1.0 : isNight ? 2.5 : 1.5}
-            roughness={0.2}
-            flatShading
-            wireframe={wireframe}
-          />
-        </mesh>
-        <mesh position={[0, 0.2, 0]}>
-          <coneGeometry args={[0.1, 0.3, 5]} />
-          <meshStandardMaterial
-            color="#fef08a"
-            emissive="#facc15"
-            emissiveIntensity={drought ? 1.6 : 2.8}
-            wireframe={wireframe}
-          />
-        </mesh>
-      </group>
+      {/* 4. Jagged Low-Poly Tetrahedron Flame Cluster */}
+      {!drought && (
+        <group ref={flameGroupRef} position={[0, 0.16, 0]}>
+          {/* Primary Central Orange Tetrahedron */}
+          <mesh position={[0, 0.12, 0]} rotation={[0, 0.2, 0]}>
+            <tetrahedronGeometry args={[0.22, 0]} />
+            <meshStandardMaterial
+              color="#F97316"
+              emissive="#EA580C"
+              emissiveIntensity={isNight ? 2.6 : 1.6}
+              roughness={0.4}
+              flatShading={true}
+              wireframe={wireframe}
+            />
+          </mesh>
 
+          {/* Secondary Yellow Spire Tetrahedron */}
+          <mesh position={[0.02, 0.16, -0.02]} rotation={[0.4, 0.8, -0.2]}>
+            <tetrahedronGeometry args={[0.15, 0]} />
+            <meshStandardMaterial
+              color="#FACC15"
+              emissive="#EAB308"
+              emissiveIntensity={isNight ? 3.0 : 2.0}
+              roughness={0.3}
+              flatShading={true}
+              wireframe={wireframe}
+            />
+          </mesh>
+
+          {/* Side Outer Ember Flakes */}
+          <mesh position={[-0.08, 0.08, 0.06]} rotation={[-0.2, 0.5, 0.4]}>
+            <tetrahedronGeometry args={[0.12, 0]} />
+            <meshStandardMaterial
+              color="#FB923C"
+              emissive="#EA580C"
+              emissiveIntensity={1.8}
+              roughness={0.4}
+              flatShading={true}
+            />
+          </mesh>
+          <mesh position={[0.08, 0.08, -0.05]} rotation={[0.3, -0.6, 0.2]}>
+            <tetrahedronGeometry args={[0.11, 0]} />
+            <meshStandardMaterial
+              color="#FBBF24"
+              emissive="#F59E0B"
+              emissiveIntensity={2.0}
+              roughness={0.4}
+              flatShading={true}
+            />
+          </mesh>
+        </group>
+      )}
+
+      {/* 5. Glowing Campfire Point Light */}
       <pointLight
         ref={fireLightRef}
         position={[0, 0.38, 0]}
-        color={drought ? "#f59e0b" : "#f97316"}
-        intensity={drought ? 0.7 : isNight ? 2.6 : 1.3}
-        distance={drought ? 2.5 : 4.5}
+        color={drought ? "#F59E0B" : "#F97316"}
+        intensity={drought ? 0.6 : isNight ? 2.8 : 1.4}
+        distance={drought ? 2.5 : 4.8}
         decay={2}
       />
+
+      {/* 6. Rising Embers */}
+      {!drought && <CampfireEmbers />}
+
+      {/* 7. Three Triangular Log Benches (Surrounding Triangle) */}
+      {triangleBenches.map((bench, idx) => (
+        <group key={`triangle-bench-${idx}`} position={[bench.x, 0.08, bench.z]} rotation={[0, bench.rotY, 0]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.08, 0.095, bench.length, 7]} />
+            <meshStandardMaterial color={logColor} roughness={1.0} flatShading={true} />
+          </mesh>
+          {/* Flat Growth Ring Caps */}
+          <mesh position={[-bench.length / 2 - 0.002, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+            <circleGeometry args={[0.078, 7]} />
+            <meshStandardMaterial color="#D4A86A" roughness={1.0} flatShading={true} />
+          </mesh>
+          <mesh position={[bench.length / 2 + 0.002, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <circleGeometry args={[0.078, 7]} />
+            <meshStandardMaterial color="#D4A86A" roughness={1.0} flatShading={true} />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }

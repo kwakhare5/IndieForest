@@ -76,19 +76,24 @@ npm run lint       # ESLint + TypeScript check
 ## 7. SESSION RESUME
 
 - **Current State & Accomplishments:**
-  - **Permanent Lush Spring Emerald Greenery:** Eradicated all yellowish and straw drought overrides across all canvas models (`Island.tsx`, `PineTree.tsx`, `IslandTree.tsx`, `IslandCanvas.tsx`). Day turf is permanently vivid Spring Emerald (`#22c55e`), Sunset is Golden Chartreuse (`#84cc16`), and Night is Luminous Nocturnal Teal (`#0f766e`).
-  - **Manual Water Island Feature Purged:** Completely removed manual "Water Island" buttons, cheer triggers, confetti calls, and store actions across `DashboardNav.tsx`, `SettingsModal.tsx`, `u/[username]/page.tsx`, and `useForestStore.ts`, keeping the app 100% zero-touch automated via GitHub and Stripe webhooks.
-  - **Dashboard Navigation Streamlined:** Removed developer demo switchers (`Living Island`, `Grid Mode`, `3D Workshop`) and unused icons (`Home`, `Grid`, `Layers`) from the main game dashboard. Kept viewport 100% dedicated to the pure 3D diorama canvas.
-  - **Camera Stabilization & Movement Restrictions:** Fixed island in center by disabling panning (`enablePan={false}`). Locked zoom (`enableZoom={false}`) and purged obsolete `zoomLevel` state and `Z` key shortcut. Locked vertical tilt to isometric polar angle (`~61.2°`) and enabled smooth horizontal turntable rotation with subtle damping (`enableDamping={true}`, `dampingFactor={0.08}`, `rotateSpeed={0.5}`).
-  - **Production Verification:** 64/64 Vitest unit tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly with all 13 routes in 2.9s.
+  - **Authentic Daniel Diggle Sunnyside World Visual Fidelity (`spikes/sunnyside/`, `/sunnyside-spike`):** Reconstructed and polished the 2D living pixel farmstead world to eliminate all AI-slop defects and match authentic Daniel Diggle assets.
+  - **3D Demo Island Sunnyside Color Integration (`src/app/demo/page.tsx`, `Island.tsx`, `PineTree.tsx`, `Cabin.tsx`, `IslandCanvas.tsx`, `DemoIslandCanvas.tsx`):**
+    - Extracted exact hex swatches from primary Sunnyside assets: Apple green lawn (`#5fc14c`), warm apricot topsoil (`#e4a672`), terracotta rock stratum (`#c28569`), slate bedrock keel (`#5a6988`), and riverstone discs (`#8b9bb4`).
+    - Calibrated pine foliage skirts: shadow base `#2e6635`, mid skirt `#3e8948`, sunlit apex `#53a641`.
+    - Calibrated builder cabin: timber walls `#c58a63`, timber trim `#b27760`, warm sunburst shingles `#ef9734`, and slate chimney `#5a6988`.
+    - Defaulted `/demo` and `DemoIslandCanvas` to `"sunnyside"` palette with fresh garden ambient lighting (`#ecfdf5`).
+    - Added an interactive `Color Palette` toggle (`Sunnyside` vs `Canonical`) in the Island Controls drawer.
+    - Added a dedicated `Color Palette` showcase section in `/demo` (`src/app/demo/components/PaletteView.tsx`) with 19 categorized swatches, side-by-side comparisons, 3D material turntable (Orb, Block, Strata), and 1-click copy hex with audio chime feedback.
+  - **Zero-Risk Verification:** 65/65 Vitest unit tests passing green, Next.js Turbopack build compiling all 14 routes cleanly in 3.8s with zero TypeScript errors.
 
 **Immediate next task:**
 
-- Review live in browser at `http://localhost:3000/dashboard` to verify rock-solid camera positioning, turntable spin, and permanent lush emerald island.
+- Inspect and interact with the Sunnyside 3D Demo Island and Color Palette showcase live at `http://localhost:3000/demo`.
 
 **Open blockers:**
 
 - Run `supabase/migrations/20260820000000_init_indieforest.sql` in Supabase SQL editor to create the 4 PostgreSQL tables.
+
 
 
 

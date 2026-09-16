@@ -1,12 +1,13 @@
 "use client";
 
-import React, { Suspense, useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import React, { Suspense, useMemo, useEffect } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { Island } from "./Island";
 import { IslandTree } from "./IslandTree";
 import { Campsite } from "./Campsite";
+import { PineTree, DeciduousTree } from "./models/TabletopAssets";
 import { Weather } from "./Weather";
 import {
   calculateIslandSize,
@@ -33,6 +34,46 @@ interface IslandCanvasProps {
   className?: string;
   showGrid?: boolean;
   showBoundaries?: boolean;
+  zoomScale?: number;
+  autoFit?: boolean;
+  islandShape?: "diamond" | "crag" | "octagon";
+  palette?: "canonical" | "sunnyside" | "tabletop";
+}
+
+// -----------------------------------------------------------------------------
+// Responsive Camera Adapter: Auto-fits orthographic frustum to prevent diamond clipping
+// -----------------------------------------------------------------------------
+function ResponsiveCameraRig({
+  islandSize,
+  baseZoom,
+  zoomScale = 1.0,
+  autoFit = true,
+}: {
+  islandSize: number;
+  baseZoom: number;
+  zoomScale?: number;
+  autoFit?: boolean;
+}) {
+  const { camera, size } = useThree();
+
+  useEffect(() => {
+    if (camera instanceof THREE.OrthographicCamera) {
+      if (autoFit && size.width > 0 && size.height > 0) {
+        // Balanced world span: large, immersive island presence with safe margin (zero edge clipping)
+        const targetWorldSpan = islandSize * 1.72;
+        const minDimension = Math.min(size.width, size.height);
+        const fitZoom = (minDimension / targetWorldSpan) * zoomScale;
+
+        // In compact containers, scale down to fit; on large screens, clamp at baseZoom
+        camera.zoom = Math.min(baseZoom * zoomScale, fitZoom);
+      } else {
+        camera.zoom = baseZoom * zoomScale;
+      }
+      camera.updateProjectionMatrix();
+    }
+  }, [camera, size.width, size.height, islandSize, baseZoom, zoomScale, autoFit]);
+
+  return null;
 }
 
 // -----------------------------------------------------------------------------
@@ -51,6 +92,10 @@ export function IslandCanvas({
   interactive = true,
   selectedTreeId = null,
   className = "w-full h-full min-h-[480px]",
+  zoomScale = 1.0,
+  autoFit = false,
+  islandShape = "diamond",
+  palette = "canonical",
   onSelectTree,
   onClickCampfire,
   onClickCabin,
@@ -60,6 +105,8 @@ export function IslandCanvas({
 
   const isNight = timeOfDay === "night";
   const isSunset = timeOfDay === "sunset";
+  const isSunnyside = palette === "sunnyside";
+  const isTabletop = palette === "tabletop";
 
   // 3D Performance & Clarity Cap (Top 24 active repositories / MRR streams in full 3D)
   const visibleTrees = useMemo(() => (trees || []).slice(0, 24), [trees]);
@@ -70,15 +117,21 @@ export function IslandCanvas({
     ? "#3730a3" // Electric deep indigo ambient fill
     : isSunset
     ? "#ffedd5" // Warm peach nectar bounce
+    : isTabletop
+    ? "#e3c7db" // Purplish ambient for Tabletop matching sky
+    : isSunnyside
+    ? "#ecfdf5" // Crisp garden emerald bounce for Sunnyside
     : "#e0f2fe"; // Fresh sky blue ambient bounce
-  const ambientIntensity = isNight ? 0.70 : isSunset ? 1.15 : 1.20;
+  const ambientIntensity = isNight ? 0.70 : isSunset ? 1.15 : isTabletop ? 1.4 : 1.20;
 
   const sunColor = isNight
     ? "#38bdf8" // Crisp cyan moonbeam (high clarity, zero dark swamp)
     : isSunset
     ? "#f59e0b" // Warm honey amber sunlight
+    : isTabletop
+    ? "#ffffff" // Crisp bright white sunlight for Tabletop
     : "#fffdf7"; // Crisp warm sunlight
-  const sunIntensity = isNight ? 0.90 : isSunset ? 1.45 : 1.35;
+  const sunIntensity = isNight ? 0.90 : isSunset ? 1.45 : isTabletop ? 1.40 : 1.35;
 
   const rimColor = isNight ? "#67e8f9" : isSunset ? "#f472b6" : "#93c5fd";
   const rimIntensity = isNight ? 0.45 : isSunset ? 0.40 : 0.35;
@@ -110,20 +163,44 @@ export function IslandCanvas({
     const placedTrees: TreeData[] = [];
     const coords: Array<{ gridX: number; gridZ: number }> = [];
 
+    const getOrganicCoord = (idx: number, type: "shipping" | "revenue", level: number) => {
+       if (palette === "tabletop") {
+         const radius = calculateIslandSize(level, visibleTrees.length) * 0.62;
+         // deterministic pseudo-random offsets
+         const hash = Math.sin(idx * 1.234) * 10000;
+         const hash2 = Math.cos(idx * 0.89) * 10000;
+         const r1 = hash - Math.floor(hash);
+         const r2 = hash2 - Math.floor(hash2);
+
+         if (type === "shipping") {
+            // South-West Forest Base
+            const rx = -radius * 0.25 + (r1 - 0.5) * radius * 0.5;
+            const rz = radius * 0.4 + (r2 - 0.5) * radius * 0.5;
+            return { gridX: rx / 0.45, gridZ: rz / 0.45 };
+         } else {
+            // East Farmstead Plateau
+            const rx = radius * 0.4 + (r1 - 0.5) * radius * 0.4;
+            const rz = (r2 - 0.5) * radius * 0.4;
+            return { gridX: rx / 0.45, gridZ: rz / 0.45 };
+         }
+       }
+       return getTreeSlotCoordinate(idx, type, level);
+    };
+
     sortedShip.forEach((tree, idx) => {
-      const coord = getTreeSlotCoordinate(idx, "shipping", level);
+      const coord = getOrganicCoord(idx, "shipping", level);
       placedTrees.push({ ...tree, gridX: coord.gridX, gridZ: coord.gridZ });
       coords.push(coord);
     });
 
     sortedRev.forEach((tree, idx) => {
-      const coord = getTreeSlotCoordinate(idx, "revenue", level);
+      const coord = getOrganicCoord(idx, "revenue", level);
       placedTrees.push({ ...tree, gridX: coord.gridX, gridZ: coord.gridZ });
       coords.push(coord);
     });
 
     return { safeTrees: placedTrees, treeCoords: coords };
-  }, [visibleTrees, level]);
+  }, [visibleTrees, level, palette]);
 
   return (
     <div className={`relative ${className}`}>
@@ -144,6 +221,12 @@ export function IslandCanvas({
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
+          <ResponsiveCameraRig
+            islandSize={islandSize}
+            baseZoom={baseZoom}
+            zoomScale={zoomScale}
+            autoFit={autoFit}
+          />
           <OrbitControls
             enableRotate={interactive}
             enablePan={false}
@@ -151,6 +234,14 @@ export function IslandCanvas({
             enableDamping={true}
             dampingFactor={0.08}
             rotateSpeed={0.5}
+            target={
+              selectedTreeId
+                ? (() => {
+                    const found = safeTrees.find((t) => t.id === selectedTreeId);
+                    return found ? [found.gridX * 0.45, 0.25, found.gridZ * 0.45] : [0, 0, 0];
+                  })()
+                : [0, 0, 0]
+            }
             minPolarAngle={isometricPolarAngle}
             maxPolarAngle={isometricPolarAngle}
           />
@@ -160,26 +251,26 @@ export function IslandCanvas({
 
           {/* Directional Sunlight with Soft Shadows */}
           <directionalLight
-            position={[14, 22, 10]}
+            position={isTabletop ? [-20, 22, -10] : [14, 22, 10]}
             intensity={sunIntensity}
             color={sunColor}
             castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
             shadow-camera-near={0.5}
-            shadow-camera-far={45}
-            shadow-camera-left={-shadowFrustum}
-            shadow-camera-right={shadowFrustum}
-            shadow-camera-top={shadowFrustum}
-            shadow-camera-bottom={-shadowFrustum}
-            shadow-bias={-0.0005}
+            shadow-camera-far={60}
+            shadow-camera-left={-shadowFrustum * 1.5}
+            shadow-camera-right={shadowFrustum * 1.5}
+            shadow-camera-top={shadowFrustum * 1.5}
+            shadow-camera-bottom={-shadowFrustum * 1.5}
+            shadow-bias={-0.001}
           />
 
           {/* Soft Secondary Mint / Rim Fill Light */}
           <directionalLight
-            position={[-12, 12, -10]}
-            intensity={rimIntensity}
-            color={rimColor}
+            position={isTabletop ? [15, 10, 15] : [-12, 12, -10]}
+            intensity={isTabletop ? 0.6 : rimIntensity}
+            color={isTabletop ? "#ffb5e8" : rimColor} // Pinkish fill for tabletop
           />
 
           {/* 2. Soft Studio Contact Shadows (Zero Jitter, Baked frames={1}) */}
@@ -201,31 +292,53 @@ export function IslandCanvas({
             timeOfDay={timeOfDay}
             showGrid={showGrid}
             showBoundaries={showBoundaries}
+            islandShape={islandShape}
+            palette={palette}
           />
 
           {/* 4. 3D Trees (Shipping & Revenue with Camera-Z Depth Sorting) */}
-          {safeTrees.map((tree) => (
-            <IslandTree
-              key={tree.id}
-              tree={tree}
-              isSelected={selectedTreeId === tree.id}
-              drought={drought}
-              timeOfDay={timeOfDay}
-              onSelect={onSelectTree}
-            />
-          ))}
+          {safeTrees.map((tree, i) => {
+            if (isTabletop) {
+               const TreeComponent = tree.type === "shipping" ? PineTree : DeciduousTree;
+               const hash = Math.sin(i * 9.87) * 1000;
+               const scale = 0.8 + (hash - Math.floor(hash)) * 0.4;
+               const rotationY = (hash - Math.floor(hash)) * Math.PI * 2;
+               return (
+                 <TreeComponent 
+                   key={tree.id} 
+                   position={[tree.gridX * 0.45, 0.25, tree.gridZ * 0.45]} 
+                   scale={scale} 
+                   rotation={[0, rotationY, 0]} 
+                 />
+               );
+            }
+            return (
+              <IslandTree
+                key={tree.id}
+                tree={tree}
+                isSelected={selectedTreeId === tree.id}
+                drought={drought}
+                timeOfDay={timeOfDay}
+                palette={palette}
+                onSelect={onSelectTree}
+              />
+            );
+          })}
 
           {/* 5. Living Campsite & Milestones */}
-          <Campsite
-            level={level}
-            treeCount={visibleTrees.length}
-            streakDays={streakDays}
-            timeOfDay={timeOfDay}
-            drought={drought}
-            onClickCampfire={onClickCampfire}
-            onClickCabin={onClickCabin}
-            onClickTent={onClickTent}
-          />
+          {!isTabletop && (
+            <Campsite
+              level={level}
+              treeCount={visibleTrees.length}
+              streakDays={streakDays}
+              timeOfDay={timeOfDay}
+              drought={drought}
+              palette={palette}
+              onClickCampfire={onClickCampfire}
+              onClickCabin={onClickCabin}
+              onClickTent={onClickTent}
+            />
+          )}
 
           {/* 6. Dynamic Atmospheric Weather Systems */}
           <Weather

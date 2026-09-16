@@ -15,10 +15,58 @@ During the Session End ritual (called automatically whenever significant changes
 
 ## Log Entries
 
-### [IndieForest — Permanent Spring Emerald Greenery, Camera Stabilization & HUD Streamlining] 2026-09-08
-- **Commit**: `a3cad4f` (feat(canvas): stabilize camera, enforce lush greenery, and streamline dashboard)
-- **Vibe**: Grounded, peaceful, and clean. Removed the disruptive golden-wheat/yellowish drought overrides across all models so the island remains permanently lush Spring Emerald (`#22c55e`). Purged all manual watering buttons to honor 100% automated zero-touch ingestion. Cleaned developer sandbox switchers from the player dashboard and anchored the 3D diorama camera firmly to screen center with smooth, subtle turntable rotation.
+### [IndieForest — Canonical Sunnyside World Visual Fidelity & 3D Demo Island Color Integration] 2026-09-13
+- **Commit**: `pending` (feat(3d): calibrate and integrate authentic Sunnyside World color palette into 3D Demo Island, IslandCanvas, PineTree, Cabin, and campsite props)
+- **Vibe**: 100% authentic, vibrant, cozy Daniel Diggle pixel & 3D diorama harmony. Extracted exact color swatches directly from primary Sunnyside World assets (`tileset.png`, `spr_deco_tree_02_strip4.png`, `campfire_ring.png`, `soil_00.png`) and integrated them seamlessly across the 3D Demo Island with real-time toggle controls.
 - **Shipped**:
+  - **Sunnyside Color Palette Extraction & Geological Calibration (`Island.tsx`):**
+    - Turf / Lawn: Day `#5fc14c` (vibrant apple green from Tiles 65, 66), Sunset `#84cc16`, Night `#1b4d3e`.
+    - Topsoil Band: Day `#e4a672` (warm apricot topsoil from Autotile 2246), Sunset `#c27a4e`, Night `#4a3020`.
+    - Rock Stratum Band: Day `#c28569` (warm terracotta cliff layer from Tile 468), Sunset `#965942`, Night `#38231a`.
+    - Bedrock Keel: Day `#5a6988` (chiseled cool slate keel from Tile 287), Sunset `#434f6b`, Night `#262f48`.
+    - Riverstone Stepping Discs & Boulders: Day `#8b9bb4` (cool slate riverstone highlights), Sunset `#6c7a94`, Night `#3e4b60`.
+    - Dangling Roots: `#3a4466` (deep slate earth).
+  - **Authentic Foliage & Timber Shading (`PineTree.tsx`, `IslandTree.tsx`, `Cabin.tsx`):**
+    - Conifer Pines: Deep shadow base `#2e6635`, mid skirt `#3e8948`, and sunlit apex `#53a641` matched to `spr_deco_tree_02_strip4.png`.
+    - Revenue Pines: Warm terracotta amber `#be4a2f`, mid `#e48325`, sunburst gold `#feae34`.
+    - Log Cabin HQ: Warm timber walls `#c58a63`, trim `#b27760`, sunburst shingle roof `#ef9734`, slate chimney `#5a6988`, and stone foundation `#5a6988`.
+    - Seamless Tree Grass Patches: `#5fc14c` / `#72d35e` flushed with diorama turf.
+  - **3D Demo Island Integration & Interactive Switcher (`src/app/demo/page.tsx`, `IslandCanvas.tsx`, `DemoIslandCanvas.tsx`):**
+    - Defaulted 3D Demo Island to the Sunnyside palette with fresh emerald garden ambient bounce (`#ecfdf5`).
+    - Added a real-time `Color Palette` SegmentedControl to the Island Controls sidebar (`Sunnyside` vs `Canonical`).
+  - **Dedicated Color Palette Showcase Section (`src/app/demo/components/PaletteView.tsx`, `page.tsx`):**
+    - Added a 4th mode tab `Color Palette` to `/demo` navigation bar.
+    - Built split-pane directory with category filters (`All (19)`, `Terrain`, `Trees`, `Campsite`, `Sky & Water`).
+    - Implemented side-by-side Sunnyside vs Canonical swatch cards, exact hex chips, asset provenance, and target code symbol badges.
+    - Integrated live 3D material turntable (Orb, Block, Strata) with real-time palette toggling and 1-click copy hex with audio chime feedback.
+  - **Zero Regression & Production Verification:** All 65 Vitest unit tests passing green, Next.js Turbopack compiling all 14 routes with 0 TypeScript errors in 3.8s. Existing `/dashboard` diorama defaults safely preserved.
+
+### [IndieForest — 1-to-1 Low-Poly Visual Diorama Reconstruction] 2026-09-09
+- **Commit**: `pending` (feat(3d): 1-to-1 visual diorama reconstruction matching reference image)
+- **Vibe**: Direct, sculptural, tactile craftsmanship. Reconstructed every single 3D element to mirror the reference diorama: 4-layer stratified rock underbelly, faceted conifer pines, authentic log cabin with plank gable roof, A-frame canvas tent with open flaps, stone campfire with stump seats, and winding sand path to a wooden cliff overlook.
+- **Shipped**:
+  - **Slender Conifer Pines (`PineTree.tsx`):** Narrowed skirt width by ~40% with tall vertical taper, proud trunk ground clearance (`0.45m+`), and root flare. Standardized all active tiers (Sprout, Young, Mature, Mighty) to the same iconic slender alpine conifer.
+  - **Gentle Low-Pitch Log Cabin (`Cabin.tsx`):** Fixed the pointed roof by replacing the steep pitch with a gentle ~18° low-slope gable roof, wide overhanging eaves, horizontal cedar plank bevels, and compact stone chimney.
+  - **Restored Stone Stepping Path & Zen Cleanup (`Island.tsx`):** Restored natural riverstone stepping discs connecting the campsite structures; purged all ground clutter (sand path rectangles, cliff deck, shrubs, wildflower dots), keeping only 4 natural perimeter rock outcrops.
+  - **Full 3-Surface Visual Unification (`IslandCanvas.tsx`, `DemoIslandCanvas.tsx`, `page.tsx`, `dashboard/page.tsx`):** Standardized `/demo`, `/dashboard`, and `/` to the identical canonical diorama (Isometric Diamond chunk, 4-layer stratified underbelly, de-clustered campsite, studio lighting).
+  - **Full Production Verification:** 65/65 Vitest unit tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling all 13 routes in 2.9s.
+
+### [IndieForest — Plain Language Copy Overhaul, Decoupled Demo Canvas & HUD Direct Utility] 2026-09-08
+- **Commit**: `pending` (feat(copy): plain language overhaul across landing page, HUD, and modals; architectural decoupling of demo island)
+- **Vibe**: Honest, razor-sharp, zero-slop developer clarity. Stripped out all corporate marketing clichés ("streamline", "leverage", "proof of work"), decorative fantasy jargon ("Alpine Conifer Pine", "Golden Money Oak", "West/East Grove"), and ambiguous names in favor of direct utility names: Focus Timer, Rest Days, Island Stats, Share Island, and Daily Goals. Completely decoupled the landing page demo diorama from player store state.
+- **Shipped**:
+  - **Stateless Demo Island Decoupling (`DemoIslandCanvas.tsx`, `Hero.tsx`, ADR 0001):**
+    - Isolated landing page showcase diorama into dedicated `DemoIslandCanvas.tsx` with dynamic orthographic auto-fit framing (`targetWorldSpan = islandSize * 1.72`) preventing diamond edge clipping.
+    - Purged `useForestStore` from landing `Hero.tsx` to guarantee marketing visitors never mutate local player state.
+  - **Plain Language Landing Page Overhaul (`Hero.tsx`, `HowItWorks.tsx`, `Groves.tsx`, `Features.tsx`, `Faq.tsx`):**
+    - Replaced botanical fantasy terms with concrete developer language: `Code Trees` (green trees for commits) and `Revenue Trees` (gold trees for sales).
+    - Simplified step explanations, bento cards, trust indicators, and FAQ questions & answers.
+  - **In-Game HUD & Modals Direct Utility Names (`DashboardDock.tsx`, `DashboardNav.tsx`, `TreeCard.tsx`, Modals):**
+    - Standardized HUD controls: `Share Island` (dock CTA), `Daily Goals` (navigation milestones popover), `Code Tree` / `Revenue Tree` and `Total Commits` / `Monthly Revenue` (`TreeCard.tsx`).
+    - Refactored modal titles and badges: `Focus Timer` (campfire), `Rest Days` (tent & protection), `Island Stats` (cabin overview), `Settings` (preferences), `Add Project` (new project), `Guestbook` (short notes).
+  - **Gamification & Domain Alignment (`gamification.ts`, `CONTEXT.md`):**
+    - Refactored daily quests to direct action verbs: `Daily Git Push`, `Share Island Card`, `Record Revenue`, `Focus Session`.
+    - Updated `CONTEXT.md` Section 1 domain glossary to reflect plain English terms.
   - **Permanent Spring Emerald Greenery (`Island.tsx`, `PineTree.tsx`, `IslandTree.tsx`):**
     - Eradicated all yellowish and straw drought overrides on island turf and pine foliage. Day grass is permanently Spring Emerald (`#22c55e`), Sunset is Golden Chartreuse (`#84cc16`), and Night is Luminous Nocturnal Teal (`#0f766e`).
     - Lighting restored to crisp sunlight (`#fffdf7`) with sky-blue ambient fill (`#e0f2fe`).
@@ -33,7 +81,7 @@ During the Session End ritual (called automatically whenever significant changes
     - Disabled wheel and pinch zooming (`enableZoom={false}`), removed obsolete `zoomLevel` state and `Z` key zoom shortcut.
     - Locked vertical tilt strictly to the isometric polar angle (`~61.2°`), preventing awkward vertical pitches or underside views.
     - Implemented smooth, subtle horizontal turntable rotation with momentum damping (`enableDamping={true}`, `dampingFactor={0.08}`, `rotateSpeed={0.5}`).
-  - **Production Verification:** 64/64 Vitest unit tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly with all 13 routes in 2.9s.
+  - **Production Verification:** 64/64 Vitest unit tests passing green, ESLint 0 errors / 0 warnings, Next.js Turbopack build compiling cleanly with all 13 routes in 1.6s.
 
 ### [IndieForest — Codebase Cleanup, User Flow Streamlining & Skeuomorphic Parity] 2026-09-07
 - **Commit**: `pending` (Comprehensive Codebase Cleanup, Dead Prototype & Task Purged, Dashboard vs Demo Routing Streamlined, Public Profile Skeuomorphic Parity, HUD & Modals Air & Glass Chamfer, 64/64 Tests Green, Turbopack Build Clean)

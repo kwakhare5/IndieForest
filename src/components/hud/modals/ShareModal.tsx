@@ -36,29 +36,29 @@ export function ShareModal({ isOpen, onClose }: ShareModalProps) {
   // 3 Human Tweet Templates (Zero AI Slop)
   const tweetTemplates = [
     // Template 1: Numbers-Led Milestone
-    `Day ${streakDays} of shipping daily on IndieForest.
+    `Day ${streakDays} of shipping on IndieForest.
 
 • Tier ${badge} (${title} · Lvl ${level})
 • ${trees.length} Active Projects | ${totalCommits} Commits | $${totalMrr}/mo MRR
 • Today's Ship: "${latestShip}"
 
-Living diorama: ${profileUrl}`,
+Island: ${profileUrl}`,
 
     // Template 2: Short & Punchy
-    `Zero manual trackers. Just pure shipping.
+    `Zero manual tracking. Just code and ship.
 
 Day ${streakDays} streak on @IndieForest.
-${trees.length} trees grown from verified commits & Stripe webhooks.
+${trees.length} trees grown from git commits and Stripe sales.
 
-Inspect my island: ${profileUrl}`,
+View island: ${profileUrl}`,
 
     // Template 3: Builder Reflection
     `Consistency compounds.
 
-Day ${streakDays} of building in public.
+Day ${streakDays} of shipping in public.
 Current status: Tier ${badge} (${title}) with ${trees.length} active projects.
 
-Living 3D world: ${profileUrl}`,
+View island: ${profileUrl}`,
   ];
 
   const activeTweetText = tweetTemplates[selectedTemplateIndex];
@@ -180,8 +180,8 @@ Living 3D world: ${profileUrl}`,
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Export 3D Social Card & Proof"
-      badgeText="Build in Public"
+      title="Share Island Card"
+      badgeText="Share"
       icon={Share2}
       maxWidth="md"
       position="center"

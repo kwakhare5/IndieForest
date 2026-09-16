@@ -92,9 +92,9 @@ export function DashboardDock({
             }}
             icon={Share2}
             className="shadow-xs active:scale-95 transition-transform text-xs"
-            title="Export 3D Share Card & Proof (Press S)"
+            title="Share 3D Island Card (Press S)"
           >
-            Share Proof
+            Share Island
           </Button>
       </DoubleBezel>
     </div>

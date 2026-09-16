@@ -218,6 +218,7 @@ export interface ForestState {
     proofUrl?: string,
     repo?: string
   ) => void;
+  shipToProject: (treeId: string, message?: string) => void;
   addTree: (
     name: string,
     mrr?: number,

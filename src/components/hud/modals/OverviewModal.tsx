@@ -37,8 +37,8 @@ export function OverviewModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Island Overview & Projects"
-      badgeText="Dashboard Summary"
+      title="Island Stats"
+      badgeText="Overview"
       icon={Building2}
       maxWidth="lg"
     >
@@ -74,28 +74,28 @@ export function OverviewModal({
             icon={Sparkles}
             className="text-xs"
           >
-            Export Proof
+            Share Island
           </Button>
         </div>
 
         {/* Dual-Grove Aggregate Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
-            <span className="text-[10px] text-stone-400 font-medium block">Code Grove</span>
+            <span className="text-[10px] text-stone-400 font-medium block">Code Trees</span>
             <div className="text-base font-normal text-emerald-800 font-pixel flex items-center gap-1">
               <Trees className="w-3.5 h-3.5 text-emerald-600" />
-              {shippingTrees.length} PINES
+              {shippingTrees.length} TREES
             </div>
             <span className="text-[10px] text-stone-400">{totalCommits} commits</span>
           </div>
 
           <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
-            <span className="text-[10px] text-stone-400 font-medium block">Cash Grove</span>
+            <span className="text-[10px] text-stone-400 font-medium block">Revenue Trees</span>
             <div className="text-base font-normal text-amber-700 font-pixel flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
               ${totalMrr}/MO
             </div>
-            <span className="text-[10px] text-stone-400">{revenueTrees.length} cash trees</span>
+            <span className="text-[10px] text-stone-400">{revenueTrees.length} revenue trees</span>
           </div>
 
           <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
@@ -107,7 +107,7 @@ export function OverviewModal({
           </div>
 
           <div className="p-3 rounded-2xl bg-stone-50/90 border border-stone-200/80 shadow-[inset_0_1.5px_3px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)] space-y-0.5">
-            <span className="text-[10px] text-stone-400 font-medium block">Rank Tier</span>
+            <span className="text-[10px] text-stone-400 font-medium block">Builder Level</span>
             <div className="text-base font-normal text-stone-900 font-pixel">
               LVL {level}
             </div>

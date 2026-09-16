@@ -79,7 +79,7 @@ export function Features() {
           </div>
 
           <div className="pt-4 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-500">
-            <span>Welcome-Back Rain revives dormant pines</span>
+            <span>Welcome-Back Rain revives dormant trees</span>
             <span className="font-medium text-emerald-800">Zero streak shaming</span>
           </div>
         </Card>
@@ -92,10 +92,10 @@ export function Features() {
             </div>
 
             <h3 className="text-base sm:text-lg font-medium text-stone-900 mb-1.5 font-sans">
-              Rest Shields
+              Rest Days
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-              Earn 1 shield every 7 days of shipping (up to 2). Take weekends off without resetting your streak to zero.
+              Earn 1 rest day every 7 days of shipping (up to 2). Take weekends off without resetting your streak to zero.
             </p>
           </div>
 
@@ -110,13 +110,13 @@ export function Features() {
             <Card variant="subtle-inset" className="p-3 rounded-xl text-xs text-stone-700 flex items-center justify-between font-sans">
               <span>Protection:</span>
               <span className={`font-medium ${shieldState === "armed" ? "text-emerald-700" : "text-amber-700"}`}>
-                {shieldState === "armed" ? "2 Shields Active (Auto-Deploy)" : "Rest Protected (Streak Safe)"}
+                {shieldState === "armed" ? "2 Rest Days Active (Auto-Deploy)" : "Rest Day Active (Streak Safe)"}
               </span>
             </Card>
           </div>
 
           <div className="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-stone-600">
-            <span>Rest Protection</span>
+            <span>Rest Days</span>
             <span className="font-medium text-sky-800 font-sans text-xs">2 Max Banked</span>
           </div>
         </Card>
@@ -141,7 +141,7 @@ export function Features() {
               <span className="font-normal text-emerald-800 text-sm font-pixel">$2,450/mo</span>
             </div>
             <div className="p-2.5 rounded-xl bg-white/98 border border-[#e5dfd5] shadow-[0_1px_2px_rgba(0,0,0,0.03),inset_0_1px_0_#fff] text-xs font-sans flex items-center justify-between">
-              <span className="text-stone-900 font-medium">Pro Plan · Golden Oak</span>
+              <span className="text-stone-900 font-medium">Pro Plan · Revenue Tree</span>
               <Badge variant="amber" size="sm">Verified Stripe</Badge>
             </div>
           </Card>
@@ -162,10 +162,10 @@ export function Features() {
               <span className="text-xs font-sans text-emerald-700 font-medium">X &amp; LinkedIn Ready</span>
             </div>
             <h3 className="text-lg sm:text-xl font-medium text-stone-900 mb-1.5 font-sans">
-              1-Click 3D Share Cards &amp; Clean Tweets
+              1-Click 3D Share Cards &amp; Updates
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg font-sans">
-              Export verified 3D diorama cards with your exact stats in under 10 seconds. Zero cringe, zero AI slop:
+              Export clean 3D diorama cards with your exact stats in under 10 seconds:
             </p>
           </div>
 
@@ -183,7 +183,7 @@ export function Features() {
                 showArrow
                 discIcon={copiedText ? Check : Copy}
               >
-                {copiedText ? "Copied" : "Copy Formatted Post"}
+                {copiedText ? "Copied" : "Copy Update"}
               </Button>
               <span className="text-[11px] text-stone-500 font-sans font-medium uppercase tracking-wider">280 CHARACTERS</span>
             </div>

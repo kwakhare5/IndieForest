@@ -118,8 +118,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Settings & Integrations"
-      badgeText="Developer Console"
+      title="Settings"
+      badgeText="Preferences"
       icon={Settings}
       maxWidth="md"
       position="top-right"
@@ -209,7 +209,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   </Button>
                 </div>
                 <p className="text-[11px] text-stone-500 mt-1.5 leading-relaxed">
-                  Sprouts an Evergreen Pine for each repository. Commits pushed to your main branch level up tree tiers.
+                  Adds a green code tree for each repository. Commits make your trees grow taller.
                 </p>
                 {syncError && (
                   <p className="text-[11px] text-rose-600 font-medium mt-2 animate-in fade-in">
@@ -225,7 +225,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
               <div>
                 <label className="font-medium text-stone-800 text-xs block mb-1">
-                  Universal Ingestion Endpoint
+                  Webhook URL
                 </label>
                 <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)]">
                   <input
@@ -247,7 +247,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <span className="font-medium text-stone-900 block text-xs">Setup in 30 seconds:</span>
                 <p>1. Open Stripe / Polar / Lemon Squeezy $\rightarrow$ <strong>Developers $\rightarrow$ Webhooks</strong>.</p>
                 <p>2. Paste this URL and listen for <code>payment_intent.succeeded</code> or <code>subscription.created</code>.</p>
-                <p>3. Every sale will sprout a Golden Revenue Oak on your East grove.</p>
+                <p>3. Every sale will grow a golden revenue tree on your island.</p>
               </div>
             </div>
           )}
@@ -257,7 +257,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <div className="space-y-3.5 pt-1 animate-in fade-in duration-150">
               <div>
                 <label className="font-medium text-stone-800 text-xs block mb-1">
-                  GitHub Profile README Embed
+                  GitHub README Badge
                 </label>
                 <div className="flex items-center gap-1.5 p-2 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)]">
                   <input
@@ -277,7 +277,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
               <div>
                 <label className="font-medium text-stone-800 text-xs block mb-1">
-                  Public Island Showcase Link
+                  Public Island Link
                 </label>
                 <div className="flex items-center justify-between p-2 rounded-xl bg-stone-50/90 border border-stone-200/90 shadow-[inset_0_2px_4px_rgba(28,25,23,0.05),inset_0_-1px_0_rgba(255,255,255,0.85)]">
                   <span className="font-mono text-[11px] text-stone-800 truncate pr-2">
@@ -308,7 +308,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
         {/* Subtle Footer Action */}
         <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-400">
-          <span>IndieForest v1.0 · Zero-Touch Ingestion</span>
+          <span>IndieForest v1.0 · Automatic Sync</span>
           <button
             onClick={handleResetCache}
             className="text-stone-400 hover:text-rose-600 transition cursor-pointer flex items-center gap-1"

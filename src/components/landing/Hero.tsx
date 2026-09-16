@@ -13,14 +13,13 @@ import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card, DoubleBezel } from "@/components/ui/Card";
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 import { sound } from "@/lib/sound";
 import { GitHubIslandProfile } from "@/lib/github";
-import { useForestStore } from "@/store/useForestStore";
 import type { TreeData } from "@/types/game";
 
-const IslandCanvas = dynamic(
-  () => import("@/components/canvas/IslandCanvas").then((mod) => mod.IslandCanvas),
+const DemoIslandCanvas = dynamic(
+  () => import("@/components/canvas/DemoIslandCanvas").then((mod) => mod.DemoIslandCanvas),
   {
     ssr: false,
     loading: () => (
@@ -36,22 +35,20 @@ const IslandCanvas = dynamic(
 
 const FAMOUS_BUILDER_HANDLES = ["shadcn", "antfu", "torvalds"] as const;
 
-const INITIAL_STARTER_TREES: TreeData[] = [
-  {
-    id: "initial-tree-1",
-    name: "indieforest",
-    type: "shipping",
-    commits: 1,
-    tier: "sapling",
-    gridX: -1.8,
-    gridZ: -1.0,
-    plantedAt: new Date().toISOString(),
-  },
+// Curated 8-tree demo grove for marketing showcase (5 shipping pines + 3 revenue oaks + campsite)
+const CURATED_DEMO_GROVE: TreeData[] = [
+  { id: "demo-t1", name: "indieforest", type: "shipping", commits: 268, tier: "majestic", gridX: -1.8, gridZ: -1.0, plantedAt: "2026-08-01" },
+  { id: "demo-t2", name: "turbosync-api", type: "shipping", commits: 142, tier: "mature", gridX: -3.2, gridZ: -2.1, plantedAt: "2026-08-03" },
+  { id: "demo-t3", name: "vibe-cli", type: "shipping", commits: 45, tier: "young", gridX: -1.0, gridZ: 1.5, plantedAt: "2026-08-05" },
+  { id: "demo-t4", name: "auth-module", type: "shipping", commits: 18, tier: "sapling", gridX: -2.5, gridZ: 0.5, plantedAt: "2026-08-10" },
+  { id: "demo-t5", name: "docs-site", type: "shipping", commits: 8, tier: "sapling", gridX: -3.8, gridZ: 1.8, plantedAt: "2026-08-15" },
+  { id: "demo-t6", name: "saas-starter", type: "revenue", mrr: 1200, tier: "mature", gridX: 1.8, gridZ: -1.0, plantedAt: "2026-08-02" },
+  { id: "demo-t7", name: "api-tokens", type: "revenue", mrr: 450, tier: "young", gridX: 2.9, gridZ: 0.8, plantedAt: "2026-08-06" },
+  { id: "demo-t8", name: "lifetime-license", type: "revenue", mrr: 180, tier: "sapling", gridX: 1.2, gridZ: 2.0, plantedAt: "2026-08-12" },
 ];
 
 export function Hero() {
   const { isLoaded, isSignedIn } = useUser();
-  const mergeCloudData = useForestStore((s) => s.mergeCloudData);
 
   const [searchUsername, setSearchUsername] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -97,24 +94,11 @@ export function Hero() {
     await handleFetchProfile(handle);
   };
 
-  const handleClaimData = () => {
-    sound.playLevelUp();
-    if (activeProfile) {
-      mergeCloudData({
-        trees: activeProfile.trees,
-        streakDays: activeProfile.streakDays,
-        level: activeProfile.level,
-        xp: activeProfile.xp,
-      });
-    }
-  };
-
   const displayedTrees = activeProfile?.trees && activeProfile.trees.length > 0
     ? activeProfile.trees
-    : INITIAL_STARTER_TREES;
+    : CURATED_DEMO_GROVE;
 
-  const displayStreak = activeProfile?.streakDays || 1;
-  const displayLevel = activeProfile?.level || 1;
+  const displayLevel = activeProfile?.level || 2;
 
   return (
     <section className="pt-28 pb-16 md:pt-36 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 font-sans">
@@ -122,7 +106,7 @@ export function Hero() {
         {/* Left Hero Copy */}
         <div className="lg:col-span-6 space-y-6 text-left">
           <Badge variant="emerald" dot size="md" className="mb-2 shadow-2xs">
-            Living 3D Builder Island
+            3D Island for Developers
           </Badge>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-stone-950 leading-[1.06] tracking-tight font-editorial">
@@ -130,7 +114,7 @@ export function Hero() {
           </h1>
 
           <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl font-sans">
-            Connect your GitHub. Your repositories sprout as evergreen trees. Daily commits make them grow taller. Stripe sales turn them gold. 100% automated with zero manual logging.
+            Connect your GitHub. Your repositories sprout as green trees that grow as you push code. Stripe sales add gold trees. Everything updates automatically with zero manual logging.
           </p>
 
           {/* Instant Search Bar */}
@@ -236,11 +220,11 @@ export function Hero() {
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Free Forever</span>
+              <span>Free to start</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Supabase Cloud Sync</span>
+              <span>Cloud sync</span>
             </div>
           </div>
         </div>
@@ -252,12 +236,9 @@ export function Hero() {
             className="relative w-full aspect-square max-w-lg mx-auto shadow-2xl overflow-hidden"
             innerClassName="overflow-hidden relative"
           >
-            <IslandCanvas
+            <DemoIslandCanvas
               trees={displayedTrees}
               level={displayLevel}
-              streakDays={displayStreak}
-              streakShields={1}
-              drought={false}
               timeOfDay="day"
               className="w-full h-full"
             />
@@ -267,7 +248,7 @@ export function Hero() {
               <DoubleBezel rounded="full" className="shadow-md" innerClassName="px-3 py-1.5 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-xs font-medium text-stone-900 font-sans">
-                  {activeProfile ? `@${activeProfile.username}'s Island` : "Live 3D Diorama"}
+                  {activeProfile ? `@${activeProfile.username}'s Island` : "3D Island Preview"}
                 </span>
               </DoubleBezel>
             </div>
@@ -283,27 +264,29 @@ export function Hero() {
                     </span>
                   </div>
                   {isLoaded && isSignedIn ? (
-                    <Button
-                      variant="emerald"
-                      size="sm"
-                      onClick={handleClaimData}
-                      icon={Sparkles}
-                    >
-                      Save to My Island
-                    </Button>
+                    <Link href="/dashboard">
+                      <Button
+                        variant="emerald"
+                        size="sm"
+                        onClick={() => sound.playLevelUp()}
+                        icon={Sparkles}
+                      >
+                        Go to Dashboard
+                      </Button>
+                    </Link>
                   ) : (
-                    <SignInButton mode="modal">
+                    <SignUpButton mode="modal">
                       <div>
                         <Button
                           variant="emerald"
                           size="sm"
-                          onClick={handleClaimData}
+                          onClick={() => sound.playLevelUp()}
                           icon={Sparkles}
                         >
-                          Save to My Island
+                          Claim This Island
                         </Button>
                       </div>
-                    </SignInButton>
+                    </SignUpButton>
                   )}
                 </DoubleBezel>
               </div>

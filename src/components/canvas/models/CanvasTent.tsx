@@ -8,89 +8,47 @@ interface CanvasTentProps {
   wireframe?: boolean;
 }
 
+// Low-Poly A-Frame Canvas Tent — Directly Matching Reference Image
 export function CanvasTent({
-  isNight = false,
+  isNight: _isNight = false,
   drought = false,
   wireframe = false,
 }: CanvasTentProps) {
-  const canvasColor = "#fef3c7";
-  const timberColor = "#78350f";
+  const canvasColor = drought ? "#d6d3d1" : "#dfcfb5"; // Warm sandy khaki canvas
+  const canvasShadow = drought ? "#a8a29e" : "#bfa98b";
+  const woodColor = drought ? "#57534e" : "#6e472a";
 
   return (
     <group>
-      {/* 1. Ground Wooden Footprint Deck */}
+      {/* 1. Ground Footprint Timber Skids */}
       <mesh position={[0, 0.02, 0]} receiveShadow>
-        <boxGeometry args={[0.92, 0.03, 1.15]} />
-        <meshStandardMaterial
-          color={timberColor}
-          roughness={0.9}
-          wireframe={wireframe}
-        />
+        <boxGeometry args={[1.05, 0.03, 1.25]} />
+        <meshStandardMaterial color={woodColor} roughness={0.9} flatShading wireframe={wireframe} />
       </mesh>
 
-      {/* 2. Rolled Plaid Wool Sleeping Bedroll Inside */}
-      <mesh position={[0, 0.06, -0.1]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0.07, 0.07, 0.48, 8]} />
-        <meshStandardMaterial
-          color={drought ? "#b45309" : "#991b1b"}
-          roughness={0.8}
-          wireframe={wireframe}
-        />
+      {/* 2. Horizontal Ridge Pole extending past tent ends */}
+      <mesh position={[0, 0.88, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+        <cylinderGeometry args={[0.025, 0.025, 1.45, 6]} />
+        <meshStandardMaterial color={woodColor} roughness={0.85} flatShading wireframe={wireframe} />
       </mesh>
 
-      {/* 3. Front Crossed Timber X-Poles (Shears) */}
-      <mesh position={[-0.24, 0.38, 0.54]} rotation={[0, 0, -0.52]} castShadow>
-        <cylinderGeometry args={[0.02, 0.022, 1.05, 6]} />
-        <meshStandardMaterial color={timberColor} roughness={0.85} wireframe={wireframe} />
-      </mesh>
-      <mesh position={[0.24, 0.38, 0.54]} rotation={[0, 0, 0.52]} castShadow>
-        <cylinderGeometry args={[0.02, 0.022, 1.05, 6]} />
-        <meshStandardMaterial color={timberColor} roughness={0.85} wireframe={wireframe} />
-      </mesh>
+      {/* 3. Front and Back Crossed Support Shears (Wood Poles) */}
+      {[-0.6, 0.6].map((z, idx) => (
+        <group key={`shear-${idx}`} position={[0, 0.44, z]}>
+          <mesh position={[-0.24, 0, 0]} rotation={[0, 0, -0.48]} castShadow>
+            <cylinderGeometry args={[0.02, 0.02, 1.05, 6]} />
+            <meshStandardMaterial color={woodColor} roughness={0.85} flatShading wireframe={wireframe} />
+          </mesh>
+          <mesh position={[0.24, 0, 0]} rotation={[0, 0, 0.48]} castShadow>
+            <cylinderGeometry args={[0.02, 0.02, 1.05, 6]} />
+            <meshStandardMaterial color={woodColor} roughness={0.85} flatShading wireframe={wireframe} />
+          </mesh>
+        </group>
+      ))}
 
-      {/* 4. Back Crossed Timber X-Poles (Shears) */}
-      <mesh position={[-0.24, 0.38, -0.54]} rotation={[0, 0, -0.52]} castShadow>
-        <cylinderGeometry args={[0.02, 0.022, 1.05, 6]} />
-        <meshStandardMaterial color={timberColor} roughness={0.85} wireframe={wireframe} />
-      </mesh>
-      <mesh position={[0.24, 0.38, -0.54]} rotation={[0, 0, 0.52]} castShadow>
-        <cylinderGeometry args={[0.02, 0.022, 1.05, 6]} />
-        <meshStandardMaterial color={timberColor} roughness={0.85} wireframe={wireframe} />
-      </mesh>
-
-      {/* 5. Horizontal Cedar Ridge Pole */}
-      <mesh position={[0, 0.76, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-        <cylinderGeometry args={[0.024, 0.024, 1.22, 6]} />
-        <meshStandardMaterial color={timberColor} roughness={0.8} wireframe={wireframe} />
-      </mesh>
-
-      {/* 6. Left Taut Canvas Sloped Roof */}
-      <mesh position={[-0.25, 0.38, 0]} rotation={[0, 0, -0.56]} castShadow receiveShadow>
-        <boxGeometry args={[0.02, 0.88, 1.08]} />
-        <meshStandardMaterial
-          color={canvasColor}
-          roughness={0.7}
-          metalness={0.05}
-          flatShading
-          wireframe={wireframe}
-        />
-      </mesh>
-
-      {/* 7. Right Taut Canvas Sloped Roof */}
-      <mesh position={[0.25, 0.38, 0]} rotation={[0, 0, 0.56]} castShadow receiveShadow>
-        <boxGeometry args={[0.02, 0.88, 1.08]} />
-        <meshStandardMaterial
-          color={canvasColor}
-          roughness={0.7}
-          metalness={0.05}
-          flatShading
-          wireframe={wireframe}
-        />
-      </mesh>
-
-      {/* 8. Back Triangular Canvas Gable Wall */}
-      <mesh position={[0, 0.34, -0.53]} rotation={[0, Math.PI, 0]} castShadow>
-        <coneGeometry args={[0.44, 0.72, 3]} />
+      {/* 4. Left Canvas Sloped Roof */}
+      <mesh position={[-0.27, 0.45, 0]} rotation={[0, 0, -0.52]} castShadow receiveShadow>
+        <boxGeometry args={[0.03, 0.98, 1.28]} />
         <meshStandardMaterial
           color={canvasColor}
           roughness={0.75}
@@ -99,53 +57,60 @@ export function CanvasTent({
         />
       </mesh>
 
-      {/* 9. Rolled Cream Canvas Door Flaps at Entrance */}
-      <mesh position={[-0.32, 0.22, 0.55]} rotation={[0.2, 0, -0.4]} castShadow>
-        <cylinderGeometry args={[0.045, 0.045, 0.42, 6]} />
-        <meshStandardMaterial color={canvasColor} roughness={0.8} wireframe={wireframe} />
-      </mesh>
-      <mesh position={[0.32, 0.22, 0.55]} rotation={[0.2, 0, 0.4]} castShadow>
-        <cylinderGeometry args={[0.045, 0.045, 0.42, 6]} />
-        <meshStandardMaterial color={canvasColor} roughness={0.8} wireframe={wireframe} />
+      {/* 5. Right Canvas Sloped Roof */}
+      <mesh position={[0.27, 0.45, 0]} rotation={[0, 0, 0.52]} castShadow receiveShadow>
+        <boxGeometry args={[0.03, 0.98, 1.28]} />
+        <meshStandardMaterial
+          color={canvasColor}
+          roughness={0.75}
+          flatShading
+          wireframe={wireframe}
+        />
       </mesh>
 
-      {/* 10. Hanging Copper Storm Lantern at Front Peak */}
-      <group position={[0, 0.62, 0.56]}>
-        <mesh position={[0, 0.04, 0]}>
-          <cylinderGeometry args={[0.004, 0.004, 0.08, 3]} />
-          <meshStandardMaterial color="#451a03" />
+      {/* 6. Back Triangular Canvas Wall */}
+      <mesh position={[0, 0.42, -0.61]} rotation={[0, Math.PI, 0]} castShadow>
+        <cylinderGeometry args={[0.01, 0.52, 0.82, 3]} />
+        <meshStandardMaterial
+          color={canvasShadow}
+          roughness={0.8}
+          flatShading
+          wireframe={wireframe}
+        />
+      </mesh>
+
+      {/* 7. Front Doorway — Open Canvas Triangular Flaps */}
+      <group position={[0, 0, 0.62]}>
+        {/* Dark Interior Recess */}
+        <mesh position={[0, 0.38, -0.02]}>
+          <planeGeometry args={[0.42, 0.72]} />
+          <meshBasicMaterial color="#211812" />
         </mesh>
-        <mesh>
-          <octahedronGeometry args={[0.042, 0]} />
-          <meshStandardMaterial
-            color="#fef08a"
-            emissive={drought ? "#ca8a04" : "#facc15"}
-            emissiveIntensity={drought ? 0.8 : isNight ? 2.4 : 1.0}
-            wireframe={wireframe}
-          />
+
+        {/* Left Flap (Folded outwards) */}
+        <mesh position={[-0.22, 0.38, 0.04]} rotation={[0.2, 0.45, -0.3]} castShadow>
+          <cylinderGeometry args={[0.01, 0.22, 0.72, 3]} />
+          <meshStandardMaterial color={canvasColor} roughness={0.75} flatShading wireframe={wireframe} />
         </mesh>
-        {isNight && (
-          <pointLight position={[0, 0, 0]} color="#fde047" intensity={drought ? 0.8 : 1.5} distance={2.5} decay={2} />
-        )}
+
+        {/* Right Flap (Folded outwards) */}
+        <mesh position={[0.22, 0.38, 0.04]} rotation={[0.2, -0.45, 0.3]} castShadow>
+          <cylinderGeometry args={[0.01, 0.22, 0.72, 3]} />
+          <meshStandardMaterial color={canvasColor} roughness={0.75} flatShading wireframe={wireframe} />
+        </mesh>
       </group>
 
-      {/* 11. 4 Corner Cord Guy Lines & Wooden Ground Stakes */}
+      {/* 8. Corner Ground Stakes */}
       {[
-        [-0.45, 0.1, 0.52, -0.72, 0.03, 0.72],
-        [0.45, 0.1, 0.52, 0.72, 0.03, 0.72],
-        [-0.45, 0.1, -0.52, -0.72, 0.03, -0.72],
-        [0.45, 0.1, -0.52, 0.72, 0.03, -0.72],
-      ].map((c, i) => (
-        <group key={i}>
-          <mesh position={[(c[0] + c[3]) / 2, 0.07, (c[2] + c[5]) / 2]}>
-            <cylinderGeometry args={[0.003, 0.003, 0.38, 3]} />
-            <meshStandardMaterial color="#a8a29e" />
-          </mesh>
-          <mesh position={[c[3], c[4], c[5]]} rotation={[0.3, 0, 0.3]}>
-            <cylinderGeometry args={[0.012, 0.015, 0.1, 4]} />
-            <meshStandardMaterial color={timberColor} roughness={0.8} wireframe={wireframe} />
-          </mesh>
-        </group>
+        [-0.55, 0.05, 0.65],
+        [0.55, 0.05, 0.65],
+        [-0.55, 0.05, -0.65],
+        [0.55, 0.05, -0.65],
+      ].map((pos, i) => (
+        <mesh key={`stake-${i}`} position={pos as [number, number, number]} rotation={[0, 0, pos[0] > 0 ? 0.3 : -0.3]}>
+          <cylinderGeometry args={[0.015, 0.015, 0.14, 5]} />
+          <meshStandardMaterial color={woodColor} roughness={0.9} flatShading wireframe={wireframe} />
+        </mesh>
       ))}
     </group>
   );

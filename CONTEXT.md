@@ -10,15 +10,16 @@
 | **Diorama / Island** | The visual 1:1 symmetrical square workspace representing a founder's active projects & revenue streams | Map, Board, World, Farm |
 | **Modular Slabs** | Expanding 1:1 square isometric terrain blocks ($9\times 9, 12\times 12, 15\times 15, 18\times 18$) | Void, Rectangle, Floor |
 | **Daily Ship** | A verified unit of daily progress logged via GitHub commit sync or manual log | Check-in, Task completion, Tick |
-| **Alpine Conifer Pine** | Shipping module tree grown through code commits & daily active shipping | Green tree, Pine pin |
-| **Golden Money Oak** | Revenue module tree sprouted and grown through customer subscriptions & MRR | Gold tree, Cash pin |
-| **Growth Tier** | The 5 growth stages of a tree (`sapling`, `young`, `mature`, `majestic`, `stump`) | Level, Size, Rank |
-| **Streak Shield** | Burnout protection item earned every 7 shipping days (max 2) defending against rest days | Freeze, Pass, Cheat token |
-| **Drought** | Visual state indicating missed shipping days after all streak shields are exhausted | Penalty, Decay, Failure |
+| **Code Tree** | Green conifer tree representing a git repository, grown taller through commits & daily active shipping | Botanical conifer, Pine pin |
+| **Revenue Tree** | Gold deciduous tree representing a revenue stream, grown through customer sales & MRR | Cash pin, Golden oak fantasy |
+| **Growth Tier** | The 4 plain English growth stages of a tree (`sprout`, `small`, `tall`, `mighty`) | Size, Rank, Level |
+| **Rest Days** | Burnout protection days earned every 7 shipping days (max 2) defending against rest days | Freeze, Pass, Cheat token |
+| **Focus Timer** | Campfire focus timer with ambient sound for distraction-free coding | Vault, Station |
+| **Island Stats** | Central overview modal displaying project breakdown, commits, and revenue | Architect Overview |
+| **Drought** | Visual state indicating missed shipping days after all rest days are exhausted | Penalty, Decay, Failure |
 | **Double-Bezel** | Universal porcelain UI architecture with an outer enclosure and inner tactile card | Nested border, Card outline |
 | **Anchored Popover** | Lightweight floating porcelain cards anchored directly to HUD capsules | Full-screen drawer, Side panel |
 | **README Badge** | Server-rendered dynamic SVG at `/api/badge/[username]` for GitHub profile READMEs | Widget, Banner, Sticker |
-| **Visitor Cheer** | 1-click "Water Tree" action by public visitors giving cheer XP to the builder | Like, Upvote, Claps |
 | **Golden Companion** | Standing 4-legged mascot dog with animated tail wagging, curious head tilts, and jump physics | Blob, Sleeping lump |
 
 ---
@@ -32,6 +33,8 @@
 5. **Universal Revenue Ingestion:** Universal webhook route `/api/webhooks/revenue` parses Stripe, Lemon Squeezy, and Polar payloads into verified modules.
 6. **Zero Slop:** No decorative emojis in UI text. Use geometric Lucide icons and clean Roman numerals for tier badges.
 7. **Cloud Resilience:** Zustand store auto-syncs with Supabase PostgreSQL (`public.profiles`, `public.trees`, `public.ship_logs`, `public.guestbook_entries`) while retaining instant offline localStorage capability.
+8. **Orthographic Container Auto-Fit:** In enclosed card containers (such as the landing hero showcase or public profile modules), the diorama orthographic camera automatically scales to $\le \min(W, H) / (\text{islandSize} \times 1.72)$ to guarantee zero isometric diamond edge clipping while maximizing island presence across all screen sizes.
+9. **Decoupled Demo vs Game Dioramas:** The marketing landing page diorama (`DemoIslandCanvas`) is completely decoupled from the real game dashboard (`IslandCanvas`). The landing hero is stateless and must NEVER import or mutate `useForestStore`. Previewed GitHub repositories exist strictly in ephemeral component memory; claiming directs to Clerk Sign-Up to create an authentic account.
 
 ---
 
